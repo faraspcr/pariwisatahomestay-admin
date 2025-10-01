@@ -7,5 +7,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
-Route::get('/admin/pariwisata', [PariwisataDestinasiAdminController::class, 'index']);
+Route::get('/admin/pariwisata', [PariwisataDestinasiAdminController::class, 'index'])->name('pariwisata.admin');

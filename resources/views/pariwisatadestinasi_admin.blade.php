@@ -127,33 +127,33 @@
             </div>
         </div>
 
-        <!-- Order Terbaru -->
-        <h2>Order Terbaru</h2>
+        <!-- Data Destinasi Wisata -->
+        <h2>Data Destinasi Wisata</h2>
         <table>
             <tr>
-                <th>Pemesan</th>
-                <th>Tanggal Checkin</th>
-                <th>Homestay</th>
-                <th>Harga</th>
-                <th>Status</th>
+                <th>ID</th>
+                <th>Nama</th>
+                <th>Deskripsi</th>
+                <th>Alamat</th>
+                <th>RT/RW</th>
+                <th>Jam Buka</th>
+                <th>Tiket</th>
+                <th>Kontak</th>
             </tr>
+            @foreach($destinasi as $item)
             <tr>
-                <td>Rafa</td>
-                <td>2025-10-01</td>
-                <td>Homestay Indah</td>
-                <td>Rp 250.000</td>
-                <td>Selesai</td>
+                <td>{{ $item['destinasi_id'] }}</td>
+                <td>{{ $item['nama'] }}</td>
+                <td>{{ $item['deskripsi'] }}</td>
+                <td>{{ $item['alamat'] }}</td>
+                <td>{{ $item['rt'] }}/{{ $item['rw'] }}</td>
+                <td>{{ $item['jam_buka'] }}</td>
+                <td>Rp {{ number_format($item['tiket'], 0, ',', '.') }}</td>
+                <td>{{ $item['kontak'] }}</td>
             </tr>
-            <tr>
-                <td>Raka</td>
-                <td>2025-10-05</td>
-                <td>Homestay Sejuk</td>
-                <td>Rp 300.000</td>
-                <td>Pending</td>
-            </tr>
+            @endforeach
         </table>
     </div>
 </body>
 
 </html>
-
