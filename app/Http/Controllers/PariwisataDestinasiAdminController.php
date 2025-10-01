@@ -13,8 +13,8 @@ class PariwisataDestinasiAdminController extends Controller
     {
         return view('pariwisatadestinasi_admin');
         $destinasi = [
-            ['nama' => 'Gunung Bromo', 'alamat' => 'RT 01 RW 02', 'tiket' => 15000],
-            ['nama' => 'Air Terjun Segar', 'alamat' => 'RT 03 RW 01', 'tiket' => 20000],
+            ['nama' => 'Pantai', 'alamat' => 'RT 01 RW 02', 'tiket' => 15000],
+            ['nama' => 'Air Terjun Segar', 'alamat' => 'RT 03 RW 01', 'tiket' => 22000],
             ['nama' => 'Bukit Asri', 'alamat' => 'RT 02 RW 04', 'tiket' => 12000],
         ];
 
