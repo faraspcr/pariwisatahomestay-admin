@@ -17,13 +17,13 @@ class AuthController extends Controller
             'username' => 'required',
             'password' => [
                 'required',
-                'min:3',
+                'min:5',
                 'regex:/[A-Z]/'
             ],
         ], [
             'username.required' => 'Username wajib diisi!',
             'password.required' => 'Password wajib diisi!',
-            'password.min' => 'Password minimal 3 karakter!',
+            'password.min' => 'Password minimal 5 karakter!',
             'password.regex' => 'Password harus mengandung huruf kapital!',
         ]);
 
