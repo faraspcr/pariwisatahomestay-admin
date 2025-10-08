@@ -481,7 +481,7 @@
         <p>Selamat datang, {{ $username }}! Kelola data destinasi wisata dan homestay desa dengan mudah</p>
     </div>
 
-    <!-- ✅ PERBAIKI FORM LOGOUT -->
+    <!--FORM LOGOUT -->
     <form action="{{ route('auth.logout') }}" method="POST" class="d-inline">
         @csrf
         <button type="submit" class="logout-btn">

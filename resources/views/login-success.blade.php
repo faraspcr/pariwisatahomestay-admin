@@ -36,7 +36,7 @@
     <p class="mb-3">Selamat datang, <strong>{{ $username }}</strong>!</p>
     <p class="text-muted mb-4">Anda berhasil login ke sistem Pariwisata Desa.</p>
 
-    <!-- ✅ PERBAIKI LINK INI -->
+
     <a href="{{ route('pariwisata.admin') }}" class="btn btn-success btn-lg">
         🚀 Lanjut ke Dashboard
     </a>
