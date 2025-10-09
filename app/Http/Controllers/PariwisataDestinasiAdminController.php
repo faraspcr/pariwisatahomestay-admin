@@ -42,7 +42,7 @@ class PariwisataDestinasiAdminController extends Controller
             [
                 'destinasi_id' => 3,
                 'nama' => 'Bukit Asri',
-                'deskripsi' => 'Bukit dengan pemandangan desa yang luas dan udara segar',
+                'deskripsi' => 'Bukit dengan pemandangan desa yang luas dan udara segar serta nyaman untuk bersantai',
                 'alamat' => 'Jl. Bukit Asri No. 10',
                 'rt' => '02',
                 'rw' => '04',
