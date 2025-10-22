@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PariwisataDestinasiAdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PariwisataDestinasiAdminController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -18,3 +19,5 @@ Route::post('/auth/logout', [AuthController::class, 'logout'])->name('auth.logou
 
 // Route untuk admin
 Route::get('/admin/pariwisata', [PariwisataDestinasiAdminController::class, 'index'])->name('pariwisata.admin');
+
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
