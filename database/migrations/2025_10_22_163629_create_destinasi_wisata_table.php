@@ -12,18 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('destinasi_wisata', function (Blueprint $table) {
-    $table->id('destinasi_id');
-    $table->string('nama');
-    $table->text('deskripsi')->nullable();
-    $table->string('alamat');
-    $table->string('rt', 5)->nullable();
-    $table->string('rw', 5)->nullable();
-    $table->string('jam_buka')->nullable();
-    $table->decimal('tiket', 10, 2)->nullable();
-    $table->string('kontak')->nullable();
-    $table->timestamps();
-});
-
+            $table->id('destinasi_id');
+            $table->string('nama');
+            $table->text('deskripsi');
+            $table->text('alamat');
+            $table->string('rt', 3);
+            $table->string('rw', 3);
+            $table->time('jam_buka');
+            $table->decimal('tiket', 10, 2);
+            $table->string('kontak', 20);
+            $table->timestamps();
+        });
     }
 
     /**

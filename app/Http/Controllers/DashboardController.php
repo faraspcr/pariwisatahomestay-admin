@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Warga;
+use App\Models\DestinasiWisata;
 
 class DashboardController extends Controller
 {
@@ -11,7 +13,10 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return view('admin.dashboard');
+        $totalWarga = Warga::count();
+        $totalDestinasi = DestinasiWisata::count();
+
+        return view('admin.dashboard', compact('totalWarga', 'totalDestinasi'));
     }
 
     /**

@@ -96,7 +96,6 @@
                 <!-- Form Tambah Warga -->
                 <div class="card form-container">
                     <div class="card-body">
-                       <form action="{{ route('warga.store') }}" method="POST">
     <form action="{{ route('warga.store') }}" method="POST">
     @csrf
 
@@ -114,7 +113,7 @@
                 @enderror
             </div>
 
-            <!-- Nama Lengkap -->
+           <!-- Nama Lengkap -->
             <div class="mb-3">
                 <label for="nama" class="form-label">Nama Lengkap <span class="text-danger">*</span></label>
                 <input type="text" class="form-control @error('nama') is-invalid @enderror"
@@ -124,8 +123,7 @@
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
-
-            <!-- Jenis Kelamin -->
+<!-- Jenis Kelamin - YANG SUDAH DIPERBAIKI -->
             <div class="mb-3">
                 <label for="jenis_kelamin" class="form-label">Jenis Kelamin <span class="text-danger">*</span></label>
                 <select class="form-select @error('jenis_kelamin') is-invalid @enderror"

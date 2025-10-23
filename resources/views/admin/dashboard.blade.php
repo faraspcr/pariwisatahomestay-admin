@@ -282,7 +282,7 @@
                 <ul class="nav">
                     <li class="nav-item nav-category">Main</li>
                     <li class="nav-item">
-                        <a class="nav-link" href="index.html">
+                        <a class="nav-link" href="{{ route('dashboard') }}">
                             <span class="icon-bg"><i class="mdi mdi-cube menu-icon"></i></span>
                             <span class="menu-title">Dashboard</span>
                         </a>
@@ -294,13 +294,6 @@
                             <span class="menu-title">UI Elements</span>
                             <i class="menu-arrow"></i>
                         </a>
-                        <!-- Menu Data Warga -->
-<li class="nav-item">
-    <a class="nav-link" href="{{ route('warga.index') }}">
-        <span class="icon-bg"><i class="mdi mdi-account-multiple menu-icon"></i></span>
-        <span class="menu-title">Data Warga</span>
-    </a>
-</li>
                         <div class="collapse" id="ui-basic">
                             <ul class="nav flex-column sub-menu">
                                 <li class="nav-item"> <a class="nav-link"
@@ -312,6 +305,22 @@
                             </ul>
                         </div>
                     </li>
+
+                   <!-- Menu Data Warga -->
+<li class="nav-item">
+    <a class="nav-link" href="{{ route('warga.index') }}">
+        <span class="icon-bg"><i class="mdi mdi-account-multiple menu-icon"></i></span>
+        <span class="menu-title">Data Warga</span>
+    </a>
+</li>
+<!-- Menu Destinasi Wisata -->
+<li class="nav-item">
+    <a class="nav-link" href="{{ route('destinasiwisata.index') }}">
+        <span class="icon-bg"><i class="mdi mdi-map-marker menu-icon"></i></span>
+        <span class="menu-title">Destinasi Wisata</span>
+    </a>
+</li>
+
                     <li class="nav-item">
                         <a class="nav-link" href="pages/icons/mdi.html">
                             <span class="icon-bg"><i class="mdi mdi-contacts menu-icon"></i></span>
@@ -479,20 +488,19 @@
                             <div class="tab-content tab-transparent-content">
                                 <div class="tab-pane fade show active" id="business-1" role="tabpanel"
                                     aria-labelledby="business-tab">
-                                    <!-- GANTI BAGIAN INI -->
                                     <div class="row">
                                         <div class="col-xl-3 col-lg-6 col-sm-6 grid-margin stretch-card">
                                             <div class="card">
                                                 <div class="card-body text-center">
-                                                    <h5 class="mb-2 text-dark font-weight-normal">Orders</h5>
-                                                    <h2 class="mb-4 text-dark font-weight-bold">932.00</h2>
+                                                    <h5 class="mb-2 text-dark font-weight-normal">Total Warga</h5>
+                                                    <h2 class="mb-4 text-dark font-weight-bold">{{ $totalWarga ?? 0 }}</h2>
                                                     <div
                                                         class="dashboard-progress dashboard-progress-1 d-flex align-items-center justify-content-center item-parent">
                                                         <i
-                                                            class="mdi mdi-lightbulb icon-md absolute-center text-dark"></i>
+                                                            class="mdi mdi-account-multiple icon-md absolute-center text-dark"></i>
                                                     </div>
-                                                    <p class="mt-4 mb-0">Completed</p>
-                                                    <h3 class="mb-0 font-weight-bold mt-2 text-dark">5443</h3>
+                                                    <p class="mt-4 mb-0">Data Warga Terdaftar</p>
+                                                    <h3 class="mb-0 font-weight-bold mt-2 text-dark">100%</h3>
                                                 </div>
                                             </div>
                                         </div>
@@ -500,15 +508,15 @@
                                         <div class="col-xl-3 col-lg-6 col-sm-6 grid-margin stretch-card">
                                             <div class="card">
                                                 <div class="card-body text-center">
-                                                    <h5 class="mb-2 text-dark font-weight-normal">Unique Visitors</h5>
-                                                    <h2 class="mb-4 text-dark font-weight-bold">756,00</h2>
+                                                    <h5 class="mb-2 text-dark font-weight-normal">Destinasi Wisata</h5>
+                                                    <h2 class="mb-4 text-dark font-weight-bold">{{ $totalDestinasi ?? 0 }}</h2>
                                                     <div
                                                         class="dashboard-progress dashboard-progress-2 d-flex align-items-center justify-content-center item-parent">
                                                         <i
-                                                            class="mdi mdi-account-circle icon-md absolute-center text-dark"></i>
+                                                            class="mdi mdi-map-marker icon-md absolute-center text-dark"></i>
                                                     </div>
-                                                    <p class="mt-4 mb-0">Increased since yesterday</p>
-                                                    <h3 class="mb-0 font-weight-bold mt-2 text-dark">50%</h3>
+                                                    <p class="mt-4 mb-0">Tempat Wisata</p>
+                                                    <h3 class="mb-0 font-weight-bold mt-2 text-dark">100%</h3>
                                                 </div>
                                             </div>
                                         </div>
@@ -543,94 +551,97 @@
                                             </div>
                                         </div>
                                     </div>
-                                  <!-- GANTI BAGIAN INI -->
-<div class="row">
-  <div class="col-12 grid-margin">
-    <div class="card">
-      <div class="card-body">
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-              <h4 class="card-title mb-0">Recent Activity</h4>
-            </div>
-          </div>
-          <div class="col-lg-3 col-sm-4 grid-margin grid-margin-lg-0">
-            <div class="wrapper pb-5 border-bottom">
-              <div class="text-wrapper d-flex align-items-center justify-content-between mb-2">
-                <p class="mb-0 text-dark">Total Profit</p>
-                <span class="text-success"><i class="mdi mdi-arrow-up"></i>2.95%</span>
-              </div>
-              <h3 class="mb-0 text-dark font-weight-bold">$ 92556</h3>
-              <canvas id="total-profit"></canvas>
-            </div>
-            <div class="wrapper pt-5">
-              <div class="text-wrapper d-flex align-items-center justify-content-between mb-2">
-                <p class="mb-0 text-dark">Expenses</p>
-                <span class="text-success"><i class="mdi mdi-arrow-up"></i>52.95%</span>
-              </div>
-              <h3 class="mb-4 text-dark font-weight-bold">$ 59565</h3>
-              <canvas id="total-expences"></canvas>
-            </div>
-          </div>
-          <div class="col-lg-9 col-sm-8 grid-margin grid-margin-lg-0">
-            <div class="pl-0 pl-lg-4 ">
-              <div class="d-xl-flex justify-content-between align-items-center mb-2">
-                <div class="d-lg-flex align-items-center mb-lg-2 mb-xl-0">
-                  <h3 class="text-dark font-weight-bold mr-2 mb-0">Devices sales</h3>
-                  <h5 class="mb-0">( growth 62% )</h5>
+                                    <div class="row">
+                                        <div class="col-12 grid-margin">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-sm-12">
+                                                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                                                <h4 class="card-title mb-0">Recent Activity</h4>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-3 col-sm-4 grid-margin grid-margin-lg-0">
+                                                            <div class="wrapper pb-5 border-bottom">
+                                                                <div class="text-wrapper d-flex align-items-center justify-content-between mb-2">
+                                                                    <p class="mb-0 text-dark">Total Profit</p>
+                                                                    <span class="text-success"><i class="mdi mdi-arrow-up"></i>2.95%</span>
+                                                                </div>
+                                                                <h3 class="mb-0 text-dark font-weight-bold">$ 92556</h3>
+                                                                <canvas id="total-profit"></canvas>
+                                                            </div>
+                                                            <div class="wrapper pt-5">
+                                                                <div class="text-wrapper d-flex align-items-center justify-content-between mb-2">
+                                                                    <p class="mb-0 text-dark">Expenses</p>
+                                                                    <span class="text-success"><i class="mdi mdi-arrow-up"></i>52.95%</span>
+                                                                </div>
+                                                                <h3 class="mb-4 text-dark font-weight-bold">$ 59565</h3>
+                                                                <canvas id="total-expences"></canvas>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-9 col-sm-8 grid-margin grid-margin-lg-0">
+                                                            <div class="pl-0 pl-lg-4 ">
+                                                                <div class="d-xl-flex justify-content-between align-items-center mb-2">
+                                                                    <div class="d-lg-flex align-items-center mb-lg-2 mb-xl-0">
+                                                                        <h3 class="text-dark font-weight-bold mr-2 mb-0">Devices sales</h3>
+                                                                        <h5 class="mb-0">( growth 62% )</h5>
+                                                                    </div>
+                                                                    <div class="d-lg-flex">
+                                                                        <p class="mr-2 mb-0">Timezone:</p>
+                                                                        <p class="text-dark font-weight-bold mb-0">GMT-0400 Eastern Delight Time</p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="graph-custom-legend clearfix" id="device-sales-legend"></div>
+                                                                <canvas id="device-sales"></canvas>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-4 grid-margin stretch-card">
+                                            <div class="card card-danger-gradient">
+                                                <div class="card-body mb-4">
+                                                    <h4 class="card-title text-white">Account Retention</h4>
+                                                    <canvas id="account-retension"></canvas>
+                                                </div>
+                                                <div class="card-body bg-white pt-4">
+                                                    <div class="row pt-4">
+                                                        <div class="col-sm-6">
+                                                            <div class="text-center border-right border-md-0">
+                                                                <h4>Conversion</h4>
+                                                                <h1 class="text-dark font-weight-bold mb-md-3">$306</h1>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="text-center">
+                                                                <h4>Cancellation</h4>
+                                                                <h1 class="text-dark font-weight-bold">$1,520</h1>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-8 grid-margin stretch-card">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="d-xl-flex justify-content-between mb-2">
+                                                        <h4 class="card-title">Page views analytics</h4>
+                                                        <div class="graph-custom-legend primary-dot" id="pageViewAnalyticLengend"></div>
+                                                    </div>
+                                                    <canvas id="page-view-analytic"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="d-lg-flex">
-                  <p class="mr-2 mb-0">Timezone:</p>
-                  <p class="text-dark font-weight-bold mb-0">GMT-0400 Eastern Delight Time</p>
-                </div>
-              </div>
-              <div class="graph-custom-legend clearfix" id="device-sales-legend"></div>
-              <canvas id="device-sales"></canvas>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-                                    <!-- GANTI BAGIAN INI -->
-<div class="row">
-  <div class="col-sm-4 grid-margin stretch-card">
-    <div class="card card-danger-gradient">
-      <div class="card-body mb-4">
-        <h4 class="card-title text-white">Account Retention</h4>
-        <canvas id="account-retension"></canvas>
-      </div>
-      <div class="card-body bg-white pt-4">
-        <div class="row pt-4">
-          <div class="col-sm-6">
-            <div class="text-center border-right border-md-0">
-              <h4>Conversion</h4>
-              <h1 class="text-dark font-weight-bold mb-md-3">$306</h1>
-            </div>
-          </div>
-          <div class="col-sm-6">
-            <div class="text-center">
-              <h4>Cancellation</h4>
-              <h1 class="text-dark font-weight-bold">$1,520</h1>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-sm-8 grid-margin stretch-card">
-    <div class="card">
-      <div class="card-body">
-        <div class="d-xl-flex justify-content-between mb-2">
-          <h4 class="card-title">Page views analytics</h4>
-          <div class="graph-custom-legend primary-dot" id="pageViewAnalyticLengend"></div>
-        </div>
-        <canvas id="page-view-analytic"></canvas>
-      </div>
-    </div>
-  </div>
-</div>
                 <!-- content-wrapper ends -->
                 <!-- partial:partials/_footer.html -->
                 <footer class="footer">
@@ -667,5 +678,4 @@
     <script src="{{ asset('assets-admin/js/dashboard.js') }}"></script>
     <!-- End custom js for this page -->
 </body>
-
 </html>

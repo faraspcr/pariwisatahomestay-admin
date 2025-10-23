@@ -11,6 +11,7 @@ class DestinasiWisata extends Model
 
     protected $table = 'destinasi_wisata';
     protected $primaryKey = 'destinasi_id';
+
     protected $fillable = [
         'nama',
         'deskripsi',
@@ -19,6 +20,11 @@ class DestinasiWisata extends Model
         'rw',
         'jam_buka',
         'tiket',
-        'kontak',
+        'kontak'
+    ];
+
+    protected $casts = [
+        'tiket' => 'decimal:2',
+        'jam_buka' => 'datetime:H:i'
     ];
 }
