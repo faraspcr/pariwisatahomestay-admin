@@ -11,19 +11,15 @@ Route::get('/', function () {
 });
 
 // Route untuk auth
-// "Route /auth GET → menampilkan halaman login"
 Route::get('/auth', [AuthController::class, 'index'])->name('auth.index');
-
-//"Route /auth/login POST → memproses form login"
 Route::post('/auth/login', [AuthController::class, 'login'])->name('auth.login');
-Route::post('/auth/logout', [AuthController::class, 'logout'])->name('auth.logout'); // ✅ TAMBAHKAN ROUTE LOGOUT
+Route::post('/auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
 
 // Route untuk admin
 Route::get('/admin/pariwisata', [PariwisataDestinasiAdminController::class, 'index'])->name('pariwisata.admin');
-
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-// web.php
+// Route CRUD Warga
 Route::get('/warga', [WargaController::class, 'index'])->name('warga.index');
 Route::get('/warga/create', [WargaController::class, 'create'])->name('warga.create');
 Route::post('/warga', [WargaController::class, 'store'])->name('warga.store');

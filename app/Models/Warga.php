@@ -20,4 +20,6 @@ class Warga extends Model
         'telp',
         'email',
     ];
+    // Jika Anda ingin menggunakan timestamp
+    public $timestamps = true;
 }

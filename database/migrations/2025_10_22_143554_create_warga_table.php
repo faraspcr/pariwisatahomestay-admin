@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id('warga_id');
             $table->string('no_ktp')->unique();
             $table->string('nama');
-           $table->enum('jenis_kelamin', ['Male', 'Female', 'Other'])->nullable();
+            $table->enum('jenis_kelamin', ['L', 'P', 'Other'])->nullable();
             $table->string('agama');
             $table->string('pekerjaan')->nullable();
             $table->string('telp', 20)->nullable();

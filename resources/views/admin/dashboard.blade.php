@@ -294,6 +294,13 @@
                             <span class="menu-title">UI Elements</span>
                             <i class="menu-arrow"></i>
                         </a>
+                        <!-- Menu Data Warga -->
+<li class="nav-item">
+    <a class="nav-link" href="{{ route('warga.index') }}">
+        <span class="icon-bg"><i class="mdi mdi-account-multiple menu-icon"></i></span>
+        <span class="menu-title">Data Warga</span>
+    </a>
+</li>
                         <div class="collapse" id="ui-basic">
                             <ul class="nav flex-column sub-menu">
                                 <li class="nav-item"> <a class="nav-link"

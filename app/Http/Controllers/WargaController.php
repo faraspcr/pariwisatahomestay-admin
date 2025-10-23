@@ -12,7 +12,7 @@ class WargaController extends Controller
      */
     public function index()
     {
-        $warga = Warga::all();
+        $warga = Warga::all(); // menggunakan pagination
         return view('admin.warga.index', compact('warga'));
     }
 
@@ -21,47 +21,57 @@ class WargaController extends Controller
      */
     public function create()
     {
-		return view('admin.warga.create');
+        return view('admin.warga.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    // app/Http/Controllers/WargaController.php
-public function store(Request $request)
+ public function store(Request $request)
 {
     $validated = $request->validate([
+        'no_ktp' => 'required|string|unique:warga|max:16',
         'nama' => 'required|string|max:255',
-        'nik' => 'required|string|unique:wargas|max:16',
-        'tempat_lahir' => 'required|string|max:255',
-        'tanggal_lahir' => 'required|date',
-        'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
+        'jenis_kelamin' => 'required|in:L,P',
         'agama' => 'required|string|max:255',
         'pekerjaan' => 'required|string|max:255',
-        'alamat' => 'required|string',
-        'no_telepon' => 'required|string|max:15'
+        'telp' => 'required|string|max:15',
+        'email' => 'nullable|email|max:255'
+    ], [
+        // Pesan error dalam bahasa Indonesia
+        'no_ktp.required' => 'Nomor KTP wajib diisi',
+        'no_ktp.unique' => 'Nomor KTP sudah terdaftar',
+        'no_ktp.max' => 'Nomor KTP maksimal 16 digit',
+        'nama.required' => 'Nama lengkap wajib diisi',
+        'jenis_kelamin.required' => 'Jenis kelamin wajib dipilih',
+        'jenis_kelamin.in' => 'Jenis kelamin harus Laki-laki atau Perempuan',
+        'agama.required' => 'Agama wajib dipilih',
+        'pekerjaan.required' => 'Pekerjaan wajib diisi',
+        'telp.required' => 'Nomor telepon wajib diisi',
+        'telp.max' => 'Nomor telepon maksimal 15 digit',
+        'email.email' => 'Format email tidak valid'
     ]);
 
-    Warga::create($validated);
+   Warga::create($validated);
 
     return redirect()->route('warga.index')
         ->with('success', 'Data warga berhasil ditambahkan!');
 }
-
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Warga $warga)
     {
-        //
+        return view('warga.show', compact('warga'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Warga $warga)
     {
-        //
+        $warga = Warga::findOrFail($id);
+        return view('admin.warga.edit', compact('warga'));
     }
 
     /**
@@ -69,7 +79,24 @@ public function store(Request $request)
      */
     public function update(Request $request, string $id)
     {
-        //
+        $warga = Warga::findOrFail($id);
+
+        $validated = $request->validate([
+            'nama' => 'required|string|max:255',
+            'nik' => 'required|string|max:16|unique:warga,nik,' . $id . ',warga_id',
+            'tempat_lahir' => 'required|string|max:255',
+            'tanggal_lahir' => 'required|date',
+            'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
+            'agama' => 'required|string|max:255',
+            'pekerjaan' => 'required|string|max:255',
+            'alamat' => 'required|string',
+            'no_telepon' => 'required|string|max:15'
+        ]);
+
+        $warga->update($validated);
+
+        return redirect()->route('warga.index')
+            ->with('success', 'Data warga berhasil diupdate!');
     }
 
     /**
@@ -77,6 +104,10 @@ public function store(Request $request)
      */
     public function destroy(string $id)
     {
-        //
+        $warga = Warga::findOrFail($id);
+        $warga->delete();
+
+        return redirect()->route('warga.index')
+            ->with('success', 'Data warga berhasil dihapus!');
     }
 }
