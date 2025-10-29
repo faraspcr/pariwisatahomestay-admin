@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\WargaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DestinasiWisataController;
@@ -11,9 +12,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Route untuk auth
-Route::get('/auth', [AuthController::class, 'index'])->name('auth.index');
-Route::post('/auth/login', [AuthController::class, 'login'])->name('auth.login');
+Route::get('/auth/login', [AuthController::class, 'showLoginForm'])->name('auth.login');
+Route::post('/auth/login', [AuthController::class, 'login'])->name('auth.login.submit');
+Route::get('/auth/register', [AuthController::class, 'showRegisterForm'])->name('auth.register');
+Route::post('/auth/register', [AuthController::class, 'register'])->name('auth.register.submit');
 Route::post('/auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
 
 // Route untuk admin
@@ -30,11 +32,7 @@ Route::delete('/warga/{id}', [WargaController::class, 'destroy'])->name('warga.d
 
 
 Route::resource('destinasiwisata', DestinasiWisataController::class);
+// Tambahkan route untuk user
+Route::resource('user', UserController::class);
 
-// Route CRUD DestinasiWisata
-Route::get('/destinasivisata', [DestinasiWisataController::class, 'index'])->name('destinasivisata.index');
-Route::get('/destinasivisata/create', [DestinasiWisataController::class, 'create'])->name('destinasivisata.create');
-Route::post('/destinasivisata', [DestinasiWisataController::class, 'store'])->name('destinasivisata.store');
-Route::get('/destinasivisata/{id}/edit', [DestinasiWisataController::class, 'edit'])->name('destinasivisata.edit');
-Route::put('/destinasivisata/{id}', [DestinasiWisataController::class, 'update'])->name('destinasivisata.update');
-Route::delete('/destinasivisata/{id}', [DestinasiWisataController::class, 'destroy'])->name('destinasivisata.destroy');
+

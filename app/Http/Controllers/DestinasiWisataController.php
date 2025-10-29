@@ -30,23 +30,33 @@ class DestinasiWisataController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nama' => 'required|string|max:255',
-            'deskripsi' => 'required|string',
-            'alamat' => 'required|string|max:500',
-            'rt' => 'required|string|max:3',
-            'rw' => 'required|string|max:3',
+            'nama' => 'required|string|max:255|min:3',
+            'deskripsi' => 'required|string|min:10',
+            'alamat' => 'required|string|max:500|min:10',
+            'rt' => 'required|string|size:3',
+            'rw' => 'required|string|size:3',
             'jam_buka' => 'required|date_format:H:i',
             'tiket' => 'required|numeric|min:0',
-            'kontak' => 'required|string|max:20'
+            'kontak' => 'required|string|min:10|max:15'
         ], [
+            // Pesan error dalam bahasa Indonesia
             'nama.required' => 'Nama destinasi wajib diisi',
+            'nama.min' => 'Nama destinasi minimal 3 karakter',
             'deskripsi.required' => 'Deskripsi wajib diisi',
+            'deskripsi.min' => 'Deskripsi minimal 10 karakter',
             'alamat.required' => 'Alamat wajib diisi',
+            'alamat.min' => 'Alamat minimal 10 karakter',
             'rt.required' => 'RT wajib diisi',
+            'rt.size' => 'RT harus 3 digit',
             'rw.required' => 'RW wajib diisi',
+            'rw.size' => 'RW harus 3 digit',
             'jam_buka.required' => 'Jam buka wajib diisi',
+            'jam_buka.date_format' => 'Format jam buka tidak valid',
             'tiket.required' => 'Harga tiket wajib diisi',
-            'kontak.required' => 'Kontak wajib diisi'
+            'tiket.min' => 'Harga tiket tidak boleh negatif',
+            'kontak.required' => 'Kontak wajib diisi',
+            'kontak.min' => 'Kontak minimal 10 digit',
+            'kontak.max' => 'Kontak maksimal 15 digit'
         ]);
 
         DestinasiWisata::create($validated);
@@ -66,57 +76,52 @@ class DestinasiWisataController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
-{
-    $destinasi = DestinasiWisata::findOrFail($id);
-    return view('admin.destinasiwisata.edit', compact('destinasi'));
-}
+   public function edit(string $id)
+    {
+        $destinasi = DestinasiWisata::findOrFail($id);
+        return view('admin.destinasiwisata.edit', compact('destinasi'));
+    }
+
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
-{
-    $validated = $request->validate([
-        'nama_destinasi' => 'required|string|max:255',
-        'lokasi' => 'required|string|max:255',
-        'deskripsi' => 'required|string',
-        'kategori' => 'required|string|max:255',
-        'harga_tiket' => 'required|numeric|min:0',
-        'jam_operasional' => 'required|string|max:255',
-        'fasilitas' => 'nullable|string',
-        'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
-    ], [
-        'nama_destinasi.required' => 'Nama destinasi wajib diisi',
-        'lokasi.required' => 'Lokasi wajib diisi',
-        'deskripsi.required' => 'Deskripsi wajib diisi',
-        'kategori.required' => 'Kategori wajib dipilih',
-        'harga_tiket.required' => 'Harga tiket wajib diisi',
-        'harga_tiket.numeric' => 'Harga tiket harus berupa angka',
-        'harga_tiket.min' => 'Harga tiket tidak boleh negatif',
-        'jam_operasional.required' => 'Jam operasional wajib diisi',
-        'gambar.image' => 'File harus berupa gambar',
-        'gambar.mimes' => 'Format gambar harus jpeg, png, jpg, atau gif',
-        'gambar.max' => 'Ukuran gambar maksimal 2MB'
-    ]);
+    {
+        $validated = $request->validate([
+            'nama' => 'required|string|max:255|min:3',
+            'deskripsi' => 'required|string|min:10',
+            'alamat' => 'required|string|max:500|min:10',
+            'rt' => 'required|string|size:3',
+            'rw' => 'required|string|size:3',
+            'jam_buka' => 'required|date_format:H:i',
+            'tiket' => 'required|numeric|min:0',
+            'kontak' => 'required|string|min:10|max:15'
+        ], [
+            'nama.required' => 'Nama destinasi wajib diisi',
+            'nama.min' => 'Nama destinasi minimal 3 karakter',
+            'deskripsi.required' => 'Deskripsi wajib diisi',
+            'deskripsi.min' => 'Deskripsi minimal 10 karakter',
+            'alamat.required' => 'Alamat wajib diisi',
+            'alamat.min' => 'Alamat minimal 10 karakter',
+            'rt.required' => 'RT wajib diisi',
+            'rt.size' => 'RT harus 3 digit',
+            'rw.required' => 'RW wajib diisi',
+            'rw.size' => 'RW harus 3 digit',
+            'jam_buka.required' => 'Jam buka wajib diisi',
+            'jam_buka.date_format' => 'Format jam buka tidak valid',
+            'tiket.required' => 'Harga tiket wajib diisi',
+            'tiket.min' => 'Harga tiket tidak boleh negatif',
+            'kontak.required' => 'Kontak wajib diisi',
+            'kontak.min' => 'Kontak minimal 10 digit',
+            'kontak.max' => 'Kontak maksimal 15 digit'
+        ]);
 
-    $destinasi = DestinasiWisata::findOrFail($id);
+        $destinasi = DestinasiWisata::findOrFail($id);
+        $destinasi->update($validated);
 
-    // Handle upload gambar jika ada
-    if ($request->hasFile('gambar')) {
-        // Hapus gambar lama jika ada
-        if ($destinasi->gambar && Storage::exists($destinasi->gambar)) {
-            Storage::delete($destinasi->gambar);
-        }
-
-        // Simpan gambar baru
-        $gambarPath = $request->file('gambar')->store('destinasi-wisata', 'public');
-        $validated['gambar'] = $gambarPath;
+        return redirect()->route('destinasiwisata.index')
+            ->with('success', 'Data destinasi wisata berhasil diperbarui!');
     }
-
-    $destinasi->update($validated);
-
-    return redirect()->route('destinasivisata.index')->with('success', 'Data destinasi wisata berhasil diperbarui');
-}
 
     /**
      * Remove the specified resource from storage.

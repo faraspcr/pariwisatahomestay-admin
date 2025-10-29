@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah Destinasi Wisata - Bina Desa</title>
+    <title>Tambah User - Bina Desa</title>
 
     <!-- {{-- Start CSS --}} -->
     <!-- plugins:css -->
@@ -61,7 +61,7 @@
                             <div class="input-group-prepend bg-transparent">
                                 <i class="input-group-text border-0 mdi mdi-magnify"></i>
                             </div>
-                            <input type="text" class="form-control bg-transparent border-0" placeholder="Cari destinasi...">
+                            <input type="text" class="form-control bg-transparent border-0" placeholder="Cari user...">
                         </div>
                     </form>
                 </div>
@@ -98,7 +98,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link active" href="{{ route('user.index') }}">
                             <span class="icon-bg"><i class="mdi mdi-account menu-icon"></i></span>
                             <span class="menu-title">User</span>
                         </a>
@@ -110,7 +110,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{ route('destinasiwisata.index') }}">
+                        <a class="nav-link" href="{{ route('destinasiwisata.index') }}">
                             <span class="icon-bg"><i class="mdi mdi-map-marker menu-icon"></i></span>
                             <span class="menu-title">Destinasi Wisata</span>
                         </a>
@@ -127,14 +127,14 @@
                     <!-- Header -->
                     <div class="page-header">
                         <h3 class="page-title">
-                            <i class="mdi mdi-map-marker-plus text-primary mr-2"></i>
-                            Tambah Destinasi Wisata
+                            <i class="mdi mdi-account-plus text-primary mr-2"></i>
+                            Tambah User
                         </h3>
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item"><a href="{{ route('destinasiwisata.index') }}">Destinasi Wisata</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Tambah Destinasi</li>
+                                <li class="breadcrumb-item"><a href="{{ route('user.index') }}">Data User</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Tambah User</li>
                             </ol>
                         </nav>
                     </div>
@@ -166,44 +166,33 @@
                         </div>
                     @endif
 
-                    <!-- Form Tambah Destinasi Wisata -->
+                    <!-- Form Tambah User -->
                     <div class="card form-container">
                         <div class="card-body">
-                            <form action="{{ route('destinasiwisata.store') }}" method="POST" id="destinasiForm">
+                            <form action="{{ route('user.store') }}" method="POST" id="userForm">
                                 @csrf
 
                                 <div class="row">
                                     <!-- Kolom Kiri -->
                                     <div class="col-md-6">
-                                        <!-- Nama Destinasi -->
+                                        <!-- Nama -->
                                         <div class="mb-3">
-                                            <label for="nama" class="form-label">Nama Destinasi <span class="required-star">*</span></label>
-                                            <input type="text" class="form-control @error('nama') field-error @enderror"
-                                                   id="nama" name="nama" value="{{ old('nama') }}"
-                                                   placeholder="Masukkan nama destinasi wisata">
-                                            @error('nama')
+                                            <label for="name" class="form-label">Nama <span class="required-star">*</span></label>
+                                            <input type="text" class="form-control @error('name') field-error @enderror"
+                                                   id="name" name="name" value="{{ old('name') }}"
+                                                   placeholder="Masukkan nama lengkap">
+                                            @error('name')
                                                 <div class="error-message">{{ $message }}</div>
                                             @enderror
                                         </div>
 
-                                        <!-- Deskripsi -->
+                                        <!-- Email -->
                                         <div class="mb-3">
-                                            <label for="deskripsi" class="form-label">Deskripsi <span class="required-star">*</span></label>
-                                            <textarea class="form-control @error('deskripsi') field-error @enderror"
-                                                      id="deskripsi" name="deskripsi" rows="3"
-                                                      placeholder="Masukkan deskripsi destinasi">{{ old('deskripsi') }}</textarea>
-                                            @error('deskripsi')
-                                                <div class="error-message">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-
-                                        <!-- Alamat -->
-                                        <div class="mb-3">
-                                            <label for="alamat" class="form-label">Alamat <span class="required-star">*</span></label>
-                                            <textarea class="form-control @error('alamat') field-error @enderror"
-                                                      id="alamat" name="alamat" rows="2"
-                                                      placeholder="Masukkan alamat lengkap">{{ old('alamat') }}</textarea>
-                                            @error('alamat')
+                                            <label for="email" class="form-label">Email <span class="required-star">*</span></label>
+                                            <input type="email" class="form-control @error('email') field-error @enderror"
+                                                   id="email" name="email" value="{{ old('email') }}"
+                                                   placeholder="Masukkan email">
+                                            @error('email')
                                                 <div class="error-message">{{ $message }}</div>
                                             @enderror
                                         </div>
@@ -211,60 +200,24 @@
 
                                     <!-- Kolom Kanan -->
                                     <div class="col-md-6">
-                                        <!-- RT & RW -->
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="rt" class="form-label">RT <span class="required-star">*</span></label>
-                                                    <input type="text" class="form-control @error('rt') field-error @enderror"
-                                                           id="rt" name="rt" value="{{ old('rt') }}"
-                                                           placeholder="Contoh: 001" maxlength="3">
-                                                    @error('rt')
-                                                        <div class="error-message">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="rw" class="form-label">RW <span class="required-star">*</span></label>
-                                                    <input type="text" class="form-control @error('rw') field-error @enderror"
-                                                           id="rw" name="rw" value="{{ old('rw') }}"
-                                                           placeholder="Contoh: 002" maxlength="3">
-                                                    @error('rw')
-                                                        <div class="error-message">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Jam Buka -->
+                                        <!-- Password -->
                                         <div class="mb-3">
-                                            <label for="jam_buka" class="form-label">Jam Buka <span class="required-star">*</span></label>
-                                            <input type="time" class="form-control @error('jam_buka') field-error @enderror"
-                                                   id="jam_buka" name="jam_buka" value="{{ old('jam_buka') }}">
-                                            @error('jam_buka')
+                                            <label for="password" class="form-label">Password <span class="required-star">*</span></label>
+                                            <input type="password" class="form-control @error('password') field-error @enderror"
+                                                   id="password" name="password"
+                                                   placeholder="Masukkan password (min. 8 karakter)">
+                                            @error('password')
                                                 <div class="error-message">{{ $message }}</div>
                                             @enderror
                                         </div>
 
-                                        <!-- Harga Tiket -->
+                                        <!-- Konfirmasi Password -->
                                         <div class="mb-3">
-                                            <label for="tiket" class="form-label">Harga Tiket (Rp) <span class="required-star">*</span></label>
-                                            <input type="number" class="form-control @error('tiket') field-error @enderror"
-                                                   id="tiket" name="tiket" value="{{ old('tiket') }}"
-                                                   placeholder="Masukkan harga tiket" min="0" step="0.01">
-                                            @error('tiket')
-                                                <div class="error-message">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-
-                                        <!-- Kontak -->
-                                        <div class="mb-3">
-                                            <label for="kontak" class="form-label">Kontak <span class="required-star">*</span></label>
-                                            <input type="text" class="form-control @error('kontak') field-error @enderror"
-                                                   id="kontak" name="kontak" value="{{ old('kontak') }}"
-                                                   placeholder="Masukkan nomor kontak" maxlength="15">
-                                            @error('kontak')
+                                            <label for="password_confirmation" class="form-label">Konfirmasi Password <span class="required-star">*</span></label>
+                                            <input type="password" class="form-control @error('password_confirmation') field-error @enderror"
+                                                   id="password_confirmation" name="password_confirmation"
+                                                   placeholder="Ulangi password">
+                                            @error('password_confirmation')
                                                 <div class="error-message">{{ $message }}</div>
                                             @enderror
                                         </div>
@@ -275,11 +228,11 @@
                                 <div class="row mt-4">
                                     <div class="col-12">
                                         <div class="d-flex justify-content-end gap-2">
-                                            <a href="{{ route('destinasiwisata.index') }}" class="btn btn-outline-secondary">
+                                            <a href="{{ route('user.index') }}" class="btn btn-outline-secondary">
                                                 <i class="mdi mdi-arrow-left mr-1"></i>Kembali
                                             </a>
                                             <button type="submit" class="btn btn-primary">
-                                                <i class="mdi mdi-content-save mr-1"></i>Simpan Destinasi
+                                                <i class="mdi mdi-content-save mr-1"></i>Simpan User
                                             </button>
                                         </div>
                                     </div>
@@ -322,20 +275,6 @@
     <!-- endinject -->
 
     <script>
-        // Auto format untuk input RT dan RW (hanya angka)
-        document.getElementById('rt').addEventListener('input', function(e) {
-            this.value = this.value.replace(/[^0-9]/g, '');
-        });
-
-        document.getElementById('rw').addEventListener('input', function(e) {
-            this.value = this.value.replace(/[^0-9]/g, '');
-        });
-
-        // Auto format untuk input kontak (hanya angka dan +)
-        document.getElementById('kontak').addEventListener('input', function(e) {
-            this.value = this.value.replace(/[^0-9+]/g, '');
-        });
-
         // Auto dismiss alerts after 5 seconds
         setTimeout(function() {
             $('.alert').alert('close');
