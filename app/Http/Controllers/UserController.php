@@ -8,9 +8,6 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $data['users'] = User::all();
@@ -18,24 +15,18 @@ class UserController extends Controller
         return view('admin.user.index', $data);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $data['editData'] = null;
-        return view('pages.user.create', $data);
+        return view('admin.user.create', $data);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:100',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:8|confirmed' // required saat create
+            'password' => 'required|min:8|confirmed'
         ]);
 
         User::create([
@@ -44,40 +35,25 @@ class UserController extends Controller
             'password' => Hash::make($request->password)
         ]);
 
-        return redirect()->route('pages.users.index')
+        return redirect()->route('user.index')
             ->with('success', 'User berhasil ditambahkan');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         $data['user'] = User::findOrFail($id);
         $data['editData'] = $data['user'];
-        return view('pages.user.edit', $data);
+        return view('admin.user.edit', $data);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
-         $user = User::findOrFail($id);
+        $user = User::findOrFail($id);
 
-        // password nullable saat update
         $request->validate([
             'name' => 'required|string|max:100',
             'email' => 'required|email|unique:users,email,' . $id,
-            'password' => 'nullable|min:8|confirmed' // nullable saat update
+            'password' => 'nullable|min:8|confirmed'
         ]);
 
         $data = [
@@ -85,26 +61,22 @@ class UserController extends Controller
             'email' => $request->email,
         ];
 
-        // Password hanya diupdate jika diisi
         if ($request->password) {
             $data['password'] = Hash::make($request->password);
         }
 
         $user->update($data);
-
-        return redirect()->route('pages.users.index')
+        return redirect()->route('user.index')
             ->with('success', 'User berhasil diupdate');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         $user = User::findOrFail($id);
         $user->delete();
 
-        return redirect()->route('pages.users.index')
+
+        return redirect()->route('user.index')
             ->with('success', 'User berhasil dihapus');
     }
 }
