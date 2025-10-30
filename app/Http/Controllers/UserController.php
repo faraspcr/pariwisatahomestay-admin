@@ -15,7 +15,7 @@ class UserController extends Controller
     {
         $data['users'] = User::all();
         $data['editData'] = null;
-        return view('pages.user.index', $data);
+        return view('admin.user.index', $data);
     }
 
     /**

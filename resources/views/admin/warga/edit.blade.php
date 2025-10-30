@@ -1,138 +1,9 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Warga - Bina Desa</title>
+@extends('admin.layouts.app')
 
-    <!-- {{-- Start CSS --}} -->
-    <!-- plugins:css -->
-    <link rel="stylesheet" href="{{ asset('assets-admin/vendors/mdi/css/materialdesignicons.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets-admin/vendors/css/vendor.bundle.base.css') }}">
-    <!-- endinject -->
-    <!-- Layout styles -->
-    <link rel="stylesheet" href="{{ asset('assets-admin/css/style.css') }}">
-    <!-- End layout styles -->
-    <style>
-        .form-container {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-        }
-        .form-label {
-            font-weight: 600;
-            color: #2c3e50;
-        }
-        .required-star {
-            color: #e74c3c;
-        }
-        .error-list {
-            background: #f8d7da;
-            border: 1px solid #f5c6cb;
-            border-radius: 5px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-        .error-list ul {
-            margin: 0;
-            padding-left: 20px;
-        }
-        .error-list li {
-            color: #721c24;
-        }
-        .field-error {
-            border-color: #e74c3c !important;
-            background-color: #fdf2f2;
-        }
-        .error-message {
-            color: #e74c3c;
-            font-size: 0.875rem;
-            margin-top: 0.25rem;
-            display: block;
-        }
-    </style>
-</head>
-<body>
-    <div class="container-scroller">
-
-        <!-- {{-- start header --}} -->
-        <!-- partial:partials/_navbar.html -->
-        <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
-            <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-                <a class="navbar-brand brand-logo" href="{{ route('dashboard') }}">
-                    <div style="color: #28a745; font-size: 24px; font-weight: bold; display: flex; align-items: center; justify-content: center; width: 100%;">
-                        <i class="mdi mdi-home-group mr-2"></i>BINA DESA
-                    </div>
-                </a>
-            </div>
-            <div class="navbar-menu-wrapper d-flex align-items-stretch">
-                <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
-                    <span class="mdi mdi-menu"></span>
-                </button>
-                <div class="search-field d-none d-xl-block">
-                    <form class="d-flex align-items-center h-100" action="#">
-                        <div class="input-group">
-                            <div class="input-group-prepend bg-transparent">
-                                <i class="input-group-text border-0 mdi mdi-magnify"></i>
-                            </div>
-                            <input type="text" class="form-control bg-transparent border-0" placeholder="Cari warga...">
-                        </div>
-                    </form>
-                </div>
-                <ul class="navbar-nav navbar-nav-right">
-                    <li class="nav-item nav-profile dropdown">
-                        <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
-                            <div class="nav-profile-img">
-                                <div class="nav-profile-icon">
-                                    <i class="mdi mdi-account" style="font-size: 24px; color: #6c757d;"></i>
-                                </div>
-                            </div>
-                            <div class="nav-profile-text">
-                                <p class="mb-1 text-black">{{ Auth::user()->name ?? 'Admin' }}</p>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-        <!-- partial -->
-        <!-- {{-- end header --}} -->
+@section('content')
 
         <div class="container-fluid page-body-wrapper">
 
-            <!-- {{-- start sidebar --}} -->
-            <!-- partial:partials/_sidebar.html -->
-            <nav class="sidebar sidebar-offcanvas" id="sidebar">
-                <ul class="nav">
-                    <li class="nav-item nav-category">Utama</li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('dashboard') }}">
-                            <span class="icon-bg"><i class="mdi mdi-cube menu-icon"></i></span>
-                            <span class="menu-title">Dashboard</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <span class="icon-bg"><i class="mdi mdi-account menu-icon"></i></span>
-                            <span class="menu-title">User</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{{ route('warga.index') }}">
-                            <span class="icon-bg"><i class="mdi mdi-account-multiple menu-icon"></i></span>
-                            <span class="menu-title">Data Warga</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('destinasiwisata.index') }}">
-                            <span class="icon-bg"><i class="mdi mdi-map-marker menu-icon"></i></span>
-                            <span class="menu-title">Destinasi Wisata</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-            <!-- partial -->
-            <!-- {{-- end sidebar --}} -->
 
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -303,23 +174,6 @@
                 </div>
                 <!-- content-wrapper ends -->
 
-                <!-- {{-- start footer --}} -->
-                <!-- partial:partials/_footer.html -->
-                <footer class="footer">
-                    <div class="footer-inner-wraper">
-                        <div class="d-sm-flex justify-content-center justify-content-sm-between">
-                            <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright © Bina Desa 2023</span>
-                            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center"> Sistem Administrasi Desa</span>
-                        </div>
-                    </div>
-                </footer>
-                <!-- partial -->
-                <!-- {{-- end footer --}} -->
-
-            </div>
-        </div>
-    </div>
-
     <!-- {{-- Start JS --}} -->
     <!-- plugins:js -->
     <script src="{{ asset('assets-admin/vendors/js/vendor.bundle.base.js') }}"></script>
@@ -349,5 +203,4 @@
         }, 5000);
     </script>
     <!-- {{-- End JS --}} -->
-</body>
-</html>
+@endsection
