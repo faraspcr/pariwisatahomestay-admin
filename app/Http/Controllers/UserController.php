@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -13,8 +13,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
-        return view("admin/user/index", compact("users"));
+        $data['users'] = User::all();
+        $data['editData'] = null;
+        return view('pages.user.index', $data);
     }
 
     /**
@@ -22,7 +23,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('admin.user.create');
+        $data['editData'] = null;
+        return view('pages.user.create', $data);
     }
 
     /**
@@ -30,36 +32,28 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'name' => 'required|string|max:100',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:8|confirmed'
-        ], [
-            'name.required' => 'Nama wajib diisi',
-            'name.max' => 'Nama maksimal 100 karakter',
-            'email.required' => 'Email wajib diisi',
-            'email.email' => 'Format email tidak valid',
-            'email.unique' => 'Email sudah terdaftar',
-            'password.required' => 'Password wajib diisi',
-            'password.min' => 'Password minimal 8 karakter',
-            'password.confirmed' => 'Konfirmasi password tidak cocok'
+            'password' => 'required|min:8|confirmed' // required saat create
         ]);
 
-        // Enkripsi password
-        $validated['password'] = Hash::make($validated['password']);
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password)
+        ]);
 
-        User::create($validated);
-
-        return redirect()->route('user.index')
-            ->with('success', 'Data user berhasil ditambahkan!');
+        return redirect()->route('pages.users.index')
+            ->with('success', 'User berhasil ditambahkan');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(string $id)
     {
-        return view('admin.user.show', compact('user'));
+        //
     }
 
     /**
@@ -67,8 +61,9 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
-        $user = User::findOrFail($id);
-        return view('admin.user.edit', compact('user'));
+        $data['user'] = User::findOrFail($id);
+        $data['editData'] = $data['user'];
+        return view('pages.user.edit', $data);
     }
 
     /**
@@ -76,34 +71,29 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $user = User::findOrFail($id);
+         $user = User::findOrFail($id);
 
-        $validated = $request->validate([
+        // password nullable saat update
+        $request->validate([
             'name' => 'required|string|max:100',
             'email' => 'required|email|unique:users,email,' . $id,
-            'password' => 'nullable|min:8|confirmed'
-        ], [
-            'name.required' => 'Nama wajib diisi',
-            'name.max' => 'Nama maksimal 100 karakter',
-            'email.required' => 'Email wajib diisi',
-            'email.email' => 'Format email tidak valid',
-            'email.unique' => 'Email sudah terdaftar',
-            'password.min' => 'Password minimal 8 karakter',
-            'password.confirmed' => 'Konfirmasi password tidak cocok'
+            'password' => 'nullable|min:8|confirmed' // nullable saat update
         ]);
 
-        // Jika password diisi, enkripsi password baru
-        if ($request->filled('password')) {
-            $validated['password'] = Hash::make($validated['password']);
-        } else {
-            // Hapus password dari validated data jika tidak diisi
-            unset($validated['password']);
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+        ];
+
+        // Password hanya diupdate jika diisi
+        if ($request->password) {
+            $data['password'] = Hash::make($request->password);
         }
 
-        $user->update($validated);
+        $user->update($data);
 
-        return redirect()->route('user.index')
-            ->with('success', 'Data user berhasil diperbarui!');
+        return redirect()->route('pages.users.index')
+            ->with('success', 'User berhasil diupdate');
     }
 
     /**
@@ -114,7 +104,7 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $user->delete();
 
-        return redirect()->route('user.index')
-            ->with('success', 'Data user berhasil dihapus!');
+        return redirect()->route('pages.users.index')
+            ->with('success', 'User berhasil dihapus');
     }
 }

@@ -100,11 +100,11 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <span class="icon-bg"><i class="mdi mdi-account menu-icon"></i></span>
-                            <span class="menu-title">User</span>
-                        </a>
-                    </li>
+    <a class="nav-link" href="{{ route('user.index') }}">
+        <span class="icon-bg"><i class="mdi mdi-account menu-icon"></i></span>
+        <span class="menu-title">User</span>
+    </a>
+</li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('warga.index') }}">
                             <span class="icon-bg"><i class="mdi mdi-account-multiple menu-icon"></i></span>
