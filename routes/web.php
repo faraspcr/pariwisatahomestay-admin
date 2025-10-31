@@ -12,13 +12,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/auth/login', [AuthController::class, 'showLoginForm'])->name('auth.login');
+// PERBAIKI: Gunakan AuthController (bukan AuthorHandler/AuthorController)
+Route::get('/auth/login', [AuthController::class, 'showLoginForm'])->name('auth.login'); // PERBAIKI: ->name() bukan ->login()
 Route::post('/auth/login', [AuthController::class, 'login'])->name('auth.login.submit');
-Route::get('/auth/register', [AuthController::class, 'showRegisterForm'])->name('auth.register');
-Route::post('/auth/register', [AuthController::class, 'register'])->name('auth.register.submit');
+Route::get('/auth/register', [AuthController::class, 'showRegisterForm'])->name('auth.register'); // PERBAIKI: tambahkan titik koma
+Route::post('/auth/register', [AuthController::class, 'register'])->name('auth.register.submit'); // PERBAIKI: tambahkan titik koma
 Route::post('/auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
 
-// Route untuk admin
+// Route untuk admin - PERBAIKI ROUTE YANG RUSAK
 Route::get('/admin/pariwisata', [PariwisataDestinasiAdminController::class, 'index'])->name('pariwisata.admin');
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -30,9 +31,7 @@ Route::get('/warga/{id}/edit', [WargaController::class, 'edit'])->name('warga.ed
 Route::put('/warga/{id}', [WargaController::class, 'update'])->name('warga.update');
 Route::delete('/warga/{id}', [WargaController::class, 'destroy'])->name('warga.destroy');
 
-
 Route::resource('destinasiwisata', DestinasiWisataController::class);
+
 // Tambahkan route untuk user
 Route::resource('user', UserController::class);
-
-

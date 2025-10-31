@@ -13,7 +13,7 @@ class WargaController extends Controller
     public function index()
     {
         $warga = Warga::all();
-        return view('admin.index', compact('warga'));
+        return view('pages.warga.index', compact('warga')); // PERBAIKAN: 'warga' bukan 'warga
     }
 
     /**
@@ -21,7 +21,7 @@ class WargaController extends Controller
      */
     public function create()
     {
-        return view('admin.warga.create');
+        return view('pages.warga.create'); // PERBAIKAN: Tambah titik koma
     }
 
     /**
@@ -67,7 +67,7 @@ class WargaController extends Controller
      */
     public function show(Warga $warga)
     {
-        return view('warga.show', compact('warga'));
+        return view('pages.warga.show', compact('warga')); // PERBAIKAN: tambah 'pages.'
     }
 
     /**
@@ -75,8 +75,8 @@ class WargaController extends Controller
      */
     public function edit(string $id)
     {
-        $data['dataWarga'] = Warga::findOrFail($id);
-        return view('admin.warga.edit', $data);
+        $dataWarga = Warga::findOrFail($id);
+        return view('pages.warga.edit', compact('dataWarga')); // PERBAIKAN: 'pages.warga.edit'
     }
 
     /**

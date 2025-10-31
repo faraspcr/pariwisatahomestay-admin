@@ -10,15 +10,13 @@ class UserController extends Controller
 {
     public function index()
     {
-        $data['users'] = User::all();
-        $data['editData'] = null;
-        return view('admin.user.index', $data);
+        $users = User::all();
+        return view('pages.user.index', compact('users')); // TAMBAH 'pages.'
     }
 
     public function create()
     {
-        $data['editData'] = null;
-        return view('admin.user.create', $data);
+        return view('pages.user.create'); // TAMBAH 'pages.'
     }
 
     public function store(Request $request)
@@ -41,9 +39,8 @@ class UserController extends Controller
 
     public function edit(string $id)
     {
-        $data['user'] = User::findOrFail($id);
-        $data['editData'] = $data['user'];
-        return view('admin.user.edit', $data);
+        $user = User::findOrFail($id);
+        return view('pages.user.edit', compact('user')); // TAMBAH 'pages.'
     }
 
     public function update(Request $request, string $id)
@@ -74,7 +71,6 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
         $user->delete();
-
 
         return redirect()->route('user.index')
             ->with('success', 'User berhasil dihapus');
