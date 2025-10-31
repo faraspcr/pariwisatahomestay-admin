@@ -13,7 +13,7 @@ class DestinasiWisataController extends Controller
     public function index()
     {
        $destinasiWisata = DestinasiWisata::paginate(10); // 10 data per halaman
-         return view('admin.destinasiwisata.index', ['destinasiWisata' => $destinasiWisata]);
+         return view('pages.destinasiwisata.index', ['destinasiWisata' => $destinasiWisata]); // PERBAIKAN: 'pages.'
     }
 
     /**
@@ -21,7 +21,7 @@ class DestinasiWisataController extends Controller
      */
     public function create()
     {
-        return view('admin.destinasiwisata.create');
+        return view('pages.destinasiwisata.create'); // PERBAIKAN: 'pages.'
     }
 
     /**
@@ -70,7 +70,7 @@ class DestinasiWisataController extends Controller
      */
     public function show(DestinasiWisata $destinasiWisata)
     {
-        return view('admin.destinasiwisata.show', compact('destinasiWisata'));
+        return view('pages.destinasiwisata.show', compact('destinasiWisata')); // PERBAIKAN: 'pages.'
     }
 
     /**
@@ -79,7 +79,7 @@ class DestinasiWisataController extends Controller
    public function edit(string $id)
     {
         $destinasi = DestinasiWisata::findOrFail($id);
-        return view('admin.destinasiwisata.edit', compact('destinasi'));
+        return view('pages.destinasiwisata.edit', compact('destinasi')); // PERBAIKAN: 'pages.'
     }
 
     /**
