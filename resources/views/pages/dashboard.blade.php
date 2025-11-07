@@ -557,7 +557,7 @@
                         // Scrolling down - hide button
                         whatsappFloat.style.transform = 'translateY(100px)';
                     } else {
-                        // Scrolling up - show button
+
                         whatsappFloat.style.transform = 'translateY(0)';
                     }
                     lastScrollTop = scrollTop;
