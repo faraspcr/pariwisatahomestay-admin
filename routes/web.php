@@ -8,9 +8,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DestinasiWisataController;
 use App\Http\Controllers\PariwisataDestinasiAdminController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
 // PERBAIKI: Gunakan AuthController (bukan AuthorHandler/AuthorController)
 Route::get('/auth/login', [AuthController::class, 'showLoginForm'])->name('auth.login'); // PERBAIKI: ->name() bukan ->login()
@@ -20,8 +18,8 @@ Route::post('/auth/register', [AuthController::class, 'register'])->name('auth.r
 Route::post('/auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
 
 // Route untuk admin - PERBAIKI ROUTE YANG RUSAK
-Route::get('/admin/pariwisata', [PariwisataDestinasiAdminController::class, 'index'])->name('pariwisata.admin');
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+// Route::get('/admin/pariwisata', [PariwisataDestinasiAdminController::class, 'index'])->name('pariwisata.admin');
+// Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 // Route CRUD Warga
 Route::get('/warga', [WargaController::class, 'index'])->name('warga.index');
