@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Warga;
 use App\Models\DestinasiWisata;
+use App\Models\User;
 
 class DashboardController extends Controller
 {
@@ -15,8 +16,16 @@ class DashboardController extends Controller
     {
         $totalWarga = Warga::count();
         $totalDestinasi = DestinasiWisata::count();
+        $totalUser = User::count();
 
-        return view('admin.dashboard', compact('totalWarga', 'totalDestinasi'));
+        // Data untuk WhatsApp button
+        $whatsappData = [
+            'phone_number' => '6281234567890', // Ganti dengan nomor admin
+            'default_message' => 'Halo Admin Bina Desa! Saya perlu bantuan terkait sistem Bina Desa. Bisa dibantu?',
+            'admin_name' => 'Admin Bina Desa'
+        ];
+
+        return view('pages.dashboard', compact('totalWarga', 'totalDestinasi', 'totalUser', 'whatsappData'));
     }
 
     /**
