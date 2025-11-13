@@ -6,7 +6,7 @@
     <title>Data Warga - Bina Desa</title>
 
     {{-- ====================== START CSS ====================== --}}
-    @include('admin.layouts.css')
+    @include('layouts.css')
     {{-- ====================== END CSS ====================== --}}
 
 </head>
@@ -14,16 +14,16 @@
     <div class="container-scroller">
 
         {{-- ====================== START HEADER ====================== --}}
-        @include('admin.layouts.header')
+        @include('layouts.header')
         {{-- ====================== END HEADER ====================== --}}
 
         <div class="container-fluid page-body-wrapper">
 
             {{-- ====================== START SIDEBAR ====================== --}}
-            @include("admin.layouts.sidebar")
+
             {{-- ====================== END SIDEBAR ====================== --}}
 
-           @yield('content');
+           @yield('content')
 
                     <!-- {{-- end main content --}} -->
                     {{-- ====================== END MAIN CONTENT ====================== --}}
@@ -32,7 +32,7 @@
                 <!-- content-wrapper ends -->
 
                 {{-- ====================== START FOOTER ====================== --}}
-               @include('admin.layouts.footer')
+               @include('layouts.footer')
                 {{-- ====================== END FOOTER ====================== --}}
 
             </div>
@@ -40,7 +40,7 @@
     </div>
 
     {{-- ====================== START JS ====================== --}}
-    @include('admin.layouts.js')
+    @include('layouts.js')
     {{-- ====================== END JS ====================== --}}
 </body>
 </html>

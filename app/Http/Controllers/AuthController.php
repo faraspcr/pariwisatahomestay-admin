@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+
     // Show login form
     public function showLoginForm()
     {
@@ -84,7 +85,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-      return redirect('/auth/login')
-            ->with('success', 'Logout berhasil!');
+      return redirect()->route('login')->with('success', 'Logout berhasil!');
     }
 }

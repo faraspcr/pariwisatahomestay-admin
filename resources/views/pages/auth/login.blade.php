@@ -43,6 +43,39 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-left::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.05)"/></svg>');
+            background-size: cover;
+        }
+
+        .brand-section {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .brand-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #10b981, #3b82f6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
         .login-left h1 {
@@ -50,6 +83,7 @@
             margin-bottom: 15px;
             font-weight: 700;
             color: white;
+            text-align: center;
         }
 
         .login-left p {
@@ -57,6 +91,7 @@
             color: #d1d5db;
             line-height: 1.6;
             margin-bottom: 30px;
+            text-align: center;
         }
 
         .features {
@@ -298,8 +333,13 @@
 <div class="login-container">
     <!-- Left Side - Branding -->
     <div class="login-left">
-        <h1>🏝️ PARIWISATA DESA</h1>
-        <p>Selamat datang di sistem administrasi destinasi wisata dan homestay desa.</p>
+        <div class="brand-section">
+            <div class="brand-logo">
+                🏝️
+            </div>
+            <h1>PARIWISATA DESA</h1>
+            <p>Selamat datang di sistem administrasi destinasi wisata dan homestay desa.</p>
+        </div>
 
         <ul class="features">
             <li>Kelola data destinasi wisata</li>
