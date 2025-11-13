@@ -1,4 +1,4 @@
-  {{-- ====================== START CSS ====================== --}}
+{{-- ====================== START CSS ====================== --}}
     <!-- plugins:css -->
     <link rel="stylesheet" href="{{ asset('assets-admin/vendors/mdi/css/materialdesignicons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets-admin/vendors/css/vendor.bundle.base.css') }}">
@@ -34,4 +34,3 @@
         }
     </style>
     {{-- ====================== END CSS ====================== --}}
-

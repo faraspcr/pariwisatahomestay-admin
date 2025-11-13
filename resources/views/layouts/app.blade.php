@@ -20,7 +20,7 @@
         <div class="container-fluid page-body-wrapper">
 
             {{-- ====================== START SIDEBAR ====================== --}}
-
+            @include('layouts.sidebar')
             {{-- ====================== END SIDEBAR ====================== --}}
 
            @yield('content')
