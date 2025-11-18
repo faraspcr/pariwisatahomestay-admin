@@ -27,4 +27,9 @@ class DestinasiWisata extends Model
         'tiket' => 'decimal:2',
         'jam_buka' => 'datetime:H:i'
     ];
+// Relasi ke UlasanWisata
+    public function ulasan()
+    {
+        return $this->hasMany(UlasanWisata::class, 'destinasi_id', 'destinasi_id');
+    }
 }

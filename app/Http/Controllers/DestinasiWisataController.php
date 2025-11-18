@@ -10,11 +10,11 @@ class DestinasiWisataController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-       $destinasiWisata = DestinasiWisata::paginate(10); // 10 data per halaman
-         return view('pages.destinasiwisata.index', ['destinasiWisata' => $destinasiWisata]); // PERBAIKAN: 'pages.'
-    }
+   public function index()
+{
+    $destinasiWisata = DestinasiWisata::orderBy('created_at', 'desc')->get();
+    return view('pages.destinasiwisata.index', compact('destinasiWisata'));
+}
 
     /**
      * Show the form for creating a new resource.

@@ -11,6 +11,7 @@ class Warga extends Model
 
     protected $table = 'warga';
     protected $primaryKey = 'warga_id';
+
     protected $fillable = [
         'no_ktp',
         'nama',
@@ -20,6 +21,12 @@ class Warga extends Model
         'telp',
         'email',
     ];
-    // Jika Anda ingin menggunakan timestamp
+
     public $timestamps = true;
+
+    // Tambahkan relasi ke UlasanWisata
+    public function ulasanWisata()
+    {
+        return $this->hasMany(UlasanWisata::class, 'warga_id', 'warga_id');
+    }
 }

@@ -667,13 +667,13 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('destinasiwisata.index') }}">
                                         <i class="mdi mdi-map-marker menu-icon"></i>
-                                        Pengelolaan Wisata
+                                        Destinasi Wisata
                                     </a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#">
-                                        <i class="mdi mdi-handshake menu-icon"></i>
-                                        Layanan Desa
+                               <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('ulasan_wisata.index') }}">
+                                        <i class="mdi mdi-account-group menu-icon"></i>
+                                       Ulasan Wisata
                                     </a>
                                 </li>
                             </ul>

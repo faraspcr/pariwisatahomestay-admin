@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WargaController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\UlasanWisataController;
 use App\Http\Controllers\DestinasiWisataController;
 use App\Http\Controllers\PariwisataDestinasiAdminController;
 
@@ -34,3 +35,6 @@ Route::resource('destinasiwisata', DestinasiWisataController::class);
 
 // Tambahkan route untuk user
 Route::resource('user', UserController::class);
+
+// routes/web.php
+Route::resource('ulasan_wisata', UlasanWisataController::class);

@@ -172,19 +172,6 @@
                     </table>
                 </div>
 
-                <!-- Pagination -->
-                @if ($destinasiWisata->hasPages())
-                    <div class="d-flex justify-content-between align-items-center mt-4">
-                        <div class="text-muted">
-                            Menampilkan {{ $destinasiWisata->firstItem() }} -
-                            {{ $destinasiWisata->lastItem() }} dari {{ $destinasiWisata->total() }}
-                            destinasi
-                        </div>
-                        <nav>
-                            {{ $destinasiWisata->links() }}
-                        </nav>
-                    </div>
-                @endif
 
                 <!-- Info Summary -->
                 <div class="row mt-4">

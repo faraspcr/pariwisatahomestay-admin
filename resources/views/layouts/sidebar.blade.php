@@ -1,7 +1,7 @@
 {{-- ====================== START SIDEBAR ====================== --}}
-            <!-- {{-- start sidebar --}} -->
-            <!-- partial:partials/_sidebar.html -->
-           <nav class="sidebar sidebar-offcanvas" id="sidebar">
+<!-- {{-- start sidebar --}} -->
+<!-- partial:partials/_sidebar.html -->
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
     <ul class="nav">
         <li class="nav-item nav-category">Utama</li>
         <li class="nav-item">
@@ -28,8 +28,14 @@
                 <span class="menu-title">Destinasi Wisata</span>
             </a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('ulasan_wisata.index') }}" data-no-spa>
+                <span class="icon-bg"><i class="mdi mdi-account-group menu-icon"></i></span>
+                <span class="menu-title">Ulasan Wisata</span>
+            </a>
+        </li>
     </ul>
 </nav>
-            <!-- partial -->
-            <!-- {{-- end sidebar --}} -->
-            {{-- ====================== END SIDEBAR ====================== --}}
+<!-- partial -->
+<!-- {{-- end sidebar --}} -->
+{{-- ====================== END SIDEBAR ====================== --}}
