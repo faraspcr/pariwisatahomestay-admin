@@ -33,11 +33,16 @@
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             border: 1px solid #e5e7eb;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .login-left {
             flex: 1;
-            background: linear-gradient(to bottom right, #1f2937, #374151);
             color: white;
             padding: 50px 40px;
             display: flex;
@@ -47,7 +52,42 @@
             overflow: hidden;
         }
 
-        .login-left::before {
+        .carousel {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .carousel-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .carousel-slide.active {
+            opacity: 1;
+        }
+
+        .carousel-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(31, 41, 55, 0.6), rgba(55, 65, 81, 0.7));
+            z-index: 1;
+        }
+
+        .carousel-overlay::before {
             content: "";
             position: absolute;
             top: 0;
@@ -58,11 +98,70 @@
             background-size: cover;
         }
 
+        .carousel-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            z-index: 3;
+        }
+
+        .carousel-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .carousel-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .carousel-indicators {
+            display: flex;
+            gap: 8px;
+        }
+
+        .carousel-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .carousel-indicator.active {
+            background: white;
+            transform: scale(1.2);
+        }
+
         .brand-section {
             position: relative;
             z-index: 2;
             text-align: center;
             margin-bottom: 30px;
+            animation: slideInFromLeft 0.8s ease-out 0.2s both;
+        }
+
+        @keyframes slideInFromLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
         .brand-logo {
@@ -76,6 +175,14 @@
             justify-content: center;
             font-size: 2.5rem;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            animation: bounceIn 1s ease-out 0.4s both;
+        }
+
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: scale(0.3); }
+            50% { opacity: 1; transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
         }
 
         .login-left h1 {
@@ -84,19 +191,27 @@
             font-weight: 700;
             color: white;
             text-align: center;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .login-left p {
             font-size: 1.1rem;
-            color: #d1d5db;
+            color: #e5e7eb;
             line-height: 1.6;
             margin-bottom: 30px;
             text-align: center;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
         }
 
         .features {
             margin-top: 20px;
             list-style: none;
+            animation: slideInFromRight 0.8s ease-out 0.6s both;
+        }
+
+        @keyframes slideInFromRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
         .features li {
@@ -104,7 +219,19 @@
             display: flex;
             align-items: center;
             font-size: 1rem;
-            color: #e5e7eb;
+            color: #f3f4f6;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.6s ease-out both;
+        }
+
+        .features li:nth-child(1) { animation-delay: 0.8s; }
+        .features li:nth-child(2) { animation-delay: 0.9s; }
+        .features li:nth-child(3) { animation-delay: 1.0s; }
+        .features li:nth-child(4) { animation-delay: 1.1s; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .features li::before {
@@ -120,6 +247,7 @@
             justify-content: center;
             font-weight: bold;
             font-size: 0.9rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         .login-right {
@@ -129,6 +257,7 @@
             flex-direction: column;
             justify-content: center;
             background: white;
+            animation: slideInFromRight 0.8s ease-out 0.4s both;
         }
 
         .login-header {
@@ -152,14 +281,6 @@
             position: relative;
         }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #374151;
-            font-size: 0.95rem;
-        }
-
         .input-with-icon {
             position: relative;
         }
@@ -179,6 +300,7 @@
             outline: none;
             border-color: #3b82f6;
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            transform: translateY(-2px);
         }
 
         .form-control.error {
@@ -204,6 +326,11 @@
             height: 20px;
             color: #9ca3af;
             z-index: 2;
+            transition: color 0.3s ease;
+        }
+
+        .form-control:focus + .input-icon {
+            color: #3b82f6;
         }
 
         .btn-login {
@@ -218,6 +345,23 @@
             cursor: pointer;
             transition: all 0.3s ease;
             margin-top: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-login::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-login:hover::before {
+            left: 100%;
         }
 
         .btn-login:hover {
@@ -235,6 +379,12 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            animation: slideInDown 0.5s ease-out;
+        }
+
+        @keyframes slideInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .flash-success {
@@ -262,6 +412,13 @@
             display: flex;
             align-items: center;
             gap: 5px;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
 
         .success-message {
@@ -302,10 +459,22 @@
             color: #3b82f6;
             text-decoration: none;
             font-weight: 600;
+            position: relative;
         }
 
-        .form-footer a:hover {
-            text-decoration: underline;
+        .form-footer a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #3b82f6;
+            transition: width 0.3s ease;
+        }
+
+        .form-footer a:hover::after {
+            width: 100%;
         }
 
         .password-requirements {
@@ -319,6 +488,7 @@
             align-items: center;
             gap: 8px;
             margin-bottom: 5px;
+            transition: all 0.3s ease;
         }
 
         .requirement.met {
@@ -346,20 +516,43 @@
             .login-header h2 {
                 font-size: 1.75rem;
             }
+
+            .carousel-controls {
+                bottom: 10px;
+            }
         }
     </style>
 </head>
 <body>
 
 <div class="login-container">
-    <!-- Left Side - Branding -->
+    <!-- Left Side - Branding with Carousel -->
     <div class="login-left">
+        <!-- Carousel -->
+        <div class="carousel">
+            <div class="carousel-slide active" style="background-image: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80')"></div>
+            <div class="carousel-slide" style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80')"></div>
+            <div class="carousel-slide" style="background-image: url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80')"></div>
+            <div class="carousel-overlay"></div>
+        </div>
+
+        <!-- Carousel Controls -->
+        <div class="carousel-controls">
+            <button class="carousel-btn prev">❮</button>
+            <div class="carousel-indicators">
+                <div class="carousel-indicator active"></div>
+                <div class="carousel-indicator"></div>
+                <div class="carousel-indicator"></div>
+            </div>
+            <button class="carousel-btn next">❯</button>
+        </div>
+
         <div class="brand-section">
             <div class="brand-logo">
                 🏝️
             </div>
             <h1>PARIWISATA DESA</h1>
-            <p>Selamat datang di sistem administrasi destinasi wisata dan homestay desa.</p>
+            <p>Selamat datang di sistem administrasi Pariwisata dan Homestay desa.</p>
         </div>
 
         <ul class="features">
@@ -467,7 +660,48 @@
 </div>
 
 <script>
+    // Carousel Functionality
     document.addEventListener('DOMContentLoaded', function() {
+        const slides = document.querySelectorAll('.carousel-slide');
+        const indicators = document.querySelectorAll('.carousel-indicator');
+        const prevBtn = document.querySelector('.carousel-btn.prev');
+        const nextBtn = document.querySelector('.carousel-btn.next');
+        let currentSlide = 0;
+
+        function showSlide(index) {
+            // Remove active class from all slides and indicators
+            slides.forEach(slide => slide.classList.remove('active'));
+            indicators.forEach(indicator => indicator.classList.remove('active'));
+
+            // Add active class to current slide and indicator
+            slides[index].classList.add('active');
+            indicators[index].classList.add('active');
+            currentSlide = index;
+        }
+
+        function nextSlide() {
+            let nextIndex = (currentSlide + 1) % slides.length;
+            showSlide(nextIndex);
+        }
+
+        function prevSlide() {
+            let prevIndex = (currentSlide - 1 + slides.length) % slides.length;
+            showSlide(prevIndex);
+        }
+
+        // Event listeners
+        nextBtn.addEventListener('click', nextSlide);
+        prevBtn.addEventListener('click', prevSlide);
+
+        // Add click events to indicators
+        indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => showSlide(index));
+        });
+
+        // Auto slide every 5 seconds
+        setInterval(nextSlide, 5000);
+
+        // Simulasi flash message dari session
         const urlParams = new URLSearchParams(window.location.search);
 
         // Jika ada parameter error

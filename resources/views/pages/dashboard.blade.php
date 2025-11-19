@@ -672,7 +672,7 @@
                                 </li>
                                <li class="nav-item">
                                     <a class="nav-link" href="{{ route('ulasan_wisata.index') }}">
-                                        <i class="mdi mdi-account-group menu-icon"></i>
+                                        <i class="mdi mdi-star-circle menu-icon"></i>
                                        Ulasan Wisata
                                     </a>
                                 </li>
