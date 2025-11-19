@@ -13,9 +13,7 @@ class CreateUlasanWisataDummy extends Seeder
     {
         $faker = Faker::create('id_ID');
 
-        $ulasanData = [];
-
-        // Array komentar dalam Bahasa Indonesia
+        // KOMENTAR BAHASA INDONESIA - TETAP PAKAI INI
         $komentarIndonesia = [
             'Tempatnya sangat bagus dan bersih, cocok untuk keluarga.',
             'Pemandangan yang menakjubkan, worth it untuk dikunjungi.',
@@ -32,23 +30,26 @@ class CreateUlasanWisataDummy extends Seeder
             'Wisata edukatif yang menyenangkan untuk anak-anak.',
             'Tiket masuk murah meriah dengan fasilitas lengkap.',
             'Suasana tenang dan damai, cocok untuk melepas penat.',
-            'Staff sangat helpful dan informatif tentang sejarah tempat ini.',
-            'Area bermain anak perlu diperbaiki dan ditambah.',
-            'Tempat foto yang instagramable dengan spot-spot keren.',
-            'Kebun binatang mini yang menarik untuk anak-anak.',
-            'Kolam renang bersih dan aman untuk berenang keluarga.',
         ];
 
         // Ambil ID destinasi wisata dan warga yang ada
         $destinasiIds = DestinasiWisata::pluck('destinasi_id')->toArray();
         $wargaIds = Warga::pluck('warga_id')->toArray();
 
-        for ($i = 1; $i <= 50; $i++) {
+        // CEK JIKA DATA KOSONG
+        if (empty($destinasiIds) || empty($wargaIds)) {
+            $this->command->error('ERROR: Data destinasi atau warga masih kosong!');
+            return;
+        }
+
+        $ulasanData = [];
+
+        for ($i = 1; $i <= 20; $i++) {
             $ulasanData[] = [
                 'destinasi_id' => $faker->randomElement($destinasiIds),
                 'warga_id'     => $faker->randomElement($wargaIds),
                 'rating'       => $faker->numberBetween(1, 5),
-                'komentar'     => $faker->randomElement($komentarIndonesia),
+                'komentar'     => $faker->randomElement($komentarIndonesia), // INI YANG BIKIN BAHASA INDONESIA
                 'waktu'        => $faker->dateTimeBetween('-1 year', 'now'),
                 'created_at'   => now(),
                 'updated_at'   => now(),
