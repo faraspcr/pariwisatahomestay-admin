@@ -6,7 +6,7 @@
 
         {{-- ====================== START MAIN CONTENT ====================== --}}
 
-        <!-- Header -->
+
         <div class="page-header">
             <h3 class="page-title">
                 <i class="mdi mdi-star text-warning mr-2"></i>
