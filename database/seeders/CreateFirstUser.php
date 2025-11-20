@@ -14,10 +14,10 @@ class CreateFirstUser extends Seeder
      */
     public function run(): void
     {
-        // Create first admin user hanya dengan faras24si@gmail.com
+        // Create first admin user hanya dengan faras@gmail.com
         User::create([
             'name' => 'Admin',
-            'email' => 'faras@gmail.com',
+            'email' => 'zakia@gmail.com',
             'password' => Hash::make('faraszak123')
         ]);
     }
