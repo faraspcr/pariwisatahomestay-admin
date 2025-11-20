@@ -12,7 +12,7 @@ class UlasanWisataController extends Controller
 {
     public function index()
     {
-        $ulasan = UlasanWisata::with(['destinasi', 'warga'])->latest()->paginate(102);
+        $ulasan = UlasanWisata::with(['destinasi', 'warga'])->latest()->paginate(500);
 
         // Stats untuk cards
         $stats = [
