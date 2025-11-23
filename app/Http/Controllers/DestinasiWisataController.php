@@ -10,18 +10,18 @@ class DestinasiWisataController extends Controller
     /**
      * Display a listing of the resource.
      */
-   public function index()
-{
-    $destinasiWisata = DestinasiWisata::orderBy('created_at', 'desc')->get();
-    return view('pages.destinasiwisata.index', compact('destinasiWisata'));
-}
+    public function index()
+    {
+        $destinasiWisata = DestinasiWisata::all();
+        return view('pages.destinasiwisata.index', compact('destinasiWisata'));
+    }
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        return view('pages.destinasiwisata.create'); // PERBAIKAN: 'pages.'
+        return view('pages.destinasiwisata.create');
     }
 
     /**
@@ -39,7 +39,6 @@ class DestinasiWisataController extends Controller
             'tiket' => 'required|numeric|min:0',
             'kontak' => 'required|string|min:10|max:15'
         ], [
-            // Pesan error dalam bahasa Indonesia
             'nama.required' => 'Nama destinasi wajib diisi',
             'nama.min' => 'Nama destinasi minimal 3 karakter',
             'deskripsi.required' => 'Deskripsi wajib diisi',
@@ -70,16 +69,16 @@ class DestinasiWisataController extends Controller
      */
     public function show(DestinasiWisata $destinasiWisata)
     {
-        return view('pages.destinasiwisata.show', compact('destinasiWisata')); // PERBAIKAN: 'pages.'
+        return view('pages.destinasiwisata.show', compact('destinasiWisata'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-   public function edit(string $id)
+    public function edit(string $id)
     {
         $destinasi = DestinasiWisata::findOrFail($id);
-        return view('pages.destinasiwisata.edit', compact('destinasi')); // PERBAIKAN: 'pages.'
+        return view('pages.destinasiwisata.edit', compact('destinasi'));
     }
 
     /**

@@ -6,7 +6,6 @@
 
         {{-- ====================== START MAIN CONTENT ====================== --}}
 
-
         <div class="page-header">
             <h3 class="page-title">
                 <i class="mdi mdi-star text-warning mr-2"></i>
@@ -119,23 +118,50 @@
         <!-- Card Data Ulasan Wisata -->
         <div class="card">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h4 class="card-title mb-0">Data Ulasan Wisata</h4>
-                    <div class="d-flex">
-                        <input type="text" class="form-control form-control-sm mr-2" placeholder="Cari ulasan..." id="searchInput" style="width: 200px;">
-                        <select class="form-control form-control-sm" id="ratingFilter" style="width: 150px;">
-                            <option value="">Semua Rating</option>
-                            <option value="5">⭐ 5 Bintang</option>
-                            <option value="4">⭐ 4 Bintang</option>
-                            <option value="3">⭐ 3 Bintang</option>
-                            <option value="2">⭐ 2 Bintang</option>
-                            <option value="1">⭐ 1 Bintang</option>
-                        </select>
-                        <a href="{{ route('ulasan_wisata.create') }}" class="btn btn-primary btn-sm ml-2">
-                            <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah Ulasan
-                        </a>
+                <h4 class="card-title mb-4">Data Ulasan Wisata</h4>
+
+                <!-- Form Filter dan Search -->
+                <form method="GET" action="{{ route('ulasan_wisata.index') }}">
+                    <div class="row mb-4">
+                        <!-- Filter Rating -->
+                        <div class="col-md-3">
+                            <select name="rating" onchange="this.form.submit()" class="form-control form-control-sm filter-rating">
+                                <option value="">Semua Rating</option>
+                                <option value="5" {{ request('rating') == '5' ? 'selected' : '' }}>⭐ 5 Bintang</option>
+                                <option value="4" {{ request('rating') == '4' ? 'selected' : '' }}>⭐ 4 Bintang</option>
+                                <option value="3" {{ request('rating') == '3' ? 'selected' : '' }}>⭐ 3 Bintang</option>
+                                <option value="2" {{ request('rating') == '2' ? 'selected' : '' }}>⭐ 2 Bintang</option>
+                                <option value="1" {{ request('rating') == '1' ? 'selected' : '' }}>⭐ 1 Bintang</option>
+                            </select>
+                        </div>
+
+                        <!-- Form Search -->
+                        <div class="col-md-3">
+                            <div class="input-group search-group">
+                                <input type="text"
+                                       name="search"
+                                       class="form-control form-control-sm search-input"
+                                       placeholder="Cari ulasan wisata..."
+                                       value="{{ request('search') }}">
+                                <button type="submit" class="input-group-text search-btn">
+                                    <i class="mdi mdi-magnify"></i>
+                                </button>
+                                @if(request("search"))
+                                <a href="{{ request()->fullUrlWithQuery(['search'=> null]) }}" class="input-group-text clear-btn">
+                                    Clear
+                                </a>
+                                @endif
+                            </div>
+                        </div>
+
+                        <!-- Tombol Tambah -->
+                        <div class="col-md-6 text-right">
+                            <a href="{{ route('ulasan_wisata.create') }}" class="btn btn-primary btn-sm add-btn">
+                                <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah Ulasan
+                            </a>
+                        </div>
                     </div>
-                </div>
+                </form>
 
                 <div class="table-responsive">
                     <table class="table table-striped table-hover">
@@ -153,9 +179,9 @@
                         </thead>
                         <tbody>
                             @forelse($ulasan as $item)
-                            <tr>
+                            <tr class="table-row">
                                 <td class="text-center">
-                                    <span class="badge badge-info">{{ $loop->iteration }}</span>
+                                    <span class="badge badge-info">{{ ($ulasan->currentPage() - 1) * $ulasan->perPage() + $loop->iteration }}</span>
                                 </td>
                                 <td>
                                     <div class="d-flex align-items-center">
@@ -185,22 +211,22 @@
                                             <i class="mdi mdi-star {{ $i <= $item->rating ? 'text-warning' : 'text-light' }}" style="font-size: 16px;"></i>
                                         @endfor
                                     </div>
-                                    <span class="badge badge-warning">{{ $item->rating }}/5</span>
+                                    <span class="badge badge-warning rating-number">{{ $item->rating }}/5</span>
                                 </td>
                                 <!-- Kolom Komentar -->
-<td>
-    <div class="comment-text" style="white-space: pre-line; word-wrap: break-word; line-height: 1.5; max-width: 300px;">
-        {{ $item->komentar }}
-    </div>
-    @if(strlen($item->komentar) > 150)
-    <button class="btn btn-link btn-sm p-0 mt-1 read-more-btn"
-            data-comment="{{ $item->komentar }}"
-            data-toggle="modal"
-            data-target="#commentModal">
-        <small><i class="mdi mdi-chevron-double-down mr-1"></i>selengkapnya</small>
-    </button>
-    @endif
-</td>
+                                <td>
+                                    <div class="comment-text" style="white-space: pre-line; word-wrap: break-word; line-height: 1.5; max-width: 300px;">
+                                        {{ $item->komentar }}
+                                    </div>
+                                    @if(strlen($item->komentar) > 150)
+                                    <button class="btn btn-link btn-sm p-0 mt-1 read-more-btn"
+                                            data-comment="{{ $item->komentar }}"
+                                            data-toggle="modal"
+                                            data-target="#commentModal">
+                                        <small><i class="mdi mdi-chevron-double-down mr-1"></i>selengkapnya</small>
+                                    </button>
+                                    @endif
+                                </td>
                                 <td class="text-center">
                                     <small class="text-muted">
                                         {{ $item->waktu->format('d M Y') }}<br>
@@ -218,14 +244,14 @@
                                         ];
                                         $status = $statusConfig[$item->rating] ?? ['class' => 'badge-secondary', 'text' => '-'];
                                     @endphp
-                                    <span class="badge {{ $status['class'] }} py-2 px-3">
+                                    <span class="badge status-badge {{ $status['class'] }} py-2 px-3">
                                         {{ $status['text'] }}
                                     </span>
                                 </td>
                                 <td class="text-center action-buttons">
                                     <div class="btn-group" role="group">
                                         <a href="{{ route('ulasan_wisata.edit', $item->ulasan_id) }}"
-                                           class="btn btn-outline-info btn-sm"
+                                           class="btn btn-outline-info btn-sm action-btn"
                                            data-toggle="tooltip"
                                            title="Edit Data">
                                             <i class="mdi mdi-pencil"></i>
@@ -234,7 +260,7 @@
                                             @csrf
                                             @method("DELETE")
                                             <button type="submit"
-                                                    class="btn btn-outline-danger btn-sm"
+                                                    class="btn btn-outline-danger btn-sm action-btn"
                                                     data-toggle="tooltip"
                                                     title="Hapus Data"
                                                     onclick="return confirm('Apakah Anda yakin ingin menghapus ulasan ini?')">
@@ -247,11 +273,11 @@
                             @empty
                             <tr>
                                 <td colspan="8" class="text-center py-5">
-                                    <div class="d-flex flex-column align-items-center">
+                                    <div class="d-flex flex-column align-items-center empty-state">
                                         <i class="mdi mdi-star-off-outline text-muted" style="font-size: 64px;"></i>
                                         <h4 class="text-muted mt-3">Belum ada data ulasan</h4>
                                         <p class="text-muted">Silakan tambah data ulasan terlebih dahulu</p>
-                                        <a href="{{ route('ulasan_wisata.create') }}" class="btn btn-primary mt-2">
+                                        <a href="{{ route('ulasan_wisata.create') }}" class="btn btn-primary mt-2 add-btn">
                                             <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah Ulasan Pertama
                                         </a>
                                     </div>
@@ -262,14 +288,19 @@
                     </table>
                 </div>
 
+                <!-- PAGINATION -->
+                <div class="mt-4">
+                    {{ $ulasan->links('pagination::bootstrap-5') }}
+                </div>
+
                 <!-- Info Summary -->
                 <div class="row mt-4">
                     <div class="col-md-12">
-                        <div class="alert alert-info">
+                        <div class="alert alert-info summary-card">
                             <div class="d-flex align-items-center">
                                 <i class="mdi mdi-information-outline mr-2" style="font-size: 24px;"></i>
                                 <div>
-                                    <h6 class="alert-heading mb-1">Total Data Ulasan: {{ $ulasan->count() }}</h6>
+                                    <h6 class="alert-heading mb-1">Total Data Ulasan: {{ $totalUlasan }}</h6>
                                     <p class="mb-0">Data ulasan wisata yang terdaftar dalam sistem Bina Desa</p>
                                 </div>
                             </div>
@@ -294,7 +325,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p id="fullComment"></p>
+                <p id="fullComment" style="white-space: pre-line;"></p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
@@ -453,18 +484,226 @@
         animation: pulse-glow 2s infinite;
     }
 
+    /* ==================== ANIMASI UNTUK SEARCH & FILTER ==================== */
+
+    /* Animasi untuk Filter Rating */
+    .filter-rating {
+        border: 1px solid #ddd;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+    }
+
+    .filter-rating:focus {
+        border-color: #4e73df;
+        box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+        transform: translateY(-1px);
+    }
+
+    .filter-rating:hover {
+        border-color: #4e73df;
+        transform: translateY(-1px);
+    }
+
+    /* Animasi untuk Search Input Group */
+    .search-group {
+        transition: all 0.3s ease;
+        border-radius: 8px;
+    }
+
+    .search-group:focus-within {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .search-input:focus {
+        border-color: #4e73df;
+        box-shadow: none;
+    }
+
+    /* Animasi untuk Search Button */
+    .search-btn {
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .search-btn:hover {
+        background-color: #4e73df !important;
+        color: white !important;
+        transform: scale(1.05);
+    }
+
+    /* Animasi untuk Clear Button */
+    .clear-btn {
+        transition: all 0.3s ease;
+    }
+
+    .clear-btn:hover {
+        background-color: #f45c4e !important;
+        color: white !important;
+        transform: scale(1.05);
+    }
+
+    /* Animasi untuk Tombol Tambah */
+    .add-btn {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .add-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(78, 115, 223, 0.4);
+    }
+
+    .add-btn:active {
+        transform: translateY(0);
+    }
+
+    /* ==================== ANIMASI UNTUK PAGINATION ==================== */
+    .pagination {
+        margin-top: 2rem;
+    }
+
+    .page-link {
+        border: none;
+        margin: 0 3px;
+        border-radius: 8px !important;
+        transition: all 0.3s ease;
+        color: #6e707e;
+        font-weight: 500;
+    }
+
+    .page-link:hover {
+        background-color: #4e73df !important;
+        color: white !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(78, 115, 223, 0.3);
+    }
+
+    .page-item.active .page-link {
+        background: linear-gradient(135deg, #4e73df, #224abe) !important;
+        border: none;
+        transform: scale(1.05);
+        box-shadow: 0 4px 15px rgba(78, 115, 223, 0.4);
+    }
+
+    .page-item.disabled .page-link {
+        opacity: 0.5;
+        transform: none;
+        box-shadow: none;
+    }
+
+    /* ==================== ANIMASI UNTUK TABLE ==================== */
+    .table-row {
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .table-row:hover {
+        background-color: rgba(78, 115, 223, 0.05) !important;
+        transform: translateX(5px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Animasi untuk Action Buttons */
+    .action-btn {
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        border-radius: 6px;
+    }
+
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .action-btn.btn-outline-info:hover {
+        background-color: #36b9cc !important;
+        border-color: #36b9cc !important;
+        color: white !important;
+    }
+
+    .action-btn.btn-outline-danger:hover {
+        background-color: #e74a3b !important;
+        border-color: #e74a3b !important;
+        color: white !important;
+    }
+
+    /* Animasi untuk Rating */
+    .rating-badge {
+        transition: all 0.3s ease;
+    }
+
+    .rating-badge:hover {
+        transform: scale(1.1);
+    }
+
+    .rating-number {
+        transition: all 0.3s ease;
+    }
+
+    .rating-number:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+    }
+
+    /* Animasi untuk Status Badge */
+    .status-badge {
+        transition: all 0.3s ease;
+    }
+
+    .status-badge:hover {
+        transform: scale(1.05);
+    }
+
+    /* Animasi untuk Empty State */
+    .empty-state {
+        animation: fadeInUp 0.8s ease;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Animasi untuk Summary Card */
+    .summary-card {
+        transition: all 0.3s ease;
+        border-radius: 10px;
+    }
+
+    .summary-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Loading Animation untuk Search */
+    @keyframes pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(78, 115, 223, 0.4);
+        }
+        70% {
+            box-shadow: 0 0 0 10px rgba(78, 115, 223, 0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(78, 115, 223, 0);
+        }
+    }
+
+    .search-loading {
+        animation: pulse 1.5s infinite;
+    }
+
     /* Existing styles remain the same */
     .rating-badge .mdi.text-light {
         color: #e4e6ef !important;
-    }
-    .table-hover tbody tr:hover {
-        background-color: rgba(41, 98, 255, 0.05);
-        transform: translateY(-1px);
-        transition: all 0.3s ease;
-    }
-    .action-buttons .btn {
-        border-radius: 8px;
-        margin: 2px;
     }
     .comment-text {
         max-width: 200px;
@@ -474,32 +713,9 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Read more functionality
-    document.querySelectorAll('.read-more').forEach(function(element) {
+    document.querySelectorAll('.read-more-btn').forEach(function(element) {
         element.addEventListener('click', function() {
             document.getElementById('fullComment').textContent = this.getAttribute('data-comment');
-            $('#commentModal').modal('show');
-        });
-    });
-
-    // Search functionality
-    document.getElementById('searchInput').addEventListener('input', function(e) {
-        const searchTerm = e.target.value.toLowerCase();
-        document.querySelectorAll('table tbody tr').forEach(function(row) {
-            const text = row.textContent.toLowerCase();
-            row.style.display = text.includes(searchTerm) ? '' : 'none';
-        });
-    });
-
-    // Rating filter functionality
-    document.getElementById('ratingFilter').addEventListener('change', function(e) {
-        const rating = e.target.value;
-        document.querySelectorAll('table tbody tr').forEach(function(row) {
-            if (!rating) {
-                row.style.display = '';
-                return;
-            }
-            const rowRating = row.querySelector('.badge-warning')?.textContent?.split('/')[0];
-            row.style.display = rowRating === rating ? '' : 'none';
         });
     });
 
@@ -527,6 +743,81 @@ document.addEventListener('DOMContentLoaded', function() {
         card.style.transform = 'translateY(20px)';
         card.style.transition = 'all 0.6s ease-out';
         observer.observe(card);
+    });
+
+    // ==================== ANIMASI UNTUK SEARCH & FILTER ====================
+
+    // Animasi untuk search loading
+    const searchForm = document.querySelector('form[method="GET"]');
+    const searchInput = document.querySelector('.search-input');
+    const searchButton = document.querySelector('.search-btn');
+
+    if (searchForm && searchButton) {
+        searchForm.addEventListener('submit', function(e) {
+            if (searchInput.value.trim() !== '') {
+                searchButton.classList.add('search-loading');
+                const originalHTML = searchButton.innerHTML;
+                searchButton.innerHTML = '<i class="mdi mdi-loading mdi-spin mr-1"></i>';
+
+                // Reset setelah 2 detik (fallback)
+                setTimeout(() => {
+                    searchButton.classList.remove('search-loading');
+                    searchButton.innerHTML = originalHTML;
+                }, 2000);
+            }
+        });
+    }
+
+    // Animasi hover untuk pagination
+    const paginationLinks = document.querySelectorAll('.page-link');
+    paginationLinks.forEach(link => {
+        link.addEventListener('mouseenter', function() {
+            if (!this.parentElement.classList.contains('active') && !this.parentElement.classList.contains('disabled')) {
+                this.style.transform = 'translateY(-2px)';
+            }
+        });
+
+        link.addEventListener('mouseleave', function() {
+            if (!this.parentElement.classList.contains('active')) {
+                this.style.transform = 'translateY(0)';
+            }
+        });
+    });
+
+    // Animasi untuk filter select
+    const ratingSelect = document.querySelector('.filter-rating');
+    if (ratingSelect) {
+        ratingSelect.addEventListener('change', function() {
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 150);
+        });
+    }
+
+    // Animasi untuk table rows saat load
+    const tableRows = document.querySelectorAll('.table-row');
+    tableRows.forEach((row, index) => {
+        row.style.opacity = '0';
+        row.style.transform = 'translateX(-20px)';
+
+        setTimeout(() => {
+            row.style.transition = 'all 0.5s ease';
+            row.style.opacity = '1';
+            row.style.transform = 'translateX(0)';
+        }, index * 100);
+    });
+
+    // Animasi untuk rating stars
+    const ratingBadges = document.querySelectorAll('.rating-badge');
+    ratingBadges.forEach(badge => {
+        badge.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.1)';
+        });
+
+        badge.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1)';
+        });
     });
 });
 </script>

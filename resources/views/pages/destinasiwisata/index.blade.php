@@ -57,7 +57,7 @@
                             <tr>
                                 <th class="text-center">#</th>
                                 <th>Nama Destinasi</th>
-                                <th>Deskripsi</th>
+                                <th style="min-width: 250px;">Deskripsi</th>
                                 <th>Lokasi</th>
                                 <th class="text-center">RT/RW</th>
                                 <th class="text-center">Jam Buka</th>
@@ -87,7 +87,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="description-text" style="max-width: 200px;">
+                                        <div class="description-text" style="white-space: pre-line; max-width: 250px; line-height: 1.4;">
                                             {{ $item->deskripsi }}
                                         </div>
                                     </td>
@@ -225,10 +225,19 @@
     }
 
     .description-text {
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
+        white-space: pre-line;
+        word-wrap: break-word;
+        line-height: 1.4;
+    }
+
+    /* Memastikan tabel responsive */
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    /* Menambahkan padding untuk readability yang lebih baik */
+    .description-text {
+        padding: 4px 0;
     }
 </style>
 
