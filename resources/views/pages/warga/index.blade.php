@@ -47,10 +47,10 @@
 
                 <!-- Form Filter dan Search -->
                 <form method="GET" action="{{ route('warga.index') }}">
-                    <div class="row mb-4 align-items-center">
+                    <div class="row mb-4">
                         <!-- Filter Gender -->
                         <div class="col-md-3">
-                            <select name="jenis_kelamin" onchange="this.form.submit()" class="form-control filter-gender">
+                            <select name="jenis_kelamin" onchange="this.form.submit()" class="form-control form-control-sm filter-rating">
                                 <option value="">Semua Gender</option>
                                 <option value="L" {{ request('jenis_kelamin') == 'L' ? 'selected' : '' }}>Laki-laki</option>
                                 <option value="P" {{ request('jenis_kelamin') == 'P' ? 'selected' : '' }}>Perempuan</option>
@@ -58,11 +58,11 @@
                         </div>
 
                         <!-- Form Search -->
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="input-group search-group">
                                 <input type="text"
                                        name="search"
-                                       class="form-control search-input"
+                                       class="form-control form-control-sm search-input"
                                        placeholder="Cari data warga..."
                                        value="{{ request('search') }}">
                                 <button type="submit" class="input-group-text search-btn">
@@ -77,8 +77,8 @@
                         </div>
 
                         <!-- Tombol Tambah -->
-                        <div class="col-md-5 text-right">
-                            <a href="{{ route('warga.create') }}" class="btn btn-primary add-btn">
+                        <div class="col-md-6 text-right">
+                            <a href="{{ route('warga.create') }}" class="btn btn-primary btn-sm add-btn">
                                 <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah Warga
                             </a>
                         </div>
@@ -224,38 +224,52 @@
 </div>
 
 <style>
-/* ==================== STYLING UNTUK FILTER DAN SEARCH ==================== */
+/* ==================== ANIMASI UNTUK SEARCH & FILTER ==================== */
 
-/* Styling untuk Filter Gender - UKURAN SAMA PERSIS */
-.filter-gender {
-    border: 1px solid #d1d3e2;
-    transition: all 0.3s ease;
-    border-radius: 6px;
-    height: 42px;
-    font-size: 14px;
-    width: 100%;
-    background-color: #fff;
-    padding: 8px 12px;
-    line-height: 1.5;
+/* SAMAKAN UKURAN FILTER DAN SEARCH */
+.filter-rating,
+.search-input {
+    height: 38px !important; /* Sama tinggi */
+    font-size: 14px; /* Sama ukuran font */
+    border-radius: 8px; /* Sama border radius */
 }
 
-.filter-gender:focus {
+/* Pastikan input group memiliki tinggi yang konsisten */
+.search-group {
+    height: 38px; /* Sama tinggi dengan filter */
+}
+
+/* Styling untuk tombol search dan clear - SAMAKAN TINGGI */
+.search-btn,
+.clear-btn {
+    height: 38px !important; /* Sama tinggi dengan input */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 12px;
+}
+
+/* Animasi untuk Filter Gender */
+.filter-rating {
+    border: 1px solid #ddd;
+    transition: all 0.3s ease;
+}
+
+.filter-rating:focus {
     border-color: #4e73df;
     box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
     transform: translateY(-1px);
 }
 
-.filter-gender:hover {
+.filter-rating:hover {
     border-color: #4e73df;
     transform: translateY(-1px);
 }
 
-/* Styling untuk Search Group - UKURAN SAMA PERSIS */
+/* Animasi untuk Search Input Group */
 .search-group {
     transition: all 0.3s ease;
-    border-radius: 6px;
-    width: 100%;
-    height: 42px;
+    border-radius: 8px;
 }
 
 .search-group:focus-within {
@@ -263,71 +277,38 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Styling untuk Search Input - UKURAN SAMA PERSIS */
-.search-input {
-    border: 1px solid #d1d3e2;
-    border-right: none;
-    border-radius: 6px 0 0 6px;
-    height: 42px;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    padding: 8px 12px;
-    line-height: 1.5;
-    flex: 1;
-}
-
 .search-input:focus {
     border-color: #4e73df;
     box-shadow: none;
-    border-right: none;
 }
 
-/* Styling untuk Search Button - UKURAN SAMA PERSIS */
+/* Animasi untuk Search Button */
 .search-btn {
     transition: all 0.3s ease;
     cursor: pointer;
-    border: 1px solid #d1d3e2;
+    border: 1px solid #ddd;
     border-left: none;
-    background-color: #f8f9fc;
-    height: 42px;
-    width: 45px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0 6px 6px 0;
-    padding: 0;
+    background-color: #f8f9fa;
 }
 
 .search-btn:hover {
     background-color: #4e73df !important;
     color: white !important;
-    border-color: #4e73df;
     transform: scale(1.05);
 }
 
-/* Styling untuk Clear Button */
+/* Animasi untuk Clear Button */
 .clear-btn {
     transition: all 0.3s ease;
-    border: 1px solid #d1d3e2;
+    border: 1px solid #ddd;
     border-left: none;
-    background-color: #f8f9fc;
-    height: 42px;
-    width: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    color: #6e707e;
-    text-decoration: none;
-    border-radius: 0;
+    background-color: #f8f9fa;
 }
 
 .clear-btn:hover {
-    background-color: #e74a3b !important;
+    background-color: #f45c4e !important;
     color: white !important;
-    border-color: #e74a3b;
     transform: scale(1.05);
-    text-decoration: none;
 }
 
 /* Animasi untuk Tombol Tambah */
@@ -335,10 +316,6 @@
     position: relative;
     overflow: hidden;
     transition: all 0.3s ease;
-    height: 42px;
-    display: flex;
-    align-items: center;
-    padding: 8px 16px;
 }
 
 .add-btn:hover {
@@ -348,23 +325,6 @@
 
 .add-btn:active {
     transform: translateY(0);
-}
-
-/* Konsistensi tinggi semua elemen form */
-.form-control {
-    height: 42px !important;
-}
-
-.btn {
-    height: 42px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-}
-
-/* Pastikan semua elemen sejajar */
-.row.align-items-center {
-    min-height: 50px;
 }
 
 /* ==================== ANIMASI UNTUK PAGINATION ==================== */
@@ -528,7 +488,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Animasi untuk filter select
-    const genderSelect = document.querySelector('.filter-gender');
+    const genderSelect = document.querySelector('.filter-rating');
     if (genderSelect) {
         genderSelect.addEventListener('change', function() {
             this.style.transform = 'scale(0.95)';

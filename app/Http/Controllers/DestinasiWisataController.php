@@ -10,9 +10,19 @@ class DestinasiWisataController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $destinasiWisata = DestinasiWisata::all();
+        // Kolom yang bisa di-filter
+    $filterableColumns = ['jam_buka'];
+
+    // Kolom yang bisa di-search (TAMBAH 'tiket')
+    $searchableColumns = ['nama', 'deskripsi', 'alamat', 'kontak', 'tiket'];
+
+        // Query dengan filter DAN search
+        $destinasiWisata = DestinasiWisata::filter($request, $filterableColumns)
+            ->search($request, $searchableColumns)
+            ->paginate(10)
+            ->onEachSide(2);
         return view('pages.destinasiwisata.index', compact('destinasiWisata'));
     }
 

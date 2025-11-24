@@ -8,15 +8,29 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::all();
-        return view('pages.user.index', compact('users')); // TAMBAH 'pages.'
+        // Kolom yang bisa di-filter - PAKAI created_at untuk urutan bergabung
+        $filterableColumns = ['urutan'];
+
+        // Kolom yang bisa di-search
+        $searchableColumns = ['name', 'email', 'id'];
+
+        // Query dengan filter DAN search
+        $users = User::filter($request, $filterableColumns)
+            ->search($request, $searchableColumns)
+            ->paginate(10)
+            ->onEachSide(2);
+
+        return view('pages.user.index', compact('users'));
     }
+
+    // ... method lainnya tetap sama
+
 
     public function create()
     {
-        return view('pages.user.create'); // TAMBAH 'pages.'
+        return view('pages.user.create');
     }
 
     public function store(Request $request)
@@ -40,7 +54,7 @@ class UserController extends Controller
     public function edit(string $id)
     {
         $user = User::findOrFail($id);
-        return view('pages.user.edit', compact('user')); // TAMBAH 'pages.'
+        return view('pages.user.edit', compact('user'));
     }
 
     public function update(Request $request, string $id)
