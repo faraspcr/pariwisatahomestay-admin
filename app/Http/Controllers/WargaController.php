@@ -16,7 +16,7 @@ class WargaController extends Controller
     $filterableColumns = ['jenis_kelamin'];
 
     // KOLOM YANG DIPERBAIKI: ganti 'telepon' menjadi 'telp'
-    $searchableColumns = ['nama', 'email', 'telp', 'agama']; // PERBAIKAN DI SINI
+    $searchableColumns = ['nama', 'email', 'telp', 'agama'];
 
     // Query dengan filter DAN search
     $warga = Warga::filter($request, $filterableColumns)
@@ -31,7 +31,7 @@ class WargaController extends Controller
      */
     public function create()
     {
-        return view('pages.warga.create'); // PERBAIKAN: Tambah titik koma
+        return view('pages.warga.create');
     }
 
     /**
