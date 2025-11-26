@@ -48,7 +48,7 @@ class CreateDestinasiWisataDummy extends Seeder
             'Jl. Imam Bonjol No. 44', 'Jl. Pattimura No. 55', 'Jl. Antasari No. 66'
         ];
 
-        for ($i = 1; $i <= 30; $i++) {
+        for ($i = 1; $i <= 100; $i++) {
             $namaDestinasi = $faker->randomElement($namaWisata) . ' ' . $faker->randomElement($kotaIndonesia);
 
             $destinasiData[] = [

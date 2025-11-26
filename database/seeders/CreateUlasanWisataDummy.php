@@ -44,7 +44,7 @@ class CreateUlasanWisataDummy extends Seeder
 
         $ulasanData = [];
 
-        for ($i = 1; $i <= 20; $i++) {
+       for ($i = 1; $i <= 100; $i++) {
             $ulasanData[] = [
                 'destinasi_id' => $faker->randomElement($destinasiIds),
                 'warga_id'     => $faker->randomElement($wargaIds),
