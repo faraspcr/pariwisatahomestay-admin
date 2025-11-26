@@ -13,7 +13,7 @@ class CreateWargaDummy extends Seeder
 
         $wargaData = [];
 
-        for ($i = 1; $i <= 50; $i++) {
+        for ($i = 1; $i <= 100; $i++) {
             $gender = $faker->randomElement(['L', 'P']);
             $agama  = $faker->randomElement(['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Konghucu']);
 
