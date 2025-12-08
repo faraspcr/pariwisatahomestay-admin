@@ -36,5 +36,5 @@ Route::resource('destinasiwisata', DestinasiWisataController::class);
 // Tambahkan route untuk user
 Route::resource('user', UserController::class);
 
-// routes/web.php
+
 Route::resource('ulasan_wisata', UlasanWisataController::class);
