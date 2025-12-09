@@ -5,20 +5,6 @@
     <div class="content-wrapper">
 
         {{-- ====================== START MAIN CONTENT ====================== --}}
-        <!-- Header -->
-        <div class="page-header">
-            <h3 class="page-title">
-                <i class="mdi mdi-account text-primary mr-2"></i>
-                Data User
-            </h3>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Data User</li>
-                </ol>
-            </nav>
-        </div>
-
         <!-- Alert Success -->
         @if(session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">

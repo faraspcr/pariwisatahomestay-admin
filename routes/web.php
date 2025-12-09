@@ -6,8 +6,11 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\WargaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UlasanWisataController;
+use App\Http\Controllers\KamarHomestayController;
+use App\Http\Controllers\BookingHomestayController;
 use App\Http\Controllers\DestinasiWisataController;
-use App\Http\Controllers\PariwisataDestinasiAdminController;
+use App\Http\Controllers\HomestayController; // ✅ PASTIKAN INI ADA!
+
 
 Route::get('/', [AuthController::class, 'showLoginForm'])->name('login');
 
@@ -38,3 +41,6 @@ Route::resource('user', UserController::class);
 
 
 Route::resource('ulasan_wisata', UlasanWisataController::class);
+Route::resource('homestay', HomestayController::class);
+Route::resource('kamar_homestay', KamarHomestayController::class);
+Route::resource('booking-homestay', BookingHomestayController::class);

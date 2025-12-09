@@ -136,9 +136,11 @@
             0% {
                 box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
             }
+
             70% {
                 box-shadow: 0 0 0 10px rgba(37, 211, 102, 0);
             }
+
             100% {
                 box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
             }
@@ -402,7 +404,7 @@
             background: transparent;
             border-radius: 10px;
             margin-bottom: 15px;
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .profile-avatar {
@@ -428,7 +430,7 @@
         .profile-info p {
             margin: 0;
             font-size: 0.85rem;
-            color: rgba(255,255,255,0.8);
+            color: rgba(255, 255, 255, 0.8);
         }
 
         /* Logout Button */
@@ -477,7 +479,7 @@
 
         /* Hover effect untuk profile header */
         .navbar-nav-right .nav-profile .nav-link:hover {
-            background: rgba(0,0,0,0.05);
+            background: rgba(0, 0, 0, 0.05);
             border-radius: 30px;
         }
 
@@ -520,12 +522,14 @@
         <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
             <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
                 <a class="navbar-brand brand-logo" href="{{ route('dashboard') }}">
-                    <div style="color: #28a745; font-size: 24px; font-weight: bold; display: flex; align-items: center; justify-content: center; width: 100%;">
+                    <div
+                        style="color: #28a745; font-size: 24px; font-weight: bold; display: flex; align-items: center; justify-content: center; width: 100%;">
                         <i class="mdi mdi-home-group mr-2"></i>BINA DESA
                     </div>
                 </a>
                 <a class="navbar-brand brand-logo-mini" href="{{ route('dashboard') }}">
-                    <div style="color: #28a745; font-size: 18px; font-weight: bold; display: flex; align-items: center; justify-content: center;">
+                    <div
+                        style="color: #28a745; font-size: 18px; font-weight: bold; display: flex; align-items: center; justify-content: center;">
                         BD
                     </div>
                 </a>
@@ -541,7 +545,8 @@
                             <div class="input-group-prepend bg-transparent">
                                 <i class="input-group-text border-0 mdi mdi-magnify"></i>
                             </div>
-                            <input type="text" class="form-control bg-transparent border-0" placeholder="Cari data...">
+                            <input type="text" class="form-control bg-transparent border-0"
+                                placeholder="Cari data...">
                         </div>
                     </form>
                 </div>
@@ -549,11 +554,13 @@
                 <ul class="navbar-nav navbar-nav-right">
                     <!-- Notification Bell -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
+                        <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#"
+                            data-toggle="dropdown">
                             <i class="mdi mdi-bell-outline"></i>
                             <span class="count-symbol bg-danger">3</span>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
+                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
+                            aria-labelledby="notificationDropdown">
                             <h6 class="p-3 mb-0 bg-primary text-white">Notifikasi</h6>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item preview-item">
@@ -562,7 +569,8 @@
                                         <i class="mdi mdi-account-plus"></i>
                                     </div>
                                 </div>
-                                <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
+                                <div
+                                    class="preview-item-content d-flex align-items-start flex-column justify-content-center">
                                     <h6 class="preview-subject font-weight-normal">Warga Baru</h6>
                                     <p class="text-gray ellipsis mb-0">2 warga baru terdaftar</p>
                                 </div>
@@ -574,7 +582,8 @@
                                         <i class="mdi mdi-map-marker"></i>
                                     </div>
                                 </div>
-                                <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
+                                <div
+                                    class="preview-item-content d-flex align-items-start flex-column justify-content-center">
                                     <h6 class="preview-subject font-weight-normal">Wisata Baru</h6>
                                     <p class="text-gray ellipsis mb-0">1 destinasi wisata ditambahkan</p>
                                 </div>
@@ -586,18 +595,21 @@
                                         <i class="mdi mdi-account"></i>
                                     </div>
                                 </div>
-                                <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
+                                <div
+                                    class="preview-item-content d-flex align-items-start flex-column justify-content-center">
                                     <h6 class="preview-subject font-weight-normal">User Baru</h6>
                                     <p class="text-gray ellipsis mb-0">1 user baru dibuat</p>
                                 </div>
                             </a>
                             <div class="dropdown-divider"></div>
-                            <h6 class="p-3 mb-0 text-center"><a href="#" class="text-primary">Lihat semua notifikasi</a></h6>
+                            <h6 class="p-3 mb-0 text-center"><a href="#" class="text-primary">Lihat semua
+                                    notifikasi</a></h6>
                         </div>
                     </li>
 
                     <li class="nav-item nav-profile dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center" id="profileDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" id="profileDropdown"
+                            href="#" data-toggle="dropdown" aria-expanded="false">
                             <div class="nav-profile-img mr-3">
                                 <div class="profile-avatar" style="width: 35px; height: 35px; font-size: 1.2rem;">
                                     <i class="mdi mdi-account"></i>
@@ -607,9 +619,11 @@
                                 <p class="mb-0 text-black" id="userName">Faras Zakia</p>
                             </div>
                         </a>
-                        <div class="dropdown-menu navbar-dropdown dropdown-menu-right p-0 border-0 font-size-sm" aria-labelledby="profileDropdown" data-x-placement="bottom-end">
+                        <div class="dropdown-menu navbar-dropdown dropdown-menu-right p-0 border-0 font-size-sm"
+                            aria-labelledby="profileDropdown" data-x-placement="bottom-end">
                             <div class="p-3 text-center bg-primary">
-                                <div class="profile-avatar" style="margin: 0 auto 15px; width: 70px; height: 70px; font-size: 2rem;">
+                                <div class="profile-avatar"
+                                    style="margin: 0 auto 15px; width: 70px; height: 70px; font-size: 2rem;">
                                     <i class="mdi mdi-account"></i>
                                 </div>
                                 <p class="mt-2 mb-0 text-white" style="font-weight: 700;">Faras Zakia</p>
@@ -617,16 +631,20 @@
                             </div>
                             <div class="p-2">
                                 <h5 class="dropdown-header text-uppercase pl-2 text-dark">Akun Pengguna</h5>
-                                <a class="dropdown-item py-2 d-flex align-items-center justify-content-between" href="#">
+                                <a class="dropdown-item py-2 d-flex align-items-center justify-content-between"
+                                    href="#">
                                     <span>Profil Saya</span>
                                     <i class="mdi mdi-account-outline ml-1"></i>
                                 </a>
-                                <a class="dropdown-item py-2 d-flex align-items-center justify-content-between" href="javascript:void(0)">
+                                <a class="dropdown-item py-2 d-flex align-items-center justify-content-between"
+                                    href="javascript:void(0)">
                                     <span>Pengaturan</span>
                                     <i class="mdi mdi-settings"></i>
                                 </a>
                                 <div role="separator" class="dropdown-divider"></div>
-                                <a class="dropdown-item py-2 d-flex align-items-center justify-content-between" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <a class="dropdown-item py-2 d-flex align-items-center justify-content-between"
+                                    href="#"
+                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                     <span>Logout</span>
                                     <i class="mdi mdi-logout ml-1"></i>
                                 </a>
@@ -634,7 +652,8 @@
                         </div>
                     </li>
                 </ul>
-                <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+                <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+                    data-toggle="offcanvas">
                     <span class="mdi mdi-menu"></span>
                 </button>
             </div>
@@ -658,32 +677,51 @@
                     <li class="nav-item nav-category">Fitur Utama</li>
 
                     <li class="nav-item">
-                        <a class="nav-link dropdown-toggle" data-toggle="collapse" href="#fiturUtama" aria-expanded="false" aria-controls="fiturUtama">
+                        <a class="nav-link dropdown-toggle" data-toggle="collapse" href="#fiturUtama"
+                            aria-expanded="false" aria-controls="fiturUtama">
                             <span class="icon-bg"><i class="mdi mdi-apps menu-icon"></i></span>
                             <span class="menu-title">Fitur Utama</span>
                         </a>
                         <div class="collapse" id="fiturUtama">
                             <ul class="nav flex-column sub-menu">
+                                <!-- Destinasi Wisata -->
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('destinasiwisata.index') }}">
                                         <i class="mdi mdi-map-marker menu-icon"></i>
                                         Destinasi Wisata
                                     </a>
                                 </li>
-                               <li class="nav-item">
+
+                                <!-- HOMESTAY BARU -->
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('homestay.index') }}">
+                                        <i class="mdi mdi-home menu-icon"></i>
+                                        Homestay
+                                    </a>
+                                </li>
+                                  <!-- KAMAR HOMESTAY -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('kamar_homestay.index') }}">
+                            <i class="mdi mdi-bed menu-icon"></i>
+                            Kamar Homestay
+                        </a>
+                    </li>
+
+                                <!-- Ulasan Wisata -->
+                                <li class="nav-item">
                                     <a class="nav-link" href="{{ route('ulasan_wisata.index') }}">
                                         <i class="mdi mdi-star-circle menu-icon"></i>
-                                       Ulasan Wisata
+                                        Ulasan Wisata
                                     </a>
                                 </li>
                             </ul>
                         </div>
                     </li>
-
                     <li class="nav-item nav-category">Master Data</li>
 
                     <li class="nav-item">
-                        <a class="nav-link dropdown-toggle" data-toggle="collapse" href="#masterData" aria-expanded="false" aria-controls="masterData">
+                        <a class="nav-link dropdown-toggle" data-toggle="collapse" href="#masterData"
+                            aria-expanded="false" aria-controls="masterData">
                             <span class="icon-bg"><i class="mdi mdi-database menu-icon"></i></span>
                             <span class="menu-title">Master Data</span>
                         </a>
@@ -720,7 +758,8 @@
 
                     <li class="nav-item sidebar-user-actions">
                         <div class="sidebar-user-menu">
-                            <a href="#" class="logout-btn" onclick="event.preventDefault(); document.getElementById('sidebar-logout-form').submit();">
+                            <a href="#" class="logout-btn"
+                                onclick="event.preventDefault(); document.getElementById('sidebar-logout-form').submit();">
                                 <i class="mdi mdi-logout"></i>
                                 Logout
                             </a>
@@ -759,7 +798,8 @@
                                             <div class="circular-progress-icon">
                                                 <i class="mdi mdi-account-group"></i>
                                             </div>
-                                            <div class="circular-progress-value" id="warga-count">{{ $totalWarga ?? 0 }}</div>
+                                            <div class="circular-progress-value" id="warga-count">
+                                                {{ $totalWarga ?? 0 }}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -783,7 +823,8 @@
                                             <div class="circular-progress-icon">
                                                 <i class="mdi mdi-map-marker"></i>
                                             </div>
-                                            <div class="circular-progress-value" id="wisata-count">{{ $totalDestinasi ?? 0 }}</div>
+                                            <div class="circular-progress-value" id="wisata-count">
+                                                {{ $totalDestinasi ?? 0 }}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -807,7 +848,8 @@
                                             <div class="circular-progress-icon">
                                                 <i class="mdi mdi-account-multiple"></i>
                                             </div>
-                                            <div class="circular-progress-value" id="user-count">{{ $totalUser ?? 0 }}</div>
+                                            <div class="circular-progress-value" id="user-count">
+                                                {{ $totalUser ?? 0 }}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -831,7 +873,8 @@
                                             <div class="circular-progress-icon">
                                                 <i class="mdi mdi-calendar-check"></i>
                                             </div>
-                                            <div class="circular-progress-value" id="aktivitas-count">{{ $totalAktivitas ?? 25 }}</div>
+                                            <div class="circular-progress-value" id="aktivitas-count">
+                                                {{ $totalAktivitas ?? 25 }}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -856,8 +899,10 @@
                                     <h3 class="chart-title">Statistik Pengunjung</h3>
                                     <div class="period-selector">
                                         <div class="btn-group" role="group">
-                                            <button type="button" class="btn btn-period active" data-period="minggu-ini">Minggu Ini</button>
-                                            <button type="button" class="btn btn-period" data-period="minggu-lalu">Minggu Lalu</button>
+                                            <button type="button" class="btn btn-period active"
+                                                data-period="minggu-ini">Minggu Ini</button>
+                                            <button type="button" class="btn btn-period"
+                                                data-period="minggu-lalu">Minggu Lalu</button>
                                         </div>
                                     </div>
                                 </div>
@@ -922,7 +967,7 @@
     <script src="{{ asset('assets-admin/vendors/js/vendor.bundle.base.js') }}"></script>
     <!-- endinject -->
     <!-- Plugin js for this page -->
-    <script src="{{ asset('assets-admin/vendors/chart.js/Chart.min.js')}}"></script>
+    <script src="{{ asset('assets-admin/vendors/chart.js/Chart.min.js') }}"></script>
     <script src="{{ asset('assets-admin/vendors/jquery-circle-progress/js/circle-progress.min.js') }}"></script>
     <!-- End plugin js for this page -->
     <!-- inject:js -->
@@ -942,7 +987,11 @@
 
             // Set current date
             const now = new Date();
-            const options = { day: 'numeric', month: 'long', year: 'numeric' };
+            const options = {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            };
             document.getElementById('currentDate').textContent = now.toLocaleDateString('id-ID', options);
 
             // Initialize Chart.js
@@ -1035,8 +1084,7 @@
             // Load recent activities dari database
             function loadRecentActivities() {
                 // Simulasi data dari database
-                const activities = [
-                    {
+                const activities = [{
                         title: 'Warga Baru Terdaftar',
                         description: '2 warga baru ditambahkan hari ini',
                         icon: 'mdi mdi-account-plus',
@@ -1153,7 +1201,8 @@
             if (whatsappFloat) {
                 whatsappFloat.addEventListener('click', function() {
                     const phoneNumber = '6281234567890';
-                    const defaultMessage = 'Halo Admin Bina Desa! Saya perlu bantuan terkait sistem Bina Desa. Bisa dibantu?';
+                    const defaultMessage =
+                        'Halo Admin Bina Desa! Saya perlu bantuan terkait sistem Bina Desa. Bisa dibantu?';
                     const encodedMessage = encodeURIComponent(defaultMessage);
                     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
                     window.open(whatsappUrl, '_blank');
@@ -1163,4 +1212,5 @@
     </script>
     <!-- ==================== END JS ==================== -->
 </body>
+
 </html>

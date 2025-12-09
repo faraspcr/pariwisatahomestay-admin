@@ -1,4 +1,3 @@
-
 <!-- ==================== START SIDEBAR ==================== -->
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
     <ul class="nav">
@@ -13,28 +12,54 @@
 
         <li class="nav-item nav-category">Fitur Utama</li>
 
-        <li class="nav-item">
-            <a class="nav-link dropdown-toggle" data-toggle="collapse" href="#fiturUtama" aria-expanded="false" aria-controls="fiturUtama">
-                <span class="icon-bg"><i class="mdi mdi-apps menu-icon"></i></span>
-                <span class="menu-title">Fitur Utama</span>
-            </a>
-            <div class="collapse" id="fiturUtama">
-                <ul class="nav flex-column sub-menu">
+       <li class="nav-item">
+    <a class="nav-link dropdown-toggle" data-toggle="collapse" href="#fiturUtama" aria-expanded="false" aria-controls="fiturUtama">
+        <span class="icon-bg"><i class="mdi mdi-apps menu-icon"></i></span>
+        <span class="menu-title">Fitur Utama</span>
+    </a>
+    <div class="collapse" id="fiturUtama">
+        <ul class="nav flex-column sub-menu">
+            <!-- Destinasi Wisata -->
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('destinasiwisata.index') }}">
+                    <i class="mdi mdi-map-marker menu-icon"></i>
+                    Destinasi Wisata
+                </a>
+            </li>
+
+            <!-- HOMESTAY -->
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('homestay.index') }}">
+                    <i class="mdi mdi-home menu-icon"></i>
+                    Homestay
+                </a>
+            </li>
+
+              <!-- KAMAR HOMESTAY -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('destinasiwisata.index') }}">
-                            <i class="mdi mdi-map-marker menu-icon"></i>
-                            Destinasi Wisata
+                        <a class="nav-link" href="{{ route('kamar_homestay.index') }}">
+                            <i class="mdi mdi-door-closed menu-icon"></i>
+                            Kamar Homestay
                         </a>
                     </li>
-                   <li class="nav-item">
-                        <a class="nav-link" href="{{ route('ulasan_wisata.index') }}">
-                            <i class="mdi mdi-star-circle menu-icon"></i>
-                            Ulasan Wisata
+                     <!-- BOOKING -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('booking-homestay.index') }}">
+                            <i class="mdi mdi-calendar-check menu-icon"></i>
+                            Booking
                         </a>
                     </li>
-                </ul>
-            </div>
-        </li>
+
+            <!-- Ulasan Wisata -->
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('ulasan_wisata.index') }}">
+                    <i class="mdi mdi-star-circle menu-icon"></i>
+                    Ulasan Wisata
+                </a>
+            </li>
+        </ul>
+    </div>
+</li>
 
         <li class="nav-item nav-category">Master Data</li>
 

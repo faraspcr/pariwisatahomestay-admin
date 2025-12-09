@@ -6,27 +6,24 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
         Schema::create('media', function (Blueprint $table) {
-            $table->id('media_id');
-            $table->string('ref_table'); // contoh: 'destinasi_wisata'
-            $table->unsignedBigInteger('ref_id'); // contoh: id dari destinasi_wisata
-            $table->string('file_url'); // lokasi file (URL/path)
-            $table->string('caption')->nullable(); // keterangan gambar
-            $table->string('mime_type', 100)->nullable(); // tipe file (jpg/png/pdf)
-            $table->integer('sort_order')->default(0); // urutan tampilan
-            $table->timestamps();
+            $table->id('media_id'); // Primary key
+            $table->string('ref_table'); // Contoh: 'destinasi_wisata'
+            $table->unsignedBigInteger('ref_id'); // Contoh: 5
+            $table->string('file_name'); // Nama file: foto1.jpg
+            $table->string('caption')->nullable(); // Keterangan optional
+            $table->string('mime_type'); // Contoh: image/jpeg
+            $table->integer('sort_order')->default(1); // Urutan tampilan
+            $table->timestamps(); // created_at, updated_at
+
+            // Index untuk pencarian cepat
+            $table->index(['ref_table', 'ref_id']);
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('media');
     }

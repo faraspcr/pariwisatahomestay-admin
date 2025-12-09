@@ -5,21 +5,6 @@
     <div class="content-wrapper">
 
         {{-- ====================== START MAIN CONTENT ====================== --}}
-
-        <!-- Header -->
-        <div class="page-header">
-            <h3 class="page-title">
-                <i class="mdi mdi-map-marker text-success mr-2"></i>
-                Destinasi Wisata
-            </h3>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Destinasi Wisata</li>
-                </ol>
-            </nav>
-        </div>
-
         <!-- Alert Success -->
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
