@@ -4,8 +4,6 @@
 <div class="main-panel">
     <div class="content-wrapper">
 
-        {{-- ====================== START MAIN CONTENT ====================== --}}
-
         <!-- Header -->
         <div class="page-header">
             <h3 class="page-title">
@@ -42,7 +40,7 @@
             </div>
         @endif
 
-        <!-- Error List di Atas Form -->
+        <!-- Error List -->
         @if($errors->any())
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <i class="mdi mdi-alert-circle-outline mr-2"></i>
@@ -68,7 +66,7 @@
                     </a>
                 </div>
 
-                <form action="{{ route('destinasiwisata.store') }}" method="POST" id="destinasiForm">
+                <form action="{{ route('destinasiwisata.store') }}" method="POST" id="destinasiForm" enctype="multipart/form-data">
                     @csrf
 
                     <div class="row">
@@ -170,6 +168,47 @@
                         </div>
                     </div>
 
+                    <!-- Form Upload File -->
+                    <div class="row mt-4">
+                        <div class="col-md-12">
+                            <div class="card border-primary">
+                                <div class="card-header bg-primary text-white">
+                                    <h5 class="mb-0">
+                                        <i class="mdi mdi-camera mr-2"></i>Upload Foto Destinasi
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="foto_destinasi" class="form-label">
+                                            Foto Destinasi (Multiple)
+                                            <span class="text-muted">(Maksimal 5MB per file, format: jpeg, png, jpg, gif, webp)</span>
+                                        </label>
+                                        <input type="file"
+                                               class="form-control-file @error('foto_destinasi.*') is-invalid @enderror"
+                                               id="foto_destinasi"
+                                               name="foto_destinasi[]"
+                                               multiple
+                                               accept="image/*">
+
+                                        @error('foto_destinasi.*')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
+
+                                        <small class="form-text text-muted">
+                                            Bisa memilih lebih dari satu foto. Foto akan ditampilkan sebagai galeri destinasi.
+                                        </small>
+                                    </div>
+
+                                    <!-- Preview Area -->
+                                    <div class="preview-area mt-3" id="previewArea" style="display: none;">
+                                        <h6 class="mb-2">Preview Foto:</h6>
+                                        <div class="row" id="imagePreview"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Tombol Aksi -->
                     <div class="row mt-4">
                         <div class="col-12">
@@ -186,12 +225,9 @@
                 </form>
             </div>
         </div>
-
-        {{-- ====================== END MAIN CONTENT ====================== --}}
     </div>
 </div>
 
-{{-- ====================== START JS TAMBAHAN ====================== --}}
 <script>
     // Auto format untuk input RT dan RW (hanya angka)
     document.getElementById('rt').addEventListener('input', function(e) {
@@ -207,10 +243,48 @@
         this.value = this.value.replace(/[^0-9+]/g, '');
     });
 
+    // Preview Image Upload
+    document.getElementById('foto_destinasi').addEventListener('change', function(e) {
+        const previewArea = document.getElementById('previewArea');
+        const imagePreview = document.getElementById('imagePreview');
+        const files = e.target.files;
+
+        imagePreview.innerHTML = '';
+
+        if (files.length > 0) {
+            previewArea.style.display = 'block';
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const colDiv = document.createElement('div');
+                    colDiv.className = 'col-md-3 mb-3';
+
+                    colDiv.innerHTML = `
+                        <div class="card">
+                            <img src="${e.target.result}" class="card-img-top" style="height: 150px; object-fit: cover;">
+                            <div class="card-body p-2">
+                                <p class="card-text small text-truncate mb-0">${file.name}</p>
+                                <p class="card-text small text-muted mb-0">${(file.size / 1024).toFixed(2)} KB</p>
+                            </div>
+                        </div>
+                    `;
+
+                    imagePreview.appendChild(colDiv);
+                }
+
+                reader.readAsDataURL(file);
+            }
+        } else {
+            previewArea.style.display = 'none';
+        }
+    });
+
     // Auto dismiss alerts setelah 5 detik
     setTimeout(function() {
         $('.alert').alert('close');
     }, 5000);
 </script>
-{{-- ====================== END JS TAMBAHAN ====================== --}}
 @endsection

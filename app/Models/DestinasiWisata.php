@@ -34,13 +34,20 @@ class DestinasiWisata extends Model
     {
         return $this->hasMany(UlasanWisata::class, 'destinasi_id', 'destinasi_id');
     }
-// Scope untuk filter - SESUAIKAN DENGAN CONTROLLER
+
+    // Relasi ke Media
+    public function files()
+    {
+        return $this->hasMany(Media::class, 'ref_id', 'destinasi_id')
+                    ->where('ref_table', 'destinasi_wisata')
+                    ->orderBy('sort_order', 'asc');
+    }
+
     public function scopeFilter(Builder $query, Request $request, array $filterableColumns): Builder
     {
         foreach ($filterableColumns as $column) {
             if ($request->filled($column)) {
                 if ($column === 'jam_buka') {
-                    // Handle filter jam_buka dengan rentang waktu
                     $jamRange = $request->jam_buka;
                     if ($jamRange === 'dini_hari') {
                         $query->where('jam_buka', '>=', '00:00')->where('jam_buka', '<=', '05:59');
@@ -61,22 +68,20 @@ class DestinasiWisata extends Model
         return $query;
     }
 
-
     public function scopeSearch($query, $request, array $columns)
-{
-    if ($request->filled('search')) {
-        $query->where(function ($q) use ($request, $columns) {
-            foreach ($columns as $column) {
-                if ($column === 'tiket') {
-                    // Handle numeric search untuk tiket
-                    if (is_numeric($request->search)) {
-                        $q->orWhere($column, '=', $request->search);
+    {
+        if ($request->filled('search')) {
+            $query->where(function ($q) use ($request, $columns) {
+                foreach ($columns as $column) {
+                    if ($column === 'tiket') {
+                        if (is_numeric($request->search)) {
+                            $q->orWhere($column, '=', $request->search);
+                        }
+                    } else {
+                        $q->orWhere($column, 'LIKE', '%' . $request->search . '%');
                     }
-                } else {
-                    $q->orWhere($column, 'LIKE', '%' . $request->search . '%');
                 }
-            }
-        });
+            });
+        }
     }
-}
 }

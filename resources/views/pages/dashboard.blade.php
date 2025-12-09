@@ -702,8 +702,15 @@
                                   <!-- KAMAR HOMESTAY -->
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('kamar_homestay.index') }}">
-                            <i class="mdi mdi-bed menu-icon"></i>
+                            <i class="mdi mdi-door-closed menu-icon"></i>
                             Kamar Homestay
+                        </a>
+                    </li>
+                     <!-- BOOKING -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('booking-homestay.index') }}">
+                            <i class="mdi mdi-calendar-check menu-icon"></i>
+                            Booking
                         </a>
                     </li>
 

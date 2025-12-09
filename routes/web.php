@@ -34,7 +34,15 @@ Route::get('/warga/{id}/edit', [WargaController::class, 'edit'])->name('warga.ed
 Route::put('/warga/{id}', [WargaController::class, 'update'])->name('warga.update');
 Route::delete('/warga/{id}', [WargaController::class, 'destroy'])->name('warga.destroy');
 
+// Destinasi Wisata Routes
 Route::resource('destinasiwisata', DestinasiWisataController::class);
+
+// Tambah route untuk upload dan delete file
+Route::post('destinasiwisata/{id}/upload-files', [DestinasiWisataController::class, 'uploadFiles'])
+    ->name('destinasiwisata.upload-files');
+
+Route::delete('destinasiwisata/{id}/delete-file/{fileId}', [DestinasiWisataController::class, 'deleteFile'])
+    ->name('destinasiwisata.delete-file');
 
 // Tambahkan route untuk user
 Route::resource('user', UserController::class);
@@ -44,3 +52,4 @@ Route::resource('ulasan_wisata', UlasanWisataController::class);
 Route::resource('homestay', HomestayController::class);
 Route::resource('kamar_homestay', KamarHomestayController::class);
 Route::resource('booking-homestay', BookingHomestayController::class);
+
