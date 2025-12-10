@@ -24,6 +24,7 @@ class Media extends Model
     public function getFileUrlAttribute()
     {
         return asset('storage/' . $this->ref_table . '/' . $this->file_name);
+
     }
 
     // Accessor untuk cek gambar

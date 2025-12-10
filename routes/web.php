@@ -37,12 +37,25 @@ Route::delete('/warga/{id}', [WargaController::class, 'destroy'])->name('warga.d
 // Destinasi Wisata Routes
 Route::resource('destinasiwisata', DestinasiWisataController::class);
 
-// Tambah route untuk upload dan delete file
+// Route untuk upload files
 Route::post('destinasiwisata/{id}/upload-files', [DestinasiWisataController::class, 'uploadFiles'])
     ->name('destinasiwisata.upload-files');
 
-Route::delete('destinasiwisata/{id}/delete-file/{fileId}', [DestinasiWisataController::class, 'deleteFile'])
+// Route untuk delete file - PASTIKAN METHODNYA DELETE
+Route::delete('destinasiwisata/{id}/files/{fileId}', [DestinasiWisataController::class, 'deleteFile'])
     ->name('destinasiwisata.delete-file');
+
+// Route untuk download file
+Route::get('destinasiwisata/{id}/files/{fileId}/download', [DestinasiWisataController::class, 'downloadFile'])
+    ->name('destinasiwisata.download-file');
+
+// Route untuk show file di browser (preview gambar/PDF)
+Route::get('destinasiwisata/{id}/files/{fileId}/show', [DestinasiWisataController::class, 'showFile'])
+    ->name('destinasiwisata.show-file');
+
+Route::post('/destinasi-wisata/{id}/files/{fileId}/rename', [DestinasiWisataController::class, 'renameFile'])
+    ->name('destinasiwisata.rename-file');
+
 
 // Tambahkan route untuk user
 Route::resource('user', UserController::class);
