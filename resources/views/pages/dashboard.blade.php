@@ -692,13 +692,13 @@
                                     </a>
                                 </li>
 
-                                <!-- HOMESTAY BARU -->
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('homestay.index') }}">
-                                        <i class="mdi mdi-home menu-icon"></i>
-                                        Homestay
-                                    </a>
-                                </li>
+                                <!-- HOMESTAY -->
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('homestay.index') }}">
+                    <i class="mdi mdi-home menu-icon"></i>
+                    Homestay
+                </a>
+            </li>
                                   <!-- KAMAR HOMESTAY -->
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('kamar_homestay.index') }}">

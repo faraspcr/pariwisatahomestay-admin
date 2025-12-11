@@ -31,14 +31,47 @@
             <div class="card-body">
                 <h4 class="card-title mb-4">Daftar Homestay</h4>
 
-                <!-- Tombol Tambah -->
-                <div class="row mb-4">
-                    <div class="col-md-12 text-right">
-                        <a href="{{ route('homestay.create') }}" class="btn btn-primary btn-sm add-btn">
-                            <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah Homestay
-                        </a>
+                {{-- ====================== FILTER DAN SEARCH (SEPERTI WARGA) ====================== --}}
+                <!-- Form Filter dan Search -->
+                <form method="GET" action="{{ route('homestay.index') }}">
+                    <div class="row mb-4">
+                        <!-- Filter Status -->
+                        <div class="col-md-3">
+                            <select name="status" onchange="this.form.submit()" class="form-control form-control-sm filter-rating">
+                                <option value="">Semua Status</option>
+                                <option value="aktif" {{ request('status') == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                                <option value="nonaktif" {{ request('status') == 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
+                                <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                            </select>
+                        </div>
+
+                        <!-- Form Search -->
+                        <div class="col-md-3">
+                            <div class="input-group search-group">
+                                <input type="text"
+                                       name="search"
+                                       class="form-control form-control-sm search-input"
+                                       placeholder="Cari nama/alamat/pemilik..."
+                                       value="{{ request('search') }}">
+                                <button type="submit" class="input-group-text search-btn">
+                                    <i class="mdi mdi-magnify"></i>
+                                </button>
+                                @if(request("search"))
+                                <a href="{{ request()->fullUrlWithQuery(['search'=> null]) }}" class="input-group-text clear-btn">
+                                    <i class="mdi mdi-close"></i>
+                                </a>
+                                @endif
+                            </div>
+                        </div>
+
+                        <!-- Tombol Tambah -->
+                        <div class="col-md-6 text-right">
+                            <a href="{{ route('homestay.create') }}" class="btn btn-primary btn-sm add-btn">
+                                <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah Homestay
+                            </a>
+                        </div>
                     </div>
-                </div>
+                </form>
 
                 <div class="table-responsive">
                     <table class="table table-striped table-hover">
@@ -135,11 +168,22 @@
                                     <td colspan="8" class="text-center py-5">
                                         <div class="d-flex flex-column align-items-center empty-state">
                                             <i class="mdi mdi-home-off text-muted" style="font-size: 64px;"></i>
-                                            <h4 class="text-muted mt-3">Belum ada data homestay</h4>
+                                            <h4 class="text-muted mt-3">
+                                                @if(request()->hasAny(['search', 'status']))
+                                                    Tidak ditemukan homestay dengan filter yang dipilih
+                                                @else
+                                                    Belum ada data homestay
+                                                @endif
+                                            </h4>
                                             <p class="text-muted">Silakan tambah homestay terlebih dahulu</p>
                                             <a href="{{ route('homestay.create') }}" class="btn btn-success mt-2">
                                                 <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah Homestay Pertama
                                             </a>
+                                            @if(request()->hasAny(['search', 'status']))
+                                                <a href="{{ route('homestay.index') }}" class="btn btn-secondary mt-2">
+                                                    <i class="mdi mdi-refresh mr-1"></i>Reset Filter
+                                                </a>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>
@@ -150,7 +194,7 @@
 
                 {{-- ====================== PAGINATION ====================== --}}
                 <div class="mt-4">
-                    {{ $homestays->links('pagination::bootstrap-5') }}
+                    {{ $homestays->appends(request()->query())->links('pagination::bootstrap-5') }}
                 </div>
 
                 <!-- Info Summary -->
@@ -176,6 +220,116 @@
 </div>
 
 <style>
+/* ==================== ANIMASI UNTUK SEARCH & FILTER ==================== */
+
+/* SAMAKAN UKURAN FILTER DAN SEARCH */
+.filter-rating,
+.search-input {
+    height: 38px !important; /* Sama tinggi */
+    font-size: 14px; /* Sama ukuran font */
+    border-radius: 8px; /* Sama border radius */
+}
+
+/* Pastikan input group memiliki tinggi yang konsisten */
+.search-group {
+    height: 38px; /* Sama tinggi dengan filter */
+}
+
+/* Styling untuk tombol search dan clear - SAMAKAN TINGGI */
+.search-btn,
+.clear-btn {
+    height: 38px !important; /* Sama tinggi dengan input */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 12px;
+    min-width: 40px;
+}
+
+/* Animasi untuk Filter Status */
+.filter-rating {
+    border: 1px solid #ddd;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.filter-rating:focus {
+    border-color: #4e73df;
+    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+    transform: translateY(-1px);
+}
+
+.filter-rating:hover {
+    border-color: #4e73df;
+    transform: translateY(-1px);
+}
+
+/* Animasi untuk Search Input Group */
+.search-group {
+    transition: all 0.3s ease;
+    border-radius: 8px;
+}
+
+.search-group:focus-within {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.search-input:focus {
+    border-color: #4e73df;
+    box-shadow: none;
+}
+
+/* Animasi untuk Search Button */
+.search-btn {
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    border-left: none;
+    background-color: #f8f9fa;
+    color: #6c757d;
+}
+
+.search-btn:hover {
+    background-color: #4e73df !important;
+    color: white !important;
+    transform: scale(1.05);
+}
+
+/* Animasi untuk Clear Button */
+.clear-btn {
+    transition: all 0.3s ease;
+    border: 1px solid #ddd;
+    border-left: none;
+    background-color: #f8f9fa;
+    color: #6c757d;
+    text-decoration: none;
+}
+
+.clear-btn:hover {
+    background-color: #f45c4e !important;
+    color: white !important;
+    transform: scale(1.05);
+}
+
+/* Animasi untuk Tombol Tambah */
+.add-btn {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    padding: 8px 16px;
+    font-weight: 500;
+}
+
+.add-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(78, 115, 223, 0.4);
+}
+
+.add-btn:active {
+    transform: translateY(0);
+}
+
 /* ==================== ANIMASI UNTUK PAGINATION ==================== */
 .pagination {
     margin-top: 2rem;
@@ -277,17 +431,6 @@
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
 }
 
-.add-btn {
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s ease;
-}
-
-.add-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(78, 115, 223, 0.4);
-}
-
 /* STYLING BADGE HOMESTAY */
 .badge-price {
     background: linear-gradient(45deg, #FF6B35, #FF8E53);
@@ -318,12 +461,158 @@
 .table-responsive {
     overflow-x: auto;
 }
+
+/* Styling untuk Info Filter Aktif */
+.alert-info {
+    border-left: 4px solid #36b9cc;
+    background-color: #f8f9fa;
+    border-color: #d1d3e2;
+}
+
+.alert-info .badge {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.75rem;
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+.alert-info .badge-primary {
+    background: linear-gradient(45deg, #4e73df, #224abe);
+}
+
+.alert-info .badge-info {
+    background: linear-gradient(45deg, #36b9cc, #258391);
+}
+
+.alert-info .btn-light {
+    border: 1px solid #ddd;
+    transition: all 0.3s ease;
+}
+
+.alert-info .btn-light:hover {
+    background-color: #f45c4e;
+    color: white;
+    border-color: #f45c4e;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .row.mb-4 > div {
+        margin-bottom: 10px;
+    }
+
+    .col-md-3, .col-md-6 {
+        width: 100%;
+    }
+
+    .text-right {
+        text-align: left !important;
+    }
+
+    .add-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .action-buttons .btn-group {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .action-buttons .btn {
+        width: 35px;
+        height: 35px;
+    }
+}
+
+/* Loading Animation untuk Search */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(78, 115, 223, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(78, 115, 223, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(78, 115, 223, 0);
+    }
+}
+
+.search-loading {
+    animation: pulse 1.5s infinite;
+}
 </style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     $('[data-toggle="tooltip"]').tooltip();
 
+    // ==================== ANIMASI UNTUK SEARCH & FILTER ====================
+
+    // Animasi untuk search loading
+    const searchForm = document.querySelector('form[method="GET"]');
+    const searchInput = document.querySelector('.search-input');
+    const searchButton = document.querySelector('.search-btn');
+
+    if (searchForm && searchButton) {
+        searchForm.addEventListener('submit', function(e) {
+            if (searchInput.value.trim() !== '') {
+                // Simpan original content
+                const originalHTML = searchButton.innerHTML;
+
+                // Tambah animasi loading
+                searchButton.innerHTML = '<i class="mdi mdi-loading mdi-spin mr-1"></i>';
+                searchButton.style.pointerEvents = 'none';
+
+                // Reset setelah 1.5 detik (fallback)
+                setTimeout(() => {
+                    searchButton.innerHTML = originalHTML;
+                    searchButton.style.pointerEvents = 'auto';
+                }, 1500);
+            }
+        });
+    }
+
+    // Animasi untuk filter select
+    const statusSelect = document.querySelector('.filter-rating');
+    if (statusSelect) {
+        statusSelect.addEventListener('change', function() {
+            // Efek visual saat berubah
+            this.style.transform = 'scale(0.95)';
+            this.style.boxShadow = '0 0 10px rgba(78, 115, 223, 0.3)';
+
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+                this.style.boxShadow = 'none';
+            }, 300);
+        });
+    }
+
+    // Animasi hover untuk clear button
+    const clearBtn = document.querySelector('.clear-btn');
+    if (clearBtn) {
+        clearBtn.addEventListener('mouseenter', function() {
+            this.style.transform = 'rotate(90deg) scale(1.1)';
+        });
+
+        clearBtn.addEventListener('mouseleave', function() {
+            this.style.transform = 'rotate(0) scale(1)';
+        });
+    }
+
+    // Auto focus ke search input saat clear
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.clear-btn')) {
+            setTimeout(() => {
+                if (searchInput) {
+                    searchInput.focus();
+                }
+            }, 100);
+        }
+    });
+
+    // Animasi untuk table rows saat load
     const tableRows = document.querySelectorAll('.homestay-card');
     tableRows.forEach((row, index) => {
         row.style.opacity = '0';
@@ -336,6 +625,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, index * 100);
     });
 
+    // Animasi hover untuk pagination
     const paginationLinks = document.querySelectorAll('.page-link');
     paginationLinks.forEach(link => {
         link.addEventListener('mouseenter', function() {

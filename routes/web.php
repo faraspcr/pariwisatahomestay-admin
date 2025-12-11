@@ -62,7 +62,17 @@ Route::resource('user', UserController::class);
 
 
 Route::resource('ulasan_wisata', UlasanWisataController::class);
+
+// Homestay Routes
 Route::resource('homestay', HomestayController::class);
+
+// File Upload Routes untuk Homestay
+Route::post('homestay/{id}/upload-files', [HomestayController::class, 'uploadFiles'])->name('homestay.upload-files');
+Route::delete('homestay/{id}/delete-file/{fileId}', [HomestayController::class, 'deleteFile'])->name('homestay.delete-file');
+Route::get('homestay/{id}/download-file/{fileId}', [HomestayController::class, 'downloadFile'])->name('homestay.download-file');
+Route::get('homestay/{id}/show-file/{fileId}', [HomestayController::class, 'showFile'])->name('homestay.show-file');
+
+
 Route::resource('kamar_homestay', KamarHomestayController::class);
 Route::resource('booking-homestay', BookingHomestayController::class);
 

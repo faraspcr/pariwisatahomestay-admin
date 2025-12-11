@@ -9,14 +9,14 @@
         <!-- Header -->
         <div class="page-header">
             <h3 class="page-title">
-                <i class="mdi mdi-home-edit text-primary mr-2"></i>
-                Edit Data Homestay
+                <i class="mdi mdi-eye text-primary mr-2"></i>
+                Detail Homestay
             </h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('homestay.index') }}">Data Homestay</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Edit Data</li>
+                    <li class="breadcrumb-item"><a href="{{ route('homestay.index') }}">Homestay</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Detail Homestay</li>
                 </ol>
             </nav>
         </div>
@@ -32,193 +32,133 @@
             </div>
         @endif
 
-        @if(session('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="mdi mdi-alert-circle-outline mr-2"></i>
-                <strong>Error!</strong> {{ session('error') }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
-
-        <!-- Error List di Atas Form -->
-        @if($errors->any())
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="mdi mdi-alert-circle-outline mr-2"></i>
-                <strong>Terjadi kesalahan!</strong> Silakan perbaiki data berikut:
-                <ul class="mt-2 mb-0">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
-
         <div class="row">
-            <!-- Form Edit Data -->
-            <div class="col-lg-6 mb-4">
-                <div class="card card-edit">
+            <!-- Informasi Homestay -->
+            <div class="col-lg-5 mb-4">
+                <div class="card card-detail">
                     <div class="card-header bg-info text-white">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0"><i class="mdi mdi-pencil-box mr-2"></i>Form Edit Data Homestay</h5>
-                            <a href="{{ route('homestay.index') }}" class="btn btn-light btn-sm">
-                                <i class="mdi mdi-arrow-left mr-1"></i>Kembali
-                            </a>
-                        </div>
+                        <h5 class="mb-0"><i class="mdi mdi-information mr-2"></i>Informasi Homestay</h5>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('homestay.update', $homestay->homestay_id) }}" method="POST" id="homestayForm">
-                            @csrf
-                            @method('PUT')
-
-                            <div class="row">
-                                <!-- Kolom Kiri -->
-                                <div class="col-md-6">
-                                    <!-- Nama Homestay -->
-                                    <div class="form-group">
-                                        <label for="nama" class="form-label">Nama Homestay <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control @error('nama') is-invalid @enderror"
-                                               id="nama" name="nama" value="{{ old('nama', $homestay->nama) }}"
-                                               placeholder="Masukkan nama homestay" required>
-                                        @error('nama')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <!-- Pemilik -->
-                                    <div class="form-group">
-                                        <label for="pemilik_warga_id" class="form-label">Pemilik <span class="text-danger">*</span></label>
-                                        <select class="form-control @error('pemilik_warga_id') is-invalid @enderror"
-                                                id="pemilik_warga_id" name="pemilik_warga_id" required>
-                                            <option value="">-- Pilih Pemilik --</option>
-                                            @foreach($wargas as $warga)
-                                                <option value="{{ $warga->warga_id }}"
-                                                    {{ old('pemilik_warga_id', $homestay->pemilik_warga_id) == $warga->warga_id ? 'selected' : '' }}>
-                                                    {{ $warga->nama }} - {{ $warga->no_ktp }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        @error('pemilik_warga_id')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <!-- Alamat -->
-                                    <div class="form-group">
-                                        <label for="alamat" class="form-label">Alamat <span class="text-danger">*</span></label>
-                                        <textarea class="form-control @error('alamat') is-invalid @enderror"
-                                                  id="alamat" name="alamat" rows="3"
-                                                  placeholder="Masukkan alamat lengkap" required>{{ old('alamat', $homestay->alamat) }}</textarea>
-                                        @error('alamat')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
+                        <div class="detail-info">
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <i class="mdi mdi-home text-primary"></i>
+                                    <span>Nama Homestay</span>
                                 </div>
+                                <div class="detail-value">{{ $homestay->nama }}</div>
+                            </div>
 
-                                <!-- Kolom Kanan -->
-                                <div class="col-md-6">
-                                    <!-- RT -->
-                                    <div class="form-group">
-                                        <label for="rt" class="form-label">RT</label>
-                                        <input type="text" class="form-control @error('rt') is-invalid @enderror"
-                                               id="rt" name="rt" value="{{ old('rt', $homestay->rt) }}"
-                                               placeholder="Masukkan RT" maxlength="5">
-                                        @error('rt')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <i class="mdi mdi-account text-primary"></i>
+                                    <span>Pemilik</span>
+                                </div>
+                                <div class="detail-value">{{ $homestay->pemilik->nama ?? 'Tidak ada data' }}</div>
+                            </div>
 
-                                    <!-- RW -->
-                                    <div class="form-group">
-                                        <label for="rw" class="form-label">RW</label>
-                                        <input type="text" class="form-control @error('rw') is-invalid @enderror"
-                                               id="rw" name="rw" value="{{ old('rw', $homestay->rw) }}"
-                                               placeholder="Masukkan RW" maxlength="5">
-                                        @error('rw')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <i class="mdi mdi-home-map-marker text-primary"></i>
+                                    <span>Alamat</span>
+                                </div>
+                                <div class="detail-value">{{ $homestay->alamat }}</div>
+                            </div>
 
-                                    <!-- Harga per Malam -->
-                                    <div class="form-group">
-                                        <label for="harga_per_malam" class="form-label">Harga per Malam <span class="text-danger">*</span></label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">Rp</span>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <i class="mdi mdi-map-marker-radius text-primary"></i>
+                                    <span>RT/RW</span>
+                                </div>
+                                <div class="detail-value">
+                                    <span class="badge-biru">{{ $homestay->rt }}/{{ $homestay->rw }}</span>
+                                </div>
+                            </div>
+
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <i class="mdi mdi-sofa text-primary"></i>
+                                    <span>Fasilitas</span>
+                                </div>
+                                <div class="detail-value detail-desc">
+                                    @if($homestay->fasilitas_json)
+                                        @php
+                                            $fasilitas = json_decode($homestay->fasilitas_json, true);
+                                        @endphp
+                                        @if(is_array($fasilitas) && count($fasilitas) > 0)
+                                            <div class="fasilitas-list">
+                                                @foreach($fasilitas as $fasil)
+                                                    <span class="badge bg-light text-dark mb-1 mr-1">{{ $fasil }}</span>
+                                                @endforeach
                                             </div>
-                                            <input type="number" class="form-control @error('harga_per_malam') is-invalid @enderror"
-                                                   id="harga_per_malam" name="harga_per_malam"
-                                                   value="{{ old('harga_per_malam', $homestay->harga_per_malam) }}"
-                                                   placeholder="Masukkan harga per malam" min="0" required>
-                                        </div>
-                                        @error('harga_per_malam')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <!-- Status -->
-                                    <div class="form-group">
-                                        <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
-                                        <select class="form-control @error('status') is-invalid @enderror"
-                                                id="status" name="status" required>
-                                            <option value="">-- Pilih Status --</option>
-                                            <option value="pending" {{ old('status', $homestay->status) == 'pending' ? 'selected' : '' }}>Pending</option>
-                                            <option value="aktif" {{ old('status', $homestay->status) == 'aktif' ? 'selected' : '' }}>Aktif</option>
-                                            <option value="nonaktif" {{ old('status', $homestay->status) == 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
-                                        </select>
-                                        @error('status')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <!-- Fasilitas (JSON) -->
-                                    <div class="form-group">
-                                        <label for="fasilitas_json" class="form-label">Fasilitas (JSON)</label>
-                                        <textarea class="form-control @error('fasilitas_json') is-invalid @enderror"
-                                                  id="fasilitas_json" name="fasilitas_json" rows="3"
-                                                  placeholder='Contoh: ["WiFi", "AC", "Kolam Renang"]'>{{ old('fasilitas_json', is_array($homestay->fasilitas_json) ? json_encode($homestay->fasilitas_json, JSON_PRETTY_PRINT) : $homestay->fasilitas_json) }}</textarea>
-                                        <small class="form-text text-muted">
-                                            Format JSON array. Contoh: ["WiFi", "AC", "Parkir", "Dapur"]
-                                        </small>
-                                        @error('fasilitas_json')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
+                                        @else
+                                            {{ $homestay->fasilitas_json }}
+                                        @endif
+                                    @else
+                                        -
+                                    @endif
                                 </div>
                             </div>
 
-                            <!-- Tombol Aksi -->
-                            <div class="row mt-4 pt-3 border-top">
-                                <div class="col-12">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="form-check">
-                                            <input type="checkbox" class="form-check-input" id="confirmEdit">
-                                            <label class="form-check-label text-muted" for="confirmEdit">
-                                                Saya yakin data yang diubah sudah benar
-                                            </label>
-                                        </div>
-                                        <div class="d-flex gap-2">
-                                            <a href="{{ route('homestay.index') }}" class="btn btn-outline-secondary btn-sm">
-                                                <i class="mdi mdi-close mr-1"></i>Batal
-                                            </a>
-                                            <button type="submit" class="btn btn-primary btn-sm" id="submitBtn" disabled>
-                                                <i class="mdi mdi-content-save mr-1"></i>Simpan Perubahan
-                                            </button>
-                                        </div>
-                                    </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <i class="mdi mdi-cash text-primary"></i>
+                                    <span>Harga per Malam</span>
+                                </div>
+                                <div class="detail-value">
+                                    <span class="badge-orange">Rp {{ number_format($homestay->harga_per_malam, 0, ',', '.') }}</span>
                                 </div>
                             </div>
-                        </form>
+
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <i class="mdi mdi-check-circle text-primary"></i>
+                                    <span>Status</span>
+                                </div>
+                                <div class="detail-value">
+                                    @if($homestay->status == 'active')
+                                        <span class="badge-hijau">Aktif</span>
+                                    @elseif($homestay->status == 'inactive')
+                                        <span class="badge-danger">Tidak Aktif</span>
+                                    @else
+                                        <span class="badge-secondary">{{ $homestay->status }}</span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <i class="mdi mdi-identifier text-primary"></i>
+                                    <span>ID Homestay</span>
+                                </div>
+                                <div class="detail-value">
+                                    <span class="badge bg-secondary">#{{ $homestay->homestay_id }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex mt-4 pt-3 border-top">
+                            <a href="{{ route('homestay.edit', $homestay->homestay_id) }}" class="btn btn-warning me-2 btn-action">
+                                <i class="mdi mdi-pencil mr-1"></i> Edit Data
+                            </a>
+                            <form action="{{ route('homestay.destroy', $homestay->homestay_id) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-action"
+                                        onclick="return confirm('Apakah Anda yakin ingin menghapus homestay ini?')">
+                                    <i class="mdi mdi-delete mr-1"></i> Hapus
+                                </button>
+                            </form>
+                            <a href="{{ route('homestay.index') }}" class="btn btn-secondary ms-auto btn-action">
+                                <i class="mdi mdi-arrow-left mr-1"></i> Kembali
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- File Pendukung (GALLERY SAMA PERSIS DENGAN SHOW) -->
-            <div class="col-lg-6 mb-4">
+            <!-- Foto Homestay -->
+            <div class="col-lg-7 mb-4">
                 <div class="card border-0 shadow card-gallery">
                     <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
                         <h5 class="mb-0"><i class="mdi mdi-camera mr-2"></i>Galeri Foto Homestay</h5>
@@ -226,12 +166,16 @@
                     </div>
                     <div class="card-body">
                         @if(count($files) > 0)
-                            <!-- Gallery Navigation -->
+                            <!-- Gallery Navigation dengan Slideshow Controls -->
                             <div class="row mb-3">
                                 <div class="col-12">
                                     <div class="gallery-nav">
                                         <button class="btn btn-sm btn-outline-primary" onclick="showAllPhotos()">
                                             <i class="mdi mdi-view-grid"></i> Semua File
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-success" id="slideshowToggleBtn" onclick="toggleSlideshow()">
+                                            <i class="mdi mdi-play" id="slideshowIcon"></i>
+                                            <span id="slideshowText">Mulai Slideshow</span>
                                         </button>
                                         <button class="btn btn-sm btn-outline-info" onclick="downloadAll()">
                                             <i class="mdi mdi-download"></i> Download Semua
@@ -240,7 +184,24 @@
                                 </div>
                             </div>
 
-                            <!-- Main Photo Preview -->
+                            <!-- Slideshow Timer Display -->
+                            <div class="row mb-2" id="slideshowTimerContainer" style="display: none;">
+                                <div class="col-12">
+                                    <div class="slideshow-timer text-center">
+                                        <span class="badge bg-warning text-dark">
+                                            <i class="mdi mdi-timer mr-1"></i>
+                                            Slideshow: <span id="slideshowTimer">5</span> detik
+                                        </span>
+                                        <div class="slideshow-progress mt-2">
+                                            <div class="progress" style="height: 6px;">
+                                                <div class="progress-bar bg-success" id="slideshowProgress" role="progressbar" style="width: 0%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Main Photo Preview - DIPERBESAR -->
                             <div class="main-photo-container mb-4">
                                 <div class="main-photo-wrapper">
                                     @php
@@ -256,7 +217,7 @@
                                     @endphp
 
                                     @if($isImage)
-                                        <!-- Gambar -->
+                                        <!-- Gambar - DIPERBESAR -->
                                         <img src="{{ asset('storage/' . $firstFile->file_name) }}"
                                              id="currentMainPhoto"
                                              class="main-photo"
@@ -294,6 +255,18 @@
                                             <p class="text-muted">{{ $firstFile->mime_type }}</p>
                                         </div>
                                     @endif
+
+                                    <!-- Slideshow Controls Overlay -->
+                                    <div class="slideshow-controls-overlay">
+                                        <button class="btn btn-light btn-round" onclick="prevPhoto()" data-toggle="tooltip" title="Sebelumnya">
+                                            <i class="mdi mdi-chevron-left"></i>
+                                        </button>
+                                        <button class="btn btn-light btn-round" onclick="nextPhoto()" data-toggle="tooltip" title="Berikutnya">
+                                            <i class="mdi mdi-chevron-right"></i>
+                                        </button>
+                                    </div>
+
+                                    <!-- Photo Overlay Controls -->
                                     <div class="photo-overlay">
                                         @if($isImage)
                                             <button class="btn btn-light btn-sm" onclick="downloadCurrentPhoto()"
@@ -544,7 +517,7 @@
     </div>
 </div>
 
-{{-- ====================== START JS TAMBAHAN UNTUK EDIT ====================== --}}
+{{-- ====================== START JS TAMBAHAN DENGAN SLIDESHOW ====================== --}}
 <script>
     // Variables
     let currentPhotoIndex = 0;
@@ -556,6 +529,13 @@
     let currentPDFPreviewUrl = '';
     const homestayId = {{ $homestay->homestay_id }};
     const baseImagePath = '{{ asset("storage/") }}/';
+
+    // Slideshow Variables
+    let slideshowInterval = null;
+    let slideshowTime = 5; // detik
+    let slideshowTimer = slideshowTime;
+    let slideshowActive = false;
+    let slideshowProgressInterval = null;
 
     // Helper functions
     function basename(path) {
@@ -570,83 +550,222 @@
         return '{{ route("homestay.show-file", [$homestay->homestay_id, "FILE_ID"]) }}'.replace('FILE_ID', fileId);
     }
 
-    // Form Validation
-    document.getElementById('confirmEdit').addEventListener('change', function() {
-        document.getElementById('submitBtn').disabled = !this.checked;
-    });
-
-    // Auto format untuk input RT dan RW (hanya angka)
-    document.getElementById('rt').addEventListener('input', function(e) {
-        this.value = this.value.replace(/[^0-9]/g, '');
-        if (this.value.length > 5) {
-            this.value = this.value.substring(0, 5);
+    // ============ SLIDESHOW FUNCTIONS ============
+    function toggleSlideshow() {
+        if (slideshowActive) {
+            stopSlideshow();
+        } else {
+            startSlideshow();
         }
-    });
+    }
 
-    document.getElementById('rw').addEventListener('input', function(e) {
-        this.value = this.value.replace(/[^0-9]/g, '');
-        if (this.value.length > 5) {
-            this.value = this.value.substring(0, 5);
+    function startSlideshow() {
+        if (photos.length === 0) {
+            showToast('warning', 'Tidak ada file untuk slideshow');
+            return;
         }
-    });
 
-    // Format harga saat input
-    document.getElementById('harga_per_malam').addEventListener('input', function(e) {
-        let value = this.value.replace(/[^0-9]/g, '');
-        if (value) {
-            this.value = parseInt(value).toLocaleString('id-ID');
+        // Filter hanya file gambar untuk slideshow
+        const imageFiles = photos.filter(photo => photo.mime_type.includes('image'));
+        if (imageFiles.length === 0) {
+            showToast('warning', 'Tidak ada file gambar untuk slideshow');
+            return;
         }
-    });
 
-    // Format harga saat focus out
-    document.getElementById('harga_per_malam').addEventListener('blur', function(e) {
-        let value = this.value.replace(/[^0-9]/g, '');
-        if (value) {
-            this.value = parseInt(value).toLocaleString('id-ID');
+        slideshowActive = true;
+        slideshowTimer = slideshowTime;
+
+        // Update UI
+        document.getElementById('slideshowToggleBtn').classList.remove('btn-outline-success');
+        document.getElementById('slideshowToggleBtn').classList.add('btn-success');
+        document.getElementById('slideshowIcon').classList.remove('mdi-play');
+        document.getElementById('slideshowIcon').classList.add('mdi-pause');
+        document.getElementById('slideshowText').textContent = 'Stop Slideshow';
+
+        // Show timer
+        document.getElementById('slideshowTimerContainer').style.display = 'block';
+
+        // Mulai interval slideshow
+        slideshowInterval = setInterval(nextSlideshowPhoto, slideshowTime * 1000);
+
+        // Mulai progress bar
+        startProgressBar();
+
+        showToast('info', 'Slideshow dimulai. Otomatis berganti setiap ' + slideshowTime + ' detik');
+    }
+
+    function stopSlideshow() {
+        slideshowActive = false;
+
+        // Update UI
+        document.getElementById('slideshowToggleBtn').classList.remove('btn-success');
+        document.getElementById('slideshowToggleBtn').classList.add('btn-outline-success');
+        document.getElementById('slideshowIcon').classList.remove('mdi-pause');
+        document.getElementById('slideshowIcon').classList.add('mdi-play');
+        document.getElementById('slideshowText').textContent = 'Mulai Slideshow';
+
+        // Hide timer
+        document.getElementById('slideshowTimerContainer').style.display = 'none';
+
+        // Hentikan interval
+        if (slideshowInterval) {
+            clearInterval(slideshowInterval);
+            slideshowInterval = null;
         }
-    });
 
-    // Format harga saat focus in
-    document.getElementById('harga_per_malam').addEventListener('focus', function(e) {
-        let value = this.value.replace(/[^0-9]/g, '');
-        if (value) {
-            this.value = value;
+        // Hentikan progress bar
+        if (slideshowProgressInterval) {
+            clearInterval(slideshowProgressInterval);
+            slideshowProgressInterval = null;
         }
-    });
 
-    // Validasi JSON untuk fasilitas
-    const fasilitasTextarea = document.getElementById('fasilitas_json');
-    if (fasilitasTextarea) {
-        fasilitasTextarea.addEventListener('blur', function(e) {
-            const value = this.value.trim();
-            if (value) {
-                try {
-                    JSON.parse(value);
-                    this.classList.remove('is-invalid');
-                    this.classList.add('is-valid');
-                } catch (error) {
-                    this.classList.add('is-invalid');
-                    this.classList.remove('is-valid');
-                    console.error('Invalid JSON format:', error.message);
-                }
-            } else {
-                this.classList.remove('is-invalid', 'is-valid');
+        // Reset progress bar
+        document.getElementById('slideshowProgress').style.width = '0%';
+
+        showToast('info', 'Slideshow dihentikan');
+    }
+
+    function nextSlideshowPhoto() {
+        const imageFiles = photos.filter(photo => photo.mime_type.includes('image'));
+
+        if (imageFiles.length === 0) {
+            stopSlideshow();
+            return;
+        }
+
+        // Cari index file gambar berikutnya
+        let nextIndex = -1;
+        for (let i = currentPhotoIndex + 1; i < photos.length; i++) {
+            if (photos[i].mime_type.includes('image')) {
+                nextIndex = i;
+                break;
             }
-        });
+        }
+
+        // Jika tidak ditemukan, cari dari awal
+        if (nextIndex === -1) {
+            for (let i = 0; i < currentPhotoIndex; i++) {
+                if (photos[i].mime_type.includes('image')) {
+                    nextIndex = i;
+                    break;
+                }
+            }
+        }
+
+        // Jika masih tidak ditemukan, tetap di gambar yang sama
+        if (nextIndex === -1) {
+            nextIndex = currentPhotoIndex;
+        }
+
+        // Pindah ke gambar berikutnya
+        changeMainPhoto(
+            photos[nextIndex].file_name,
+            nextIndex,
+            photos[nextIndex].mime_type,
+            photos[nextIndex].media_id,
+            basename(photos[nextIndex].file_name)
+        );
+
+        // Reset timer dan progress bar
+        slideshowTimer = slideshowTime;
+        startProgressBar();
+    }
+
+    function startProgressBar() {
+        // Hentikan progress bar sebelumnya
+        if (slideshowProgressInterval) {
+            clearInterval(slideshowProgressInterval);
+        }
+
+        // Reset progress
+        document.getElementById('slideshowProgress').style.width = '0%';
+        document.getElementById('slideshowTimer').textContent = slideshowTime;
+
+        let timeLeft = slideshowTime;
+        const progressBar = document.getElementById('slideshowProgress');
+        const timerElement = document.getElementById('slideshowTimer');
+
+        slideshowProgressInterval = setInterval(() => {
+            timeLeft--;
+
+            // Update timer display
+            timerElement.textContent = timeLeft;
+
+            // Update progress bar
+            const progress = ((slideshowTime - timeLeft) / slideshowTime) * 100;
+            progressBar.style.width = progress + '%';
+
+            if (timeLeft <= 0) {
+                clearInterval(slideshowProgressInterval);
+            }
+        }, 1000);
+    }
+
+    // ============ NAVIGATION FUNCTIONS ============
+    function nextPhoto() {
+        if (photos.length === 0) return;
+
+        let nextIndex = currentPhotoIndex + 1;
+        if (nextIndex >= photos.length) {
+            nextIndex = 0;
+        }
+
+        changeMainPhoto(
+            photos[nextIndex].file_name,
+            nextIndex,
+            photos[nextIndex].mime_type,
+            photos[nextIndex].media_id,
+            basename(photos[nextIndex].file_name)
+        );
+
+        // Reset slideshow timer jika slideshow aktif
+        if (slideshowActive) {
+            slideshowTimer = slideshowTime;
+            startProgressBar();
+        }
+    }
+
+    function prevPhoto() {
+        if (photos.length === 0) return;
+
+        let prevIndex = currentPhotoIndex - 1;
+        if (prevIndex < 0) {
+            prevIndex = photos.length - 1;
+        }
+
+        changeMainPhoto(
+            photos[prevIndex].file_name,
+            prevIndex,
+            photos[prevIndex].mime_type,
+            photos[prevIndex].media_id,
+            basename(photos[prevIndex].file_name)
+        );
+
+        // Reset slideshow timer jika slideshow aktif
+        if (slideshowActive) {
+            slideshowTimer = slideshowTime;
+            startProgressBar();
+        }
     }
 
     // ============ FUNGSI HANDLE ERROR GAMBAR ============
     function handleImageError(img, fileName) {
         console.error('Gagal memuat gambar:', fileName);
 
+        // Coba load dengan URL yang benar
         const correctPath = 'storage/' + fileName;
         const correctUrl = "{{ asset('') }}" + correctPath;
+
+        // Coba load lagi dengan teknik cache busting
         const timestamp = new Date().getTime();
         const retryUrl = correctUrl + '?t=' + timestamp;
 
+        // Coba load dengan URL baru
         img.src = retryUrl;
 
+        // Jika masih error, tampilkan placeholder
         img.onerror = function() {
+            // Tampilkan placeholder yang lebih baik
             const svg = `
                 <svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
                     <rect width="800" height="500" fill="#f8f9fa"/>
@@ -662,6 +781,9 @@
 
             img.src = 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
             img.style.cursor = 'default';
+
+            // Tampilkan pesan toast
+            showToast('error', `Gagal memuat: ${fileName.split('/').pop()}`);
         };
     }
 
@@ -728,22 +850,33 @@
 
         // Tampilkan preview sesuai jenis file
         if (isImage) {
+            // Tampilkan gambar
             const timestamp = new Date().getTime();
             const fullPath = 'storage/' + fileName;
             mainPhoto.src = "{{ asset('') }}" + fullPath + '?t=' + timestamp;
             mainPhoto.style.display = 'block';
 
+            // Update juga untuk fullscreen modal
             document.getElementById('fullscreenImage').src = "{{ asset('') }}" + fullPath + '?t=' + timestamp;
             document.getElementById('imageFullscreenTitle').textContent = currentFileDisplayName;
             currentPDFPreviewUrl = '';
         } else if (isPDF) {
+            // Tampilkan preview PDF
             currentPDFPreviewUrl = getPreviewUrl(fileId);
 
+            // Update container PDF
             const pdfContainer = document.querySelector('.pdf-preview-container') || createPDFPreview();
             pdfContainer.style.display = 'block';
 
+            // Update fullscreen untuk PDF
             document.getElementById('pdfFullscreenTitle').textContent = currentFileDisplayName + ' (PDF)';
+
+            // Stop slideshow jika PDF ditampilkan
+            if (slideshowActive) {
+                stopSlideshow();
+            }
         } else {
+            // Tampilkan preview dokumen lain
             let icon = 'mdi-file-document-box';
             let color = 'text-secondary';
 
@@ -773,6 +906,11 @@
             }
             mainPhotoWrapper.insertBefore(newDocPreview, mainPhotoWrapper.firstChild);
             currentPDFPreviewUrl = '';
+
+            // Stop slideshow jika dokumen non-gambar ditampilkan
+            if (slideshowActive) {
+                stopSlideshow();
+            }
         }
 
         photoName.textContent = currentFileDisplayName;
@@ -815,6 +953,7 @@
     function downloadCurrentPhoto() {
         if (currentFileId) {
             const downloadUrl = getDownloadUrl(currentFileId);
+            console.log('Download current file:', downloadUrl);
             window.open(downloadUrl, '_blank');
         }
     }
@@ -822,6 +961,7 @@
     function downloadFullscreenPhoto() {
         if (currentFileId) {
             const downloadUrl = getDownloadUrl(currentFileId);
+            console.log('Download fullscreen file:', downloadUrl);
             window.open(downloadUrl, '_blank');
         }
     }
@@ -834,24 +974,31 @@
 
         showToast('info', `Memulai download ${photos.length} file...`);
 
+        // Download semua file dengan delay
         photos.forEach((photo, index) => {
             setTimeout(() => {
                 const downloadUrl = getDownloadUrl(photo.media_id);
+                console.log(`Downloading ${index + 1}/${photos.length}:`, downloadUrl);
+
+                // Buat link download secara dinamis
                 const link = document.createElement('a');
                 link.href = downloadUrl;
                 link.target = '_blank';
                 link.download = basename(photo.file_name);
 
+                // Tambahkan ke body dan klik
                 document.body.appendChild(link);
                 link.click();
 
+                // Hapus link setelah diklik
                 setTimeout(() => {
                     document.body.removeChild(link);
                 }, 100);
 
-            }, index * 1500);
+            }, index * 1500); // Jarak 1.5 detik antar download
         });
 
+        // Tampilkan pesan selesai
         setTimeout(() => {
             showToast('success', 'Semua file telah ditambahkan ke antrian download');
         }, photos.length * 1500 + 1000);
@@ -863,8 +1010,10 @@
         const isPDF = currentFileType.includes('pdf');
 
         if (isImage) {
+            // Tampilkan gambar di modal fullscreen khusus gambar
             $('#imageFullscreenModal').modal('show');
 
+            // Atur gambar agar benar-benar fullscreen
             const img = document.getElementById('fullscreenImage');
             img.style.maxWidth = '100%';
             img.style.maxHeight = '80vh';
@@ -874,10 +1023,12 @@
             img.style.margin = '0 auto';
 
         } else if (isPDF) {
+            // Tampilkan PDF di modal fullscreen khusus PDF
             const pdfIframe = document.getElementById('pdfFullscreenIframe');
             pdfIframe.src = currentPDFPreviewUrl;
             $('#pdfFullscreenModal').modal('show');
         } else {
+            // Untuk dokumen lain, langsung download
             downloadCurrentPhoto();
         }
     }
@@ -916,6 +1067,7 @@
             uploadBtn.disabled = false;
 
             Array.from(input.files).forEach((file, index) => {
+                // Check file size (5MB max)
                 if (file.size > 5 * 1024 * 1024) {
                     showToast('error', `File ${file.name} melebihi 5MB`);
                     return;
@@ -995,6 +1147,7 @@
 
     // ============ TOAST NOTIFICATION ============
     function showToast(type, message) {
+        // Hapus toast sebelumnya
         const existingToasts = document.querySelectorAll('.toast-notification');
         existingToasts.forEach(toast => toast.remove());
 
@@ -1010,55 +1163,12 @@
 
         document.body.appendChild(toast);
 
+        // Auto remove after 3 seconds
         setTimeout(() => {
             if (toast.parentElement) {
                 toast.remove();
             }
         }, 3000);
-    }
-
-    // ============ FORM VALIDATION ============
-    function validateForm() {
-        const nama = document.getElementById('nama').value.trim();
-        const pemilik = document.getElementById('pemilik_warga_id').value;
-        const alamat = document.getElementById('alamat').value.trim();
-        const harga = document.getElementById('harga_per_malam').value.replace(/[^0-9]/g, '');
-        const status = document.getElementById('status').value;
-
-        let isValid = true;
-        let errorMessage = '';
-
-        if (nama.length < 3) {
-            isValid = false;
-            errorMessage += 'Nama homestay minimal 3 karakter\n';
-        }
-
-        if (!pemilik) {
-            isValid = false;
-            errorMessage += 'Pemilik harus dipilih\n';
-        }
-
-        if (alamat.length < 10) {
-            isValid = false;
-            errorMessage += 'Alamat minimal 10 karakter\n';
-        }
-
-        if (!harga || parseInt(harga) < 0) {
-            isValid = false;
-            errorMessage += 'Harga per malam harus diisi dan minimal 0\n';
-        }
-
-        if (!status) {
-            isValid = false;
-            errorMessage += 'Status harus dipilih\n';
-        }
-
-        if (!isValid) {
-            alert('Perbaiki kesalahan berikut:\n\n' + errorMessage);
-            return false;
-        }
-
-        return true;
     }
 
     // ============ INITIALIZATION ============
@@ -1071,42 +1181,6 @@
             $('.alert').alert('close');
         }, 5000);
 
-        // Add form validation
-        document.getElementById('homestayForm').addEventListener('submit', function(e) {
-            if (!validateForm()) {
-                e.preventDefault();
-                return false;
-            }
-
-            const submitBtn = document.getElementById('submitBtn');
-            const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<i class="mdi mdi-loading mdi-spin mr-1"></i> Menyimpan...';
-            submitBtn.disabled = true;
-
-            return true;
-        });
-
-        // Add keyboard shortcuts
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.key === 's') {
-                e.preventDefault();
-                document.getElementById('submitBtn').click();
-            }
-
-            if (e.key === 'Escape') {
-                window.location.href = "{{ route('homestay.index') }}";
-            }
-        });
-
-        // Format harga on load
-        const hargaInput = document.getElementById('harga_per_malam');
-        if (hargaInput.value) {
-            let value = hargaInput.value.replace(/[^0-9]/g, '');
-            if (value) {
-                hargaInput.value = parseInt(value).toLocaleString('id-ID');
-            }
-        }
-
         // Initialize fullscreen image
         if (photos.length > 0 && photos[0].mime_type.includes('image')) {
             const firstFile = photos[0];
@@ -1116,85 +1190,238 @@
             document.getElementById('imageFullscreenTitle').textContent = basename(firstFile.file_name);
         }
 
+        // Tambahkan console log untuk debugging
         console.log('Files loaded:', photos);
         console.log('Homestay ID:', homestayId);
+
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Esc untuk keluar dari fullscreen dan stop slideshow
+            if (e.key === 'Escape') {
+                if ($('#imageFullscreenModal').hasClass('show')) {
+                    $('#imageFullscreenModal').modal('hide');
+                }
+                if ($('#pdfFullscreenModal').hasClass('show')) {
+                    $('#pdfFullscreenModal').modal('hide');
+                }
+                if (slideshowActive) {
+                    stopSlideshow();
+                }
+            }
+
+            // Space untuk toggle slideshow
+            if (e.key === ' ' && !e.target.matches('input, textarea, button, a')) {
+                e.preventDefault();
+                toggleSlideshow();
+            }
+
+            // Arrow keys untuk navigasi foto
+            if (e.key === 'ArrowRight') {
+                if (photos.length > 0) {
+                    nextPhoto();
+                }
+            }
+
+            if (e.key === 'ArrowLeft') {
+                if (photos.length > 0) {
+                    prevPhoto();
+                }
+            }
+        });
+
+        // Stop slideshow saat modal dibuka
+        $('#imageFullscreenModal, #pdfFullscreenModal').on('show.bs.modal', function () {
+            if (slideshowActive) {
+                stopSlideshow();
+            }
+        });
     });
 </script>
 
 <style>
-/* ==================== EDIT FORM STYLES ==================== */
-.card-edit {
+/* ==================== DETAIL STYLES ==================== */
+.card-detail {
     border-radius: 15px;
     overflow: hidden;
-    border: none;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
     transition: transform 0.3s ease;
 }
 
-.card-edit:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+.card-detail:hover {
+    transform: translateY(-5px);
 }
 
-.card-edit .card-header {
-    border-bottom: 3px solid rgba(255,255,255,0.2);
+.detail-info {
+    padding: 10px 0;
 }
 
-.card-edit .form-label {
-    font-weight: 600;
-    color: #495057;
-    font-size: 0.9rem;
-    margin-bottom: 8px;
+.detail-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.detail-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.detail-label {
+    min-width: 150px;
     display: flex;
     align-items: center;
+    font-weight: 600;
+    color: #555;
 }
 
-.card-edit .form-control-sm {
+.detail-label i {
+    font-size: 18px;
+    margin-right: 10px;
+    width: 24px;
+}
+
+.detail-value {
+    flex: 1;
+    color: #333;
+    line-height: 1.5;
+}
+
+.detail-desc {
+    white-space: pre-line;
+    line-height: 1.6;
+    background: #f8f9fa;
+    padding: 10px;
     border-radius: 8px;
-    border: 1px solid #ddd;
-    padding: 10px 12px;
-    font-size: 0.9rem;
+    border-left: 3px solid #4e73df;
+}
+
+.fasilitas-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.fasilitas-list .badge {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+/* ==================== BADGE STYLES ==================== */
+.badge-biru {
+    background: linear-gradient(45deg, #2196F3, #64B5F6);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.badge-hijau {
+    background: linear-gradient(45deg, #4CAF50, #66BB6A);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.badge-orange {
+    background: linear-gradient(45deg, #FF6B35, #FF8E53);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.badge-danger {
+    background: linear-gradient(45deg, #DC3545, #E74C3C);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.badge-secondary {
+    background: linear-gradient(45deg, #6C757D, #868E96);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+/* ==================== SLIDESHOW CONTROLS ==================== */
+.slideshow-timer {
+    padding: 10px;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border-radius: 10px;
+    margin-bottom: 15px;
+    border: 2px solid #e0e0e0;
+}
+
+.slideshow-timer .badge {
+    font-size: 1rem;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.slideshow-progress .progress {
+    border-radius: 10px;
+    overflow: hidden;
+    background: rgba(0,0,0,0.1);
+}
+
+.slideshow-progress .progress-bar {
+    border-radius: 10px;
+    transition: width 1s linear;
+}
+
+.slideshow-controls-overlay {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 5;
+}
+
+.main-photo-wrapper:hover .slideshow-controls-overlay {
+    opacity: 1;
+}
+
+.slideshow-controls-overlay .btn-round {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid #4e73df;
+    color: #4e73df;
+    font-size: 24px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     transition: all 0.3s ease;
 }
 
-.card-edit .form-control-sm:focus {
-    border-color: #4e73df;
-    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
-    transform: translateY(-1px);
-}
-
-.card-edit .form-control-sm.is-invalid {
-    border-color: #e74a3b;
-    background-image: none;
-}
-
-.card-edit .form-control-sm.is-invalid:focus {
-    box-shadow: 0 0 0 0.2rem rgba(231, 74, 59, 0.25);
-}
-
-.card-edit .invalid-feedback {
-    font-size: 0.8rem;
-    margin-top: 4px;
-}
-
-.card-edit .input-group-sm .input-group-text {
-    background-color: #f8f9fa;
-    border-color: #ddd;
-    font-weight: 600;
-    color: #495057;
+.slideshow-controls-overlay .btn-round:hover {
+    background: #4e73df;
+    color: white;
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(78, 115, 223, 0.4);
 }
 
 /* ==================== GALLERY STYLES ==================== */
 .card-gallery {
     border-radius: 15px;
     overflow: hidden;
-    border: none;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-}
-
-.card-gallery .card-header {
-    border-bottom: 3px solid rgba(255,255,255,0.2);
-    padding: 15px 20px;
 }
 
 .gallery-nav {
@@ -1221,11 +1448,23 @@
     color: white;
 }
 
+.gallery-nav .btn-outline-success:hover {
+    background-color: #28a745;
+    color: white;
+}
+
 .gallery-nav .btn-outline-info:hover {
     background-color: #17a2b8;
     color: white;
 }
 
+.gallery-nav .btn-success {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    border: none;
+    color: white;
+}
+
+/* PERBAIKAN BESAR: Main photo container lebih besar */
 .main-photo-container {
     position: relative;
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
@@ -1239,8 +1478,8 @@
     position: relative;
     border-radius: 12px;
     overflow: hidden;
-    min-height: 400px;
-    max-height: 500px;
+    min-height: 500px;
+    max-height: 600px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1253,9 +1492,10 @@
     box-shadow: 0 12px 30px rgba(0,0,0,0.2);
 }
 
+/* PERBAIKAN BESAR: Main photo lebih besar */
 .main-photo {
     max-width: 100%;
-    max-height: 450px;
+    max-height: 550px;
     width: auto;
     height: auto;
     object-fit: contain;
@@ -1267,6 +1507,7 @@
     transform: scale(1.03);
 }
 
+/* Styling khusus untuk PDF Preview */
 .pdf-preview-container {
     width: 100%;
     padding: 40px 30px;
@@ -1275,12 +1516,46 @@
     box-shadow: 0 4px 15px rgba(0,0,0,0.05);
 }
 
+.pdf-preview-container i {
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.pdf-preview-container:hover i {
+    opacity: 1;
+}
+
+.pdf-preview-container h5 {
+    font-weight: 600;
+    color: #495057;
+    margin-top: 15px !important;
+}
+
+.pdf-preview-container .btn {
+    margin: 5px;
+}
+
 .document-preview {
     width: 100%;
     padding: 40px 30px;
     background: #f8f9fa;
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.document-preview i {
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.document-preview:hover i {
+    opacity: 1;
+}
+
+.document-preview h5 {
+    font-weight: 600;
+    color: #495057;
+    margin-top: 15px !important;
 }
 
 .photo-overlay {
@@ -1331,6 +1606,21 @@
     border: 1px solid #e9ecef;
 }
 
+.photo-info #currentPhotoName {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 10px;
+}
+
+.photo-controls .badge {
+    font-size: 0.9rem;
+    padding: 8px 15px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #4e73df, #224abe);
+    font-weight: 600;
+}
+
 /* ==================== THUMBNAIL STYLES ==================== */
 .thumbnail-card {
     position: relative;
@@ -1376,6 +1666,16 @@
     padding: 15px;
 }
 
+.file-thumbnail i {
+    opacity: 0.8;
+    transition: transform 0.3s ease;
+}
+
+.thumbnail-card:hover .file-thumbnail i {
+    transform: scale(1.2);
+    opacity: 1;
+}
+
 .thumbnail-overlay {
     position: absolute;
     top: 0;
@@ -1409,6 +1709,24 @@
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
+.delete-thumbnail:hover {
+    background-color: #dc3545 !important;
+    transform: scale(1.15);
+    box-shadow: 0 4px 10px rgba(220, 53, 69, 0.4);
+}
+
+.download-thumbnail:hover {
+    background-color: #17a2b8 !important;
+    transform: scale(1.15);
+    box-shadow: 0 4px 10px rgba(23, 162, 184, 0.4);
+}
+
+.view-thumbnail:hover {
+    background-color: #ffc107 !important;
+    transform: scale(1.15);
+    box-shadow: 0 4px 10px rgba(255, 193, 7, 0.4);
+}
+
 .badge-order {
     position: absolute;
     top: 8px;
@@ -1424,6 +1742,82 @@
     border-radius: 50%;
     font-weight: bold;
     box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+/* ==================== FULLSCREEN MODAL STYLES ==================== */
+/* Modal untuk Gambar */
+#imageFullscreenModal .modal-dialog {
+    max-width: 95%;
+    margin: 10px auto;
+}
+
+#imageFullscreenModal .modal-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.9);
+    min-height: 85vh;
+    padding: 0;
+}
+
+#imageFullscreenModal .modal-content {
+    background: transparent;
+    border: none;
+}
+
+#fullscreenImage {
+    max-width: 100%;
+    max-height: 85vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+}
+
+#imageFullscreenModal .modal-header {
+    background: rgba(0, 0, 0, 0.7);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 15px 20px;
+}
+
+#imageFullscreenModal .modal-footer {
+    background: rgba(0, 0, 0, 0.7);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 15px 20px;
+}
+
+/* Modal untuk PDF */
+#pdfFullscreenModal .modal-content {
+    background: rgba(0, 0, 0, 0.95);
+}
+
+#pdfFullscreenModal .modal-header {
+    background: rgba(0, 0, 0, 0.8);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#pdfFullscreenModal .modal-footer {
+    background: rgba(0, 0, 0, 0.8);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#pdfFullscreenIframe {
+    background: white;
+}
+
+.modal-footer .btn-light {
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    font-weight: 600;
+    padding: 10px 20px;
+    transition: all 0.3s ease;
+}
+
+.modal-footer .btn-light:hover {
+    background: white;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
 }
 
 /* ==================== UPLOAD STYLES ==================== */
@@ -1447,6 +1841,16 @@
     display: inline-block;
     width: 100%;
     margin-bottom: 20px;
+}
+
+.custom-file-upload input[type="file"] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
 }
 
 .upload-label {
@@ -1610,6 +2014,43 @@
     margin-right: 12px;
 }
 
+.toast-success .toast-content i {
+    color: #4CAF50;
+}
+
+.toast-error .toast-content i {
+    color: #f44336;
+}
+
+.toast-info .toast-content i {
+    color: #2196F3;
+}
+
+.toast-warning .toast-content i {
+    color: #FF9800;
+}
+
+.toast-close {
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    color: #999;
+    padding: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.toast-close:hover {
+    background: #f0f0f0;
+    color: #333;
+}
+
 @keyframes slideIn {
     from {
         transform: translateX(100%);
@@ -1621,20 +2062,30 @@
     }
 }
 
-/* ==================== BUTTON STYLES ==================== */
-.btn-primary {
-    background: linear-gradient(135deg, #4e73df, #224abe);
-    border: none;
+/* ==================== BUTTON ACTIONS ==================== */
+.btn-action {
+    padding: 10px 20px;
+    border-radius: 8px;
     font-weight: 600;
+    transition: all 0.3s ease;
 }
 
-.btn-primary:hover {
-    background: linear-gradient(135deg, #3a56c4, #1d3ca8);
+.btn-action:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(78, 115, 223, 0.4);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-/* ==================== RESPONSIVE STYLES ==================== */
+/* ==================== ANIMATIONS ==================== */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.card-detail, .card-gallery {
+    animation: fadeIn 0.5s ease;
+}
+
+/* ==================== RESPONSIVE ==================== */
 @media (max-width: 1200px) {
     .main-photo-wrapper {
         min-height: 450px;
@@ -1644,10 +2095,15 @@
     .main-photo {
         max-height: 500px;
     }
+
+    #imageFullscreenModal .modal-dialog {
+        max-width: 100%;
+        margin: 5px auto;
+    }
 }
 
 @media (max-width: 992px) {
-    .card-edit, .card-gallery {
+    .card-detail, .card-gallery {
         margin-bottom: 25px;
     }
 
@@ -1673,16 +2129,30 @@
         min-width: 140px;
         margin-bottom: 8px;
     }
+
+    .slideshow-controls-overlay .btn-round {
+        width: 45px;
+        height: 45px;
+        font-size: 22px;
+    }
+
+    #imageFullscreenModal .modal-body {
+        min-height: 80vh;
+    }
+
+    #fullscreenImage {
+        max-height: 80vh;
+    }
 }
 
 @media (max-width: 768px) {
-    .card-edit .form-label {
-        font-size: 0.9rem;
+    .detail-item {
+        flex-direction: column;
     }
 
-    .card-edit .form-control-sm {
-        padding: 10px;
-        font-size: 0.9rem;
+    .detail-label {
+        min-width: auto;
+        margin-bottom: 5px;
     }
 
     .main-photo-wrapper {
@@ -1711,6 +2181,12 @@
         font-size: 16px;
     }
 
+    .slideshow-controls-overlay .btn-round {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
+
     .gallery-nav .btn {
         padding: 7px 12px;
         font-size: 0.85rem;
@@ -1724,6 +2200,14 @@
         right: auto;
         transform: translateX(-50%);
         bottom: 20px;
+    }
+
+    #imageFullscreenModal .modal-body {
+        min-height: 70vh;
+    }
+
+    #fullscreenImage {
+        max-height: 70vh;
     }
 }
 
@@ -1752,6 +2236,17 @@
         font-size: 14px;
     }
 
+    .slideshow-controls-overlay .btn-round {
+        width: 35px;
+        height: 35px;
+        font-size: 18px;
+        padding: 0;
+    }
+
+    .slideshow-controls-overlay {
+        padding: 0 10px;
+    }
+
     .photo-info #currentPhotoName {
         font-size: 0.9rem;
     }
@@ -1769,6 +2264,14 @@
     .upload-btn {
         padding: 12px;
         font-size: 0.95rem;
+    }
+
+    #imageFullscreenModal .modal-body {
+        min-height: 60vh;
+    }
+
+    #fullscreenImage {
+        max-height: 60vh;
     }
 }
 
@@ -1790,6 +2293,25 @@
         min-width: 100%;
         margin-bottom: 5px;
     }
+
+    .slideshow-controls-overlay {
+        display: none;
+    }
+
+    .slideshow-controls-overlay .btn-round {
+        width: 30px;
+        height: 30px;
+        font-size: 16px;
+    }
+
+    #imageFullscreenModal .modal-body {
+        min-height: 50vh;
+    }
+
+    #fullscreenImage {
+        max-height: 50vh;
+    }
 }
 </style>
+
 @endsection
