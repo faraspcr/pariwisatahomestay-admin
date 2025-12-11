@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth; // TAMBAHKAN INI
 use App\Models\Warga;
 use App\Models\DestinasiWisata;
 use App\Models\User;
@@ -14,9 +15,20 @@ class DashboardController extends Controller
      */
     public function index()
     {
+        // ========== TAMBAHKAN INI: Cek apakah user sudah login ==========
+        if (!Auth::check()) {
+            return redirect()->route('auth.login')->with('error', 'Silakan login terlebih dahulu!');
+        }
+
+        // ========== TAMBAHKAN INI: Ambil data user yang login ==========
+        $user = Auth::user();
+        $lastLogin = session('last_login');
+
+        // Data statistik yang sudah ada
         $totalWarga = Warga::count();
         $totalDestinasi = DestinasiWisata::count();
         $totalUser = User::count();
+        $totalAktivitas = 25; // TAMBAHKAN: Contoh data aktivitas
 
         // Data untuk WhatsApp button
         $whatsappData = [
@@ -25,7 +37,16 @@ class DashboardController extends Controller
             'admin_name' => 'Admin Bina Desa'
         ];
 
-        return view('pages.dashboard', compact('totalWarga', 'totalDestinasi', 'totalUser', 'whatsappData'));
+        // ========== TAMBAHKAN INI: Kirim semua data ke view ==========
+        return view('pages.dashboard', compact(
+            'totalWarga',
+            'totalDestinasi',
+            'totalUser',
+            'whatsappData',
+            'user',          // TAMBAHKAN: data user
+            'lastLogin',     // TAMBAHKAN: last login dari session
+            'totalAktivitas' // TAMBAHKAN: total aktivitas
+        ));
     }
 
     /**

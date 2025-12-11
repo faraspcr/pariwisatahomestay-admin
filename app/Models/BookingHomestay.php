@@ -53,6 +53,14 @@ class BookingHomestay extends Model
         );
     }
 
+    // Relasi ke Media untuk bukti pembayaran
+    public function files()
+    {
+        return $this->hasMany(Media::class, 'ref_id', 'booking_id')
+                    ->where('ref_table', 'booking_homestay')
+                    ->orderBy('sort_order', 'asc');
+    }
+
     // SCOPE UNTUK FILTER DAN SEARCH
     public function scopeFilter($query, $request, array $filterableColumns)
     {
@@ -95,6 +103,20 @@ class BookingHomestay extends Model
 
     // Cek apakah booking aktif
     public function getIsAktifAttribute()
+    {
+        $today = now()->format('Y-m-d');
+        return $this->checkin <= $today && $this->checkout >= $today;
+    }
+
+    // Cek apakah sudah lewat
+    public function getIsCompletedAttribute()
+    {
+        $today = now()->format('Y-m-d');
+        return $this->checkout < $today;
+    }
+
+    // Cek apakah booking sedang berlangsung
+    public function getIsOngoingAttribute()
     {
         $today = now()->format('Y-m-d');
         return $this->checkin <= $today && $this->checkout >= $today;

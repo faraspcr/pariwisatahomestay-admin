@@ -33,11 +33,11 @@
         @endif
 
         <div class="row">
-            <!-- Informasi Destinasi -->
+            <!-- Informasi Destinasi Wisata - STRUKTUR SAMA -->
             <div class="col-lg-5 mb-4">
                 <div class="card card-detail">
                     <div class="card-header bg-info text-white">
-                        <h5 class="mb-0"><i class="mdi mdi-information mr-2"></i>Informasi Destinasi</h5>
+                        <h5 class="mb-0"><i class="mdi mdi-information mr-2"></i>Informasi Destinasi Wisata</h5>
                     </div>
                     <div class="card-body">
                         <div class="detail-info">
@@ -75,19 +75,20 @@
                                 </div>
                             </div>
 
+                            <!-- Jam Buka (Ganti Fasilitas) -->
                             <div class="detail-item">
                                 <div class="detail-label">
                                     <i class="mdi mdi-clock-outline text-primary"></i>
                                     <span>Jam Buka</span>
                                 </div>
-                                <div class="detail-value">
+                                <div class="detail-value detail-desc">
                                     <span class="badge-hijau">{{ $destinasiWisata->jam_buka }}</span>
                                 </div>
                             </div>
 
                             <div class="detail-item">
                                 <div class="detail-label">
-                                    <i class="mdi mdi-ticket text-primary"></i>
+                                    <i class="mdi mdi-cash text-primary"></i>
                                     <span>Harga Tiket</span>
                                 </div>
                                 <div class="detail-value">
@@ -100,7 +101,17 @@
                                     <i class="mdi mdi-phone text-primary"></i>
                                     <span>Kontak</span>
                                 </div>
-                                <div class="detail-value">{{ $destinasiWisata->kontak }}</div>
+                                <div class="detail-value">{{ $destinasiWisata->kontak ?? '-' }}</div>
+                            </div>
+
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <i class="mdi mdi-check-circle text-primary"></i>
+                                    <span>Status</span>
+                                </div>
+                                <div class="detail-value">
+                                    <span class="badge-hijau">Aktif</span>
+                                </div>
                             </div>
 
                             <div class="detail-item">
@@ -112,6 +123,22 @@
                                     <span class="badge bg-secondary">#{{ $destinasiWisata->destinasi_id }}</span>
                                 </div>
                             </div>
+
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <i class="mdi mdi-calendar text-primary"></i>
+                                    <span>Dibuat Tanggal</span>
+                                </div>
+                                <div class="detail-value">{{ $destinasiWisata->created_at->format('d F Y H:i') }}</div>
+                            </div>
+
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <i class="mdi mdi-update text-primary"></i>
+                                    <span>Diupdate Tanggal</span>
+                                </div>
+                                <div class="detail-value">{{ $destinasiWisata->updated_at->format('d F Y H:i') }}</div>
+                            </div>
                         </div>
 
                         <div class="d-grid gap-2 d-md-flex mt-4 pt-3 border-top">
@@ -122,7 +149,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-action"
-                                        onclick="return confirm('Apakah Anda yakin ingin menghapus destinasi ini?')">
+                                        onclick="return confirm('Apakah Anda yakin ingin menghapus destinasi wisata ini?')">
                                     <i class="mdi mdi-delete mr-1"></i> Hapus
                                 </button>
                             </form>
@@ -134,11 +161,11 @@
                 </div>
             </div>
 
-            <!-- Foto Destinasi -->
+            <!-- Foto Destinasi Wisata - STRUKTUR SAMA -->
             <div class="col-lg-7 mb-4">
                 <div class="card border-0 shadow card-gallery">
                     <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0"><i class="mdi mdi-camera mr-2"></i>Galeri Foto Destinasi</h5>
+                        <h5 class="mb-0"><i class="mdi mdi-camera mr-2"></i>Galeri Foto Destinasi Wisata</h5>
                         <span class="badge bg-light text-dark">{{ count($files) }} File</span>
                     </div>
                     <div class="card-body">
@@ -376,7 +403,7 @@
                             <div class="text-center py-5 empty-gallery">
                                 <i class="mdi mdi-image-off fa-4x text-muted mb-3"></i>
                                 <h5 class="text-muted">Belum ada file yang diupload</h5>
-                                <p class="text-muted">Upload file untuk menampilkan galeri destinasi</p>
+                                <p class="text-muted">Upload file untuk menampilkan galeri destinasi wisata</p>
                             </div>
                         @endif
 
@@ -410,7 +437,7 @@
                                     @enderror
                                     <small class="form-text text-muted">
                                         <i class="mdi mdi-information mr-1"></i>
-                                        Pilih multiple file (JPG, PNG, GIF, WEBP, PDF, DOC, DOCX, XLS, XLSX, TXT, CSV). Maksimal 5MB per file.
+                                        Pilih multiple file (JPG, PNG, GIF, WEBP, PDF, DOC, DOCX, XLS, XLSX, TXT, CSV). Maksimal 10MB per file.
                                     </small>
                                 </div>
 
@@ -1044,9 +1071,9 @@
             uploadBtn.disabled = false;
 
             Array.from(input.files).forEach((file, index) => {
-                // Check file size (5MB max)
-                if (file.size > 5 * 1024 * 1024) {
-                    showToast('error', `File ${file.name} melebihi 5MB`);
+                // Check file size (10MB max)
+                if (file.size > 10 * 1024 * 1024) {
+                    showToast('error', `File ${file.name} melebihi 10MB`);
                     return;
                 }
 
@@ -1274,6 +1301,20 @@
     border-left: 3px solid #4e73df;
 }
 
+.fasilitas-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.fasilitas-list .badge {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+}
+
 /* ==================== BADGE STYLES ==================== */
 .badge-biru {
     background: linear-gradient(45deg, #2196F3, #64B5F6);
@@ -1293,6 +1334,22 @@
 
 .badge-orange {
     background: linear-gradient(45deg, #FF6B35, #FF8E53);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.badge-danger {
+    background: linear-gradient(45deg, #DC3545, #E74C3C);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.badge-secondary {
+    background: linear-gradient(45deg, #6C757D, #868E96);
     color: white;
     padding: 6px 12px;
     border-radius: 20px;

@@ -9,17 +9,24 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-
     // Show login form
     public function showLoginForm()
     {
-        return view('pages.auth.login'); // DIUBAH DARI 'auth.login' MENJADI 'pages.auth.login'
+        // TAMBAHKAN: Auth::check() untuk cek jika sudah login
+        if (Auth::check()) {
+            return redirect()->route('dashboard');
+        }
+        return view('pages.auth.login');
     }
 
     // Show register form
     public function showRegisterForm()
     {
-        return view('pages.auth.register'); // DIUBAH DARI 'auth.register' MENJADI 'pages.auth.register'
+        // TAMBAHKAN: Auth::check() untuk cek jika sudah login
+        if (Auth::check()) {
+            return redirect()->route('dashboard');
+        }
+        return view('pages.auth.register');
     }
 
     // Process register
@@ -41,15 +48,23 @@ class AuthController extends Controller
         ]);
 
         // Buat user baru
-        User::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password)
         ]);
 
-        // Redirect ke login dengan success message
-        return redirect()->route('login')
-            ->with('success', 'Registrasi berhasil! Silakan login.');
+        // TAMBAHKAN: Auth::login() untuk login otomatis setelah register
+        Auth::login($user);
+
+        // TAMBAHKAN: Simpan waktu login WIB ke session
+        date_default_timezone_set('Asia/Jakarta');
+        $waktuWIB = date('Y-m-d H:i:s');
+        session(['last_login' => $waktuWIB]);
+
+        // Redirect ke dashboard dengan success message
+        return redirect()->route('dashboard')
+            ->with('success', 'Registrasi dan login berhasil! Selamat datang.');
     }
 
     // Process login
@@ -65,11 +80,19 @@ class AuthController extends Controller
             'password.min' => 'Password minimal 6 karakter'
         ]);
 
-        $credentials = $request->only('email', 'password');
+        // TAMBAHKAN: Cari user dan gunakan Auth::login() seperti materi
+        $user = User::where('email', $request->email)->first();
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            return redirect()->route('admin')
+        if ($user && Hash::check($request->password, $user->password)) {
+            // TAMBAHKAN: Auth::login() seperti di materi
+            Auth::login($user);
+
+            // TAMBAHKAN: Simpan waktu login WIB ke session
+            date_default_timezone_set('Asia/Jakarta');
+            $waktuWIB = date('Y-m-d H:i:s');
+            session(['last_login' => $waktuWIB]);
+
+            return redirect()->route('dashboard')
                 ->with('success', 'Login berhasil! Selamat datang.');
         }
 
@@ -81,10 +104,11 @@ class AuthController extends Controller
     // Logout
     public function logout(Request $request)
     {
+        // TAMBAHKAN: Auth::logout() seperti di materi
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-      return redirect()->route('login')->with('success', 'Logout berhasil!');
+        return redirect()->route('auth.login')->with('success', 'Logout berhasil!');
     }
 }

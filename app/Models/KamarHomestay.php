@@ -53,4 +53,56 @@ class KamarHomestay extends Model
         }
         return $query;
     }
+
+    /**
+     * Accessor untuk fasilitas_json
+     * Memastikan selalu return array
+     */
+    public function getFasilitasJsonAttribute($value)
+    {
+        // Jika value null atau kosong
+        if (empty($value)) {
+            return [];
+        }
+
+        // Jika sudah array
+        if (is_array($value)) {
+            return $value;
+        }
+
+        // Jika string JSON
+        if (is_string($value)) {
+            $decoded = json_decode($value, true);
+            return is_array($decoded) ? $decoded : [];
+        }
+
+        return [];
+    }
+
+    /**
+     * Mutator untuk fasilitas_json
+     * Selalu simpan sebagai JSON string
+     */
+    public function setFasilitasJsonAttribute($value)
+    {
+        if (empty($value)) {
+            $this->attributes['fasilitas_json'] = null;
+            return;
+        }
+
+        if (is_array($value)) {
+            $this->attributes['fasilitas_json'] = json_encode($value);
+        } elseif (is_string($value)) {
+            // Coba decode untuk validasi
+            $decoded = json_decode($value, true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                $this->attributes['fasilitas_json'] = json_encode($decoded);
+            } else {
+                // Jika bukan JSON valid, simpan sebagai string kosong
+                $this->attributes['fasilitas_json'] = json_encode([]);
+            }
+        } else {
+            $this->attributes['fasilitas_json'] = json_encode([]);
+        }
+    }
 }

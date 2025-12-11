@@ -3,6 +3,9 @@
 
 <div class="main-panel">
     <div class="content-wrapper">
+
+        {{-- ====================== START MAIN CONTENT ====================== --}}
+
         <!-- Header -->
         <div class="page-header">
             <h3 class="page-title">
@@ -18,307 +21,1773 @@
             </nav>
         </div>
 
-        <div class="row">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title mb-4">Form Edit Booking</h4>
+        <!-- Alert Success -->
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="mdi mdi-check-circle-outline mr-2"></i>
+                <strong>Sukses!</strong> {{ session('success') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
 
-                        <form action="{{ route('booking-homestay.update', $booking->booking_id) }}" method="POST">
+        @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="mdi mdi-alert-circle-outline mr-2"></i>
+                <strong>Error!</strong> {{ session('error') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
+
+        <!-- Error List di Atas Form -->
+        @if($errors->any())
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="mdi mdi-alert-circle-outline mr-2"></i>
+                <strong>Terjadi kesalahan!</strong> Silakan perbaiki data berikut:
+                <ul class="mt-2 mb-0">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
+
+        <div class="row">
+            <!-- Form Edit Data -->
+            <div class="col-lg-6 mb-4">
+                <div class="card card-edit">
+                    <div class="card-header bg-info text-white">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0"><i class="mdi mdi-calendar-edit mr-2"></i>Form Edit Booking</h5>
+                            <a href="{{ route('booking-homestay.index') }}" class="btn btn-light btn-sm">
+                                <i class="mdi mdi-arrow-left mr-1"></i>Kembali
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ route('booking-homestay.update', $booking->booking_id) }}" method="POST" id="bookingForm" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
 
                             <div class="row">
-                                <!-- Kamar Homestay -->
+                                <!-- Kolom Kiri -->
                                 <div class="col-md-6">
+                                    <!-- Kamar Homestay -->
                                     <div class="form-group">
-                                        <label>Kamar Homestay <span class="text-danger">*</span></label>
-                                        <select name="kamar_id" class="form-control" id="kamarSelect" required>
-                                            <option value="">Pilih Kamar</option>
+                                        <label for="kamar_id" class="form-label">Kamar Homestay <span class="text-danger">*</span></label>
+                                        <select class="form-control @error('kamar_id') is-invalid @enderror"
+                                                id="kamarSelect" name="kamar_id" required>
+                                            <option value="">-- Pilih Kamar --</option>
                                             @foreach($kamars as $kamar)
                                                 <option value="{{ $kamar->kamar_id }}"
                                                     data-harga="{{ $kamar->harga }}"
                                                     data-homestay="{{ $kamar->homestay->nama ?? 'Unknown' }}"
-                                                    {{ $booking->kamar_id == $kamar->kamar_id ? 'selected' : '' }}>
+                                                    {{ old('kamar_id', $booking->kamar_id) == $kamar->kamar_id ? 'selected' : '' }}>
                                                     {{ $kamar->nama_kamar }} - {{ $kamar->homestay->nama ?? 'Unknown' }}
                                                     (Rp {{ number_format($kamar->harga, 0, ',', '.') }}/malam)
                                                 </option>
                                             @endforeach
                                         </select>
-                                        <small class="text-muted" id="homestayInfo"></small>
+                                        <small class="form-text text-muted" id="homestayInfo"></small>
                                         @error('kamar_id')
-                                            <small class="text-danger">{{ $message }}</small>
+                                            <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
-                                </div>
 
-                                <!-- Warga -->
-                                <div class="col-md-6">
+                                    <!-- Warga -->
                                     <div class="form-group">
-                                        <label>Warga <span class="text-danger">*</span></label>
-                                        <select name="warga_id" class="form-control" required>
-                                            <option value="">Pilih Warga</option>
+                                        <label for="warga_id" class="form-label">Warga <span class="text-danger">*</span></label>
+                                        <select class="form-control @error('warga_id') is-invalid @enderror"
+                                                id="warga_id" name="warga_id" required>
+                                            <option value="">-- Pilih Warga --</option>
                                             @foreach($wargas as $warga)
                                                 <option value="{{ $warga->warga_id }}"
-                                                    {{ $booking->warga_id == $warga->warga_id ? 'selected' : '' }}>
-                                                    {{ $warga->nama }} ({{ $warga->nik ?? 'NIK' }})
+                                                    {{ old('warga_id', $booking->warga_id) == $warga->warga_id ? 'selected' : '' }}>
+                                                    {{ $warga->nama }} - {{ $warga->no_ktp }}
                                                 </option>
                                             @endforeach
                                         </select>
                                         @error('warga_id')
-                                            <small class="text-danger">{{ $message }}</small>
+                                            <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
-                                </div>
-                            </div>
 
-                            <div class="row">
-                                <!-- Check-in -->
-                                <div class="col-md-3">
+                                    <!-- Check-in -->
                                     <div class="form-group">
-                                        <label>Check-in <span class="text-danger">*</span></label>
-                                        <input type="date" name="checkin" id="checkin" class="form-control"
-                                               value="{{ old('checkin', $booking->checkin->format('Y-m-d')) }}" required>
+                                        <label for="checkin" class="form-label">Tanggal Check-in <span class="text-danger">*</span></label>
+                                        <input type="date" class="form-control @error('checkin') is-invalid @enderror"
+                                               id="checkin" name="checkin" value="{{ old('checkin', $booking->checkin->format('Y-m-d')) }}"
+                                               placeholder="Masukkan tanggal check-in" required>
                                         @error('checkin')
-                                            <small class="text-danger">{{ $message }}</small>
+                                            <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div>
 
-                                <!-- Check-out -->
-                                <div class="col-md-3">
+                                <!-- Kolom Kanan -->
+                                <div class="col-md-6">
+                                    <!-- Check-out -->
                                     <div class="form-group">
-                                        <label>Check-out <span class="text-danger">*</span></label>
-                                        <input type="date" name="checkout" id="checkout" class="form-control"
-                                               value="{{ old('checkout', $booking->checkout->format('Y-m-d')) }}" required>
+                                        <label for="checkout" class="form-label">Tanggal Check-out <span class="text-danger">*</span></label>
+                                        <input type="date" class="form-control @error('checkout') is-invalid @enderror"
+                                               id="checkout" name="checkout" value="{{ old('checkout', $booking->checkout->format('Y-m-d')) }}"
+                                               placeholder="Masukkan tanggal check-out" required>
                                         @error('checkout')
-                                            <small class="text-danger">{{ $message }}</small>
+                                            <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
-                                </div>
 
-                                <!-- Jumlah Hari -->
-                                <div class="col-md-3">
+                                    <!-- Jumlah Hari -->
                                     <div class="form-group">
-                                        <label>Jumlah Hari</label>
-                                        <input type="text" id="jumlahHari" class="form-control" readonly>
+                                        <label for="jumlahHari" class="form-label">Jumlah Hari</label>
+                                        <input type="text" class="form-control"
+                                               id="jumlahHari" readonly>
+                                        <small class="form-text text-muted" id="jumlahHariText">0 Hari</small>
                                     </div>
-                                </div>
 
-                                <!-- Total -->
-                                <div class="col-md-3">
+                                    <!-- Total -->
                                     <div class="form-group">
-                                        <label>Total (Rp) <span class="text-danger">*</span></label>
-                                        <input type="number" name="total" id="total" class="form-control"
-                                               value="{{ old('total', $booking->total) }}" min="0" required>
+                                        <label for="total" class="form-label">Total Biaya <span class="text-danger">*</span></label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Rp</span>
+                                            </div>
+                                            <input type="number" class="form-control @error('total') is-invalid @enderror"
+                                                   id="total" name="total"
+                                                   value="{{ old('total', $booking->total) }}"
+                                                   placeholder="Total biaya" min="0" required>
+                                        </div>
                                         @error('total')
-                                            <small class="text-danger">{{ $message }}</small>
+                                            <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
-                                </div>
-                            </div>
 
-                            <div class="row">
-                                <!-- Status -->
-                                <div class="col-md-4">
+                                    <!-- Status -->
                                     <div class="form-group">
-                                        <label>Status <span class="text-danger">*</span></label>
-                                        <select name="status" class="form-control" required>
-                                            <option value="pending" {{ $booking->status == 'pending' ? 'selected' : '' }}>Pending</option>
-                                            <option value="confirmed" {{ $booking->status == 'confirmed' ? 'selected' : '' }}>Confirmed</option>
-                                            <option value="paid" {{ $booking->status == 'paid' ? 'selected' : '' }}>Paid</option>
-                                            <option value="completed" {{ $booking->status == 'completed' ? 'selected' : '' }}>Completed</option>
-                                            <option value="cancelled" {{ $booking->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                                        <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
+                                        <select class="form-control @error('status') is-invalid @enderror"
+                                                id="status" name="status" required>
+                                            <option value="">-- Pilih Status --</option>
+                                            <option value="pending" {{ old('status', $booking->status) == 'pending' ? 'selected' : '' }}>Pending</option>
+                                            <option value="confirmed" {{ old('status', $booking->status) == 'confirmed' ? 'selected' : '' }}>Confirmed</option>
+                                            <option value="paid" {{ old('status', $booking->status) == 'paid' ? 'selected' : '' }}>Paid</option>
+                                            <option value="completed" {{ old('status', $booking->status) == 'completed' ? 'selected' : '' }}>Completed</option>
+                                            <option value="cancelled" {{ old('status', $booking->status) == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
                                         </select>
                                         @error('status')
-                                            <small class="text-danger">{{ $message }}</small>
+                                            <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
-                                </div>
 
-                                <!-- Metode Bayar -->
-                                <div class="col-md-4">
+                                    <!-- Metode Bayar -->
                                     <div class="form-group">
-                                        <label>Metode Bayar</label>
-                                        <select name="metode_bayar" class="form-control">
-                                            <option value="">Pilih Metode</option>
-                                            <option value="cash" {{ $booking->metode_bayar == 'cash' ? 'selected' : '' }}>Cash</option>
-                                            <option value="transfer" {{ $booking->metode_bayar == 'transfer' ? 'selected' : '' }}>Transfer</option>
-                                            <option value="qris" {{ $booking->metode_bayar == 'qris' ? 'selected' : '' }}>QRIS</option>
-                                            <option value="other" {{ $booking->metode_bayar == 'other' ? 'selected' : '' }}>Lainnya</option>
+                                        <label for="metode_bayar" class="form-label">Metode Bayar</label>
+                                        <select class="form-control @error('metode_bayar') is-invalid @enderror"
+                                                id="metode_bayar" name="metode_bayar">
+                                            <option value="">-- Pilih Metode Bayar --</option>
+                                            <option value="cash" {{ old('metode_bayar', $booking->metode_bayar) == 'cash' ? 'selected' : '' }}>Cash</option>
+                                            <option value="transfer" {{ old('metode_bayar', $booking->metode_bayar) == 'transfer' ? 'selected' : '' }}>Transfer</option>
+                                            <option value="qris" {{ old('metode_bayar', $booking->metode_bayar) == 'qris' ? 'selected' : '' }}>QRIS</option>
+                                            <option value="other" {{ old('metode_bayar', $booking->metode_bayar) == 'other' ? 'selected' : '' }}>Lainnya</option>
                                         </select>
                                         @error('metode_bayar')
-                                            <small class="text-danger">{{ $message }}</small>
+                                            <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="mdi mdi-content-save mr-1"></i> Update
-                                </button>
-                                <a href="{{ route('booking-homestay.index') }}" class="btn btn-light">
-                                    <i class="mdi mdi-arrow-left mr-1"></i> Kembali
-                                </a>
+                            <!-- Tombol Aksi -->
+                            <div class="row mt-4 pt-3 border-top">
+                                <div class="col-12">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input" id="confirmEdit">
+                                            <label class="form-check-label text-muted" for="confirmEdit">
+                                                Saya yakin data yang diubah sudah benar
+                                            </label>
+                                        </div>
+                                        <div class="d-flex gap-2">
+                                            <a href="{{ route('booking-homestay.index') }}" class="btn btn-outline-secondary btn-sm">
+                                                <i class="mdi mdi-close mr-1"></i>Batal
+                                            </a>
+                                            <button type="submit" class="btn btn-primary btn-sm" id="submitBtn" disabled>
+                                                <i class="mdi mdi-content-save mr-1"></i>Simpan Perubahan
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
 
-            <!-- Sidebar Info -->
-            <div class="col-md-4">
-                <div class="card">
+            <!-- File Bukti Bayar (GALLERY) -->
+            <div class="col-lg-6 mb-4">
+                <div class="card border-0 shadow card-gallery">
+                    <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="mdi mdi-receipt mr-2"></i>Bukti Pembayaran</h5>
+                        <span class="badge bg-light text-dark">{{ count($files) }} File</span>
+                    </div>
                     <div class="card-body">
-                        <h5 class="card-title">
-                            <i class="mdi mdi-calendar-text text-primary mr-2"></i>
-                            Detail Booking
-                        </h5>
-
-                        <div class="info-box mb-3">
-                            <div class="info-box-content">
-                                <span class="info-box-text">ID Booking</span>
-                                <span class="info-box-number">{{ $booking->booking_id }}</span>
+                        @if(count($files) > 0)
+                            <!-- Gallery Navigation -->
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <div class="gallery-nav">
+                                        <button class="btn btn-sm btn-outline-primary" onclick="showAllPhotos()">
+                                            <i class="mdi mdi-view-grid"></i> Semua File
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-info" onclick="downloadAll()">
+                                            <i class="mdi mdi-download"></i> Download Semua
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
+
+                            <!-- Main Photo Preview -->
+                            <div class="main-photo-container mb-4">
+                                <div class="main-photo-wrapper">
+                                    @php
+                                        $firstFile = $files[0];
+                                        $isImage = str_contains($firstFile->mime_type, 'image');
+                                        $isPDF = str_contains($firstFile->mime_type, 'pdf');
+                                        $isDocument = str_contains($firstFile->mime_type, 'word') || str_contains($firstFile->mime_type, 'document') ||
+                                                      str_contains($firstFile->mime_type, 'excel') || str_contains($firstFile->mime_type, 'sheet') ||
+                                                      str_contains($firstFile->mime_type, 'text');
+                                        $imageUrl = $isImage ? asset('storage/' . $firstFile->file_name) : '#';
+                                        $previewUrl = route('booking-homestay.show-file', [$booking->booking_id, $firstFile->media_id]);
+                                        $fileNameDisplay = basename($firstFile->file_name);
+                                    @endphp
+
+                                    @if($isImage)
+                                        <!-- Gambar -->
+                                        <img src="{{ asset('storage/' . $firstFile->file_name) }}"
+                                             id="currentMainPhoto"
+                                             class="main-photo"
+                                             alt="Bukti Pembayaran"
+                                             onerror="handleImageError(this, '{{ $firstFile->file_name }}')">
+                                    @elseif($isPDF)
+                                        <!-- PDF Preview -->
+                                        <div class="pdf-preview-container text-center py-4" id="pdfPreviewContainer">
+                                            <i class="mdi mdi-file-pdf-box text-danger" style="font-size: 100px;"></i>
+                                            <h5 class="mt-3">{{ $fileNameDisplay }}</h5>
+                                            <p class="text-muted">PDF Document</p>
+                                            <div class="mt-4">
+                                                <a href="{{ $previewUrl }}"
+                                                   class="btn btn-primary btn-sm"
+                                                   target="_blank"
+                                                   data-toggle="tooltip"
+                                                   title="Buka PDF">
+                                                    <i class="mdi mdi-eye mr-1"></i> Lihat PDF
+                                                </a>
+                                            </div>
+                                        </div>
+                                    @else
+                                        <!-- Dokumen lain -->
+                                        <div class="document-preview text-center py-4">
+                                            @if(str_contains($firstFile->mime_type, 'word') || str_contains($firstFile->mime_type, 'document'))
+                                                <i class="mdi mdi-file-word-box text-primary" style="font-size: 100px;"></i>
+                                            @elseif(str_contains($firstFile->mime_type, 'excel') || str_contains($firstFile->mime_type, 'sheet'))
+                                                <i class="mdi mdi-file-excel-box text-success" style="font-size: 100px;"></i>
+                                            @elseif(str_contains($firstFile->mime_type, 'text'))
+                                                <i class="mdi mdi-file-document-box text-info" style="font-size: 100px;"></i>
+                                            @else
+                                                <i class="mdi mdi-file-document-box text-secondary" style="font-size: 100px;"></i>
+                                            @endif
+                                            <h5 class="mt-3">{{ $fileNameDisplay }}</h5>
+                                            <p class="text-muted">{{ $firstFile->mime_type }}</p>
+                                        </div>
+                                    @endif
+                                    <div class="photo-overlay">
+                                        @if($isImage)
+                                            <button class="btn btn-light btn-sm" onclick="downloadCurrentPhoto()"
+                                                    data-toggle="tooltip" title="Download">
+                                                <i class="mdi mdi-download"></i>
+                                            </button>
+                                            <button class="btn btn-light btn-sm" onclick="openFullscreenImage()"
+                                                    data-toggle="tooltip" title="Fullscreen">
+                                                <i class="mdi mdi-fullscreen"></i>
+                                            </button>
+                                        @elseif($isPDF)
+                                            <a href="{{ route('booking-homestay.download-file', [$booking->booking_id, $firstFile->media_id]) }}"
+                                               class="btn btn-light btn-sm"
+                                               target="_blank"
+                                               data-toggle="tooltip" title="Download PDF">
+                                                <i class="mdi mdi-download"></i>
+                                            </a>
+                                            <a href="{{ $previewUrl }}"
+                                               class="btn btn-light btn-sm"
+                                               target="_blank"
+                                               data-toggle="tooltip" title="Buka PDF">
+                                                <i class="mdi mdi-eye"></i>
+                                            </a>
+                                        @else
+                                            <a href="{{ route('booking-homestay.download-file', [$booking->booking_id, $firstFile->media_id]) }}"
+                                               class="btn btn-light btn-sm"
+                                               target="_blank"
+                                               data-toggle="tooltip" title="Download">
+                                                <i class="mdi mdi-download"></i>
+                                            </a>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="photo-info text-center mt-2">
+                                    <small id="currentPhotoName" class="text-truncate d-block">{{ $fileNameDisplay }}</small>
+                                    <div class="photo-controls mt-2">
+                                        <span class="badge bg-primary" id="photoCounter">1 / {{ count($files) }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Thumbnail Gallery -->
+                            <h6 class="border-bottom pb-2 mb-3">
+                                <i class="mdi mdi-file-multiple mr-2"></i>Daftar File
+                            </h6>
+
+                            <div class="row g-2" id="thumbnailGallery">
+                                @foreach($files as $index => $file)
+                                    @php
+                                        $isImage = str_contains($file->mime_type, 'image');
+                                        $isPDF = str_contains($file->mime_type, 'pdf');
+                                        $fileIcon = 'mdi-file-document-box';
+                                        $fileColor = 'text-secondary';
+                                        $fileNameDisplay = basename($file->file_name);
+                                        $previewUrl = route('booking-homestay.show-file', [$booking->booking_id, $file->media_id]);
+
+                                        if($isPDF) {
+                                            $fileIcon = 'mdi-file-pdf-box';
+                                            $fileColor = 'text-danger';
+                                        } elseif(str_contains($file->mime_type, 'word') || str_contains($file->mime_type, 'document')) {
+                                            $fileIcon = 'mdi-file-word-box';
+                                            $fileColor = 'text-primary';
+                                        } elseif(str_contains($file->mime_type, 'excel') || str_contains($file->mime_type, 'sheet')) {
+                                            $fileIcon = 'mdi-file-excel-box';
+                                            $fileColor = 'text-success';
+                                        } elseif($isImage) {
+                                            $fileIcon = 'mdi-image';
+                                            $fileColor = 'text-info';
+                                        }
+                                    @endphp
+
+                                    <div class="col-md-3 col-4">
+                                        <div class="thumbnail-card {{ $index === 0 ? 'active' : '' }}"
+                                             onclick="changeMainPhoto('{{ $file->file_name }}', {{ $index }}, '{{ $file->mime_type }}', '{{ $file->media_id }}', '{{ $fileNameDisplay }}')"
+                                             data-index="{{ $index }}"
+                                             data-id="{{ $file->media_id }}"
+                                             data-type="{{ $file->mime_type }}"
+                                             data-filename="{{ $fileNameDisplay }}"
+                                             data-preview-url="{{ $isPDF ? $previewUrl : '#' }}">
+
+                                            @if($isImage)
+                                                <img src="{{ asset('storage/' . $file->file_name) }}"
+                                                     class="thumbnail-img"
+                                                     alt="Thumbnail {{ $index + 1 }}"
+                                                     onerror="handleThumbnailError(this, '{{ $fileNameDisplay }}')">
+                                            @else
+                                                <div class="file-thumbnail text-center py-3">
+                                                    <i class="mdi {{ $fileIcon }} {{ $fileColor }}" style="font-size: 40px;"></i>
+                                                    <small class="d-block text-truncate mt-1">{{ pathinfo($file->file_name, PATHINFO_EXTENSION) }}</small>
+                                                </div>
+                                            @endif
+
+                                            <div class="thumbnail-overlay">
+                                                <form action="{{ route('booking-homestay.delete-file', [$booking->booking_id, $file->media_id]) }}"
+                                                      method="POST"
+                                                      class="d-inline delete-form">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit"
+                                                            class="btn btn-danger btn-sm delete-thumbnail"
+                                                            onclick="return confirmDelete(event, '{{ $fileNameDisplay }}')"
+                                                            data-toggle="tooltip"
+                                                            title="Hapus File">
+                                                        <i class="mdi mdi-delete"></i>
+                                                    </button>
+                                                </form>
+                                                <a href="{{ route('booking-homestay.download-file', [$booking->booking_id, $file->media_id]) }}"
+                                                   class="btn btn-info btn-sm download-thumbnail"
+                                                   target="_blank"
+                                                   data-toggle="tooltip"
+                                                   title="Download File">
+                                                    <i class="mdi mdi-download"></i>
+                                                </a>
+                                                @if($isPDF)
+                                                <a href="{{ $previewUrl }}"
+                                                   class="btn btn-warning btn-sm view-thumbnail"
+                                                   target="_blank"
+                                                   data-toggle="tooltip"
+                                                   title="Lihat PDF">
+                                                    <i class="mdi mdi-eye"></i>
+                                                </a>
+                                                @endif
+                                                <span class="badge badge-order">{{ $index + 1 }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="text-center py-5 empty-gallery">
+                                <i class="mdi mdi-receipt-off fa-4x text-muted mb-3"></i>
+                                <h5 class="text-muted">Belum ada bukti pembayaran</h5>
+                                <p class="text-muted">Upload bukti pembayaran untuk menampilkan gallery</p>
+                            </div>
+                        @endif
+
+                        <!-- Upload Form -->
+                        <div class="upload-section mt-4 pt-4 border-top">
+                            <h6 class="mb-3">
+                                <i class="mdi mdi-cloud-upload text-primary mr-2"></i>
+                                Upload File Baru
+                            </h6>
+                            <form action="{{ route('booking-homestay.upload-files', $booking->booking_id) }}"
+                                  method="POST"
+                                  enctype="multipart/form-data"
+                                  id="uploadForm">
+                                @csrf
+                                <div class="mb-3">
+                                    <div class="custom-file-upload">
+                                        <input type="file"
+                                               class="form-control @error('bukti_bayar') is-invalid @enderror"
+                                               id="bukti_bayar"
+                                               name="bukti_bayar[]"
+                                               multiple
+                                               accept=".jpg,.jpeg,.png,.gif,.webp,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv"
+                                               onchange="previewUploadFiles(this)">
+                                        <label for="bukti_bayar" class="upload-label">
+                                            <i class="mdi mdi-cloud-upload mr-2"></i>
+                                            <span>Pilih File (Multiple)</span>
+                                        </label>
+                                    </div>
+                                    @error('bukti_bayar')
+                                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                                    @enderror
+                                    <small class="form-text text-muted">
+                                        <i class="mdi mdi-information mr-1"></i>
+                                        Pilih multiple file (JPG, PNG, GIF, WEBP, PDF, DOC, DOCX, XLS, XLSX, TXT, CSV). Maksimal 10MB per file.
+                                    </small>
+                                </div>
+
+                                <!-- Upload Preview -->
+                                <div id="uploadPreview" class="mb-3" style="display: none;">
+                                    <h6 class="text-muted mb-2">Preview File yang akan diupload:</h6>
+                                    <div id="previewContainer" class="row g-2"></div>
+                                    <div class="mt-2 text-end">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="clearPreview()">
+                                            <i class="mdi mdi-trash-can mr-1"></i> Clear Preview
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-success w-100 upload-btn" id="uploadBtn">
+                                    <i class="mdi mdi-cloud-upload mr-1"></i> Upload File
+                                </button>
+                            </form>
                         </div>
 
-                        <div class="info-box mb-3">
-                            <div class="info-box-content">
-                                <span class="info-box-text">Tanggal Booking</span>
-                                <span class="info-box-number">{{ $booking->created_at->format('d/m/Y H:i') }}</span>
-                            </div>
-                        </div>
-
-                        <div class="info-box mb-3">
-                            <div class="info-box-content">
-                                <span class="info-box-text">Warga</span>
-                                <span class="info-box-number">{{ $booking->warga->nama ?? '-' }}</span>
-                            </div>
-                        </div>
-
-                        <div class="info-box mb-3">
-                            <div class="info-box-content">
-                                <span class="info-box-text">Kamar</span>
-                                <span class="info-box-number">{{ $booking->kamar->nama_kamar ?? '-' }}</span>
-                            </div>
-                        </div>
-
-                        <div class="info-box mb-3">
-                            <div class="info-box-content">
-                                <span class="info-box-text">Homestay</span>
-                                <span class="info-box-number">{{ $booking->kamar->homestay->nama ?? '-' }}</span>
-                            </div>
-                        </div>
-
-                        <div class="info-box mb-3">
-                            <div class="info-box-content">
-                                <span class="info-box-text">Durasi</span>
-                                <span class="info-box-number">{{ $booking->checkin->diffInDays($booking->checkout) }} Hari</span>
-                            </div>
-                        </div>
-
-                        <div class="alert alert-{{
-                            $booking->status == 'cancelled' ? 'danger' :
-                            ($booking->status == 'completed' ? 'success' :
-                            ($booking->status == 'paid' ? 'primary' :
-                            ($booking->status == 'confirmed' ? 'info' : 'warning')))
-                        }}">
-                            <h6><i class="mdi mdi-information-outline mr-2"></i> Status Saat Ini</h6>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="font-weight-bold">{{ strtoupper($booking->status) }}</span>
-                                @if($booking->metode_bayar)
-                                    <span class="badge badge-light">{{ $booking->metode_bayar }}</span>
-                                @endif
+                        <!-- Info Kalkulator -->
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <div class="row text-center">
+                                            <div class="col-md-4">
+                                                <h6>Harga per Malam</h6>
+                                                <h4 id="hargaPerMalam" class="text-primary">Rp 0</h4>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <h6>Jumlah Hari</h6>
+                                                <h4 id="displayJumlahHari" class="text-success">0 Hari</h4>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <h6>Total Seharusnya</h6>
+                                                <h4 id="totalSeharusnya" class="text-success">Rp 0</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        {{-- ====================== END MAIN CONTENT ====================== --}}
     </div>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const kamarSelect = document.getElementById('kamarSelect');
-    const checkinInput = document.getElementById('checkin');
-    const checkoutInput = document.getElementById('checkout');
-    const jumlahHariInput = document.getElementById('jumlahHari');
-    const totalInput = document.getElementById('total');
-    const homestayInfo = document.getElementById('homestayInfo');
+{{-- ====================== MODAL FULLSCREEN GAMBAR ====================== --}}
+<div class="modal fade" id="imageFullscreenModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content bg-dark">
+            <div class="modal-header border-0">
+                <h6 class="modal-title text-white" id="imageFullscreenTitle"></h6>
+                <button type="button" class="btn-close btn-close-white" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0 d-flex align-items-center justify-content-center" style="min-height: 80vh;">
+                <div class="image-container" style="width: 100%; height: 100%;">
+                    <img id="fullscreenImage" src=""
+                         class="img-fluid"
+                         style="max-width: 100%; max-height: 80vh; width: auto; height: auto; display: block; margin: 0 auto;"
+                         onerror="handleFullscreenImageError(this)">
+                </div>
+            </div>
+            <div class="modal-footer border-0 justify-content-center">
+                <button class="btn btn-light me-2" onclick="downloadFullscreenPhoto()" id="fullscreenDownloadBtn">
+                    <i class="mdi mdi-download mr-1"></i> Download
+                </button>
+                <button class="btn btn-light" data-dismiss="modal">
+                    <i class="mdi mdi-fullscreen-exit mr-1"></i> Keluar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
-    // Update info kamar saat pertama kali load
-    function updateKamarInfo() {
-        const selectedOption = kamarSelect.options[kamarSelect.selectedIndex];
-        const homestay = selectedOption.getAttribute('data-homestay') || '';
-        homestayInfo.textContent = homestay ? 'Homestay: ' + homestay : '';
-        hitungTotal();
+{{-- ====================== MODAL FULLSCREEN PDF ====================== --}}
+<div class="modal fade" id="pdfFullscreenModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content bg-dark">
+            <div class="modal-header border-0">
+                <h6 class="modal-title text-white" id="pdfFullscreenTitle"></h6>
+                <button type="button" class="btn-close btn-close-white" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                <iframe id="pdfFullscreenIframe" src=""
+                        style="width: 100%; height: calc(100vh - 120px); border: none;"></iframe>
+            </div>
+            <div class="modal-footer border-0 justify-content-center">
+                <button class="btn btn-light me-2" onclick="downloadFullscreenPhoto()" id="pdfFullscreenDownloadBtn">
+                    <i class="mdi mdi-download mr-1"></i> Download
+                </button>
+                <button class="btn btn-light me-2" onclick="openPDFInNewTab()">
+                    <i class="mdi mdi-open-in-new mr-1"></i> Buka di Tab Baru
+                </button>
+                <button class="btn btn-light" data-dismiss="modal">
+                    <i class="mdi mdi-fullscreen-exit mr-1"></i> Keluar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- ====================== START JS TAMBAHAN UNTUK EDIT ====================== --}}
+<script>
+    // Variables
+    let currentPhotoIndex = 0;
+    let photos = @json($files);
+    let currentFileName = photos.length > 0 ? photos[0].file_name : '';
+    let currentFileType = photos.length > 0 ? photos[0].mime_type : '';
+    let currentFileId = photos.length > 0 ? photos[0].media_id : '';
+    let currentFileDisplayName = photos.length > 0 ? basename(photos[0].file_name) : '';
+    let currentPDFPreviewUrl = '';
+    const bookingId = {{ $booking->booking_id }};
+    const baseImagePath = '{{ asset("storage/") }}/';
+
+    // Helper functions
+    function basename(path) {
+        return path.split('/').pop();
     }
 
-    // Hitung jumlah hari dan total
-    function hitungTotal() {
-        const checkin = new Date(checkinInput.value);
-        const checkout = new Date(checkoutInput.value);
+    function getDownloadUrl(fileId) {
+        return '{{ route("booking-homestay.download-file", [$booking->booking_id, "FILE_ID"]) }}'.replace('FILE_ID', fileId);
+    }
 
-        if (checkin && checkout && checkin < checkout) {
-            const diffTime = Math.abs(checkout - checkin);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    function getPreviewUrl(fileId) {
+        return '{{ route("booking-homestay.show-file", [$booking->booking_id, "FILE_ID"]) }}'.replace('FILE_ID', fileId);
+    }
 
-            jumlahHariInput.value = diffDays;
+    // Form Validation
+    document.getElementById('confirmEdit').addEventListener('change', function() {
+        document.getElementById('submitBtn').disabled = !this.checked;
+    });
 
-            const harga = kamarSelect.selectedOptions[0]?.getAttribute('data-harga') || 0;
-            const total = harga * diffDays;
+    // ============ KALKULATOR HARGA ============
+    document.addEventListener('DOMContentLoaded', function() {
+        const kamarSelect = document.getElementById('kamarSelect');
+        const checkinInput = document.getElementById('checkin');
+        const checkoutInput = document.getElementById('checkout');
+        const jumlahHariInput = document.getElementById('jumlahHari');
+        const jumlahHariText = document.getElementById('jumlahHariText');
+        const totalInput = document.getElementById('total');
+        const hargaPerMalam = document.getElementById('hargaPerMalam');
+        const displayJumlahHari = document.getElementById('displayJumlahHari');
+        const totalSeharusnya = document.getElementById('totalSeharusnya');
+        const homestayInfo = document.getElementById('homestayInfo');
 
-            // Hanya update total jika belum diisi atau berbeda
-            if (!totalInput.value || Math.abs(totalInput.value - total) > 1000) {
-                totalInput.value = total;
+        // Update info kamar saat pertama kali load
+        function updateKamarInfo() {
+            const selectedOption = kamarSelect.options[kamarSelect.selectedIndex];
+            const harga = selectedOption.getAttribute('data-harga') || 0;
+            const homestay = selectedOption.getAttribute('data-homestay') || '';
+            hargaPerMalam.textContent = 'Rp ' + new Intl.NumberFormat('id-ID').format(harga);
+            homestayInfo.textContent = homestay ? 'Homestay: ' + homestay : '';
+            hitungTotal();
+        }
+
+        // Hitung jumlah hari dan total
+        function hitungTotal() {
+            const checkin = new Date(checkinInput.value);
+            const checkout = new Date(checkoutInput.value);
+
+            if (checkin && checkout && checkin < checkout) {
+                const diffTime = Math.abs(checkout - checkin);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                jumlahHariInput.value = diffDays;
+                jumlahHariText.textContent = `${diffDays} Hari`;
+                displayJumlahHari.textContent = `${diffDays} Hari`;
+
+                const harga = kamarSelect.selectedOptions[0]?.getAttribute('data-harga') || 0;
+                const total = harga * diffDays;
+
+                // Hanya update total jika belum diisi atau berbeda
+                if (!totalInput.value || Math.abs(totalInput.value - total) > 1000) {
+                    totalInput.value = total;
+                }
+                totalSeharusnya.textContent = 'Rp ' + new Intl.NumberFormat('id-ID').format(total);
+            } else {
+                jumlahHariInput.value = '';
+                jumlahHariText.textContent = '0 Hari';
+                displayJumlahHari.textContent = '0 Hari';
+                totalSeharusnya.textContent = 'Rp 0';
             }
+        }
+
+        kamarSelect.addEventListener('change', updateKamarInfo);
+        checkinInput.addEventListener('change', function() {
+            // Set min untuk checkout (checkin + 1)
+            const minCheckout = new Date(this.value);
+            minCheckout.setDate(minCheckout.getDate() + 1);
+            checkoutInput.min = minCheckout.toISOString().split('T')[0];
+            hitungTotal();
+        });
+        checkoutInput.addEventListener('change', hitungTotal);
+
+        // Hitung saat pertama kali load
+        updateKamarInfo();
+        hitungTotal();
+
+        // Form validation
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="mdi mdi-loading mdi-spin mr-1"></i> Menyimpan...';
+            submitBtn.disabled = true;
+
+            return true;
+        });
+    });
+
+    // ============ FUNGSI HANDLE ERROR GAMBAR ============
+    function handleImageError(img, fileName) {
+        console.error('Gagal memuat gambar:', fileName);
+
+        const correctPath = 'storage/' + fileName;
+        const correctUrl = "{{ asset('') }}" + correctPath;
+        const timestamp = new Date().getTime();
+        const retryUrl = correctUrl + '?t=' + timestamp;
+
+        img.src = retryUrl;
+
+        img.onerror = function() {
+            const svg = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
+                    <rect width="800" height="500" fill="#f8f9fa"/>
+                    <circle cx="400" cy="200" r="60" fill="#dee2e6"/>
+                    <path d="M370 180 L430 180 L430 220 L370 220 Z" fill="#adb5bd" opacity="0.5"/>
+                    <text x="400" y="320" font-family="Arial" font-size="20" fill="#6c757d" text-anchor="middle">
+                        File: ${fileName.split('/').pop()}
+                    </text>
+                    <text x="400" y="350" font-family="Arial" font-size="16" fill="#adb5bd" text-anchor="middle">
+                        Pastikan file ada di storage
+                    </text>
+                </svg>`;
+
+            img.src = 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+            img.style.cursor = 'default';
+        };
+    }
+
+    function handleThumbnailError(img, fileName) {
+        console.error('Gagal memuat thumbnail:', fileName);
+
+        const svg = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
+                <rect width="100" height="100" fill="#f8f9fa"/>
+                <circle cx="50" cy="40" r="20" fill="#dee2e6"/>
+                <path d="M40 30 L60 30 L60 50 L40 50 Z" fill="#adb5bd" opacity="0.5"/>
+                <text x="50" y="80" font-family="Arial" font-size="8" fill="#6c757d" text-anchor="middle">
+                    Error
+                </text>
+            </svg>`;
+
+        img.src = 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+    }
+
+    function handleFullscreenImageError(img) {
+        console.error('Gagal memuat gambar fullscreen');
+
+        const svg = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+                <rect width="800" height="600" fill="#1a1a1a"/>
+                <circle cx="400" cy="250" r="80" fill="#343a40"/>
+                <path d="M370 230 L430 230 L430 270 L370 270 Z" fill="#495057" opacity="0.5"/>
+                <text x="400" y="380" font-family="Arial" font-size="24" fill="#dee2e6" text-anchor="middle">
+                    Gambar tidak dapat ditampilkan
+                </text>
+                <text x="400" y="420" font-family="Arial" font-size="16" fill="#adb5bd" text-anchor="middle">
+                    Periksa koneksi atau path file
+                </text>
+            </svg>`;
+
+        img.src = 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+    }
+
+    // ============ GALLERY FUNCTIONS ============
+    function changeMainPhoto(fileName, index, mimeType, fileId, displayName) {
+        currentPhotoIndex = index;
+        currentFileName = fileName;
+        currentFileType = mimeType;
+        currentFileId = fileId;
+        currentFileDisplayName = displayName || fileName.split('/').pop();
+
+        const isImage = mimeType.includes('image');
+        const isPDF = mimeType.includes('pdf');
+        const isDocument = mimeType.includes('word') || mimeType.includes('document') ||
+                          mimeType.includes('excel') || mimeType.includes('sheet') ||
+                          mimeType.includes('text');
+
+        // Update main photo
+        const mainPhoto = document.getElementById('currentMainPhoto');
+        const pdfPreviewContainer = document.querySelector('.pdf-preview-container');
+        const docPreview = document.querySelector('.document-preview');
+        const photoName = document.getElementById('currentPhotoName');
+        const photoCounter = document.getElementById('photoCounter');
+
+        // Hide semua preview terlebih dahulu
+        mainPhoto.style.display = 'none';
+        if (pdfPreviewContainer) pdfPreviewContainer.style.display = 'none';
+        if (docPreview) docPreview.style.display = 'none';
+
+        // Tampilkan preview sesuai jenis file
+        if (isImage) {
+            const timestamp = new Date().getTime();
+            const fullPath = 'storage/' + fileName;
+            mainPhoto.src = "{{ asset('') }}" + fullPath + '?t=' + timestamp;
+            mainPhoto.style.display = 'block';
+
+            document.getElementById('fullscreenImage').src = "{{ asset('') }}" + fullPath + '?t=' + timestamp;
+            document.getElementById('imageFullscreenTitle').textContent = currentFileDisplayName;
+            currentPDFPreviewUrl = '';
+        } else if (isPDF) {
+            currentPDFPreviewUrl = getPreviewUrl(fileId);
+
+            const pdfContainer = document.querySelector('.pdf-preview-container') || createPDFPreview();
+            pdfContainer.style.display = 'block';
+
+            document.getElementById('pdfFullscreenTitle').textContent = currentFileDisplayName + ' (PDF)';
         } else {
-            jumlahHariInput.value = '';
+            let icon = 'mdi-file-document-box';
+            let color = 'text-secondary';
+
+            if (mimeType.includes('word') || mimeType.includes('document')) {
+                icon = 'mdi-file-word-box';
+                color = 'text-primary';
+            } else if (mimeType.includes('excel') || mimeType.includes('sheet')) {
+                icon = 'mdi-file-excel-box';
+                color = 'text-success';
+            } else if (mimeType.includes('text')) {
+                icon = 'mdi-file-document-box';
+                color = 'text-info';
+            }
+
+            const newDocPreview = document.createElement('div');
+            newDocPreview.className = 'document-preview text-center py-4';
+            newDocPreview.innerHTML = `
+                <i class="mdi ${icon} ${color}" style="font-size: 100px;"></i>
+                <h5 class="mt-3">${currentFileDisplayName}</h5>
+                <p class="text-muted">${mimeType}</p>
+            `;
+
+            const mainPhotoWrapper = document.querySelector('.main-photo-wrapper');
+            const existingDocPreview = mainPhotoWrapper.querySelector('.document-preview');
+            if (existingDocPreview) {
+                existingDocPreview.remove();
+            }
+            mainPhotoWrapper.insertBefore(newDocPreview, mainPhotoWrapper.firstChild);
+            currentPDFPreviewUrl = '';
+        }
+
+        photoName.textContent = currentFileDisplayName;
+        photoCounter.textContent = `${index + 1} / ${photos.length}`;
+
+        // Update active thumbnail
+        document.querySelectorAll('.thumbnail-card').forEach(card => {
+            card.classList.remove('active');
+        });
+        const targetCard = document.querySelector(`.thumbnail-card[data-index="${index}"]`);
+        if (targetCard) {
+            targetCard.classList.add('active');
         }
     }
 
-    kamarSelect.addEventListener('change', updateKamarInfo);
-    checkinInput.addEventListener('change', function() {
-        // Set min untuk checkout (checkin + 1)
-        const minCheckout = new Date(this.value);
-        minCheckout.setDate(minCheckout.getDate() + 1);
-        checkoutInput.min = minCheckout.toISOString().split('T')[0];
-        hitungTotal();
-    });
-    checkoutInput.addEventListener('change', hitungTotal);
+    function createPDFPreview() {
+        const mainPhotoWrapper = document.querySelector('.main-photo-wrapper');
+        const pdfContainer = document.createElement('div');
+        pdfContainer.className = 'pdf-preview-container text-center py-4';
+        pdfContainer.id = 'pdfPreviewContainer';
+        pdfContainer.innerHTML = `
+            <i class="mdi mdi-file-pdf-box text-danger" style="font-size: 100px;"></i>
+            <h5 class="mt-3">${currentFileDisplayName}</h5>
+            <p class="text-muted">PDF Document</p>
+            <div class="mt-4">
+                <a href="${currentPDFPreviewUrl}"
+                   class="btn btn-primary btn-sm"
+                   target="_blank"
+                   data-toggle="tooltip"
+                   title="Buka PDF">
+                    <i class="mdi mdi-eye mr-1"></i> Lihat PDF
+                </a>
+            </div>
+        `;
+        mainPhotoWrapper.insertBefore(pdfContainer, mainPhotoWrapper.firstChild);
+        return pdfContainer;
+    }
 
-    // Hitung saat pertama kali load
-    updateKamarInfo();
-    hitungTotal();
-});
+    // ============ DOWNLOAD FUNCTIONS ============
+    function downloadCurrentPhoto() {
+        if (currentFileId) {
+            const downloadUrl = getDownloadUrl(currentFileId);
+            window.open(downloadUrl, '_blank');
+        }
+    }
+
+    function downloadFullscreenPhoto() {
+        if (currentFileId) {
+            const downloadUrl = getDownloadUrl(currentFileId);
+            window.open(downloadUrl, '_blank');
+        }
+    }
+
+    function downloadAll() {
+        if (photos.length === 0) {
+            showToast('warning', 'Tidak ada file untuk didownload');
+            return;
+        }
+
+        showToast('info', `Memulai download ${photos.length} file...`);
+
+        photos.forEach((photo, index) => {
+            setTimeout(() => {
+                const downloadUrl = getDownloadUrl(photo.media_id);
+                const link = document.createElement('a');
+                link.href = downloadUrl;
+                link.target = '_blank';
+                link.download = basename(photo.file_name);
+
+                document.body.appendChild(link);
+                link.click();
+
+                setTimeout(() => {
+                    document.body.removeChild(link);
+                }, 100);
+
+            }, index * 1500);
+        });
+
+        setTimeout(() => {
+            showToast('success', 'Semua file telah ditambahkan ke antrian download');
+        }, photos.length * 1500 + 1000);
+    }
+
+    // ============ FULLSCREEN FUNCTIONS ============
+    function openFullscreenImage() {
+        const isImage = currentFileType.includes('image');
+        const isPDF = currentFileType.includes('pdf');
+
+        if (isImage) {
+            $('#imageFullscreenModal').modal('show');
+
+            const img = document.getElementById('fullscreenImage');
+            img.style.maxWidth = '100%';
+            img.style.maxHeight = '80vh';
+            img.style.width = 'auto';
+            img.style.height = 'auto';
+            img.style.display = 'block';
+            img.style.margin = '0 auto';
+
+        } else if (isPDF) {
+            const pdfIframe = document.getElementById('pdfFullscreenIframe');
+            pdfIframe.src = currentPDFPreviewUrl;
+            $('#pdfFullscreenModal').modal('show');
+        } else {
+            downloadCurrentPhoto();
+        }
+    }
+
+    function openPDFInNewTab() {
+        if (currentPDFPreviewUrl) {
+            window.open(currentPDFPreviewUrl, '_blank');
+        }
+    }
+
+    function showAllPhotos() {
+        document.getElementById('thumbnailGallery').scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+    }
+
+    function confirmDelete(event, fileName) {
+        if (!confirm(`Yakin ingin menghapus file ${fileName}?`)) {
+            event.preventDefault();
+            return false;
+        }
+        return true;
+    }
+
+    // ============ UPLOAD PREVIEW FUNCTIONS ============
+    function previewUploadFiles(input) {
+        const previewContainer = document.getElementById('previewContainer');
+        const uploadPreview = document.getElementById('uploadPreview');
+        const uploadBtn = document.getElementById('uploadBtn');
+
+        previewContainer.innerHTML = '';
+
+        if (input.files.length > 0) {
+            uploadPreview.style.display = 'block';
+            uploadBtn.disabled = false;
+
+            Array.from(input.files).forEach((file, index) => {
+                if (file.size > 10 * 1024 * 1024) {
+                    showToast('error', `File ${file.name} melebihi 10MB`);
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const col = document.createElement('div');
+                    col.className = 'col-6 col-md-3';
+
+                    if (file.type.startsWith('image/')) {
+                        col.innerHTML = `
+                            <div class="upload-preview-card">
+                                <img src="${e.target.result}"
+                                     class="upload-preview-img"
+                                     alt="Preview ${index + 1}">
+                                <div class="upload-preview-info">
+                                    <small class="text-truncate d-block">${file.name}</small>
+                                    <small class="text-muted">${(file.size / 1024).toFixed(1)} KB</small>
+                                </div>
+                            </div>
+                        `;
+                    } else if (file.type.includes('pdf')) {
+                        col.innerHTML = `
+                            <div class="upload-preview-card">
+                                <div class="upload-preview-doc text-center py-3">
+                                    <i class="mdi mdi-file-pdf-box text-danger" style="font-size: 40px;"></i>
+                                </div>
+                                <div class="upload-preview-info">
+                                    <small class="text-truncate d-block">${file.name}</small>
+                                    <small class="text-muted">PDF - ${(file.size / 1024).toFixed(1)} KB</small>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        let icon = 'mdi-file-document-box';
+                        let color = 'text-secondary';
+
+                        if (file.type.includes('word') || file.type.includes('document')) {
+                            icon = 'mdi-file-word-box';
+                            color = 'text-primary';
+                        } else if (file.type.includes('excel') || file.type.includes('sheet')) {
+                            icon = 'mdi-file-excel-box';
+                            color = 'text-success';
+                        }
+
+                        col.innerHTML = `
+                            <div class="upload-preview-card">
+                                <div class="upload-preview-doc text-center py-3">
+                                    <i class="mdi ${icon} ${color}" style="font-size: 40px;"></i>
+                                </div>
+                                <div class="upload-preview-info">
+                                    <small class="text-truncate d-block">${file.name}</small>
+                                    <small class="text-muted">${(file.size / 1024).toFixed(1)} KB</small>
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    previewContainer.appendChild(col);
+                };
+                reader.readAsDataURL(file);
+            });
+
+            showToast('info', `Menampilkan preview ${input.files.length} file`);
+        } else {
+            uploadPreview.style.display = 'none';
+            uploadBtn.disabled = true;
+        }
+    }
+
+    function clearPreview() {
+        const input = document.getElementById('bukti_bayar');
+        input.value = '';
+        previewUploadFiles(input);
+    }
+
+    // ============ TOAST NOTIFICATION ============
+    function showToast(type, message) {
+        const existingToasts = document.querySelectorAll('.toast-notification');
+        existingToasts.forEach(toast => toast.remove());
+
+        const toast = document.createElement('div');
+        toast.className = `toast-notification toast-${type}`;
+        toast.innerHTML = `
+            <div class="toast-content">
+                <i class="mdi mdi-${type === 'success' ? 'check-circle' : type === 'error' ? 'alert-circle' : 'information'} mr-2"></i>
+                <span>${message}</span>
+            </div>
+            <button class="toast-close" onclick="this.parentElement.remove()">&times;</button>
+        `;
+
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            if (toast.parentElement) {
+                toast.remove();
+            }
+        }, 3000);
+    }
+
+    // ============ INITIALIZATION ============
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize tooltips
+        $('[data-toggle="tooltip"]').tooltip();
+
+        // Auto dismiss alerts setelah 5 detik
+        setTimeout(function() {
+            $('.alert').alert('close');
+        }, 5000);
+
+        // Initialize fullscreen image
+        if (photos.length > 0 && photos[0].mime_type.includes('image')) {
+            const firstFile = photos[0];
+            const timestamp = new Date().getTime();
+            const fullPath = 'storage/' + firstFile.file_name;
+            document.getElementById('fullscreenImage').src = "{{ asset('') }}" + fullPath + '?t=' + timestamp;
+            document.getElementById('imageFullscreenTitle').textContent = basename(firstFile.file_name);
+        }
+
+        console.log('Files loaded:', photos);
+        console.log('Booking ID:', bookingId);
+    });
 </script>
 
 <style>
-.info-box {
-    display: flex;
-    min-height: 70px;
-    background: #f8f9fa;
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 10px;
+/* ==================== EDIT FORM STYLES ==================== */
+.card-edit {
+    border-radius: 15px;
+    overflow: hidden;
+    border: none;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease;
 }
-.info-box-content {
-    flex: 1;
+
+.card-edit:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
 }
-.info-box-text {
-    display: block;
-    font-size: 12px;
-    color: #6c757d;
-    text-transform: uppercase;
+
+.card-edit .card-header {
+    border-bottom: 3px solid rgba(255,255,255,0.2);
 }
-.info-box-number {
-    display: block;
+
+.card-edit .form-label {
     font-weight: 600;
-    font-size: 18px;
+    color: #495057;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.card-edit .form-control-sm {
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.card-edit .form-control-sm:focus {
+    border-color: #4e73df;
+    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+    transform: translateY(-1px);
+}
+
+.card-edit .form-control-sm.is-invalid {
+    border-color: #e74a3b;
+    background-image: none;
+}
+
+.card-edit .form-control-sm.is-invalid:focus {
+    box-shadow: 0 0 0 0.2rem rgba(231, 74, 59, 0.25);
+}
+
+.card-edit .invalid-feedback {
+    font-size: 0.8rem;
+    margin-top: 4px;
+}
+
+.card-edit .input-group-sm .input-group-text {
+    background-color: #f8f9fa;
+    border-color: #ddd;
+    font-weight: 600;
     color: #495057;
 }
-</style>
 
+/* ==================== GALLERY STYLES ==================== */
+.card-gallery {
+    border-radius: 15px;
+    overflow: hidden;
+    border: none;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.card-gallery .card-header {
+    border-bottom: 3px solid rgba(255,255,255,0.2);
+    padding: 15px 20px;
+}
+
+.gallery-nav {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.gallery-nav .btn {
+    border-radius: 8px;
+    padding: 8px 15px;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.gallery-nav .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.gallery-nav .btn-outline-primary:hover {
+    background-color: #4e73df;
+    color: white;
+}
+
+.gallery-nav .btn-outline-info:hover {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.main-photo-container {
+    position: relative;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 25px;
+    border-radius: 15px;
+    border: 2px solid #e0e0e0;
+    margin-bottom: 25px;
+}
+
+.main-photo-wrapper {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    min-height: 400px;
+    max-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+}
+
+.main-photo-wrapper:hover {
+    box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+}
+
+.main-photo {
+    max-width: 100%;
+    max-height: 450px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    transition: transform 0.5s ease;
+    cursor: pointer;
+}
+
+.main-photo:hover {
+    transform: scale(1.03);
+}
+
+.pdf-preview-container {
+    width: 100%;
+    padding: 40px 30px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.document-preview {
+    width: 100%;
+    padding: 40px 30px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.photo-overlay {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 10;
+}
+
+.main-photo-wrapper:hover .photo-overlay {
+    opacity: 1;
+}
+
+.photo-overlay .btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    background: white;
+    border: 1px solid #dee2e6;
+    transition: all 0.3s ease;
+}
+
+.photo-overlay .btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.photo-overlay .btn-light:hover {
+    background-color: #4e73df;
+    color: white;
+    border-color: #4e73df;
+}
+
+.photo-info {
+    background: white;
+    padding: 15px 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    border: 1px solid #e9ecef;
+}
+
+/* ==================== THUMBNAIL STYLES ==================== */
+.thumbnail-card {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    height: 130px;
+    border: 3px solid transparent;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.thumbnail-card.active {
+    border-color: #4e73df;
+    transform: scale(1.08);
+    box-shadow: 0 8px 20px rgba(78, 115, 223, 0.4);
+}
+
+.thumbnail-card:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.thumbnail-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.thumbnail-card:hover .thumbnail-img {
+    transform: scale(1.15);
+}
+
+.file-thumbnail {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    padding: 15px;
+}
+
+.thumbnail-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.8));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    padding: 15px;
+}
+
+.thumbnail-card:hover .thumbnail-overlay {
+    opacity: 1;
+}
+
+.delete-thumbnail, .download-thumbnail, .view-thumbnail {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.badge-order {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: rgba(0,0,0,0.8);
+    color: white;
+    font-size: 11px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+/* ==================== UPLOAD STYLES ==================== */
+.upload-section {
+    background: #f8f9fa;
+    padding: 25px;
+    border-radius: 12px;
+    margin-top: 30px;
+    border: 3px dashed #dee2e6;
+    transition: all 0.3s ease;
+}
+
+.upload-section:hover {
+    border-color: #4e73df;
+    background: #f0f5ff;
+}
+
+.custom-file-upload {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.upload-label {
+    display: block;
+    padding: 25px;
+    background: white;
+    border: 3px dashed #4e73df;
+    border-radius: 12px;
+    text-align: center;
+    color: #4e73df;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.1rem;
+}
+
+.upload-label:hover {
+    background: #4e73df;
+    color: white;
+    border-color: #4e73df;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(78, 115, 223, 0.3);
+}
+
+.upload-preview-card {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    height: 140px;
+    border: 3px solid #e0e0e0;
+    background: white;
+    transition: all 0.3s ease;
+}
+
+.upload-preview-card:hover {
+    border-color: #4e73df;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(78, 115, 223, 0.2);
+}
+
+.upload-preview-img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+}
+
+.upload-preview-doc {
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+}
+
+.upload-preview-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 5px 8px;
+    font-size: 11px;
+}
+
+.upload-btn {
+    padding: 15px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    border: none;
+    background: linear-gradient(135deg, #4CAF50, #66BB6A);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.upload-btn:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+    background: linear-gradient(135deg, #43A047, #5CB85C);
+}
+
+.upload-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+/* ==================== EMPTY GALLERY ==================== */
+.empty-gallery {
+    padding: 80px 20px;
+    background: #f8f9fa;
+    border-radius: 15px;
+    border: 3px dashed #dee2e6;
+    margin: 30px 0;
+}
+
+.empty-gallery i {
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+    font-size: 5rem;
+}
+
+.empty-gallery:hover i {
+    opacity: 0.8;
+}
+
+.empty-gallery h5 {
+    font-size: 1.5rem;
+    margin: 20px 0 10px;
+}
+
+.empty-gallery p {
+    font-size: 1.1rem;
+}
+
+/* ==================== KALKULATOR STYLES ==================== */
+.card.bg-light {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef) !important;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+}
+
+.card.bg-light h6 {
+    color: #495057;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.card.bg-light h4 {
+    font-weight: 700;
+}
+
+.text-primary {
+    color: #4e73df !important;
+}
+
+.text-success {
+    color: #28a745 !important;
+}
+
+/* ==================== TOAST NOTIFICATION ==================== */
+.toast-notification {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: white;
+    border-radius: 12px;
+    padding: 18px 25px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-width: 350px;
+    max-width: 450px;
+    z-index: 9999;
+    animation: slideIn 0.3s ease;
+    border-left: 5px solid;
+}
+
+.toast-success {
+    border-left-color: #4CAF50;
+}
+
+.toast-error {
+    border-left-color: #f44336;
+}
+
+.toast-info {
+    border-left-color: #2196F3;
+}
+
+.toast-warning {
+    border-left-color: #FF9800;
+}
+
+.toast-content {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.toast-content i {
+    font-size: 24px;
+    margin-right: 12px;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* ==================== BUTTON STYLES ==================== */
+.btn-primary {
+    background: linear-gradient(135deg, #4e73df, #224abe);
+    border: none;
+    font-weight: 600;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #3a56c4, #1d3ca8);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(78, 115, 223, 0.4);
+}
+
+/* ==================== RESPONSIVE STYLES ==================== */
+@media (max-width: 1200px) {
+    .main-photo-wrapper {
+        min-height: 450px;
+        max-height: 500px;
+    }
+
+    .main-photo {
+        max-height: 500px;
+    }
+}
+
+@media (max-width: 992px) {
+    .card-edit, .card-gallery {
+        margin-bottom: 25px;
+    }
+
+    .main-photo-wrapper {
+        min-height: 400px;
+        max-height: 450px;
+    }
+
+    .main-photo {
+        max-height: 450px;
+    }
+
+    .thumbnail-card {
+        height: 120px;
+    }
+
+    .gallery-nav {
+        justify-content: center;
+    }
+
+    .gallery-nav .btn {
+        flex: 1;
+        min-width: 140px;
+        margin-bottom: 8px;
+    }
+}
+
+@media (max-width: 768px) {
+    .card-edit .form-label {
+        font-size: 0.9rem;
+    }
+
+    .card-edit .form-control-sm {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    .main-photo-wrapper {
+        min-height: 350px;
+        max-height: 400px;
+    }
+
+    .main-photo {
+        max-height: 400px;
+    }
+
+    .thumbnail-card {
+        height: 100px;
+    }
+
+    .photo-overlay {
+        opacity: 1;
+        top: 15px;
+        right: 15px;
+        gap: 8px;
+    }
+
+    .photo-overlay .btn {
+        width: 35px;
+        height: 35px;
+        font-size: 16px;
+    }
+
+    .gallery-nav .btn {
+        padding: 7px 12px;
+        font-size: 0.85rem;
+        min-width: 120px;
+    }
+
+    .toast-notification {
+        min-width: 280px;
+        max-width: 320px;
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+        bottom: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .main-photo-wrapper {
+        min-height: 300px;
+        max-height: 350px;
+    }
+
+    .main-photo {
+        max-height: 350px;
+    }
+
+    .thumbnail-card {
+        height: 90px;
+    }
+
+    .thumbnail-overlay {
+        padding: 10px;
+        gap: 6px;
+    }
+
+    .delete-thumbnail, .download-thumbnail, .view-thumbnail {
+        width: 28px;
+        height: 28px;
+        font-size: 14px;
+    }
+
+    .photo-info #currentPhotoName {
+        font-size: 0.9rem;
+    }
+
+    .photo-controls .badge {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+    }
+
+    .upload-label {
+        padding: 20px;
+        font-size: 1rem;
+    }
+
+    .upload-btn {
+        padding: 12px;
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .main-photo-wrapper {
+        min-height: 250px;
+        max-height: 300px;
+    }
+
+    .main-photo {
+        max-height: 300px;
+    }
+
+    .thumbnail-card {
+        height: 80px;
+    }
+
+    .gallery-nav .btn {
+        min-width: 100%;
+        margin-bottom: 5px;
+    }
+}
+</style>
 @endsection

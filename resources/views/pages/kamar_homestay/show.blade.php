@@ -10,13 +10,14 @@
         <div class="page-header">
             <h3 class="page-title">
                 <i class="mdi mdi-eye text-primary mr-2"></i>
-                Detail Homestay
+                Detail Kamar Homestay
             </h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('homestay.index') }}">Homestay</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Detail Homestay</li>
+                    <li class="breadcrumb-item"><a href="{{ route('kamar_homestay.index') }}">Kamar Homestay</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Detail Kamar</li>
                 </ol>
             </nav>
         </div>
@@ -33,45 +34,37 @@
         @endif
 
         <div class="row">
-            <!-- Informasi Homestay - STRUKTUR SAMA -->
+            <!-- Informasi Kamar Homestay - STRUKTUR SAMA -->
             <div class="col-lg-5 mb-4">
                 <div class="card card-detail">
                     <div class="card-header bg-info text-white">
-                        <h5 class="mb-0"><i class="mdi mdi-information mr-2"></i>Informasi Homestay</h5>
+                        <h5 class="mb-0"><i class="mdi mdi-information mr-2"></i>Informasi Kamar Homestay</h5>
                     </div>
                     <div class="card-body">
                         <div class="detail-info">
                             <div class="detail-item">
                                 <div class="detail-label">
+                                    <i class="mdi mdi-bed text-primary"></i>
+                                    <span>Nama Kamar</span>
+                                </div>
+                                <div class="detail-value">{{ $kamar->nama_kamar }}</div>
+                            </div>
+
+                            <div class="detail-item">
+                                <div class="detail-label">
                                     <i class="mdi mdi-home text-primary"></i>
-                                    <span>Nama Homestay</span>
+                                    <span>Homestay</span>
                                 </div>
-                                <div class="detail-value">{{ $homestay->nama }}</div>
+                                <div class="detail-value">{{ $kamar->homestay->nama ?? 'Tidak ada data' }}</div>
                             </div>
 
                             <div class="detail-item">
                                 <div class="detail-label">
-                                    <i class="mdi mdi-account text-primary"></i>
-                                    <span>Pemilik</span>
-                                </div>
-                                <div class="detail-value">{{ $homestay->pemilik->nama ?? 'Tidak ada data' }}</div>
-                            </div>
-
-                            <div class="detail-item">
-                                <div class="detail-label">
-                                    <i class="mdi mdi-home-map-marker text-primary"></i>
-                                    <span>Alamat</span>
-                                </div>
-                                <div class="detail-value">{{ $homestay->alamat }}</div>
-                            </div>
-
-                            <div class="detail-item">
-                                <div class="detail-label">
-                                    <i class="mdi mdi-map-marker-radius text-primary"></i>
-                                    <span>RT/RW</span>
+                                    <i class="mdi mdi-account-group text-primary"></i>
+                                    <span>Kapasitas</span>
                                 </div>
                                 <div class="detail-value">
-                                    <span class="badge-biru">{{ $homestay->rt }}/{{ $homestay->rw }}</span>
+                                    <span class="badge-biru">{{ $kamar->kapasitas }} Orang</span>
                                 </div>
                             </div>
 
@@ -83,7 +76,7 @@
                                 </div>
                                 <div class="detail-value detail-desc">
                                     @php
-                                        $fasilitasData = $homestay->fasilitas_json;
+                                        $fasilitasData = $kamar->fasilitas_json;
                                         $fasilitasList = [];
 
                                         if (!empty($fasilitasData)) {
@@ -111,12 +104,12 @@
                                                             <i class="mdi mdi-air-conditioner mr-1"></i>
                                                         @elseif(in_array(strtolower($fasilitas), ['tv', 'television']))
                                                             <i class="mdi mdi-television mr-1"></i>
-                                                        @elseif(strpos(strtolower($fasilitas), 'kolam') !== false || strpos(strtolower($fasilitas), 'renang') !== false)
-                                                            <i class="mdi mdi-pool mr-1"></i>
-                                                        @elseif(strpos(strtolower($fasilitas), 'parkir') !== false)
-                                                            <i class="mdi mdi-parking mr-1"></i>
-                                                        @elseif(strpos(strtolower($fasilitas), 'dapur') !== false)
-                                                            <i class="mdi mdi-silverware-fork-knife mr-1"></i>
+                                                        @elseif(strpos(strtolower($fasilitas), 'mandi') !== false)
+                                                            <i class="mdi mdi-shower mr-1"></i>
+                                                        @elseif(strpos(strtolower($fasilitas), 'balkon') !== false)
+                                                            <i class="mdi mdi-balcony mr-1"></i>
+                                                        @elseif(strpos(strtolower($fasilitas), 'kasur') !== false)
+                                                            <i class="mdi mdi-bed mr-1"></i>
                                                         @else
                                                             <i class="mdi mdi-check-circle mr-1"></i>
                                                         @endif
@@ -137,33 +130,27 @@
                                     <span>Harga per Malam</span>
                                 </div>
                                 <div class="detail-value">
-                                    <span class="badge-orange">Rp {{ number_format($homestay->harga_per_malam, 0, ',', '.') }}</span>
+                                    <span class="badge-orange">Rp {{ number_format($kamar->harga, 0, ',', '.') }}</span>
                                 </div>
                             </div>
 
                             <div class="detail-item">
                                 <div class="detail-label">
-                                    <i class="mdi mdi-check-circle text-primary"></i>
+                                    <i class="mdi mdi-clock-outline text-primary"></i>
                                     <span>Status</span>
                                 </div>
                                 <div class="detail-value">
-                                    @if($homestay->status == 'active')
-                                        <span class="badge-hijau">Aktif</span>
-                                    @elseif($homestay->status == 'inactive')
-                                        <span class="badge-danger">Tidak Aktif</span>
-                                    @else
-                                        <span class="badge-secondary">{{ $homestay->status }}</span>
-                                    @endif
+                                    <span class="badge-hijau">Tersedia</span>
                                 </div>
                             </div>
 
                             <div class="detail-item">
                                 <div class="detail-label">
                                     <i class="mdi mdi-identifier text-primary"></i>
-                                    <span>ID Homestay</span>
+                                    <span>ID Kamar</span>
                                 </div>
                                 <div class="detail-value">
-                                    <span class="badge bg-secondary">#{{ $homestay->homestay_id }}</span>
+                                    <span class="badge bg-secondary">#{{ $kamar->kamar_id }}</span>
                                 </div>
                             </div>
 
@@ -172,7 +159,7 @@
                                     <i class="mdi mdi-calendar text-primary"></i>
                                     <span>Dibuat Tanggal</span>
                                 </div>
-                                <div class="detail-value">{{ $homestay->created_at->format('d F Y H:i') }}</div>
+                                <div class="detail-value">{{ $kamar->created_at->format('d F Y H:i') }}</div>
                             </div>
 
                             <div class="detail-item">
@@ -180,23 +167,23 @@
                                     <i class="mdi mdi-update text-primary"></i>
                                     <span>Diupdate Tanggal</span>
                                 </div>
-                                <div class="detail-value">{{ $homestay->updated_at->format('d F Y H:i') }}</div>
+                                <div class="detail-value">{{ $kamar->updated_at->format('d F Y H:i') }}</div>
                             </div>
                         </div>
 
                         <div class="d-grid gap-2 d-md-flex mt-4 pt-3 border-top">
-                            <a href="{{ route('homestay.edit', $homestay->homestay_id) }}" class="btn btn-warning me-2 btn-action">
+                            <a href="{{ route('kamar_homestay.edit', $kamar->kamar_id) }}" class="btn btn-warning me-2 btn-action">
                                 <i class="mdi mdi-pencil mr-1"></i> Edit Data
                             </a>
-                            <form action="{{ route('homestay.destroy', $homestay->homestay_id) }}" method="POST" class="d-inline">
+                            <form action="{{ route('kamar_homestay.destroy', $kamar->kamar_id) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-action"
-                                        onclick="return confirm('Apakah Anda yakin ingin menghapus homestay ini?')">
+                                        onclick="return confirm('Apakah Anda yakin ingin menghapus kamar ini?')">
                                     <i class="mdi mdi-delete mr-1"></i> Hapus
                                 </button>
                             </form>
-                            <a href="{{ route('homestay.index') }}" class="btn btn-secondary ms-auto btn-action">
+                            <a href="{{ route('kamar_homestay.index') }}" class="btn btn-secondary ms-auto btn-action">
                                 <i class="mdi mdi-arrow-left mr-1"></i> Kembali
                             </a>
                         </div>
@@ -204,11 +191,11 @@
                 </div>
             </div>
 
-            <!-- Foto Homestay - STRUKTUR SAMA -->
+            <!-- Foto Kamar Homestay - STRUKTUR SAMA -->
             <div class="col-lg-7 mb-4">
                 <div class="card border-0 shadow card-gallery">
                     <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0"><i class="mdi mdi-camera mr-2"></i>Galeri Foto Homestay</h5>
+                        <h5 class="mb-0"><i class="mdi mdi-camera mr-2"></i>Galeri Foto Kamar</h5>
                         <span class="badge bg-light text-dark">{{ count($files) }} File</span>
                     </div>
                     <div class="card-body">
@@ -259,7 +246,7 @@
                                                       str_contains($firstFile->mime_type, 'excel') || str_contains($firstFile->mime_type, 'sheet') ||
                                                       str_contains($firstFile->mime_type, 'text');
                                         $imageUrl = $isImage ? asset('storage/' . $firstFile->file_name) : '#';
-                                        $previewUrl = route('homestay.show-file', [$homestay->homestay_id, $firstFile->media_id]);
+                                        $previewUrl = route('kamar_homestay.show-file', [$kamar->kamar_id, $firstFile->media_id]);
                                         $fileNameDisplay = basename($firstFile->file_name);
                                     @endphp
 
@@ -325,7 +312,7 @@
                                                 <i class="mdi mdi-fullscreen"></i>
                                             </button>
                                         @elseif($isPDF)
-                                            <a href="{{ route('homestay.download-file', [$homestay->homestay_id, $firstFile->media_id]) }}"
+                                            <a href="{{ route('kamar_homestay.download-file', [$kamar->kamar_id, $firstFile->media_id]) }}"
                                                class="btn btn-light btn-sm"
                                                target="_blank"
                                                data-toggle="tooltip" title="Download PDF">
@@ -338,7 +325,7 @@
                                                 <i class="mdi mdi-eye"></i>
                                             </a>
                                         @else
-                                            <a href="{{ route('homestay.download-file', [$homestay->homestay_id, $firstFile->media_id]) }}"
+                                            <a href="{{ route('kamar_homestay.download-file', [$kamar->kamar_id, $firstFile->media_id]) }}"
                                                class="btn btn-light btn-sm"
                                                target="_blank"
                                                data-toggle="tooltip" title="Download">
@@ -368,7 +355,7 @@
                                         $fileIcon = 'mdi-file-document-box';
                                         $fileColor = 'text-secondary';
                                         $fileNameDisplay = basename($file->file_name);
-                                        $previewUrl = route('homestay.show-file', [$homestay->homestay_id, $file->media_id]);
+                                        $previewUrl = route('kamar_homestay.show-file', [$kamar->kamar_id, $file->media_id]);
 
                                         if($isPDF) {
                                             $fileIcon = 'mdi-file-pdf-box';
@@ -407,7 +394,7 @@
                                             @endif
 
                                             <div class="thumbnail-overlay">
-                                                <form action="{{ route('homestay.delete-file', [$homestay->homestay_id, $file->media_id]) }}"
+                                                <form action="{{ route('kamar_homestay.delete-file', [$kamar->kamar_id, $file->media_id]) }}"
                                                       method="POST"
                                                       class="d-inline delete-form">
                                                     @csrf
@@ -420,7 +407,7 @@
                                                         <i class="mdi mdi-delete"></i>
                                                     </button>
                                                 </form>
-                                                <a href="{{ route('homestay.download-file', [$homestay->homestay_id, $file->media_id]) }}"
+                                                <a href="{{ route('kamar_homestay.download-file', [$kamar->kamar_id, $file->media_id]) }}"
                                                    class="btn btn-info btn-sm download-thumbnail"
                                                    target="_blank"
                                                    data-toggle="tooltip"
@@ -446,7 +433,7 @@
                             <div class="text-center py-5 empty-gallery">
                                 <i class="mdi mdi-image-off fa-4x text-muted mb-3"></i>
                                 <h5 class="text-muted">Belum ada file yang diupload</h5>
-                                <p class="text-muted">Upload file untuk menampilkan galeri homestay</p>
+                                <p class="text-muted">Upload file untuk menampilkan galeri kamar</p>
                             </div>
                         @endif
 
@@ -456,7 +443,7 @@
                                 <i class="mdi mdi-cloud-upload text-primary mr-2"></i>
                                 Upload File Baru
                             </h6>
-                            <form action="{{ route('homestay.upload-files', $homestay->homestay_id) }}"
+                            <form action="{{ route('kamar_homestay.upload-files', $kamar->kamar_id) }}"
                                   method="POST"
                                   enctype="multipart/form-data"
                                   id="uploadForm">
@@ -464,18 +451,18 @@
                                 <div class="mb-3">
                                     <div class="custom-file-upload">
                                         <input type="file"
-                                               class="form-control @error('foto_homestay') is-invalid @enderror"
-                                               id="foto_homestay"
-                                               name="foto_homestay[]"
+                                               class="form-control @error('foto_kamar') is-invalid @enderror"
+                                               id="foto_kamar"
+                                               name="foto_kamar[]"
                                                multiple
                                                accept=".jpg,.jpeg,.png,.gif,.webp,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv"
                                                onchange="previewUploadFiles(this)">
-                                        <label for="foto_homestay" class="upload-label">
+                                        <label for="foto_kamar" class="upload-label">
                                             <i class="mdi mdi-cloud-upload mr-2"></i>
                                             <span>Pilih File (Multiple)</span>
                                         </label>
                                     </div>
-                                    @error('foto_homestay')
+                                    @error('foto_kamar')
                                         <div class="invalid-feedback d-block">{{ $message }}</div>
                                     @enderror
                                     <small class="form-text text-muted">
@@ -574,7 +561,7 @@
     let currentFileId = photos.length > 0 ? photos[0].media_id : '';
     let currentFileDisplayName = photos.length > 0 ? basename(photos[0].file_name) : '';
     let currentPDFPreviewUrl = '';
-    const homestayId = {{ $homestay->homestay_id }};
+    const kamarId = {{ $kamar->kamar_id }};
     const baseImagePath = '{{ asset("storage/") }}/';
 
     // Slideshow Variables
@@ -590,11 +577,11 @@
     }
 
     function getDownloadUrl(fileId) {
-        return '{{ route("homestay.download-file", [$homestay->homestay_id, "FILE_ID"]) }}'.replace('FILE_ID', fileId);
+        return '{{ route("kamar_homestay.download-file", [$kamar->kamar_id, "FILE_ID"]) }}'.replace('FILE_ID', fileId);
     }
 
     function getPreviewUrl(fileId) {
-        return '{{ route("homestay.show-file", [$homestay->homestay_id, "FILE_ID"]) }}'.replace('FILE_ID', fileId);
+        return '{{ route("kamar_homestay.show-file", [$kamar->kamar_id, "FILE_ID"]) }}'.replace('FILE_ID', fileId);
     }
 
     // ============ SLIDESHOW FUNCTIONS ============
@@ -1187,7 +1174,7 @@
     }
 
     function clearPreview() {
-        const input = document.getElementById('foto_homestay');
+        const input = document.getElementById('foto_kamar');
         input.value = '';
         previewUploadFiles(input);
     }
@@ -1239,7 +1226,7 @@
 
         // Tambahkan console log untuk debugging
         console.log('Files loaded:', photos);
-        console.log('Homestay ID:', homestayId);
+        console.log('Kamar ID:', kamarId);
 
         // Add keyboard shortcuts
         document.addEventListener('keydown', function(e) {

@@ -616,7 +616,8 @@
                                 </div>
                             </div>
                             <div class="nav-profile-text d-flex align-items-center">
-                                <p class="mb-0 text-black" id="userName">Faras Zakia</p>
+                                <!-- ==== TAMBAHKAN INI: Nama user dari Auth ==== -->
+                                <p class="mb-0 text-black">{{ Auth::user()->name ?? 'Guest' }}</p>
                             </div>
                         </a>
                         <div class="dropdown-menu navbar-dropdown dropdown-menu-right p-0 border-0 font-size-sm"
@@ -626,8 +627,9 @@
                                     style="margin: 0 auto 15px; width: 70px; height: 70px; font-size: 2rem;">
                                     <i class="mdi mdi-account"></i>
                                 </div>
-                                <p class="mt-2 mb-0 text-white" style="font-weight: 700;">Faras Zakia</p>
-                                <small class="text-white">Administrator</small>
+                                <!-- ==== TAMBAHKAN INI: Nama dan email user ==== -->
+                                <p class="mt-2 mb-0 text-white" style="font-weight: 700;">{{ Auth::user()->name ?? 'Guest' }}</p>
+                                <small class="text-white">{{ Auth::user()->email ?? 'admin@example.com' }}</small>
                             </div>
                             <div class="p-2">
                                 <h5 class="dropdown-header text-uppercase pl-2 text-dark">Akun Pengguna</h5>
@@ -641,7 +643,16 @@
                                     <span>Pengaturan</span>
                                     <i class="mdi mdi-settings"></i>
                                 </a>
+
+                                <!-- ==== TAMBAHKAN INI: Waktu login terakhir ==== -->
+                                <a class="dropdown-item py-2 d-flex align-items-center justify-content-between" href="#" style="cursor: default;">
+                                    <span>Login Terakhir</span>
+                                    <span class="text-muted">{{ session('last_login') ?? 'Belum ada data' }}</span>
+                                </a>
+
                                 <div role="separator" class="dropdown-divider"></div>
+
+                                <!-- ==== TAMBAHKAN INI: Route logout ==== -->
                                 <a class="dropdown-item py-2 d-flex align-items-center justify-content-between"
                                     href="#"
                                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -757,7 +768,8 @@
                                 <i class="mdi mdi-account"></i>
                             </div>
                             <div class="profile-info">
-                                <h5>Faras Zakia</h5>
+                                <!-- ==== TAMBAHKAN INI: Nama user dari Auth ==== -->
+                                <h5>{{ Auth::user()->name ?? 'Guest' }}</h5>
                                 <p>Administrator</p>
                             </div>
                         </div>
@@ -765,6 +777,7 @@
 
                     <li class="nav-item sidebar-user-actions">
                         <div class="sidebar-user-menu">
+                            <!-- ==== TAMBAHKAN INI: Route logout ==== -->
                             <a href="#" class="logout-btn"
                                 onclick="event.preventDefault(); document.getElementById('sidebar-logout-form').submit();">
                                 <i class="mdi mdi-logout"></i>
@@ -960,7 +973,7 @@
         <div class="whatsapp-tooltip">Hubungi Admin</div>
     </div>
 
-    <!-- Form untuk logout -->
+    <!-- ==== TAMBAHKAN INI: Form untuk logout ==== -->
     <form id="logout-form" action="{{ route('auth.logout') }}" method="POST" style="display: none;">
         @csrf
     </form>
@@ -988,9 +1001,11 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Set user name
-            const userName = "Faras Zakia";
-            document.getElementById('userName').textContent = userName;
+            // Set user name dari Auth
+            @if(Auth::check())
+                const userName = "{{ Auth::user()->name }}";
+                document.getElementById('userName').textContent = userName;
+            @endif
 
             // Set current date
             const now = new Date();

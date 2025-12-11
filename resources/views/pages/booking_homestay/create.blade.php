@@ -3,6 +3,9 @@
 
 <div class="main-panel">
     <div class="content-wrapper">
+
+        {{-- ====================== START MAIN CONTENT ====================== --}}
+
         <!-- Header -->
         <div class="page-header">
             <h3 class="page-title">
@@ -18,274 +21,1298 @@
             </nav>
         </div>
 
-        <div class="row">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title mb-4">Form Tambah Booking</h4>
-
-                        <form action="{{ route('booking-homestay.store') }}" method="POST">
-                            @csrf
-
-                            <div class="row">
-                                <!-- Kamar Homestay -->
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Kamar Homestay <span class="text-danger">*</span></label>
-                                        <select name="kamar_id" class="form-control" id="kamarSelect" required>
-                                            <option value="">Pilih Kamar</option>
-                                            @foreach($kamars as $kamar)
-                                                <option value="{{ $kamar->kamar_id }}"
-                                                    data-harga="{{ $kamar->harga }}"
-                                                    data-homestay="{{ $kamar->homestay->nama ?? 'Unknown' }}">
-                                                    {{ $kamar->nama_kamar }} - {{ $kamar->homestay->nama ?? 'Unknown' }}
-                                                    (Rp {{ number_format($kamar->harga, 0, ',', '.') }}/malam)
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        <small class="text-muted" id="homestayInfo"></small>
-                                        @error('kamar_id')
-                                            <small class="text-danger">{{ $message }}</small>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <!-- Warga -->
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Warga <span class="text-danger">*</span></label>
-                                        <select name="warga_id" class="form-control" required>
-                                            <option value="">Pilih Warga</option>
-                                            @foreach($wargas as $warga)
-                                                <option value="{{ $warga->warga_id }}" {{ old('warga_id') == $warga->warga_id ? 'selected' : '' }}>
-                                                    {{ $warga->nama }} ({{ $warga->nik ?? 'NIK' }})
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        @error('warga_id')
-                                            <small class="text-danger">{{ $message }}</small>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <!-- Check-in -->
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label>Check-in <span class="text-danger">*</span></label>
-                                        <input type="date" name="checkin" id="checkin" class="form-control"
-                                               value="{{ old('checkin', date('Y-m-d')) }}" required>
-                                        @error('checkin')
-                                            <small class="text-danger">{{ $message }}</small>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <!-- Check-out -->
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label>Check-out <span class="text-danger">*</span></label>
-                                        <input type="date" name="checkout" id="checkout" class="form-control"
-                                               value="{{ old('checkout', date('Y-m-d', strtotime('+1 day'))) }}" required>
-                                        @error('checkout')
-                                            <small class="text-danger">{{ $message }}</small>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <!-- Jumlah Hari -->
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label>Jumlah Hari</label>
-                                        <input type="text" id="jumlahHari" class="form-control" readonly>
-                                    </div>
-                                </div>
-
-                                <!-- Total -->
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label>Total (Rp) <span class="text-danger">*</span></label>
-                                        <input type="number" name="total" id="total" class="form-control"
-                                               value="{{ old('total') }}" min="0" required>
-                                        @error('total')
-                                            <small class="text-danger">{{ $message }}</small>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <!-- Status -->
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>Status <span class="text-danger">*</span></label>
-                                        <select name="status" class="form-control" required>
-                                            <option value="pending" {{ old('status') == 'pending' ? 'selected' : '' }}>Pending</option>
-                                            <option value="confirmed" {{ old('status') == 'confirmed' ? 'selected' : '' }}>Confirmed</option>
-                                            <option value="paid" {{ old('status') == 'paid' ? 'selected' : '' }}>Paid</option>
-                                            <option value="completed" {{ old('status') == 'completed' ? 'selected' : '' }}>Completed</option>
-                                            <option value="cancelled" {{ old('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
-                                        </select>
-                                        @error('status')
-                                            <small class="text-danger">{{ $message }}</small>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <!-- Metode Bayar -->
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>Metode Bayar</label>
-                                        <select name="metode_bayar" class="form-control">
-                                            <option value="">Pilih Metode</option>
-                                            <option value="cash" {{ old('metode_bayar') == 'cash' ? 'selected' : '' }}>Cash</option>
-                                            <option value="transfer" {{ old('metode_bayar') == 'transfer' ? 'selected' : '' }}>Transfer</option>
-                                            <option value="qris" {{ old('metode_bayar') == 'qris' ? 'selected' : '' }}>QRIS</option>
-                                            <option value="other" {{ old('metode_bayar') == 'other' ? 'selected' : '' }}>Lainnya</option>
-                                        </select>
-                                        @error('metode_bayar')
-                                            <small class="text-danger">{{ $message }}</small>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="mdi mdi-content-save mr-1"></i> Simpan
-                                </button>
-                                <a href="{{ route('booking-homestay.index') }}" class="btn btn-light">
-                                    <i class="mdi mdi-arrow-left mr-1"></i> Kembali
-                                </a>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+        <!-- Error List di Atas Form -->
+        @if($errors->any())
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="mdi mdi-alert-circle-outline mr-2"></i>
+                <strong>Terjadi kesalahan!</strong> Silakan perbaiki data berikut:
+                <ul class="mt-2 mb-0">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
+        @endif
 
-            <!-- Sidebar Info -->
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <i class="mdi mdi-information-outline text-primary mr-2"></i>
-                            Informasi Booking
-                        </h5>
+        <!-- Alert Success -->
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="mdi mdi-check-circle-outline mr-2"></i>
+                <strong>Sukses!</strong> {{ session('success') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
 
-                        <div class="alert alert-info">
-                            <h6><i class="mdi mdi-alert-circle-outline mr-2"></i> Panduan:</h6>
-                            <ul class="mb-0 pl-3">
-                                <li>Pilih kamar yang tersedia</li>
-                                <li>Check-in minimal hari ini</li>
-                                <li>Check-out harus setelah check-in</li>
-                                <li>Total akan otomatis terhitung</li>
-                                <li>Status bisa diubah nanti</li>
-                            </ul>
+        @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="mdi mdi-alert-circle-outline mr-2"></i>
+                <strong>Error!</strong> {{ session('error') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
+
+        <!-- Card Form Tambah Booking -->
+        <div class="card create-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="card-title mb-0">Form Tambah Data Booking</h4>
+                    <a href="{{ route('booking-homestay.index') }}" class="btn btn-outline-secondary btn-sm">
+                        <i class="mdi mdi-arrow-left mr-1"></i>Kembali ke Data Booking
+                    </a>
+                </div>
+
+                <form action="{{ route('booking-homestay.store') }}" method="POST" id="bookingForm" enctype="multipart/form-data">
+                    @csrf
+
+                    <div class="row">
+                        <!-- Kolom Kiri -->
+                        <div class="col-md-6">
+                            <!-- Kamar Homestay -->
+                            <div class="form-group">
+                                <label for="kamar_id" class="form-label">Kamar Homestay <span class="text-danger">*</span></label>
+                                <select class="form-control @error('kamar_id') is-invalid @enderror"
+                                        id="kamarSelect" name="kamar_id" required>
+                                    <option value="">-- Pilih Kamar --</option>
+                                    @foreach($kamars as $kamar)
+                                        <option value="{{ $kamar->kamar_id }}"
+                                            data-harga="{{ $kamar->harga }}"
+                                            data-homestay="{{ $kamar->homestay->nama ?? 'Unknown' }}"
+                                            {{ old('kamar_id') == $kamar->kamar_id ? 'selected' : '' }}>
+                                            {{ $kamar->nama_kamar }} - {{ $kamar->homestay->nama ?? 'Unknown' }}
+                                            (Rp {{ number_format($kamar->harga, 0, ',', '.') }}/malam)
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <small class="form-text text-muted" id="homestayInfo"></small>
+                                @error('kamar_id')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- Warga -->
+                            <div class="form-group">
+                                <label for="warga_id" class="form-label">Warga <span class="text-danger">*</span></label>
+                                <select class="form-control @error('warga_id') is-invalid @enderror"
+                                        id="warga_id" name="warga_id" required>
+                                    <option value="">-- Pilih Warga --</option>
+                                    @foreach($wargas as $warga)
+                                        <option value="{{ $warga->warga_id }}" {{ old('warga_id') == $warga->warga_id ? 'selected' : '' }}>
+                                            {{ $warga->nama }} - {{ $warga->no_ktp }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('warga_id')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- Check-in -->
+                            <div class="form-group">
+                                <label for="checkin" class="form-label">Tanggal Check-in <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control @error('checkin') is-invalid @enderror"
+                                       id="checkin" name="checkin" value="{{ old('checkin', date('Y-m-d')) }}"
+                                       placeholder="Masukkan tanggal check-in" required>
+                                @error('checkin')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- Check-out -->
+                            <div class="form-group">
+                                <label for="checkout" class="form-label">Tanggal Check-out <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control @error('checkout') is-invalid @enderror"
+                                       id="checkout" name="checkout" value="{{ old('checkout', date('Y-m-d', strtotime('+1 day'))) }}"
+                                       placeholder="Masukkan tanggal check-out" required>
+                                @error('checkout')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
 
-                        <div class="card mt-3">
-                            <div class="card-header bg-light">
-                                <h6 class="mb-0"><i class="mdi mdi-calculator mr-2"></i> Kalkulator Harga</h6>
+                        <!-- Kolom Kanan -->
+                        <div class="col-md-6">
+                            <!-- Jumlah Hari -->
+                            <div class="form-group">
+                                <label for="jumlahHari" class="form-label">Jumlah Hari</label>
+                                <input type="text" class="form-control"
+                                       id="jumlahHari" readonly>
+                                <small class="form-text text-muted" id="jumlahHariText">0 Hari</small>
                             </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <small>Harga per Malam:</small>
-                                        <h5 id="hargaPerMalam">Rp 0</h5>
+
+                            <!-- Total -->
+                            <div class="form-group">
+                                <label for="total" class="form-label">Total Biaya <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Rp</span>
                                     </div>
-                                    <div class="col-6">
-                                        <small>Jumlah Hari:</small>
-                                        <h5 id="displayJumlahHari">0 Hari</h5>
-                                    </div>
+                                    <input type="number" class="form-control @error('total') is-invalid @enderror"
+                                           id="total" name="total"
+                                           value="{{ old('total') }}"
+                                           placeholder="Total biaya" min="0" required readonly>
                                 </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <small>Total Seharusnya:</small>
-                                        <h4 id="totalSeharusnya" class="text-success">Rp 0</h4>
+                                @error('total')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- Status -->
+                            <div class="form-group">
+                                <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
+                                <select class="form-control @error('status') is-invalid @enderror"
+                                        id="status" name="status" required>
+                                    <option value="">-- Pilih Status --</option>
+                                    <option value="pending" {{ old('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                                    <option value="confirmed" {{ old('status') == 'confirmed' ? 'selected' : '' }}>Confirmed</option>
+                                    <option value="paid" {{ old('status') == 'paid' ? 'selected' : '' }}>Paid</option>
+                                    <option value="completed" {{ old('status') == 'completed' ? 'selected' : '' }}>Completed</option>
+                                    <option value="cancelled" {{ old('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                                </select>
+                                @error('status')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- Metode Bayar -->
+                            <div class="form-group">
+                                <label for="metode_bayar" class="form-label">Metode Bayar</label>
+                                <select class="form-control @error('metode_bayar') is-invalid @enderror"
+                                        id="metode_bayar" name="metode_bayar">
+                                    <option value="">-- Pilih Metode Bayar --</option>
+                                    <option value="cash" {{ old('metode_bayar') == 'cash' ? 'selected' : '' }}>Cash</option>
+                                    <option value="transfer" {{ old('metode_bayar') == 'transfer' ? 'selected' : '' }}>Transfer</option>
+                                    <option value="qris" {{ old('metode_bayar') == 'qris' ? 'selected' : '' }}>QRIS</option>
+                                    <option value="other" {{ old('metode_bayar') == 'other' ? 'selected' : '' }}>Lainnya</option>
+                                </select>
+                                @error('metode_bayar')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Upload File Bukti Bayar (SAMA DENGAN KAMAR HOMESTAY) -->
+                    <div class="row mt-4">
+                        <div class="col-md-12">
+                            <div class="card upload-card">
+                                <div class="card-header bg-gradient-primary text-white">
+                                    <h5 class="mb-0">
+                                        <i class="mdi mdi-receipt mr-2"></i>Upload Bukti Pembayaran
+                                        <span class="badge bg-light text-primary ml-2" id="fileCount">0 File</span>
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <!-- File Upload Area -->
+                                    <div class="custom-file-upload mb-4">
+                                        <input type="file"
+                                               class="form-control-file @error('bukti_bayar.*') is-invalid @enderror"
+                                               id="bukti_bayar"
+                                               name="bukti_bayar[]"
+                                               multiple
+                                               accept="image/*,.pdf,.doc,.docx"
+                                               onchange="previewFiles(this)">
+                                        <label for="bukti_bayar" class="upload-label">
+                                            <div class="upload-icon">
+                                                <i class="mdi mdi-cloud-upload"></i>
+                                            </div>
+                                            <div class="upload-text">
+                                                <h5>Drop files here or click to upload</h5>
+                                                <p class="text-muted">Format yang didukung: JPG, PNG, GIF, WEBP, PDF, DOC, DOCX</p>
+                                                <p class="text-muted">Maksimal 10MB per file</p>
+                                            </div>
+                                        </label>
+                                        @error('bukti_bayar.*')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <!-- File List Preview -->
+                                    <div class="file-list-section">
+                                        <h6 class="section-title">
+                                            <i class="mdi mdi-file-multiple mr-2"></i>
+                                            Daftar File yang akan diupload
+                                            <span class="badge badge-pill badge-info" id="selectedCount">0</span>
+                                        </h6>
+
+                                        <!-- Empty State -->
+                                        <div class="empty-state text-center py-5" id="emptyState">
+                                            <i class="mdi mdi-file-image text-muted" style="font-size: 80px;"></i>
+                                            <h5 class="text-muted mt-3">Belum ada file yang dipilih</h5>
+                                            <p class="text-muted">Upload bukti pembayaran atau dokumen pendukung</p>
+                                        </div>
+
+                                        <!-- File Preview Container -->
+                                        <div class="file-preview-container" id="filePreviewContainer" style="display: none;">
+                                            <div class="row" id="filePreviewRow"></div>
+
+                                            <!-- File Info Summary -->
+                                            <div class="file-summary mt-3 p-3 bg-light rounded">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <small class="text-muted">
+                                                            <i class="mdi mdi-file mr-1"></i>
+                                                            Total File: <span id="totalFiles">0</span>
+                                                        </small>
+                                                    </div>
+                                                    <div class="col-md-6 text-right">
+                                                        <small class="text-muted">
+                                                            <i class="mdi mdi-weight mr-1"></i>
+                                                            Total Size: <span id="totalSize">0 KB</span>
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+
+                    <!-- Info Kalkulator -->
+                    <div class="row mt-3">
+                        <div class="col-md-12">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <div class="row text-center">
+                                        <div class="col-md-4">
+                                            <h6>Harga per Malam</h6>
+                                            <h4 id="hargaPerMalam" class="text-primary">Rp 0</h4>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <h6>Jumlah Hari</h6>
+                                            <h4 id="displayJumlahHari" class="text-success">0 Hari</h4>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <h6>Total Seharusnya</h6>
+                                            <h4 id="totalSeharusnya" class="text-success">Rp 0</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tombol Aksi -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-end gap-2">
+                                <a href="{{ route('booking-homestay.index') }}" class="btn btn-outline-secondary">
+                                    <i class="mdi mdi-arrow-left mr-1"></i>Kembali
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="mdi mdi-content-save mr-1"></i>Simpan Booking
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {{-- ====================== END MAIN CONTENT ====================== --}}
+    </div>
+</div>
+
+<!-- Modal Preview Gambar -->
+<div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h6 class="modal-title" id="imagePreviewTitle"></h6>
+                <button type="button" class="btn-close btn-close-white" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                <img id="modalPreviewImage" src="" class="img-fluid w-100" alt="Preview">
+            </div>
+            <div class="modal-footer bg-dark">
+                <button type="button" class="btn btn-light" data-dismiss="modal">
+                    <i class="mdi mdi-close mr-1"></i>Tutup
+                </button>
             </div>
         </div>
     </div>
 </div>
 
+{{-- ====================== START JS TAMBAHAN UNTUK UPLOAD ====================== --}}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const kamarSelect = document.getElementById('kamarSelect');
-    const checkinInput = document.getElementById('checkin');
-    const checkoutInput = document.getElementById('checkout');
-    const jumlahHariInput = document.getElementById('jumlahHari');
-    const displayJumlahHari = document.getElementById('displayJumlahHari');
-    const totalInput = document.getElementById('total');
-    const hargaPerMalam = document.getElementById('hargaPerMalam');
-    const totalSeharusnya = document.getElementById('totalSeharusnya');
-    const homestayInfo = document.getElementById('homestayInfo');
+    // Variables
+    let selectedFiles = [];
+    let totalSize = 0;
+    const MAX_SIZE = 10 * 1024 * 1024; // 10MB in bytes
 
-    // Set min date untuk checkin (hari ini)
-    const today = new Date().toISOString().split('T')[0];
-    checkinInput.min = today;
+    // Helper functions untuk preview file
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
 
-    // Update info kamar
-    kamarSelect.addEventListener('change', function() {
-        const selectedOption = this.options[this.selectedIndex];
-        const harga = selectedOption.getAttribute('data-harga') || 0;
-        const homestay = selectedOption.getAttribute('data-homestay') || '';
-
-        hargaPerMalam.textContent = 'Rp ' + new Intl.NumberFormat('id-ID').format(harga);
-        homestayInfo.textContent = homestay ? 'Homestay: ' + homestay : '';
-
-        hitungTotal();
-    });
-
-    // Hitung jumlah hari dan total
-    function hitungTotal() {
-        const checkin = new Date(checkinInput.value);
-        const checkout = new Date(checkoutInput.value);
-
-        if (checkin && checkout && checkin < checkout) {
-            const diffTime = Math.abs(checkout - checkin);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-            jumlahHariInput.value = diffDays;
-            displayJumlahHari.textContent = diffDays + ' Hari';
-
-            const harga = kamarSelect.selectedOptions[0]?.getAttribute('data-harga') || 0;
-            const total = harga * diffDays;
-
-            totalInput.value = total;
-            totalSeharusnya.textContent = 'Rp ' + new Intl.NumberFormat('id-ID').format(total);
+    function getFileType(mimeType) {
+        if (mimeType.startsWith('image/')) {
+            return mimeType.split('/')[1].toUpperCase();
+        } else if (mimeType.includes('pdf')) {
+            return 'PDF';
+        } else if (mimeType.includes('word') || mimeType.includes('document')) {
+            return 'DOC';
         } else {
-            jumlahHariInput.value = '';
-            displayJumlahHari.textContent = '0 Hari';
-            totalSeharusnya.textContent = 'Rp 0';
+            return 'File';
         }
     }
 
-    checkinInput.addEventListener('change', function() {
-        // Set min untuk checkout (checkin + 1)
-        const minCheckout = new Date(this.value);
-        minCheckout.setDate(minCheckout.getDate() + 1);
-        checkoutInput.min = minCheckout.toISOString().split('T')[0];
+    function getFileIcon(mimeType) {
+        if (mimeType.startsWith('image/')) {
+            return 'mdi-image';
+        } else if (mimeType.includes('pdf')) {
+            return 'mdi-file-pdf-box';
+        } else if (mimeType.includes('word') || mimeType.includes('document')) {
+            return 'mdi-file-word-box';
+        } else {
+            return 'mdi-file-document-box';
+        }
+    }
 
-        // Jika checkout lebih awal dari checkin, reset
-        if (new Date(checkoutInput.value) <= new Date(this.value)) {
-            checkoutInput.value = minCheckout.toISOString().split('T')[0];
+    function getFileColor(mimeType) {
+        if (mimeType.startsWith('image/')) {
+            return 'text-info';
+        } else if (mimeType.includes('pdf')) {
+            return 'text-danger';
+        } else if (mimeType.includes('word') || mimeType.includes('document')) {
+            return 'text-primary';
+        } else {
+            return 'text-secondary';
+        }
+    }
+
+    function truncateFileName(name, maxLength = 15) {
+        if (name.length <= maxLength) return name;
+        return name.substring(0, maxLength) + '...';
+    }
+
+    function showToast(type, message) {
+        // Hapus toast sebelumnya
+        const existingToasts = document.querySelectorAll('.toast-notification');
+        existingToasts.forEach(toast => toast.remove());
+
+        const toast = document.createElement('div');
+        toast.className = `toast-notification toast-${type}`;
+        toast.innerHTML = `
+            <div class="toast-content">
+                <i class="mdi mdi-${type === 'success' ? 'check-circle' : type === 'error' ? 'alert-circle' : 'information'} mr-2"></i>
+                <span>${message}</span>
+            </div>
+            <button class="toast-close" onclick="this.parentElement.remove()">&times;</button>
+        `;
+
+        document.body.appendChild(toast);
+
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+            if (toast.parentElement) {
+                toast.remove();
+            }
+        }, 3000);
+    }
+
+    // Preview Files Function
+    function previewFiles(input) {
+        const files = input.files;
+        selectedFiles = Array.from(files);
+
+        const emptyState = document.getElementById('emptyState');
+        const filePreviewContainer = document.getElementById('filePreviewContainer');
+        const filePreviewRow = document.getElementById('filePreviewRow');
+        const fileCountElement = document.getElementById('fileCount');
+        const selectedCountElement = document.getElementById('selectedCount');
+        const totalFilesElement = document.getElementById('totalFiles');
+        const totalSizeElement = document.getElementById('totalSize');
+
+        // Reset
+        filePreviewRow.innerHTML = '';
+        totalSize = 0;
+
+        if (files.length > 0) {
+            // Hide empty state, show preview
+            emptyState.style.display = 'none';
+            filePreviewContainer.style.display = 'block';
+
+            // Update counters
+            fileCountElement.textContent = `${files.length} File`;
+            selectedCountElement.textContent = files.length;
+            totalFilesElement.textContent = files.length;
+
+            // Process each file
+            Array.from(files).forEach((file, index) => {
+                totalSize += file.size;
+
+                const fileSize = formatFileSize(file.size);
+                const fileType = getFileType(file.type);
+                const fileIcon = getFileIcon(file.type);
+                const fileColor = getFileColor(file.type);
+
+                // Create preview card
+                const colDiv = document.createElement('div');
+                colDiv.className = 'col-md-3 col-sm-4 col-6 mb-3';
+
+                colDiv.innerHTML = `
+                    <div class="file-preview-card">
+                        <div class="file-preview-header">
+                            <span class="file-badge">${index + 1}</span>
+                            <button type="button" class="btn-remove-file" onclick="removeFile(${index})" title="Hapus file">
+                                <i class="mdi mdi-close"></i>
+                            </button>
+                        </div>
+                        <div class="file-preview-body" onclick="viewFilePreview(${index})">
+                            ${file.type.startsWith('image/') ?
+                                `<img src="${URL.createObjectURL(file)}" class="file-preview-img" alt="${file.name}">` :
+                                `<div class="file-icon-preview ${fileColor}">
+                                    <i class="mdi ${fileIcon}"></i>
+                                </div>`
+                            }
+                        </div>
+                        <div class="file-preview-footer">
+                            <div class="file-name" title="${file.name}">${truncateFileName(file.name)}</div>
+                            <div class="file-info">
+                                <span class="file-type">${fileType}</span>
+                                <span class="file-size">${fileSize}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                filePreviewRow.appendChild(colDiv);
+
+                // Check file size
+                if (file.size > MAX_SIZE) {
+                    showToast('error', `File ${file.name} melebihi 10MB`);
+                    colDiv.classList.add('file-error');
+                }
+            });
+
+            // Update total size
+            totalSizeElement.textContent = formatFileSize(totalSize);
+
+        } else {
+            // Show empty state, hide preview
+            emptyState.style.display = 'block';
+            filePreviewContainer.style.display = 'none';
+            fileCountElement.textContent = '0 File';
+            selectedCountElement.textContent = '0';
+        }
+    }
+
+    // Remove file from selection
+    function removeFile(index) {
+        const dataTransfer = new DataTransfer();
+        const input = document.getElementById('bukti_bayar');
+
+        // Remove file from selectedFiles array
+        selectedFiles.splice(index, 1);
+
+        // Update DataTransfer with remaining files
+        selectedFiles.forEach(file => {
+            dataTransfer.items.add(file);
+        });
+
+        // Update file input
+        input.files = dataTransfer.files;
+
+        // Trigger change event to update preview
+        const event = new Event('change', { bubbles: true });
+        input.dispatchEvent(event);
+
+        showToast('info', 'File dihapus dari daftar upload');
+    }
+
+    // View file preview in modal
+    function viewFilePreview(index) {
+        const file = selectedFiles[index];
+
+        if (file.type.startsWith('image/')) {
+            const modal = document.getElementById('imagePreviewModal');
+            const modalImage = document.getElementById('modalPreviewImage');
+            const modalTitle = document.getElementById('imagePreviewTitle');
+
+            modalImage.src = URL.createObjectURL(file);
+            modalTitle.textContent = file.name;
+
+            $(modal).modal('show');
+        } else {
+            // For non-image files, show info
+            showToast('info', `File: ${file.name} (${formatFileSize(file.size)})`);
+        }
+    }
+
+    // ============ KALKULATOR HARGA ============
+    document.addEventListener('DOMContentLoaded', function() {
+        const kamarSelect = document.getElementById('kamarSelect');
+        const checkinInput = document.getElementById('checkin');
+        const checkoutInput = document.getElementById('checkout');
+        const jumlahHariInput = document.getElementById('jumlahHari');
+        const jumlahHariText = document.getElementById('jumlahHariText');
+        const totalInput = document.getElementById('total');
+        const hargaPerMalam = document.getElementById('hargaPerMalam');
+        const displayJumlahHari = document.getElementById('displayJumlahHari');
+        const totalSeharusnya = document.getElementById('totalSeharusnya');
+        const homestayInfo = document.getElementById('homestayInfo');
+
+        // Set min date untuk checkin (hari ini)
+        const today = new Date().toISOString().split('T')[0];
+        checkinInput.min = today;
+
+        // Update info kamar
+        kamarSelect.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const harga = selectedOption.getAttribute('data-harga') || 0;
+            const homestay = selectedOption.getAttribute('data-homestay') || '';
+
+            hargaPerMalam.textContent = 'Rp ' + new Intl.NumberFormat('id-ID').format(harga);
+            homestayInfo.textContent = homestay ? 'Homestay: ' + homestay : '';
+
+            hitungTotal();
+        });
+
+        // Hitung jumlah hari dan total
+        function hitungTotal() {
+            const checkin = new Date(checkinInput.value);
+            const checkout = new Date(checkoutInput.value);
+
+            if (checkin && checkout && checkin < checkout) {
+                const diffTime = Math.abs(checkout - checkin);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                jumlahHariInput.value = diffDays;
+                jumlahHariText.textContent = `${diffDays} Hari`;
+                displayJumlahHari.textContent = `${diffDays} Hari`;
+
+                const harga = kamarSelect.selectedOptions[0]?.getAttribute('data-harga') || 0;
+                const total = harga * diffDays;
+
+                totalInput.value = total;
+                totalSeharusnya.textContent = 'Rp ' + new Intl.NumberFormat('id-ID').format(total);
+            } else {
+                jumlahHariInput.value = '';
+                jumlahHariText.textContent = '0 Hari';
+                displayJumlahHari.textContent = '0 Hari';
+                totalSeharusnya.textContent = 'Rp 0';
+            }
+        }
+
+        checkinInput.addEventListener('change', function() {
+            // Set min untuk checkout (checkin + 1)
+            const minCheckout = new Date(this.value);
+            minCheckout.setDate(minCheckout.getDate() + 1);
+            checkoutInput.min = minCheckout.toISOString().split('T')[0];
+
+            // Jika checkout lebih awal dari checkin, reset
+            if (new Date(checkoutInput.value) <= new Date(this.value)) {
+                checkoutInput.value = minCheckout.toISOString().split('T')[0];
+            }
+
+            hitungTotal();
+        });
+
+        checkoutInput.addEventListener('change', hitungTotal);
+
+        // Hitung saat pertama kali load
+        if (kamarSelect.value) {
+            const selectedOption = kamarSelect.options[kamarSelect.selectedIndex];
+            const harga = selectedOption.getAttribute('data-harga') || 0;
+            const homestay = selectedOption.getAttribute('data-homestay') || '';
+            hargaPerMalam.textContent = 'Rp ' + new Intl.NumberFormat('id-ID').format(harga);
+            homestayInfo.textContent = homestay ? 'Homestay: ' + homestay : '';
         }
 
         hitungTotal();
+
+        // Form validation
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            let hasError = false;
+
+            // Check required fields
+            const requiredFields = ['kamar_id', 'warga_id', 'checkin', 'checkout', 'total', 'status'];
+            requiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (!field || !field.value.trim()) {
+                    if (field) field.classList.add('is-invalid');
+                    hasError = true;
+                }
+            });
+
+            // Check file sizes
+            selectedFiles.forEach(file => {
+                if (file.size > MAX_SIZE) {
+                    showToast('error', `File ${file.name} melebihi batas 10MB`);
+                    hasError = true;
+                }
+            });
+
+            if (hasError) {
+                e.preventDefault();
+                showToast('error', 'Harap perbaiki data yang masih salah');
+
+                // Scroll to first error
+                const firstError = this.querySelector('.is-invalid');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    firstError.focus();
+                }
+            } else {
+                // Show loading
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="mdi mdi-loading mdi-spin mr-1"></i> Menyimpan...';
+                submitBtn.disabled = true;
+            }
+        });
+
+        // Auto dismiss alerts setelah 5 detik
+        setTimeout(function() {
+            $('.alert').alert('close');
+        }, 5000);
+
+        // Auto focus ke input pertama
+        const firstInput = document.querySelector('input[type="text"], select');
+        if (firstInput) {
+            firstInput.focus();
+        }
     });
-
-    checkoutInput.addEventListener('change', hitungTotal);
-
-    // Hitung saat pertama kali load
-    hitungTotal();
-});
 </script>
 
+<style>
+/* ==================== CREATE FORM STYLES ==================== */
+.create-card {
+    border-radius: 15px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    border: none;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.create-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.create-card .card-title {
+    color: #333;
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.form-label i {
+    font-size: 18px;
+    margin-right: 8px;
+}
+
+.form-control, .form-control-file {
+    border-radius: 10px;
+    border: 2px solid #e0e0e0;
+    padding: 12px 15px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-control-file:focus {
+    border-color: #4e73df;
+    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+    transform: translateY(-1px);
+}
+
+.input-group {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.input-group-prepend .input-group-text {
+    background: linear-gradient(135deg, #4e73df, #224abe);
+    color: white;
+    border: none;
+    font-weight: 600;
+}
+
+/* ==================== UPLOAD CARD STYLES ==================== */
+.upload-card {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 3px dashed #e0e0e0;
+    transition: all 0.3s ease;
+}
+
+.upload-card:hover {
+    border-color: #4e73df;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(78, 115, 223, 0.15);
+}
+
+.upload-card .card-header {
+    background: linear-gradient(135deg, #4e73df, #224abe);
+    border-bottom: none;
+    padding: 15px 20px;
+}
+
+.upload-card .card-header h5 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+.upload-card .card-header .badge {
+    font-size: 0.8rem;
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+/* ==================== CUSTOM FILE UPLOAD ==================== */
+.custom-file-upload {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.custom-file-upload input[type="file"] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.upload-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border: 3px dashed #4e73df;
+    border-radius: 12px;
+    text-align: center;
+    color: #4e73df;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.upload-label:hover {
+    background: linear-gradient(135deg, #e9ecef, #dee2e6);
+    border-color: #224abe;
+    transform: translateY(-3px);
+}
+
+.upload-icon {
+    font-size: 60px;
+    color: #4e73df;
+    margin-bottom: 15px;
+    transition: transform 0.3s ease;
+}
+
+.upload-label:hover .upload-icon {
+    transform: scale(1.1);
+    color: #224abe;
+}
+
+.upload-text h5 {
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.upload-text p {
+    margin-bottom: 5px;
+    color: #666;
+}
+
+/* ==================== FILE LIST SECTION ==================== */
+.file-list-section {
+    margin-top: 20px;
+}
+
+.section-title {
+    color: #495057;
+    font-weight: 600;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.section-title .badge {
+    margin-left: 10px;
+    font-size: 0.8rem;
+    padding: 4px 8px;
+}
+
+.empty-state {
+    padding: 60px 20px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border: 2px dashed #dee2e6;
+    transition: all 0.3s ease;
+}
+
+.empty-state:hover {
+    border-color: #4e73df;
+    background: #f0f5ff;
+}
+
+.empty-state i {
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+.empty-state:hover i {
+    opacity: 0.8;
+}
+
+.empty-state h5 {
+    font-size: 1.2rem;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+/* ==================== FILE PREVIEW CARDS ==================== */
+.file-preview-card {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    background: white;
+    border: 2px solid #e0e0e0;
+    transition: all 0.3s ease;
+    height: 100%;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.file-preview-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    border-color: #4e73df;
+}
+
+.file-preview-card.file-error {
+    border-color: #dc3545;
+    animation: shake 0.5s;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.file-preview-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    z-index: 2;
+}
+
+.file-badge {
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.btn-remove-file {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(220, 53, 69, 0.9);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    opacity: 0;
+}
+
+.file-preview-card:hover .btn-remove-file {
+    opacity: 1;
+}
+
+.btn-remove-file:hover {
+    background: #dc3545;
+    transform: scale(1.1);
+}
+
+.file-preview-body {
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    overflow: hidden;
+    background: #f8f9fa;
+}
+
+.file-preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.file-preview-card:hover .file-preview-img {
+    transform: scale(1.1);
+}
+
+.file-icon-preview {
+    font-size: 50px;
+    text-align: center;
+}
+
+.file-preview-footer {
+    padding: 12px;
+    background: white;
+    border-top: 1px solid #f0f0f0;
+}
+
+.file-name {
+    font-weight: 600;
+    color: #333;
+    font-size: 14px;
+    margin-bottom: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.file-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+}
+
+.file-type {
+    color: #6c757d;
+    background: #f8f9fa;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.file-size {
+    color: #495057;
+    font-weight: 500;
+}
+
+.file-summary {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border: 1px solid #dee2e6;
+}
+
+.file-summary small {
+    font-weight: 500;
+}
+
+.file-summary i {
+    font-size: 14px;
+    margin-right: 5px;
+}
+
+/* ==================== KALKULATOR STYLES ==================== */
+.card.bg-light {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef) !important;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+}
+
+.card.bg-light h6 {
+    color: #495057;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.card.bg-light h4 {
+    font-weight: 700;
+}
+
+.text-primary {
+    color: #4e73df !important;
+}
+
+.text-success {
+    color: #28a745 !important;
+}
+
+/* ==================== TOAST NOTIFICATION ==================== */
+.toast-notification {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: white;
+    border-radius: 12px;
+    padding: 18px 25px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-width: 350px;
+    max-width: 450px;
+    z-index: 9999;
+    animation: slideIn 0.3s ease;
+    border-left: 5px solid;
+}
+
+.toast-success {
+    border-left-color: #4CAF50;
+}
+
+.toast-error {
+    border-left-color: #f44336;
+}
+
+.toast-info {
+    border-left-color: #2196F3;
+}
+
+.toast-warning {
+    border-left-color: #FF9800;
+}
+
+.toast-content {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.toast-content i {
+    font-size: 24px;
+    margin-right: 12px;
+}
+
+.toast-success .toast-content i {
+    color: #4CAF50;
+}
+
+.toast-error .toast-content i {
+    color: #f44336;
+}
+
+.toast-info .toast-content i {
+    color: #2196F3;
+}
+
+.toast-warning .toast-content i {
+    color: #FF9800;
+}
+
+.toast-close {
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    color: #999;
+    padding: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.toast-close:hover {
+    background: #f0f0f0;
+    color: #333;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* ==================== RESPONSIVE STYLES ==================== */
+@media (max-width: 1200px) {
+    .file-preview-card {
+        height: 160px;
+    }
+
+    .file-preview-body {
+        height: 130px;
+    }
+}
+
+@media (max-width: 992px) {
+    .create-card .card-title {
+        font-size: 1.3rem;
+    }
+
+    .upload-label {
+        padding: 30px 15px;
+    }
+
+    .upload-icon {
+        font-size: 50px;
+    }
+
+    .upload-text h5 {
+        font-size: 1.1rem;
+    }
+
+    .file-preview-card {
+        height: 150px;
+    }
+
+    .file-preview-body {
+        height: 120px;
+    }
+}
+
+@media (max-width: 768px) {
+    .create-card {
+        margin: 0 -15px;
+        border-radius: 0;
+    }
+
+    .form-label {
+        font-size: 0.95rem;
+    }
+
+    .upload-card .card-header h5 {
+        font-size: 1.1rem;
+    }
+
+    .upload-label {
+        padding: 25px 10px;
+    }
+
+    .upload-icon {
+        font-size: 40px;
+    }
+
+    .upload-text h5 {
+        font-size: 1rem;
+        text-align: center;
+    }
+
+    .upload-text p {
+        font-size: 0.85rem;
+        text-align: center;
+    }
+
+    .file-preview-card {
+        height: 140px;
+    }
+
+    .file-preview-body {
+        height: 110px;
+    }
+
+    .file-name {
+        font-size: 12px;
+    }
+
+    .file-info {
+        font-size: 11px;
+    }
+
+    .toast-notification {
+        min-width: 280px;
+        max-width: 320px;
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+        bottom: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .create-card .card-title {
+        font-size: 1.2rem;
+    }
+
+    .d-flex.justify-content-between {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .btn {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .upload-label {
+        padding: 20px 10px;
+    }
+
+    .upload-icon {
+        font-size: 35px;
+    }
+
+    .upload-text h5 {
+        font-size: 0.95rem;
+    }
+
+    .upload-text p {
+        font-size: 0.8rem;
+    }
+
+    .file-preview-card {
+        height: 130px;
+    }
+
+    .file-preview-body {
+        height: 100px;
+    }
+
+    .btn-remove-file {
+        opacity: 1;
+    }
+
+    .file-summary .row {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .file-summary .text-right {
+        text-align: left !important;
+    }
+}
+</style>
 @endsection

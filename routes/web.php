@@ -12,18 +12,15 @@ use App\Http\Controllers\DestinasiWisataController;
 use App\Http\Controllers\HomestayController; // ✅ PASTIKAN INI ADA!
 
 
-Route::get('/', [AuthController::class, 'showLoginForm'])->name('login');
-
-
-// PERBAIKI: Gunakan AuthController (bukan AuthorHandler/AuthorController)
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('auth.login'); // PERBAIKI: ->name() bukan ->login()
+// TAMBAHKAN: Route untuk authentication
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('auth.login');
 Route::post('/login', [AuthController::class, 'login'])->name('auth.login.submit');
-Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('auth.register'); // PERBAIKI: tambahkan titik koma
-Route::post('/register', [AuthController::class, 'register'])->name('auth.register.submit'); // PERBAIKI: tambahkan titik koma
-Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 
-// Route untuk admin - PERBAIKI ROUTE YANG RUSAK
-// Route::get('/admin/pariwisata', [PariwisataDestinasiAdminController::class, 'index'])->name('pariwisata.admin');
+Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('auth.register');
+Route::post('/register', [AuthController::class, 'register'])->name('auth.register.submit');
+
+// TAMBAHKAN: Route logout
+Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 // Route CRUD Warga
@@ -73,6 +70,18 @@ Route::get('homestay/{id}/download-file/{fileId}', [HomestayController::class, '
 Route::get('homestay/{id}/show-file/{fileId}', [HomestayController::class, 'showFile'])->name('homestay.show-file');
 
 
+// Route untuk Kamar Homestay dengan file upload
 Route::resource('kamar_homestay', KamarHomestayController::class);
-Route::resource('booking-homestay', BookingHomestayController::class);
+Route::post('kamar_homestay/{id}/upload-files', [KamarHomestayController::class, 'uploadFiles'])->name('kamar_homestay.upload-files');
+Route::delete('kamar_homestay/{id}/delete-file/{fileId}', [KamarHomestayController::class, 'deleteFile'])->name('kamar_homestay.delete-file');
+Route::get('kamar_homestay/{id}/download-file/{fileId}', [KamarHomestayController::class, 'downloadFile'])->name('kamar_homestay.download-file');
+Route::get('kamar_homestay/{id}/show-file/{fileId}', [KamarHomestayController::class, 'showFile'])->name('kamar_homestay.show-file');
+Route::post('kamar_homestay/{id}/rename-file/{fileId}', [KamarHomestayController::class, 'renameFile'])->name('kamar_homestay.rename-file');
 
+// Booking Homestay Routes dengan Multiple Upload
+Route::resource('booking-homestay', BookingHomestayController::class);
+Route::post('booking-homestay/{id}/upload-files', [BookingHomestayController::class, 'uploadFiles'])->name('booking-homestay.upload-files');
+Route::delete('booking-homestay/{id}/delete-file/{fileId}', [BookingHomestayController::class, 'deleteFile'])->name('booking-homestay.delete-file');
+Route::get('booking-homestay/{id}/download-file/{fileId}', [BookingHomestayController::class, 'downloadFile'])->name('booking-homestay.download-file');
+Route::get('booking-homestay/{id}/show-file/{fileId}', [BookingHomestayController::class, 'showFile'])->name('booking-homestay.show-file');
+Route::put('booking-homestay/{id}/rename-file/{fileId}', [BookingHomestayController::class, 'renameFile'])->name('booking-homestay.rename-file');

@@ -10,13 +10,13 @@
         <div class="page-header">
             <h3 class="page-title">
                 <i class="mdi mdi-eye text-primary mr-2"></i>
-                Detail Homestay
+                Detail Booking Homestay
             </h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('homestay.index') }}">Homestay</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Detail Homestay</li>
+                    <li class="breadcrumb-item"><a href="{{ route('booking-homestay.index') }}">Booking Homestay</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Detail Booking</li>
                 </ol>
             </nav>
         </div>
@@ -33,111 +33,85 @@
         @endif
 
         <div class="row">
-            <!-- Informasi Homestay - STRUKTUR SAMA -->
+            <!-- Informasi Booking -->
             <div class="col-lg-5 mb-4">
                 <div class="card card-detail">
                     <div class="card-header bg-info text-white">
-                        <h5 class="mb-0"><i class="mdi mdi-information mr-2"></i>Informasi Homestay</h5>
+                        <h5 class="mb-0"><i class="mdi mdi-information mr-2"></i>Informasi Booking</h5>
                     </div>
                     <div class="card-body">
                         <div class="detail-info">
                             <div class="detail-item">
                                 <div class="detail-label">
-                                    <i class="mdi mdi-home text-primary"></i>
-                                    <span>Nama Homestay</span>
+                                    <i class="mdi mdi-identifier text-primary"></i>
+                                    <span>ID Booking</span>
                                 </div>
-                                <div class="detail-value">{{ $homestay->nama }}</div>
+                                <div class="detail-value">
+                                    <span class="badge bg-secondary">#{{ $booking->booking_id }}</span>
+                                </div>
                             </div>
 
                             <div class="detail-item">
                                 <div class="detail-label">
                                     <i class="mdi mdi-account text-primary"></i>
-                                    <span>Pemilik</span>
+                                    <span>Warga</span>
                                 </div>
-                                <div class="detail-value">{{ $homestay->pemilik->nama ?? 'Tidak ada data' }}</div>
+                                <div class="detail-value">{{ $booking->warga->nama ?? 'Tidak ada data' }}</div>
                             </div>
 
                             <div class="detail-item">
                                 <div class="detail-label">
-                                    <i class="mdi mdi-home-map-marker text-primary"></i>
-                                    <span>Alamat</span>
+                                    <i class="mdi mdi-home text-primary"></i>
+                                    <span>Kamar</span>
                                 </div>
-                                <div class="detail-value">{{ $homestay->alamat }}</div>
+                                <div class="detail-value">{{ $booking->kamar->nama_kamar ?? 'Tidak ada data' }}</div>
                             </div>
 
                             <div class="detail-item">
                                 <div class="detail-label">
-                                    <i class="mdi mdi-map-marker-radius text-primary"></i>
-                                    <span>RT/RW</span>
+                                    <i class="mdi mdi-home-group text-primary"></i>
+                                    <span>Homestay</span>
+                                </div>
+                                <div class="detail-value">{{ $booking->kamar->homestay->nama ?? 'Tidak ada data' }}</div>
+                            </div>
+
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <i class="mdi mdi-calendar-check text-primary"></i>
+                                    <span>Check-in</span>
                                 </div>
                                 <div class="detail-value">
-                                    <span class="badge-biru">{{ $homestay->rt }}/{{ $homestay->rw }}</span>
+                                    <span class="badge-biru">{{ $booking->checkin->format('d F Y') }}</span>
                                 </div>
                             </div>
 
-                            <!-- Fasilitas -->
                             <div class="detail-item">
                                 <div class="detail-label">
-                                    <i class="mdi mdi-wifi text-primary"></i>
-                                    <span>Fasilitas</span>
+                                    <i class="mdi mdi-calendar-remove text-primary"></i>
+                                    <span>Check-out</span>
                                 </div>
-                                <div class="detail-value detail-desc">
-                                    @php
-                                        $fasilitasData = $homestay->fasilitas_json;
-                                        $fasilitasList = [];
+                                <div class="detail-value">
+                                    <span class="badge-orange">{{ $booking->checkout->format('d F Y') }}</span>
+                                </div>
+                            </div>
 
-                                        if (!empty($fasilitasData)) {
-                                            if (is_array($fasilitasData)) {
-                                                // Jika sudah array (karena casting di model)
-                                                $fasilitasList = array_filter($fasilitasData);
-                                            } elseif (is_string($fasilitasData)) {
-                                                // Jika masih string JSON
-                                                $decoded = json_decode($fasilitasData, true);
-                                                if (is_array($decoded)) {
-                                                    $fasilitasList = array_filter($decoded);
-                                                }
-                                            }
-                                        }
-                                    @endphp
-
-                                    @if(count($fasilitasList) > 0)
-                                        <div class="fasilitas-list">
-                                            @foreach($fasilitasList as $fasilitas => $status)
-                                                @if($status)
-                                                    <span class="badge bg-light text-dark mb-1 mr-1">
-                                                        @if(in_array(strtolower($fasilitas), ['wifi', 'internet']))
-                                                            <i class="mdi mdi-wifi mr-1"></i>
-                                                        @elseif(in_array(strtolower($fasilitas), ['ac', 'air conditioner']))
-                                                            <i class="mdi mdi-air-conditioner mr-1"></i>
-                                                        @elseif(in_array(strtolower($fasilitas), ['tv', 'television']))
-                                                            <i class="mdi mdi-television mr-1"></i>
-                                                        @elseif(strpos(strtolower($fasilitas), 'kolam') !== false || strpos(strtolower($fasilitas), 'renang') !== false)
-                                                            <i class="mdi mdi-pool mr-1"></i>
-                                                        @elseif(strpos(strtolower($fasilitas), 'parkir') !== false)
-                                                            <i class="mdi mdi-parking mr-1"></i>
-                                                        @elseif(strpos(strtolower($fasilitas), 'dapur') !== false)
-                                                            <i class="mdi mdi-silverware-fork-knife mr-1"></i>
-                                                        @else
-                                                            <i class="mdi mdi-check-circle mr-1"></i>
-                                                        @endif
-                                                        {{ ucwords(str_replace('_', ' ', $fasilitas)) }}
-                                                    </span>
-                                                @endif
-                                            @endforeach
-                                        </div>
-                                    @else
-                                        -
-                                    @endif
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <i class="mdi mdi-calendar-clock text-primary"></i>
+                                    <span>Durasi</span>
+                                </div>
+                                <div class="detail-value">
+                                    <span class="badge-hijau">{{ $booking->checkin->diffInDays($booking->checkout) }} Hari</span>
                                 </div>
                             </div>
 
                             <div class="detail-item">
                                 <div class="detail-label">
                                     <i class="mdi mdi-cash text-primary"></i>
-                                    <span>Harga per Malam</span>
+                                    <span>Total Biaya</span>
                                 </div>
                                 <div class="detail-value">
-                                    <span class="badge-orange">Rp {{ number_format($homestay->harga_per_malam, 0, ',', '.') }}</span>
+                                    <span class="badge-orange">Rp {{ number_format($booking->total, 0, ',', '.') }}</span>
                                 </div>
                             </div>
 
@@ -147,56 +121,98 @@
                                     <span>Status</span>
                                 </div>
                                 <div class="detail-value">
-                                    @if($homestay->status == 'active')
-                                        <span class="badge-hijau">Aktif</span>
-                                    @elseif($homestay->status == 'inactive')
-                                        <span class="badge-danger">Tidak Aktif</span>
-                                    @else
-                                        <span class="badge-secondary">{{ $homestay->status }}</span>
-                                    @endif
+                                    @php
+                                        $statusColors = [
+                                            'pending' => 'warning',
+                                            'confirmed' => 'info',
+                                            'paid' => 'primary',
+                                            'cancelled' => 'danger',
+                                            'completed' => 'success'
+                                        ];
+                                        $statusLabels = [
+                                            'pending' => 'Pending',
+                                            'confirmed' => 'Confirmed',
+                                            'paid' => 'Lunas',
+                                            'cancelled' => 'Batal',
+                                            'completed' => 'Selesai'
+                                        ];
+                                    @endphp
+                                    <span class="badge badge-{{ $statusColors[$booking->status] ?? 'secondary' }} py-2 px-3">
+                                        {{ $statusLabels[$booking->status] ?? $booking->status }}
+                                    </span>
                                 </div>
                             </div>
 
+                            @if($booking->metode_bayar)
                             <div class="detail-item">
                                 <div class="detail-label">
-                                    <i class="mdi mdi-identifier text-primary"></i>
-                                    <span>ID Homestay</span>
+                                    <i class="mdi mdi-credit-card text-primary"></i>
+                                    <span>Metode Bayar</span>
                                 </div>
                                 <div class="detail-value">
-                                    <span class="badge bg-secondary">#{{ $homestay->homestay_id }}</span>
+                                    <span class="badge bg-info">{{ ucfirst($booking->metode_bayar) }}</span>
                                 </div>
                             </div>
+                            @endif
 
                             <div class="detail-item">
                                 <div class="detail-label">
                                     <i class="mdi mdi-calendar text-primary"></i>
-                                    <span>Dibuat Tanggal</span>
+                                    <span>Tanggal Booking</span>
                                 </div>
-                                <div class="detail-value">{{ $homestay->created_at->format('d F Y H:i') }}</div>
+                                <div class="detail-value">{{ $booking->created_at->format('d F Y H:i') }}</div>
                             </div>
 
                             <div class="detail-item">
                                 <div class="detail-label">
                                     <i class="mdi mdi-update text-primary"></i>
-                                    <span>Diupdate Tanggal</span>
+                                    <span>Terakhir Update</span>
                                 </div>
-                                <div class="detail-value">{{ $homestay->updated_at->format('d F Y H:i') }}</div>
+                                <div class="detail-value">{{ $booking->updated_at->format('d F Y H:i') }}</div>
                             </div>
+
+                            @if($booking->isAktif)
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <i class="mdi mdi-clock-alert text-primary"></i>
+                                    <span>Status Saat Ini</span>
+                                </div>
+                                <div class="detail-value">
+                                    <span class="badge badge-success">
+                                        <i class="mdi mdi-check mr-1"></i> Sedang Berlangsung
+                                    </span>
+                                </div>
+                            </div>
+                            @endif
+
+                            @if($booking->isCompleted)
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <i class="mdi mdi-calendar-end text-primary"></i>
+                                    <span>Status Saat Ini</span>
+                                </div>
+                                <div class="detail-value">
+                                    <span class="badge badge-secondary">
+                                        <i class="mdi mdi-calendar-check mr-1"></i> Sudah Selesai
+                                    </span>
+                                </div>
+                            </div>
+                            @endif
                         </div>
 
                         <div class="d-grid gap-2 d-md-flex mt-4 pt-3 border-top">
-                            <a href="{{ route('homestay.edit', $homestay->homestay_id) }}" class="btn btn-warning me-2 btn-action">
+                            <a href="{{ route('booking-homestay.edit', $booking->booking_id) }}" class="btn btn-warning me-2 btn-action">
                                 <i class="mdi mdi-pencil mr-1"></i> Edit Data
                             </a>
-                            <form action="{{ route('homestay.destroy', $homestay->homestay_id) }}" method="POST" class="d-inline">
+                            <form action="{{ route('booking-homestay.destroy', $booking->booking_id) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-action"
-                                        onclick="return confirm('Apakah Anda yakin ingin menghapus homestay ini?')">
+                                        onclick="return confirm('Apakah Anda yakin ingin menghapus booking ini?')">
                                     <i class="mdi mdi-delete mr-1"></i> Hapus
                                 </button>
                             </form>
-                            <a href="{{ route('homestay.index') }}" class="btn btn-secondary ms-auto btn-action">
+                            <a href="{{ route('booking-homestay.index') }}" class="btn btn-secondary ms-auto btn-action">
                                 <i class="mdi mdi-arrow-left mr-1"></i> Kembali
                             </a>
                         </div>
@@ -204,11 +220,11 @@
                 </div>
             </div>
 
-            <!-- Foto Homestay - STRUKTUR SAMA -->
+            <!-- Bukti Pembayaran -->
             <div class="col-lg-7 mb-4">
                 <div class="card border-0 shadow card-gallery">
                     <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0"><i class="mdi mdi-camera mr-2"></i>Galeri Foto Homestay</h5>
+                        <h5 class="mb-0"><i class="mdi mdi-receipt mr-2"></i>Bukti Pembayaran</h5>
                         <span class="badge bg-light text-dark">{{ count($files) }} File</span>
                     </div>
                     <div class="card-body">
@@ -248,7 +264,7 @@
                                 </div>
                             </div>
 
-                            <!-- Main Photo Preview - DIPERBESAR -->
+                            <!-- Main Photo Preview -->
                             <div class="main-photo-container mb-4">
                                 <div class="main-photo-wrapper">
                                     @php
@@ -259,16 +275,16 @@
                                                       str_contains($firstFile->mime_type, 'excel') || str_contains($firstFile->mime_type, 'sheet') ||
                                                       str_contains($firstFile->mime_type, 'text');
                                         $imageUrl = $isImage ? asset('storage/' . $firstFile->file_name) : '#';
-                                        $previewUrl = route('homestay.show-file', [$homestay->homestay_id, $firstFile->media_id]);
+                                        $previewUrl = route('booking-homestay.show-file', [$booking->booking_id, $firstFile->media_id]);
                                         $fileNameDisplay = basename($firstFile->file_name);
                                     @endphp
 
                                     @if($isImage)
-                                        <!-- Gambar - DIPERBESAR -->
+                                        <!-- Gambar -->
                                         <img src="{{ asset('storage/' . $firstFile->file_name) }}"
                                              id="currentMainPhoto"
                                              class="main-photo"
-                                             alt="Foto Utama"
+                                             alt="Bukti Pembayaran"
                                              onerror="handleImageError(this, '{{ $firstFile->file_name }}')">
                                     @elseif($isPDF)
                                         <!-- PDF Preview -->
@@ -325,7 +341,7 @@
                                                 <i class="mdi mdi-fullscreen"></i>
                                             </button>
                                         @elseif($isPDF)
-                                            <a href="{{ route('homestay.download-file', [$homestay->homestay_id, $firstFile->media_id]) }}"
+                                            <a href="{{ route('booking-homestay.download-file', [$booking->booking_id, $firstFile->media_id]) }}"
                                                class="btn btn-light btn-sm"
                                                target="_blank"
                                                data-toggle="tooltip" title="Download PDF">
@@ -338,7 +354,7 @@
                                                 <i class="mdi mdi-eye"></i>
                                             </a>
                                         @else
-                                            <a href="{{ route('homestay.download-file', [$homestay->homestay_id, $firstFile->media_id]) }}"
+                                            <a href="{{ route('booking-homestay.download-file', [$booking->booking_id, $firstFile->media_id]) }}"
                                                class="btn btn-light btn-sm"
                                                target="_blank"
                                                data-toggle="tooltip" title="Download">
@@ -357,7 +373,7 @@
 
                             <!-- Thumbnail Gallery -->
                             <h6 class="border-bottom pb-2 mb-3">
-                                <i class="mdi mdi-image-multiple mr-2"></i>Daftar File
+                                <i class="mdi mdi-file-multiple mr-2"></i>Daftar File
                             </h6>
 
                             <div class="row g-2" id="thumbnailGallery">
@@ -368,7 +384,7 @@
                                         $fileIcon = 'mdi-file-document-box';
                                         $fileColor = 'text-secondary';
                                         $fileNameDisplay = basename($file->file_name);
-                                        $previewUrl = route('homestay.show-file', [$homestay->homestay_id, $file->media_id]);
+                                        $previewUrl = route('booking-homestay.show-file', [$booking->booking_id, $file->media_id]);
 
                                         if($isPDF) {
                                             $fileIcon = 'mdi-file-pdf-box';
@@ -407,7 +423,7 @@
                                             @endif
 
                                             <div class="thumbnail-overlay">
-                                                <form action="{{ route('homestay.delete-file', [$homestay->homestay_id, $file->media_id]) }}"
+                                                <form action="{{ route('booking-homestay.delete-file', [$booking->booking_id, $file->media_id]) }}"
                                                       method="POST"
                                                       class="d-inline delete-form">
                                                     @csrf
@@ -420,7 +436,7 @@
                                                         <i class="mdi mdi-delete"></i>
                                                     </button>
                                                 </form>
-                                                <a href="{{ route('homestay.download-file', [$homestay->homestay_id, $file->media_id]) }}"
+                                                <a href="{{ route('booking-homestay.download-file', [$booking->booking_id, $file->media_id]) }}"
                                                    class="btn btn-info btn-sm download-thumbnail"
                                                    target="_blank"
                                                    data-toggle="tooltip"
@@ -444,9 +460,9 @@
                             </div>
                         @else
                             <div class="text-center py-5 empty-gallery">
-                                <i class="mdi mdi-image-off fa-4x text-muted mb-3"></i>
-                                <h5 class="text-muted">Belum ada file yang diupload</h5>
-                                <p class="text-muted">Upload file untuk menampilkan galeri homestay</p>
+                                <i class="mdi mdi-receipt-off fa-4x text-muted mb-3"></i>
+                                <h5 class="text-muted">Belum ada bukti pembayaran</h5>
+                                <p class="text-muted">Upload bukti pembayaran untuk menampilkan gallery</p>
                             </div>
                         @endif
 
@@ -456,7 +472,7 @@
                                 <i class="mdi mdi-cloud-upload text-primary mr-2"></i>
                                 Upload File Baru
                             </h6>
-                            <form action="{{ route('homestay.upload-files', $homestay->homestay_id) }}"
+                            <form action="{{ route('booking-homestay.upload-files', $booking->booking_id) }}"
                                   method="POST"
                                   enctype="multipart/form-data"
                                   id="uploadForm">
@@ -464,18 +480,18 @@
                                 <div class="mb-3">
                                     <div class="custom-file-upload">
                                         <input type="file"
-                                               class="form-control @error('foto_homestay') is-invalid @enderror"
-                                               id="foto_homestay"
-                                               name="foto_homestay[]"
+                                               class="form-control @error('bukti_bayar') is-invalid @enderror"
+                                               id="bukti_bayar"
+                                               name="bukti_bayar[]"
                                                multiple
                                                accept=".jpg,.jpeg,.png,.gif,.webp,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv"
                                                onchange="previewUploadFiles(this)">
-                                        <label for="foto_homestay" class="upload-label">
+                                        <label for="bukti_bayar" class="upload-label">
                                             <i class="mdi mdi-cloud-upload mr-2"></i>
                                             <span>Pilih File (Multiple)</span>
                                         </label>
                                     </div>
-                                    @error('foto_homestay')
+                                    @error('bukti_bayar')
                                         <div class="invalid-feedback d-block">{{ $message }}</div>
                                     @enderror
                                     <small class="form-text text-muted">
@@ -574,7 +590,7 @@
     let currentFileId = photos.length > 0 ? photos[0].media_id : '';
     let currentFileDisplayName = photos.length > 0 ? basename(photos[0].file_name) : '';
     let currentPDFPreviewUrl = '';
-    const homestayId = {{ $homestay->homestay_id }};
+    const bookingId = {{ $booking->booking_id }};
     const baseImagePath = '{{ asset("storage/") }}/';
 
     // Slideshow Variables
@@ -590,11 +606,11 @@
     }
 
     function getDownloadUrl(fileId) {
-        return '{{ route("homestay.download-file", [$homestay->homestay_id, "FILE_ID"]) }}'.replace('FILE_ID', fileId);
+        return '{{ route("booking-homestay.download-file", [$booking->booking_id, "FILE_ID"]) }}'.replace('FILE_ID', fileId);
     }
 
     function getPreviewUrl(fileId) {
-        return '{{ route("homestay.show-file", [$homestay->homestay_id, "FILE_ID"]) }}'.replace('FILE_ID', fileId);
+        return '{{ route("booking-homestay.show-file", [$booking->booking_id, "FILE_ID"]) }}'.replace('FILE_ID', fileId);
     }
 
     // ============ SLIDESHOW FUNCTIONS ============
@@ -812,7 +828,6 @@
 
         // Jika masih error, tampilkan placeholder
         img.onerror = function() {
-            // Tampilkan placeholder yang lebih baik
             const svg = `
                 <svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
                     <rect width="800" height="500" fill="#f8f9fa"/>
@@ -828,9 +843,6 @@
 
             img.src = 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
             img.style.cursor = 'default';
-
-            // Tampilkan pesan toast
-            showToast('error', `Gagal memuat: ${fileName.split('/').pop()}`);
         };
     }
 
@@ -897,33 +909,22 @@
 
         // Tampilkan preview sesuai jenis file
         if (isImage) {
-            // Tampilkan gambar
             const timestamp = new Date().getTime();
             const fullPath = 'storage/' + fileName;
             mainPhoto.src = "{{ asset('') }}" + fullPath + '?t=' + timestamp;
             mainPhoto.style.display = 'block';
 
-            // Update juga untuk fullscreen modal
             document.getElementById('fullscreenImage').src = "{{ asset('') }}" + fullPath + '?t=' + timestamp;
             document.getElementById('imageFullscreenTitle').textContent = currentFileDisplayName;
             currentPDFPreviewUrl = '';
         } else if (isPDF) {
-            // Tampilkan preview PDF
             currentPDFPreviewUrl = getPreviewUrl(fileId);
 
-            // Update container PDF
             const pdfContainer = document.querySelector('.pdf-preview-container') || createPDFPreview();
             pdfContainer.style.display = 'block';
 
-            // Update fullscreen untuk PDF
             document.getElementById('pdfFullscreenTitle').textContent = currentFileDisplayName + ' (PDF)';
-
-            // Stop slideshow jika PDF ditampilkan
-            if (slideshowActive) {
-                stopSlideshow();
-            }
         } else {
-            // Tampilkan preview dokumen lain
             let icon = 'mdi-file-document-box';
             let color = 'text-secondary';
 
@@ -953,11 +954,6 @@
             }
             mainPhotoWrapper.insertBefore(newDocPreview, mainPhotoWrapper.firstChild);
             currentPDFPreviewUrl = '';
-
-            // Stop slideshow jika dokumen non-gambar ditampilkan
-            if (slideshowActive) {
-                stopSlideshow();
-            }
         }
 
         photoName.textContent = currentFileDisplayName;
@@ -1000,7 +996,6 @@
     function downloadCurrentPhoto() {
         if (currentFileId) {
             const downloadUrl = getDownloadUrl(currentFileId);
-            console.log('Download current file:', downloadUrl);
             window.open(downloadUrl, '_blank');
         }
     }
@@ -1008,7 +1003,6 @@
     function downloadFullscreenPhoto() {
         if (currentFileId) {
             const downloadUrl = getDownloadUrl(currentFileId);
-            console.log('Download fullscreen file:', downloadUrl);
             window.open(downloadUrl, '_blank');
         }
     }
@@ -1021,31 +1015,24 @@
 
         showToast('info', `Memulai download ${photos.length} file...`);
 
-        // Download semua file dengan delay
         photos.forEach((photo, index) => {
             setTimeout(() => {
                 const downloadUrl = getDownloadUrl(photo.media_id);
-                console.log(`Downloading ${index + 1}/${photos.length}:`, downloadUrl);
-
-                // Buat link download secara dinamis
                 const link = document.createElement('a');
                 link.href = downloadUrl;
                 link.target = '_blank';
                 link.download = basename(photo.file_name);
 
-                // Tambahkan ke body dan klik
                 document.body.appendChild(link);
                 link.click();
 
-                // Hapus link setelah diklik
                 setTimeout(() => {
                     document.body.removeChild(link);
                 }, 100);
 
-            }, index * 1500); // Jarak 1.5 detik antar download
+            }, index * 1500);
         });
 
-        // Tampilkan pesan selesai
         setTimeout(() => {
             showToast('success', 'Semua file telah ditambahkan ke antrian download');
         }, photos.length * 1500 + 1000);
@@ -1057,10 +1044,8 @@
         const isPDF = currentFileType.includes('pdf');
 
         if (isImage) {
-            // Tampilkan gambar di modal fullscreen khusus gambar
             $('#imageFullscreenModal').modal('show');
 
-            // Atur gambar agar benar-benar fullscreen
             const img = document.getElementById('fullscreenImage');
             img.style.maxWidth = '100%';
             img.style.maxHeight = '80vh';
@@ -1070,12 +1055,10 @@
             img.style.margin = '0 auto';
 
         } else if (isPDF) {
-            // Tampilkan PDF di modal fullscreen khusus PDF
             const pdfIframe = document.getElementById('pdfFullscreenIframe');
             pdfIframe.src = currentPDFPreviewUrl;
             $('#pdfFullscreenModal').modal('show');
         } else {
-            // Untuk dokumen lain, langsung download
             downloadCurrentPhoto();
         }
     }
@@ -1114,7 +1097,6 @@
             uploadBtn.disabled = false;
 
             Array.from(input.files).forEach((file, index) => {
-                // Check file size (10MB max)
                 if (file.size > 10 * 1024 * 1024) {
                     showToast('error', `File ${file.name} melebihi 10MB`);
                     return;
@@ -1187,14 +1169,13 @@
     }
 
     function clearPreview() {
-        const input = document.getElementById('foto_homestay');
+        const input = document.getElementById('bukti_bayar');
         input.value = '';
         previewUploadFiles(input);
     }
 
     // ============ TOAST NOTIFICATION ============
     function showToast(type, message) {
-        // Hapus toast sebelumnya
         const existingToasts = document.querySelectorAll('.toast-notification');
         existingToasts.forEach(toast => toast.remove());
 
@@ -1210,7 +1191,6 @@
 
         document.body.appendChild(toast);
 
-        // Auto remove after 3 seconds
         setTimeout(() => {
             if (toast.parentElement) {
                 toast.remove();
@@ -1237,9 +1217,8 @@
             document.getElementById('imageFullscreenTitle').textContent = basename(firstFile.file_name);
         }
 
-        // Tambahkan console log untuk debugging
         console.log('Files loaded:', photos);
-        console.log('Homestay ID:', homestayId);
+        console.log('Booking ID:', bookingId);
 
         // Add keyboard shortcuts
         document.addEventListener('keydown', function(e) {
@@ -1333,29 +1312,6 @@
     flex: 1;
     color: #333;
     line-height: 1.5;
-}
-
-.detail-desc {
-    white-space: pre-line;
-    line-height: 1.6;
-    background: #f8f9fa;
-    padding: 10px;
-    border-radius: 8px;
-    border-left: 3px solid #4e73df;
-}
-
-.fasilitas-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-}
-
-.fasilitas-list .badge {
-    padding: 6px 12px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    display: inline-flex;
-    align-items: center;
 }
 
 /* ==================== BADGE STYLES ==================== */
@@ -1513,7 +1469,6 @@
     color: white;
 }
 
-/* PERBAIKAN BESAR: Main photo container lebih besar */
 .main-photo-container {
     position: relative;
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
@@ -1527,8 +1482,8 @@
     position: relative;
     border-radius: 12px;
     overflow: hidden;
-    min-height: 500px;
-    max-height: 600px;
+    min-height: 400px;
+    max-height: 500px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1541,10 +1496,9 @@
     box-shadow: 0 12px 30px rgba(0,0,0,0.2);
 }
 
-/* PERBAIKAN BESAR: Main photo lebih besar */
 .main-photo {
     max-width: 100%;
-    max-height: 550px;
+    max-height: 450px;
     width: auto;
     height: auto;
     object-fit: contain;
@@ -1556,7 +1510,6 @@
     transform: scale(1.03);
 }
 
-/* Styling khusus untuk PDF Preview */
 .pdf-preview-container {
     width: 100%;
     padding: 40px 30px;
@@ -1565,46 +1518,12 @@
     box-shadow: 0 4px 15px rgba(0,0,0,0.05);
 }
 
-.pdf-preview-container i {
-    opacity: 0.8;
-    transition: opacity 0.3s ease;
-}
-
-.pdf-preview-container:hover i {
-    opacity: 1;
-}
-
-.pdf-preview-container h5 {
-    font-weight: 600;
-    color: #495057;
-    margin-top: 15px !important;
-}
-
-.pdf-preview-container .btn {
-    margin: 5px;
-}
-
 .document-preview {
     width: 100%;
     padding: 40px 30px;
     background: #f8f9fa;
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-}
-
-.document-preview i {
-    opacity: 0.8;
-    transition: opacity 0.3s ease;
-}
-
-.document-preview:hover i {
-    opacity: 1;
-}
-
-.document-preview h5 {
-    font-weight: 600;
-    color: #495057;
-    margin-top: 15px !important;
 }
 
 .photo-overlay {
@@ -1655,21 +1574,6 @@
     border: 1px solid #e9ecef;
 }
 
-.photo-info #currentPhotoName {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #495057;
-    margin-bottom: 10px;
-}
-
-.photo-controls .badge {
-    font-size: 0.9rem;
-    padding: 8px 15px;
-    border-radius: 20px;
-    background: linear-gradient(135deg, #4e73df, #224abe);
-    font-weight: 600;
-}
-
 /* ==================== THUMBNAIL STYLES ==================== */
 .thumbnail-card {
     position: relative;
@@ -1715,16 +1619,6 @@
     padding: 15px;
 }
 
-.file-thumbnail i {
-    opacity: 0.8;
-    transition: transform 0.3s ease;
-}
-
-.thumbnail-card:hover .file-thumbnail i {
-    transform: scale(1.2);
-    opacity: 1;
-}
-
 .thumbnail-overlay {
     position: absolute;
     top: 0;
@@ -1758,24 +1652,6 @@
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
-.delete-thumbnail:hover {
-    background-color: #dc3545 !important;
-    transform: scale(1.15);
-    box-shadow: 0 4px 10px rgba(220, 53, 69, 0.4);
-}
-
-.download-thumbnail:hover {
-    background-color: #17a2b8 !important;
-    transform: scale(1.15);
-    box-shadow: 0 4px 10px rgba(23, 162, 184, 0.4);
-}
-
-.view-thumbnail:hover {
-    background-color: #ffc107 !important;
-    transform: scale(1.15);
-    box-shadow: 0 4px 10px rgba(255, 193, 7, 0.4);
-}
-
 .badge-order {
     position: absolute;
     top: 8px;
@@ -1791,82 +1667,6 @@
     border-radius: 50%;
     font-weight: bold;
     box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-}
-
-/* ==================== FULLSCREEN MODAL STYLES ==================== */
-/* Modal untuk Gambar */
-#imageFullscreenModal .modal-dialog {
-    max-width: 95%;
-    margin: 10px auto;
-}
-
-#imageFullscreenModal .modal-body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(0, 0, 0, 0.9);
-    min-height: 85vh;
-    padding: 0;
-}
-
-#imageFullscreenModal .modal-content {
-    background: transparent;
-    border: none;
-}
-
-#fullscreenImage {
-    max-width: 100%;
-    max-height: 85vh;
-    width: auto;
-    height: auto;
-    object-fit: contain;
-    display: block;
-    margin: 0 auto;
-}
-
-#imageFullscreenModal .modal-header {
-    background: rgba(0, 0, 0, 0.7);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 15px 20px;
-}
-
-#imageFullscreenModal .modal-footer {
-    background: rgba(0, 0, 0, 0.7);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 15px 20px;
-}
-
-/* Modal untuk PDF */
-#pdfFullscreenModal .modal-content {
-    background: rgba(0, 0, 0, 0.95);
-}
-
-#pdfFullscreenModal .modal-header {
-    background: rgba(0, 0, 0, 0.8);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-#pdfFullscreenModal .modal-footer {
-    background: rgba(0, 0, 0, 0.8);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-#pdfFullscreenIframe {
-    background: white;
-}
-
-.modal-footer .btn-light {
-    background: rgba(255, 255, 255, 0.9);
-    border: none;
-    font-weight: 600;
-    padding: 10px 20px;
-    transition: all 0.3s ease;
-}
-
-.modal-footer .btn-light:hover {
-    background: white;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
 }
 
 /* ==================== UPLOAD STYLES ==================== */
@@ -1890,16 +1690,6 @@
     display: inline-block;
     width: 100%;
     margin-bottom: 20px;
-}
-
-.custom-file-upload input[type="file"] {
-    position: absolute;
-    left: 0;
-    top: 0;
-    opacity: 0;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
 }
 
 .upload-label {
@@ -2063,43 +1853,6 @@
     margin-right: 12px;
 }
 
-.toast-success .toast-content i {
-    color: #4CAF50;
-}
-
-.toast-error .toast-content i {
-    color: #f44336;
-}
-
-.toast-info .toast-content i {
-    color: #2196F3;
-}
-
-.toast-warning .toast-content i {
-    color: #FF9800;
-}
-
-.toast-close {
-    background: none;
-    border: none;
-    font-size: 22px;
-    cursor: pointer;
-    color: #999;
-    padding: 0;
-    width: 28px;
-    height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    transition: all 0.3s ease;
-}
-
-.toast-close:hover {
-    background: #f0f0f0;
-    color: #333;
-}
-
 @keyframes slideIn {
     from {
         transform: translateX(100%);
@@ -2124,16 +1877,6 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-/* ==================== ANIMATIONS ==================== */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.card-detail, .card-gallery {
-    animation: fadeIn 0.5s ease;
-}
-
 /* ==================== RESPONSIVE ==================== */
 @media (max-width: 1200px) {
     .main-photo-wrapper {
@@ -2143,11 +1886,6 @@
 
     .main-photo {
         max-height: 500px;
-    }
-
-    #imageFullscreenModal .modal-dialog {
-        max-width: 100%;
-        margin: 5px auto;
     }
 }
 
@@ -2177,20 +1915,6 @@
         flex: 1;
         min-width: 140px;
         margin-bottom: 8px;
-    }
-
-    .slideshow-controls-overlay .btn-round {
-        width: 45px;
-        height: 45px;
-        font-size: 22px;
-    }
-
-    #imageFullscreenModal .modal-body {
-        min-height: 80vh;
-    }
-
-    #fullscreenImage {
-        max-height: 80vh;
     }
 }
 
@@ -2240,23 +1964,6 @@
         padding: 7px 12px;
         font-size: 0.85rem;
         min-width: 120px;
-    }
-
-    .toast-notification {
-        min-width: 280px;
-        max-width: 320px;
-        left: 50%;
-        right: auto;
-        transform: translateX(-50%);
-        bottom: 20px;
-    }
-
-    #imageFullscreenModal .modal-body {
-        min-height: 70vh;
-    }
-
-    #fullscreenImage {
-        max-height: 70vh;
     }
 }
 
@@ -2314,14 +2021,6 @@
         padding: 12px;
         font-size: 0.95rem;
     }
-
-    #imageFullscreenModal .modal-body {
-        min-height: 60vh;
-    }
-
-    #fullscreenImage {
-        max-height: 60vh;
-    }
 }
 
 @media (max-width: 400px) {
@@ -2352,15 +2051,6 @@
         height: 30px;
         font-size: 16px;
     }
-
-    #imageFullscreenModal .modal-body {
-        min-height: 50vh;
-    }
-
-    #fullscreenImage {
-        max-height: 50vh;
-    }
 }
 </style>
-
 @endsection
