@@ -28,7 +28,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
             'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 
-            // Middleware KUSTOM KITA ↓↓↓
+            // Middleware KUSTOM KITA ↓↓↓↓
             'checkislogin' => CheckIsLogin::class,
             'checkrole' => CheckRole::class,
         ]);
