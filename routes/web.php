@@ -132,7 +132,7 @@ Route::middleware(['checkislogin'])->group(function () {
         Route::get('destinasi/{id}', [DestinasiWisataController::class, 'publicShow'])->name('destinasi.show');
     });
 
-    // ============ PEMILIK & WARGA ============
+    // ============ Pemilik dan w ============
     Route::middleware(['checkrole:pemilik,warga'])->group(function () {
         // Ulasan Wisata - VIEW & DELETE OWN
         Route::get('ulasan_wisata/{id}', [UlasanWisataController::class, 'show'])->name('ulasan_wisata.show');
