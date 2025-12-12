@@ -161,6 +161,12 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             position: relative;
             overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .circular-progress-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
 
         .circular-progress-wrapper {
@@ -265,6 +271,26 @@
             --progress-percent: 85%;
         }
 
+        .progress-homestay {
+            --progress-color: #ff9a9e;
+            --progress-percent: 45%;
+        }
+
+        .progress-kamar {
+            --progress-color: #a18cd1;
+            --progress-percent: 65%;
+        }
+
+        .progress-booking {
+            --progress-color: #fad0c4;
+            --progress-percent: 85%;
+        }
+
+        .progress-ulasan {
+            --progress-color: #ffecd2;
+            --progress-percent: 55%;
+        }
+
         /* Period Selector */
         .period-selector {
             background: white;
@@ -302,6 +328,11 @@
             padding: 25px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             margin-bottom: 25px;
+            transition: transform 0.3s ease;
+        }
+
+        .chart-container:hover {
+            transform: translateY(-3px);
         }
 
         .chart-header {
@@ -330,6 +361,11 @@
             border-radius: 15px;
             padding: 25px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .activity-card:hover {
+            transform: translateY(-3px);
         }
 
         .activity-item {
@@ -337,6 +373,14 @@
             align-items: center;
             padding: 15px 0;
             border-bottom: 1px solid #f8f9fa;
+            transition: background-color 0.3s ease;
+        }
+
+        .activity-item:hover {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding-left: 10px;
+            padding-right: 10px;
         }
 
         .activity-item:last-child {
@@ -370,6 +414,12 @@
             color: #6c757d;
         }
 
+        .activity-time {
+            font-size: 0.75rem;
+            color: #adb5bd;
+            margin-top: 2px;
+        }
+
         .activity-percent {
             font-weight: 600;
             font-size: 0.9rem;
@@ -381,6 +431,10 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
+            padding: 15px 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         }
 
         .card-title {
@@ -394,6 +448,12 @@
             font-size: 1rem;
             color: #6c757d;
             margin-top: 5px;
+        }
+
+        .welcome-message {
+            font-size: 1.1rem;
+            color: #28a745;
+            font-weight: 600;
         }
 
         /* Profile Section Styles */
@@ -483,6 +543,20 @@
             border-radius: 30px;
         }
 
+        /* New Cards Section */
+        .new-cards-section {
+            margin-top: 30px;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #28a745;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .whatsapp-float {
@@ -509,6 +583,62 @@
             .circular-progress-info {
                 text-align: center;
             }
+
+            .card-header-section {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            .chart-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+        }
+
+        /* Visitor Stats Badge */
+        .visitor-badge {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-left: 10px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .visitor-badge i {
+            margin-right: 5px;
+        }
+
+        /* Activity Status */
+        .activity-status {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .status-success {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+        }
+
+        .status-warning {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+        }
+
+        .status-danger {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
         }
     </style>
     <!-- ==================== END CSS ==================== -->
@@ -557,7 +687,7 @@
                         <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#"
                             data-toggle="dropdown">
                             <i class="mdi mdi-bell-outline"></i>
-                            <span class="count-symbol bg-danger">3</span>
+                            <span class="count-symbol bg-danger">5</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
                             aria-labelledby="notificationDropdown">
@@ -566,26 +696,26 @@
                             <a class="dropdown-item preview-item">
                                 <div class="preview-thumbnail">
                                     <div class="preview-icon bg-success">
-                                        <i class="mdi mdi-account-plus"></i>
+                                        <i class="mdi mdi-home"></i>
                                     </div>
                                 </div>
                                 <div
                                     class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                                    <h6 class="preview-subject font-weight-normal">Warga Baru</h6>
-                                    <p class="text-gray ellipsis mb-0">2 warga baru terdaftar</p>
+                                    <h6 class="preview-subject font-weight-normal">Booking Baru</h6>
+                                    <p class="text-gray ellipsis mb-0">1 booking homestay baru</p>
                                 </div>
                             </a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item preview-item">
                                 <div class="preview-thumbnail">
                                     <div class="preview-icon bg-warning">
-                                        <i class="mdi mdi-map-marker"></i>
+                                        <i class="mdi mdi-star"></i>
                                     </div>
                                 </div>
                                 <div
                                     class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                                    <h6 class="preview-subject font-weight-normal">Wisata Baru</h6>
-                                    <p class="text-gray ellipsis mb-0">1 destinasi wisata ditambahkan</p>
+                                    <h6 class="preview-subject font-weight-normal">Ulasan Baru</h6>
+                                    <p class="text-gray ellipsis mb-0">3 ulasan wisata baru</p>
                                 </div>
                             </a>
                             <div class="dropdown-divider"></div>
@@ -616,7 +746,6 @@
                                 </div>
                             </div>
                             <div class="nav-profile-text d-flex align-items-center">
-                                <!-- ==== TAMBAHKAN INI: Nama user dari Auth ==== -->
                                 <p class="mb-0 text-black">{{ Auth::user()->name ?? 'Guest' }}</p>
                             </div>
                         </a>
@@ -627,7 +756,6 @@
                                     style="margin: 0 auto 15px; width: 70px; height: 70px; font-size: 2rem;">
                                     <i class="mdi mdi-account"></i>
                                 </div>
-                                <!-- ==== TAMBAHKAN INI: Nama dan email user ==== -->
                                 <p class="mt-2 mb-0 text-white" style="font-weight: 700;">{{ Auth::user()->name ?? 'Guest' }}</p>
                                 <small class="text-white">{{ Auth::user()->email ?? 'admin@example.com' }}</small>
                             </div>
@@ -643,16 +771,11 @@
                                     <span>Pengaturan</span>
                                     <i class="mdi mdi-settings"></i>
                                 </a>
-
-                                <!-- ==== TAMBAHKAN INI: Waktu login terakhir ==== -->
                                 <a class="dropdown-item py-2 d-flex align-items-center justify-content-between" href="#" style="cursor: default;">
                                     <span>Login Terakhir</span>
-                                    <span class="text-muted">{{ session('last_login') ?? 'Belum ada data' }}</span>
+                                    <span class="text-muted">{{ session('last_login') ?? now()->format('d/m/Y H:i') }}</span>
                                 </a>
-
                                 <div role="separator" class="dropdown-divider"></div>
-
-                                <!-- ==== TAMBAHKAN INI: Route logout ==== -->
                                 <a class="dropdown-item py-2 d-flex align-items-center justify-content-between"
                                     href="#"
                                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -704,26 +827,28 @@
                                 </li>
 
                                 <!-- HOMESTAY -->
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('homestay.index') }}">
-                    <i class="mdi mdi-home menu-icon"></i>
-                    Homestay
-                </a>
-            </li>
-                                  <!-- KAMAR HOMESTAY -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('kamar_homestay.index') }}">
-                            <i class="mdi mdi-door-closed menu-icon"></i>
-                            Kamar Homestay
-                        </a>
-                    </li>
-                     <!-- BOOKING -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('booking-homestay.index') }}">
-                            <i class="mdi mdi-calendar-check menu-icon"></i>
-                            Booking
-                        </a>
-                    </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('homestay.index') }}">
+                                        <i class="mdi mdi-home menu-icon"></i>
+                                        Homestay
+                                    </a>
+                                </li>
+
+                                <!-- KAMAR HOMESTAY -->
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('kamar.my') }}">
+                                        <i class="mdi mdi-door-closed menu-icon"></i>
+                                        Kamar Homestay
+                                    </a>
+                                </li>
+
+                                <!-- BOOKING -->
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('booking-homestay.index') }}">
+                                        <i class="mdi mdi-calendar-check menu-icon"></i>
+                                        Booking
+                                    </a>
+                                </li>
 
                                 <!-- Ulasan Wisata -->
                                 <li class="nav-item">
@@ -768,7 +893,6 @@
                                 <i class="mdi mdi-account"></i>
                             </div>
                             <div class="profile-info">
-                                <!-- ==== TAMBAHKAN INI: Nama user dari Auth ==== -->
                                 <h5>{{ Auth::user()->name ?? 'Guest' }}</h5>
                                 <p>Administrator</p>
                             </div>
@@ -777,7 +901,6 @@
 
                     <li class="nav-item sidebar-user-actions">
                         <div class="sidebar-user-menu">
-                            <!-- ==== TAMBAHKAN INI: Route logout ==== -->
                             <a href="#" class="logout-btn"
                                 onclick="event.preventDefault(); document.getElementById('sidebar-logout-form').submit();">
                                 <i class="mdi mdi-logout"></i>
@@ -795,7 +918,9 @@
                     <div class="card-header-section">
                         <div>
                             <h1 class="card-title">Dashboard Overview</h1>
-                            <p class="card-subtitle">Selamat datang di dashboard Bina Desa</p>
+                            <p class="card-subtitle">
+                                Selamat datang <span class="welcome-message">{{ Auth::user()->name ?? 'Admin' }}</span> di dashboard Bina Desa
+                            </p>
                         </div>
                         <div class="period-selector">
                             <div class="btn-group" role="group" aria-label="Period selector">
@@ -909,6 +1034,112 @@
                         </div>
                     </div>
 
+                    <!-- New Circular Progress Cards for Additional Features -->
+                    <div class="new-cards-section">
+                        <h3 class="section-title">Statistik Tambahan</h3>
+                        <div class="circular-progress-container">
+                            <!-- Homestay Progress -->
+                            <div class="circular-progress-card progress-homestay">
+                                <div class="circular-progress-wrapper">
+                                    <div class="circular-progress">
+                                        <div class="circular-progress-bg">
+                                            <div class="circular-progress-ring"></div>
+                                            <div class="circular-progress-content">
+                                                <div class="circular-progress-icon">
+                                                    <i class="mdi mdi-home"></i>
+                                                </div>
+                                                <div class="circular-progress-value" id="homestay-count">
+                                                    {{ $totalHomestay ?? 0 }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="circular-progress-info">
+                                        <div class="circular-progress-title">Homestay</div>
+                                        <div class="circular-progress-trend trend-up">
+                                            <i class="mdi mdi-arrow-up"></i>
+                                            <span>Meningkat sejak kemarin 7.8%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Kamar Homestay Progress -->
+                            <div class="circular-progress-card progress-kamar">
+                                <div class="circular-progress-wrapper">
+                                    <div class="circular-progress">
+                                        <div class="circular-progress-bg">
+                                            <div class="circular-progress-ring"></div>
+                                            <div class="circular-progress-content">
+                                                <div class="circular-progress-icon">
+                                                    <i class="mdi mdi-door-closed"></i>
+                                                </div>
+                                                <div class="circular-progress-value" id="kamar-count">
+                                                    {{ $totalKamar ?? 0 }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="circular-progress-info">
+                                        <div class="circular-progress-title">Kamar Homestay</div>
+                                        <div class="circular-progress-trend trend-up">
+                                            <i class="mdi mdi-arrow-up"></i>
+                                            <span>Meningkat sejak kemarin 9.2%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Booking Progress -->
+                            <div class="circular-progress-card progress-booking">
+                                <div class="circular-progress-wrapper">
+                                    <div class="circular-progress">
+                                        <div class="circular-progress-bg">
+                                            <div class="circular-progress-ring"></div>
+                                            <div class="circular-progress-content">
+                                                <div class="circular-progress-icon">
+                                                    <i class="mdi mdi-calendar-check"></i>
+                                                </div>
+                                                <div class="circular-progress-value" id="booking-count">
+                                                    {{ $totalBooking ?? 0 }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="circular-progress-info">
+                                        <div class="circular-progress-title">Booking</div>
+                                        <div class="circular-progress-trend trend-up">
+                                            <i class="mdi mdi-arrow-up"></i>
+                                            <span>Meningkat sejak kemarin 15.4%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Ulasan Wisata Progress -->
+                            <div class="circular-progress-card progress-ulasan">
+                                <div class="circular-progress-wrapper">
+                                    <div class="circular-progress">
+                                        <div class="circular-progress-bg">
+                                            <div class="circular-progress-ring"></div>
+                                            <div class="circular-progress-content">
+                                                <div class="circular-progress-icon">
+                                                    <i class="mdi mdi-star-circle"></i>
+                                                </div>
+                                                <div class="circular-progress-value" id="ulasan-count">
+                                                    {{ $totalUlasan ?? 0 }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="circular-progress-info">
+                                        <div class="circular-progress-title">Ulasan Wisata</div>
+                                        <div class="circular-progress-trend trend-up">
+                                            <i class="mdi mdi-arrow-up"></i>
+                                            <span>Meningkat sejak kemarin 6.7%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Charts and Additional Data -->
                     <div class="row">
                         <!-- Left Column - Charts -->
@@ -916,13 +1147,20 @@
                             <!-- Performance Chart -->
                             <div class="chart-container">
                                 <div class="chart-header">
-                                    <h3 class="chart-title">Statistik Pengunjung</h3>
+                                    <h3 class="chart-title">Statistik Pengunjung
+                                        <span class="visitor-badge">
+                                            <i class="mdi mdi-eye"></i>
+                                            Total: <span id="total-visitors">1,245</span> pengunjung
+                                        </span>
+                                    </h3>
                                     <div class="period-selector">
                                         <div class="btn-group" role="group">
                                             <button type="button" class="btn btn-period active"
                                                 data-period="minggu-ini">Minggu Ini</button>
                                             <button type="button" class="btn btn-period"
                                                 data-period="minggu-lalu">Minggu Lalu</button>
+                                            <button type="button" class="btn btn-period"
+                                                data-period="bulan-ini">Bulan Ini</button>
                                         </div>
                                     </div>
                                 </div>
@@ -936,12 +1174,70 @@
                         <div class="col-md-4 grid-margin">
                             <!-- Recent Activity -->
                             <div class="activity-card">
-                                <h3 class="chart-title mb-4">Aktivitas Terbaru</h3>
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h3 class="chart-title mb-0">Aktivitas Terbaru</h3>
+                                    <span class="badge badge-primary">Hari Ini</span>
+                                </div>
                                 <div id="recent-activities">
-                                    <!-- Data akan diisi oleh JavaScript secara dinamis -->
-                                    <div class="text-center text-muted py-4">
-                                        <i class="mdi mdi-loading mdi-spin" style="font-size: 24px;"></i>
-                                        <p>Memuat aktivitas...</p>
+                                    <!-- Activities will be loaded dynamically -->
+                                    <div class="activity-item">
+                                        <div class="activity-icon" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                                            <i class="mdi mdi-account-plus"></i>
+                                        </div>
+                                        <div class="activity-content">
+                                            <div class="activity-title">Warga Baru Terdaftar</div>
+                                            <div class="activity-desc">2 warga baru ditambahkan hari ini</div>
+                                            <div class="activity-time">10:30 AM</div>
+                                        </div>
+                                        <div class="activity-percent trend-up">+12.99%</div>
+                                    </div>
+
+                                    <div class="activity-item">
+                                        <div class="activity-icon" style="background: linear-gradient(135deg, #f093fb, #f5576c);">
+                                            <i class="mdi mdi-map-marker"></i>
+                                        </div>
+                                        <div class="activity-content">
+                                            <div class="activity-title">Destinasi Wisata Baru</div>
+                                            <div class="activity-desc">1 destinasi wisata ditambahkan</div>
+                                            <div class="activity-time">09:15 AM</div>
+                                        </div>
+                                        <div class="activity-percent trend-up">+8.3%</div>
+                                    </div>
+
+                                    <div class="activity-item">
+                                        <div class="activity-icon" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">
+                                            <i class="mdi mdi-home"></i>
+                                        </div>
+                                        <div class="activity-content">
+                                            <div class="activity-title">Homestay Baru</div>
+                                            <div class="activity-desc">1 homestay baru terdaftar</div>
+                                            <div class="activity-time">08:45 AM</div>
+                                        </div>
+                                        <div class="activity-percent trend-up">+7.8%</div>
+                                    </div>
+
+                                    <div class="activity-item">
+                                        <div class="activity-icon" style="background: linear-gradient(135deg, #a18cd1, #fbc2eb);">
+                                            <i class="mdi mdi-calendar-check"></i>
+                                        </div>
+                                        <div class="activity-content">
+                                            <div class="activity-title">Booking Baru</div>
+                                            <div class="activity-desc">3 booking homestay baru</div>
+                                            <div class="activity-time">Yesterday</div>
+                                        </div>
+                                        <div class="activity-percent trend-up">+15.4%</div>
+                                    </div>
+
+                                    <div class="activity-item">
+                                        <div class="activity-icon" style="background: linear-gradient(135deg, #ffecd2, #fcb69f);">
+                                            <i class="mdi mdi-star-circle"></i>
+                                        </div>
+                                        <div class="activity-content">
+                                            <div class="activity-title">Ulasan Baru</div>
+                                            <div class="activity-desc">5 ulasan wisata baru</div>
+                                            <div class="activity-time">Yesterday</div>
+                                        </div>
+                                        <div class="activity-percent trend-up">+6.7%</div>
                                     </div>
                                 </div>
                             </div>
@@ -973,7 +1269,7 @@
         <div class="whatsapp-tooltip">Hubungi Admin</div>
     </div>
 
-    <!-- ==== TAMBAHKAN INI: Form untuk logout ==== -->
+    <!-- Logout Forms -->
     <form id="logout-form" action="{{ route('auth.logout') }}" method="POST" style="display: none;">
         @csrf
     </form>
@@ -1004,7 +1300,11 @@
             // Set user name dari Auth
             @if(Auth::check())
                 const userName = "{{ Auth::user()->name }}";
-                document.getElementById('userName').textContent = userName;
+                // Update welcome message
+                const welcomeMessage = document.querySelector('.welcome-message');
+                if (welcomeMessage) {
+                    welcomeMessage.textContent = userName;
+                }
             @endif
 
             // Set current date
@@ -1022,10 +1322,12 @@
             function initVisitorChart() {
                 const ctx = document.getElementById('visitorChart').getContext('2d');
 
-                // Data contoh untuk grafik
+                // Data untuk grafik pengunjung minggu ini vs minggu lalu
                 const chartData = {
                     labels: ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'],
-                    data: [65, 59, 80, 81, 56, 55, 40]
+                    dataMingguIni: [156, 189, 203, 178, 245, 312, 285],
+                    dataMingguLalu: [134, 165, 187, 156, 210, 278, 245],
+                    dataBulanIni: [1456, 1678, 1890, 1765, 1987, 2245, 2100]
                 };
 
                 visitorChart = new Chart(ctx, {
@@ -1033,13 +1335,22 @@
                     data: {
                         labels: chartData.labels,
                         datasets: [{
-                            label: 'Jumlah Pengunjung',
-                            data: chartData.data,
+                            label: 'Minggu Ini',
+                            data: chartData.dataMingguIni,
                             borderColor: '#667eea',
                             backgroundColor: 'rgba(102, 126, 234, 0.1)',
                             borderWidth: 3,
                             fill: true,
                             tension: 0.4
+                        }, {
+                            label: 'Minggu Lalu',
+                            data: chartData.dataMingguLalu,
+                            borderColor: '#f093fb',
+                            backgroundColor: 'rgba(240, 147, 251, 0.1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4,
+                            borderDash: [5, 5]
                         }]
                     },
                     options: {
@@ -1047,11 +1358,21 @@
                         maintainAspectRatio: false,
                         plugins: {
                             legend: {
-                                display: false
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    padding: 20,
+                                    usePointStyle: true,
+                                }
                             },
                             tooltip: {
                                 mode: 'index',
-                                intersect: false
+                                intersect: false,
+                                callbacks: {
+                                    label: function(context) {
+                                        return `${context.dataset.label}: ${context.parsed.y} pengunjung`;
+                                    }
+                                }
                             }
                         },
                         scales: {
@@ -1061,12 +1382,23 @@
                                     drawBorder: false
                                 },
                                 ticks: {
-                                    stepSize: 20
+                                    stepSize: 50,
+                                    callback: function(value) {
+                                        return value + ' pengunjung';
+                                    }
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Jumlah Pengunjung'
                                 }
                             },
                             x: {
                                 grid: {
                                     display: false
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Hari dalam Seminggu'
                                 }
                             }
                         }
@@ -1076,23 +1408,39 @@
 
             // Update circular progress based on data
             function updateCircularProgress() {
-                // Data dari controller (akan di-pass melalui Laravel)
+                // Data dari controller
                 const wargaCount = {{ $totalWarga ?? 0 }};
                 const wisataCount = {{ $totalDestinasi ?? 0 }};
                 const userCount = {{ $totalUser ?? 0 }};
                 const aktivitasCount = {{ $totalAktivitas ?? 25 }};
+                const homestayCount = {{ $totalHomestay ?? 0 }};
+                const kamarCount = {{ $totalKamar ?? 0 }};
+                const bookingCount = {{ $totalBooking ?? 0 }};
+                const ulasanCount = {{ $totalUlasan ?? 0 }};
 
                 // Update nilai di circular progress
                 document.getElementById('warga-count').textContent = wargaCount;
                 document.getElementById('wisata-count').textContent = wisataCount;
                 document.getElementById('user-count').textContent = userCount;
                 document.getElementById('aktivitas-count').textContent = aktivitasCount;
+                document.getElementById('homestay-count').textContent = homestayCount;
+                document.getElementById('kamar-count').textContent = kamarCount;
+                document.getElementById('booking-count').textContent = bookingCount;
+                document.getElementById('ulasan-count').textContent = ulasanCount;
 
                 // Update progress percent berdasarkan data
-                updateProgressPercent('progress-warga', wargaCount, 100);
+                updateProgressPercent('progress-warga', wargaCount, 200);
                 updateProgressPercent('progress-wisata', wisataCount, 50);
-                updateProgressPercent('progress-user', userCount, 20);
-                updateProgressPercent('progress-aktivitas', aktivitasCount, 30);
+                updateProgressPercent('progress-user', userCount, 50);
+                updateProgressPercent('progress-aktivitas', aktivitasCount, 50);
+                updateProgressPercent('progress-homestay', homestayCount, 30);
+                updateProgressPercent('progress-kamar', kamarCount, 100);
+                updateProgressPercent('progress-booking', bookingCount, 50);
+                updateProgressPercent('progress-ulasan', ulasanCount, 100);
+
+                // Update total visitors badge
+                const totalVisitors = [156, 189, 203, 178, 245, 312, 285].reduce((a, b) => a + b, 0);
+                document.getElementById('total-visitors').textContent = totalVisitors.toLocaleString();
             }
 
             function updateProgressPercent(className, current, max) {
@@ -1105,33 +1453,57 @@
 
             // Load recent activities dari database
             function loadRecentActivities() {
-                // Simulasi data dari database
-                const activities = [{
+                // Data contoh aktivitas
+                const activities = [
+                    {
                         title: 'Warga Baru Terdaftar',
                         description: '2 warga baru ditambahkan hari ini',
                         icon: 'mdi mdi-account-plus',
                         color: 'linear-gradient(135deg, #667eea, #764ba2)',
-                        percentage: '+12.99%'
+                        percentage: '+12.99%',
+                        time: '10:30 AM'
                     },
                     {
                         title: 'Destinasi Wisata Baru',
                         description: '1 destinasi wisata ditambahkan',
                         icon: 'mdi mdi-map-marker',
                         color: 'linear-gradient(135deg, #f093fb, #f5576c)',
-                        percentage: '+8.3%'
+                        percentage: '+8.3%',
+                        time: '09:15 AM'
                     },
                     {
-                        title: 'User Baru',
-                        description: '1 user administrator baru',
-                        icon: 'mdi mdi-account',
+                        title: 'Homestay Baru',
+                        description: '1 homestay baru terdaftar',
+                        icon: 'mdi mdi-home',
                         color: 'linear-gradient(135deg, #4facfe, #00f2fe)',
-                        percentage: '+5.2%'
+                        percentage: '+7.8%',
+                        time: '08:45 AM'
+                    },
+                    {
+                        title: 'Booking Baru',
+                        description: '3 booking homestay baru',
+                        icon: 'mdi mdi-calendar-check',
+                        color: 'linear-gradient(135deg, #a18cd1, #fbc2eb)',
+                        percentage: '+15.4%',
+                        time: 'Yesterday'
+                    },
+                    {
+                        title: 'Ulasan Baru',
+                        description: '5 ulasan wisata baru',
+                        icon: 'mdi mdi-star-circle',
+                        color: 'linear-gradient(135deg, #ffecd2, #fcb69f)',
+                        percentage: '+6.7%',
+                        time: 'Yesterday'
                     }
                 ];
 
                 const container = document.getElementById('recent-activities');
+                if (!container) return;
+
+                // Kosongkan kontainer
                 container.innerHTML = '';
 
+                // Tambahkan aktivitas
                 activities.forEach(activity => {
                     const activityHTML = `
                         <div class="activity-item">
@@ -1141,8 +1513,9 @@
                             <div class="activity-content">
                                 <div class="activity-title">${activity.title}</div>
                                 <div class="activity-desc">${activity.description}</div>
+                                <div class="activity-time">${activity.time}</div>
                             </div>
-                            <div class="activity-percent text-success">${activity.percentage}</div>
+                            <div class="activity-percent trend-up">${activity.percentage}</div>
                         </div>
                     `;
                     container.innerHTML += activityHTML;
@@ -1177,16 +1550,23 @@
             });
 
             function updateChartData(period) {
-                // Data contoh berdasarkan periode
-                let data;
-                if (period === 'minggu-ini') {
-                    data = [65, 59, 80, 81, 56, 55, 40];
-                } else {
-                    data = [45, 49, 60, 71, 46, 45, 30];
-                }
+                const chartData = {
+                    'minggu-ini': [156, 189, 203, 178, 245, 312, 285],
+                    'minggu-lalu': [134, 165, 187, 156, 210, 278, 245],
+                    'bulan-ini': [1456, 1678, 1890, 1765, 1987, 2245, 2100]
+                };
 
-                if (visitorChart) {
-                    visitorChart.data.datasets[0].data = data;
+                if (visitorChart && chartData[period]) {
+                    if (period === 'bulan-ini') {
+                        visitorChart.data.datasets[0].data = chartData[period];
+                        visitorChart.data.datasets[1].data = [];
+                        visitorChart.data.datasets[0].label = 'Bulan Ini';
+                    } else {
+                        visitorChart.data.datasets[0].data = chartData['minggu-ini'];
+                        visitorChart.data.datasets[1].data = chartData['minggu-lalu'];
+                        visitorChart.data.datasets[0].label = 'Minggu Ini';
+                        visitorChart.data.datasets[1].label = 'Minggu Lalu';
+                    }
                     visitorChart.update();
                 }
             }
@@ -1230,6 +1610,33 @@
                     window.open(whatsappUrl, '_blank');
                 });
             }
+
+            // Add smooth hover effects
+            document.querySelectorAll('.circular-progress-card, .chart-container, .activity-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                });
+
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Simulate real-time data updates
+            function simulateRealTimeUpdates() {
+                setInterval(() => {
+                    // Randomly update visitor count
+                    const visitorBadge = document.getElementById('total-visitors');
+                    if (visitorBadge) {
+                        const current = parseInt(visitorBadge.textContent.replace(/,/g, ''));
+                        const change = Math.floor(Math.random() * 10) - 3; // -3 to +6
+                        const newValue = Math.max(1200, current + change);
+                        visitorBadge.textContent = newValue.toLocaleString();
+                    }
+                }, 10000); // Update every 10 seconds
+            }
+
+            simulateRealTimeUpdates();
         });
     </script>
     <!-- ==================== END JS ==================== -->

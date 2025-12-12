@@ -47,11 +47,12 @@ class AuthController extends Controller
             'password.confirmed' => 'Konfirmasi password tidak cocok'
         ]);
 
-        // Buat user baru
+        // Buat user baru dengan role default 'warga'
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password)
+            'password' => Hash::make($request->password),
+            'role' => 'warga' // Default role
         ]);
 
         // TAMBAHKAN: Auth::login() untuk login otomatis setelah register
@@ -109,6 +110,7 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('auth.login')->with('success', 'Logout berhasil!');
+        return redirect()->route('login')->with('success', 'Logout berhasil!');
+        // ^^ Ubah dari 'auth.login' menjadi 'login'
     }
 }

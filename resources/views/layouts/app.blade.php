@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Warga - Bina Desa</title>
+    <title>Data Warga - DesaWisata</title>
 
     {{-- ====================== START CSS ====================== --}}
     @include('layouts.css')

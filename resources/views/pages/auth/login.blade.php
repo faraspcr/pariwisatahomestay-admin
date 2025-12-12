@@ -62,8 +62,8 @@
         <!-- Flash Message Area -->
         <div id="flashMessage" style="display: none;"></div>
 
-        <!-- TAMBAHKAN: action dan method POST -->
-        <form id="loginForm" action="{{ route('auth.login.submit') }}" method="POST">
+        <!-- PERBAIKAN: Gunakan route 'login.submit' bukan 'auth.login.submit' -->
+        <form id="loginForm" action="{{ route('login.submit') }}" method="POST">
             @csrf <!-- TAMBAHKAN: CSRF token -->
             <div class="form-group">
                 <label for="email">Email</label>
@@ -123,8 +123,8 @@
         </form>
 
         <div class="form-footer">
-            <!-- TAMBAHKAN: route untuk register -->
-            Belum punya akun? <a href="{{ route('auth.register') }}" id="registerLink">Daftar di sini</a>
+            <!-- PERBAIKAN: Gunakan route 'register' bukan 'auth.register' -->
+            Belum punya akun? <a href="{{ route('register') }}" id="registerLink">Daftar di sini</a>
         </div>
     </div>
 

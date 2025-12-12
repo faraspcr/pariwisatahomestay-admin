@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth; // TAMBAHKAN INI
+use Illuminate\Support\Facades\Auth;
 use App\Models\Warga;
 use App\Models\DestinasiWisata;
 use App\Models\User;
+use App\Models\Homestay; // TAMBAHKAN INI
+use App\Models\KamarHomestay; // TAMBAHKAN INI
+use App\Models\BookingHomestay; // TAMBAHKAN INI
+use App\Models\UlasanWisata; // TAMBAHKAN INI
 
 class DashboardController extends Controller
 {
@@ -30,6 +34,12 @@ class DashboardController extends Controller
         $totalUser = User::count();
         $totalAktivitas = 25; // TAMBAHKAN: Contoh data aktivitas
 
+        // ========== TAMBAHKAN INI: Data untuk fitur baru ==========
+        $totalHomestay = Homestay::count();
+        $totalKamar = KamarHomestay::count();
+        $totalBooking = BookingHomestay::count();
+        $totalUlasan = UlasanWisata::count();
+
         // Data untuk WhatsApp button
         $whatsappData = [
             'phone_number' => '6281234567890', // Ganti dengan nomor admin
@@ -37,15 +47,19 @@ class DashboardController extends Controller
             'admin_name' => 'Admin Bina Desa'
         ];
 
-        // ========== TAMBAHKAN INI: Kirim semua data ke view ==========
+        // ========== TAMBAHKAN INI: Kirim SEMUA data ke view ==========
         return view('pages.dashboard', compact(
             'totalWarga',
             'totalDestinasi',
             'totalUser',
             'whatsappData',
-            'user',          // TAMBAHKAN: data user
-            'lastLogin',     // TAMBAHKAN: last login dari session
-            'totalAktivitas' // TAMBAHKAN: total aktivitas
+            'user',           // TAMBAHKAN: data user
+            'lastLogin',      // TAMBAHKAN: last login dari session
+            'totalAktivitas', // TAMBAHKAN: total aktivitas
+            'totalHomestay',  // TAMBAHKAN: total homestay
+            'totalKamar',     // TAMBAHKAN: total kamar homestay
+            'totalBooking',   // TAMBAHKAN: total booking
+            'totalUlasan'     // TAMBAHKAN: total ulasan wisata
         ));
     }
 

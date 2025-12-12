@@ -2,36 +2,43 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\User;
+use Faker\Factory;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Faker\Factory as Faker;
+use Illuminate\Support\Str;
 
 class CreateUserDummy extends Seeder
 {
     /**
      * Run the database seeds.
      */
-    public function run(): void
+    public function run()
     {
-        $faker = Faker::create();
+        $faker = Factory::create('id_ID');
 
-        for ($i = 1; $i <= 100; $i++) {
-            $userData = [
-                'name' => $faker->name,
-                'email' => $faker->unique()->safeEmail,
-                'password' => Hash::make('password123'),
+        // // User Admin
+        // User::create([
+        //     'name' => 'Administrator',
+        //     'email' => 'admin@binadesa.com',
+        //     'email_verified_at' => now(),
+        //     'password' => Hash::make('password123'),
+        //     'remember_token' => Str::random(10),
+        //     'created_at' => now(),
+        //     'updated_at' => now(),
+        // ]);
+
+        // Generate user dummy
+        foreach (range(1, 100) as $index) {
+            User::create([
+                'name' => $faker->name(),
+                'email' => $faker->unique()->safeEmail(),
                 'email_verified_at' => $faker->randomElement([now(), null]),
+                'password' => Hash::make('password123'),
+                'remember_token' => Str::random(10),
                 'created_at' => $faker->dateTimeBetween('-1 year', 'now'),
                 'updated_at' => now(),
-            ];
-
-            DB::table('users')->insert($userData);
+            ]);
         }
-
-        $this->command->info('100 data user dummy berhasil dibuat!');
-        $this->command->info('Email: email_anda@example.com');
-        $this->command->info('Password: password123');
     }
 }

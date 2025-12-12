@@ -68,7 +68,7 @@
                     </a>
                 </div>
 
-                <form action="{{ route('user.store') }}" method="POST" id="userForm">
+                <form action="{{ route('user.store') }}" method="POST" id="userForm" enctype="multipart/form-data">
                     @csrf
 
                     <div class="row">
@@ -79,7 +79,7 @@
                                 <label for="name" class="form-label">Nama <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control @error('name') is-invalid @enderror"
                                        id="name" name="name" value="{{ old('name') }}"
-                                       placeholder="Masukkan nama lengkap">
+                                       placeholder="Masukkan nama lengkap" required>
                                 @error('name')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -90,8 +90,22 @@
                                 <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
                                 <input type="email" class="form-control @error('email') is-invalid @enderror"
                                        id="email" name="email" value="{{ old('email') }}"
-                                       placeholder="Masukkan email">
+                                       placeholder="contoh: user@email.com" required>
                                 @error('email')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- ROLE - 3 PILIHAN -->
+                            <div class="form-group">
+                                <label for="role" class="form-label">Role <span class="text-danger">*</span></label>
+                                <select name="role" id="role" class="form-control @error('role') is-invalid @enderror" required>
+                                    <option value="">Pilih Role</option>
+                                    <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                                    <option value="pemilik" {{ old('role') == 'pemilik' ? 'selected' : '' }}>Pemilik Homestay</option>
+                                    <option value="warga" {{ old('role') == 'warga' ? 'selected' : '' }}>Warga</option>
+                                </select>
+                                @error('role')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -99,25 +113,65 @@
 
                         <!-- Kolom Kanan -->
                         <div class="col-md-6">
+                            <!-- Profile Photo -->
+                            <div class="form-group">
+                                <label for="profile_photo" class="form-label">Foto Profile</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input @error('profile_photo') is-invalid @enderror"
+                                           id="profile_photo" name="profile_photo" accept="image/*">
+                                    <label class="custom-file-label" for="profile_photo" id="profile_photo_label">
+                                        Pilih file...
+                                    </label>
+                                </div>
+                                @error('profile_photo')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                                <small class="text-muted">Format: JPG, PNG, GIF (Maks 2MB)</small>
+
+                                <!-- Preview Image -->
+                                <div class="mt-3" id="imagePreview" style="display: none;">
+                                    <p class="mb-1">Preview Foto:</p>
+                                    <img id="previewImage"
+                                         src=""
+                                         alt="Preview"
+                                         class="img-thumbnail"
+                                         style="width: 120px; height: 120px; object-fit: cover;">
+                                </div>
+                            </div>
+
                             <!-- Password -->
                             <div class="form-group">
                                 <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
-                                <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                       id="password" name="password"
-                                       placeholder="Masukkan password (min. 8 karakter)">
+                                <div class="input-group">
+                                    <input type="password" class="form-control @error('password') is-invalid @enderror"
+                                           id="password" name="password"
+                                           placeholder="Minimal 8 karakter" required>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                            <i class="mdi mdi-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
                                 @error('password')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
                             </div>
 
                             <!-- Konfirmasi Password -->
                             <div class="form-group">
                                 <label for="password_confirmation" class="form-label">Konfirmasi Password <span class="text-danger">*</span></label>
-                                <input type="password" class="form-control @error('password_confirmation') is-invalid @enderror"
-                                       id="password_confirmation" name="password_confirmation"
-                                       placeholder="Ulangi password">
+                                <div class="input-group">
+                                    <input type="password" class="form-control @error('password_confirmation') is-invalid @enderror"
+                                           id="password_confirmation" name="password_confirmation"
+                                           placeholder="Ulangi password" required>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="button" id="togglePasswordConfirmation">
+                                            <i class="mdi mdi-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
                                 @error('password_confirmation')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
@@ -130,7 +184,7 @@
                                 <a href="{{ route('user.index') }}" class="btn btn-outline-secondary">
                                     <i class="mdi mdi-arrow-left mr-1"></i>Kembali
                                 </a>
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-primary" id="submitBtn">
                                     <i class="mdi mdi-content-save mr-1"></i>Simpan User
                                 </button>
                             </div>
@@ -143,5 +197,113 @@
         {{-- ====================== END MAIN CONTENT ====================== --}}
     </div>
 </div>
+
+<style>
+/* Styling untuk Form */
+.custom-file-label::after {
+    content: "Browse";
+}
+
+/* Styling untuk Preview Image */
+#previewImage {
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+#previewImage:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Styling untuk Toggle Password Button */
+#togglePassword, #togglePasswordConfirmation {
+    border: 1px solid #ced4da;
+}
+
+#togglePassword:hover, #togglePasswordConfirmation:hover {
+    background-color: #e9ecef;
+    border-color: #adb5bd;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Preview Image
+    const profilePhotoInput = document.getElementById('profile_photo');
+    const profilePhotoLabel = document.getElementById('profile_photo_label');
+    const imagePreview = document.getElementById('imagePreview');
+    const previewImage = document.getElementById('previewImage');
+
+    if (profilePhotoInput) {
+        profilePhotoInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+
+            if (file) {
+                // Update label
+                profilePhotoLabel.textContent = file.name;
+
+                // Preview image
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            } else {
+                profilePhotoLabel.textContent = 'Pilih file...';
+                imagePreview.style.display = 'none';
+            }
+        });
+    }
+
+    // Toggle Password Visibility
+    const togglePassword = document.getElementById('togglePassword');
+    const togglePasswordConfirmation = document.getElementById('togglePasswordConfirmation');
+    const passwordInput = document.getElementById('password');
+    const passwordConfirmationInput = document.getElementById('password_confirmation');
+
+    if (togglePassword) {
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.querySelector('i').classList.toggle('mdi-eye');
+            this.querySelector('i').classList.toggle('mdi-eye-off');
+        });
+    }
+
+    if (togglePasswordConfirmation) {
+        togglePasswordConfirmation.addEventListener('click', function() {
+            const type = passwordConfirmationInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordConfirmationInput.setAttribute('type', type);
+            this.querySelector('i').classList.toggle('mdi-eye');
+            this.querySelector('i').classList.toggle('mdi-eye-off');
+        });
+    }
+
+    // Form Validation
+    const form = document.getElementById('userForm');
+    const submitBtn = document.getElementById('submitBtn');
+
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            // Disable submit button to prevent double submission
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="mdi mdi-loading mdi-spin mr-1"></i>Menyimpan...';
+
+            // Password confirmation check
+            const password = document.getElementById('password').value;
+            const passwordConfirmation = document.getElementById('password_confirmation').value;
+
+            if (password !== passwordConfirmation) {
+                e.preventDefault();
+                alert('Password dan Konfirmasi Password tidak sama!');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="mdi mdi-content-save mr-1"></i>Simpan User';
+            }
+        });
+    }
+});
+</script>
 
 @endsection

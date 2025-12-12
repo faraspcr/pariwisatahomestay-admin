@@ -22,6 +22,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'profile_photo',
     ];
 
     /**
@@ -48,6 +50,35 @@ class User extends Authenticatable
     }
 
     /**
+     * Helper method untuk cek role
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isPemilik(): bool
+    {
+        return $this->role === 'pemilik';
+    }
+
+    public function isWarga(): bool
+    {
+        return $this->role === 'warga';
+    }
+
+    /**
+     * Get profile photo URL
+     */
+    public function getProfilePhotoUrlAttribute()
+    {
+        if ($this->profile_photo) {
+            return asset('storage/profile_user/' . $this->profile_photo);
+        }
+        return null;
+    }
+
+    /**
      * Scope untuk filter
      */
     public function scopeFilter(Builder $query, $request, array $filterableColumns): Builder
@@ -67,6 +98,9 @@ class User extends Authenticatable
                             break;
                         case 'nama_desc':
                             $query->orderBy('name', 'desc');
+                            break;
+                        case 'role':
+                            $query->orderBy('role', $request->input('role'));
                             break;
                     }
                 } else {

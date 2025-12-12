@@ -80,9 +80,15 @@
 
                         <!-- Tombol Tambah -->
                         <div class="col-md-3 text-right">
-                            <a href="{{ route('kamar_homestay.create') }}" class="btn btn-primary btn-sm add-btn">
-                                <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah Kamar
-                            </a>
+                            @if(auth()->user()->role === 'admin')
+                                <a href="{{ route('kamar_homestay.create') }}" class="btn btn-primary btn-sm add-btn">
+                                    <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah Kamar
+                                </a>
+                            @elseif(auth()->user()->role === 'pemilik')
+                                <a href="{{ route('kamar_homestay.create') }}" class="btn btn-primary btn-sm add-btn">
+                                    <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah Kamar
+                                </a>
+                            @endif
                         </div>
                     </div>
                 </form>
@@ -163,23 +169,43 @@
                                     </td>
                                     <td class="text-center action-buttons">
                                         <div class="btn-group" role="group">
-                                            <a href="{{ route('kamar_homestay.edit', $item->kamar_id) }}"
-                                               class="btn btn-outline-info btn-sm action-btn" data-toggle="tooltip" title="Edit Data">
-                                                <i class="mdi mdi-pencil"></i>
-                                            </a>
-                                            <a href="{{ route('kamar_homestay.show', $item->kamar_id) }}"
-                                               class="btn btn-outline-primary btn-sm action-btn" data-toggle="tooltip" title="Lihat Detail">
-                                                <i class="mdi mdi-eye"></i>
-                                            </a>
-                                            <form action="{{ route('kamar_homestay.destroy', $item->kamar_id) }}" method="POST" style="display:inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-outline-danger btn-sm action-btn"
-                                                        data-toggle="tooltip" title="Hapus Data"
-                                                        onclick="return confirm('Apakah Anda yakin ingin menghapus kamar {{ $item->nama_kamar }}?')">
-                                                    <i class="mdi mdi-delete"></i>
-                                                </button>
-                                            </form>
+                                            @if(auth()->user()->role === 'admin')
+                                                <a href="{{ route('kamar_homestay.edit', $item->kamar_id) }}"
+                                                   class="btn btn-outline-info btn-sm action-btn" data-toggle="tooltip" title="Edit Data">
+                                                    <i class="mdi mdi-pencil"></i>
+                                                </a>
+                                                <a href="{{ route('kamar_homestay.show', $item->kamar_id) }}"
+                                                   class="btn btn-outline-primary btn-sm action-btn" data-toggle="tooltip" title="Lihat Detail">
+                                                    <i class="mdi mdi-eye"></i>
+                                                </a>
+                                                <form action="{{ route('kamar_homestay.destroy', $item->kamar_id) }}" method="POST" style="display:inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-outline-danger btn-sm action-btn"
+                                                            data-toggle="tooltip" title="Hapus Data"
+                                                            onclick="return confirm('Apakah Anda yakin ingin menghapus kamar {{ $item->nama_kamar }}?')">
+                                                        <i class="mdi mdi-delete"></i>
+                                                    </button>
+                                                </form>
+                                            @elseif(auth()->user()->role === 'pemilik')
+                                                <a href="{{ route('kamar_homestay.edit', $item->kamar_id) }}"
+                                                   class="btn btn-outline-info btn-sm action-btn" data-toggle="tooltip" title="Edit Data">
+                                                    <i class="mdi mdi-pencil"></i>
+                                                </a>
+                                                <a href="{{ route('kamar_homestay.show', $item->kamar_id) }}"
+                                                   class="btn btn-outline-primary btn-sm action-btn" data-toggle="tooltip" title="Lihat Detail">
+                                                    <i class="mdi mdi-eye"></i>
+                                                </a>
+                                                <form action="{{ route('kamar_homestay.destroy', $item->kamar_id) }}" method="POST" style="display:inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-outline-danger btn-sm action-btn"
+                                                            data-toggle="tooltip" title="Hapus Data"
+                                                            onclick="return confirm('Apakah Anda yakin ingin menghapus kamar {{ $item->nama_kamar }}?')">
+                                                        <i class="mdi mdi-delete"></i>
+                                                    </button>
+                                                </form>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>
@@ -196,9 +222,15 @@
                                                 @endif
                                             </h4>
                                             <p class="text-muted">Silakan tambah kamar homestay terlebih dahulu</p>
-                                            <a href="{{ route('kamar_homestay.create') }}" class="btn btn-success mt-2">
-                                                <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah Kamar Pertama
-                                            </a>
+                                            @if(auth()->user()->role === 'admin')
+                                                <a href="{{ route('kamar_homestay.create') }}" class="btn btn-success mt-2">
+                                                    <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah Kamar Pertama
+                                                </a>
+                                            @elseif(auth()->user()->role === 'pemilik')
+                                                <a href="{{ route('kamar_homestay.create') }}" class="btn btn-success mt-2">
+                                                    <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah Kamar Pertama
+                                                </a>
+                                            @endif
                                             @if(request()->hasAny(['search', 'homestay_id', 'kapasitas']))
                                                 <a href="{{ route('kamar_homestay.index') }}" class="btn btn-secondary mt-2">
                                                     <i class="mdi mdi-refresh mr-1"></i>Reset Filter
