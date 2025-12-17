@@ -26,75 +26,62 @@
             </div>
         @endif
 
-        <!-- Debug Info - Hanya tampil di local -->
-        @if(app()->environment('local'))
-        <div class="alert alert-info">
-            <h6><i class="mdi mdi-information mr-2"></i>Info Storage:</h6>
-            <p>Profile User Folder: {{ Storage::exists('public/profile_user') ? 'ADA' : 'TIDAK ADA' }}</p>
-            <p>Jumlah File: {{ Storage::exists('public/profile_user') ? count(Storage::files('public/profile_user')) : '0' }}</p>
-            <p>Storage Path: {{ storage_path('app/public/profile_user') }}</p>
-            <p>Public Path: {{ public_path('storage/profile_user') }}</p>
-        </div>
-        @endif
-
         <!-- Card Data User -->
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title mb-4">Daftar User Terdaftar</h4>
 
-               <!-- Form Filter dan Search -->
-<form method="GET" action="{{ route('user.index') }}">
-    <div class="row mb-4">
-        <!-- Filter Urutan -->
-        <div class="col-md-3 mb-2 mb-md-0">
-            <select name="urutan" onchange="this.form.submit()" class="form-control filter-select">
-                <option value="">Semua User</option>
-                <option value="terbaru" {{ request('urutan') == 'terbaru' ? 'selected' : '' }}>User Terbaru</option>
-                <option value="terlama" {{ request('urutan') == 'terlama' ? 'selected' : '' }}>User Terlama</option>
-                <option value="nama_asc" {{ request('urutan') == 'nama_asc' ? 'selected' : '' }}>Nama A → Z</option>
-                <option value="nama_desc" {{ request('urutan') == 'nama_desc' ? 'selected' : '' }}>Nama Z → A</option>
-                <option value="role_asc" {{ request('urutan') == 'role_asc' ? 'selected' : '' }}>Role: Admin → Warga</option>
-                <option value="role_desc" {{ request('urutan') == 'role_desc' ? 'selected' : '' }}>Role: Warga → Admin</option>
-            </select>
-        </div>
+                <!-- Form Filter dan Search -->
+                <form method="GET" action="{{ route('user.index') }}">
+                    <div class="row mb-4">
+                        <!-- Filter Urutan -->
+                        <div class="col-md-3 mb-2 mb-md-0">
+                            <select name="urutan" onchange="this.form.submit()" class="form-control filter-select">
+                                <option value="">Semua User</option>
+                                <option value="terbaru" {{ request('urutan') == 'terbaru' ? 'selected' : '' }}>User Terbaru</option>
+                                <option value="terlama" {{ request('urutan') == 'terlama' ? 'selected' : '' }}>User Terlama</option>
+                                <option value="nama_asc" {{ request('urutan') == 'nama_asc' ? 'selected' : '' }}>Nama A → Z</option>
+                                <option value="nama_desc" {{ request('urutan') == 'nama_desc' ? 'selected' : '' }}>Nama Z → A</option>
+                            </select>
+                        </div>
 
-        <!-- Filter Role -->
-        <div class="col-md-2 mb-2 mb-md-0">
-            <select name="role" onchange="this.form.submit()" class="form-control filter-select">
-                <option value="">Semua Role</option>
-                <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Admin</option>
-                <option value="pemilik" {{ request('role') == 'pemilik' ? 'selected' : '' }}>Pemilik</option>
-                <option value="warga" {{ request('role') == 'warga' ? 'selected' : '' }}>Warga</option>
-            </select>
-        </div>
+                        <!-- Filter Role -->
+                        <div class="col-md-2 mb-2 mb-md-0">
+                            <select name="role" onchange="this.form.submit()" class="form-control filter-select">
+                                <option value="">Semua Role</option>
+                                <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                                <option value="pemilik" {{ request('role') == 'pemilik' ? 'selected' : '' }}>Pemilik</option>
+                                <option value="warga" {{ request('role') == 'warga' ? 'selected' : '' }}>Warga</option>
+                            </select>
+                        </div>
 
-        <!-- Form Search -->
-        <div class="col-md-4">
-            <div class="input-group search-group">
-                <input type="text"
-                       name="search"
-                       class="form-control form-control-sm search-input"
-                       placeholder="Cari data user..."
-                       value="{{ request('search') }}">
-                <button type="submit" class="input-group-text search-btn">
-                    <i class="mdi mdi-magnify"></i>
-                </button>
-                @if(request("search"))
-                <a href="{{ request()->fullUrlWithQuery(['search'=> null]) }}" class="input-group-text clear-btn">
-                    Clear
-                </a>
-                @endif
-            </div>
-        </div>
+                        <!-- Form Search -->
+                        <div class="col-md-4">
+                            <div class="input-group search-group">
+                                <input type="text"
+                                       name="search"
+                                       class="form-control form-control-sm search-input"
+                                       placeholder="Cari data user..."
+                                       value="{{ request('search') }}">
+                                <button type="submit" class="input-group-text search-btn">
+                                    <i class="mdi mdi-magnify"></i>
+                                </button>
+                                @if(request("search"))
+                                <a href="{{ request()->fullUrlWithQuery(['search'=> null]) }}" class="input-group-text clear-btn">
+                                    Clear
+                                </a>
+                                @endif
+                            </div>
+                        </div>
 
-        <!-- Tombol Tambah -->
-        <div class="col-md-3 text-right">
-            <a href="{{ route('user.create') }}" class="btn btn-primary btn-sm add-btn">
-                <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah User
-            </a>
-        </div>
-    </div>
-</form>
+                        <!-- Tombol Tambah -->
+                        <div class="col-md-3 text-right">
+                            <a href="{{ route('user.create') }}" class="btn btn-primary btn-sm add-btn">
+                                <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah User
+                            </a>
+                        </div>
+                    </div>
+                </form>
 
                 <div class="table-responsive">
                     <table class="table table-striped table-hover">
@@ -117,46 +104,24 @@
                                     <span class="badge badge-info">{{ ($users->currentPage() - 1) * $users->perPage() + $loop->iteration }}</span>
                                 </td>
                                 <td>
-                                    <!-- Profile Photo - VERSI FIXED -->
-                                    @if($item->profile_photo)
-                                        @php
-                                            // Cek apakah file ada di storage
-                                            $fileExists = false;
-                                            $photoUrl = '';
-
-                                            // Cek di storage
-                                            if (Storage::exists('public/profile_user/' . $item->profile_photo)) {
-                                                $fileExists = true;
-                                                $photoUrl = Storage::url('profile_user/' . $item->profile_photo);
-                                            }
-                                            // Cek di public storage (setelah symbolic link)
-                                            elseif (file_exists(public_path('storage/profile_user/' . $item->profile_photo))) {
-                                                $fileExists = true;
-                                                $photoUrl = asset('storage/profile_user/' . $item->profile_photo);
-                                            }
-                                        @endphp
-
-                                        @if($fileExists)
-                                            <img src="{{ $photoUrl }}"
-                                                 alt="Profile {{ $item->name }}"
-                                                 class="rounded-circle profile-img"
-                                                 style="width: 45px; height: 45px; object-fit: cover; border: 2px solid #dee2e6;"
-                                                 title="{{ $item->name }}"
-                                                 onerror="this.onerror=null; this.src='//ui-avatars.com/api/?name={{ urlencode($item->name) }}&background=4e73df&color=fff&size=45'">
-                                            <small class="d-block text-muted" style="font-size: 9px;">✓</small>
-                                        @else
-                                            <div class="d-flex align-items-center justify-content-center bg-warning rounded-circle"
-                                                 style="width: 45px; height: 45px; border: 2px dashed #ffc107;">
-                                                <span class="text-white font-weight-bold">{{ strtoupper(substr($item->name, 0, 1)) }}</span>
-                                            </div>
-                                            <small class="d-block text-danger" style="font-size: 9px;">File missing</small>
-                                        @endif
-                                    @else
-                                        <div class="d-flex align-items-center justify-content-center bg-secondary rounded-circle"
-                                             style="width: 45px; height: 45px;">
-                                            <span class="text-white font-weight-bold">{{ strtoupper(substr($item->name, 0, 1)) }}</span>
+                                    <!-- ✅ Profile Photo - SIMPLE & WORKING -->
+                                    <div class="avatar-container position-relative">
+                                        <div class="rounded-circle" style="width: 45px; height: 45px; overflow: hidden; border: 2px solid #e9ecef;">
+                                            <img src="{{ $item->profile_photo_url }}"
+                                                 alt="{{ $item->name }}"
+                                                 style="width: 100%; height: 100%; object-fit: cover;"
+                                                 onerror="this.onerror=null; this.src='{{ $item->profile_photo_url }}'">
                                         </div>
-                                    @endif
+                                        @if($item->profile_picture)
+                                            <span class="position-absolute badge bg-success" style="bottom: -5px; right: -5px; font-size: 8px; padding: 2px 4px;">
+                                                <i class="mdi mdi-check"></i>
+                                            </span>
+                                        @else
+                                            <span class="position-absolute badge bg-secondary" style="bottom: -5px; right: -5px; font-size: 8px; padding: 2px 4px;">
+                                                <i class="mdi mdi-account"></i>
+                                            </span>
+                                        @endif
+                                    </div>
                                 </td>
                                 <td>
                                     <div class="d-flex align-items-center">
@@ -207,12 +172,21 @@
                                 </td>
                                 <td class="text-center action-buttons">
                                     <div class="btn-group" role="group">
-                                        <a href="{{ route('user.edit', $item->id) }}"
+                                        <!-- Tombol Show -->
+                                        <a href="{{ route('user.show', $item->id) }}"
                                            class="btn btn-outline-info btn-sm action-btn"
+                                           data-toggle="tooltip"
+                                           title="Lihat Detail">
+                                            <i class="mdi mdi-eye"></i>
+                                        </a>
+                                        <!-- Tombol Edit -->
+                                        <a href="{{ route('user.edit', $item->id) }}"
+                                           class="btn btn-outline-warning btn-sm action-btn"
                                            data-toggle="tooltip"
                                            title="Edit Data">
                                             <i class="mdi mdi-pencil"></i>
                                         </a>
+                                        <!-- Tombol Delete -->
                                         <form action="{{ route('user.destroy', $item->id) }}" method="POST" style="display:inline">
                                             @csrf
                                             @method("DELETE")
@@ -282,8 +256,6 @@
 
 <style>
 /* ==================== STYLING UNTUK SEARCH & FILTER ==================== */
-
-/* STYLING UNTUK FILTER SELECT */
 .filter-select {
     height: 38px;
     border: 1px solid #d1d3e2;
@@ -297,7 +269,6 @@
     box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
 }
 
-/* STYLING UNTUK SEARCH GROUP */
 .search-group {
     border: 1px solid #d1d3e2;
     border-radius: 4px;
@@ -317,7 +288,6 @@
     border: none;
 }
 
-/* STYLING UNTUK SEARCH BUTTON */
 .search-btn {
     background-color: #f8f9fc;
     border: none;
@@ -333,7 +303,6 @@
     color: white;
 }
 
-/* STYLING UNTUK CLEAR BUTTON */
 .clear-btn {
     background-color: #f8f9fc;
     border: none;
@@ -353,7 +322,6 @@
     text-decoration: none;
 }
 
-/* STYLING UNTUK TOMBOL TAMBAH */
 .add-btn {
     height: 38px;
     font-size: 14px;
@@ -415,6 +383,12 @@
     color: white;
 }
 
+.action-btn.btn-outline-warning:hover {
+    background-color: #f6c23e;
+    border-color: #f6c23e;
+    color: white;
+}
+
 .action-btn.btn-outline-danger:hover {
     background-color: #e74a3b;
     border-color: #e74a3b;
@@ -460,15 +434,26 @@
     background: linear-gradient(135deg, #d1ecf1, #bee5eb);
 }
 
-/* Styling untuk Profile Image */
-.profile-img {
-    transition: all 0.3s ease;
-    cursor: pointer;
+/* ✅ STYLE UNTUK AVATAR */
+.avatar-container {
+    position: relative;
+    display: inline-block;
 }
 
-.profile-img:hover {
-    transform: scale(1.1);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+.avatar-container img {
+    transition: all 0.3s ease;
+}
+
+.avatar-container img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.position-relative .badge {
+    border: 1px solid white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    font-size: 8px;
+    padding: 2px 4px;
 }
 
 /* RESPONSIVE */
@@ -483,7 +468,7 @@
         font-size: 0.9rem;
     }
 
-    .profile-img {
+    .avatar-container .rounded-circle {
         width: 35px !important;
         height: 35px !important;
     }
@@ -493,7 +478,7 @@
 <script>
 // Fungsi untuk zoom foto
 document.addEventListener('DOMContentLoaded', function() {
-    const profileImages = document.querySelectorAll('.profile-img');
+    const profileImages = document.querySelectorAll('.avatar-container img');
 
     profileImages.forEach(img => {
         img.addEventListener('click', function() {

@@ -640,6 +640,396 @@
             background-color: rgba(220, 53, 69, 0.1);
             color: #dc3545;
         }
+
+        /* ==================== DEVELOPER IDENTITY & SETTINGS CSS ==================== */
+        .settings-logout-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .user-display-section {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.2), rgba(32, 201, 151, 0.1));
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+
+        .user-avatar-small {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            margin-right: 12px;
+            box-shadow: 0 3px 10px rgba(40, 167, 69, 0.3);
+        }
+
+        .user-info-small h5 {
+            margin: 0;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .user-info-small p {
+            margin: 0;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .settings-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .settings-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .settings-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .settings-item span {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .logout-item-sidebar {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border-radius: 8px;
+            background: rgba(220, 53, 69, 0.15);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .logout-item-sidebar:hover {
+            background: rgba(220, 53, 69, 0.25);
+            transform: translateX(5px);
+            text-decoration: none;
+        }
+
+        .logout-item-sidebar i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+            color: #dc3545;
+        }
+
+        .logout-item-sidebar span {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #dc3545;
+        }
+
+        /* ==================== DEVELOPER PAGE CSS ==================== */
+        .developer-profile-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .developer-profile-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .developer-profile-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #28a745, #20c997);
+        }
+
+        .developer-profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f8f9fa;
+        }
+
+        .developer-avatar {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            margin-right: 25px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            border: 5px solid white;
+            overflow: hidden;
+        }
+
+        .developer-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .developer-info {
+            flex: 1;
+        }
+
+        .developer-name {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .developer-title {
+            font-size: 1.1rem;
+            color: #6c757d;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .developer-badge {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .developer-contact {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            color: #6c757d;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .contact-item:hover {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .contact-item i {
+            margin-right: 5px;
+            font-size: 1.1rem;
+        }
+
+        .developer-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .detail-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .detail-card:hover {
+            background: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .detail-title {
+            font-size: 0.9rem;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .detail-content {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+        }
+
+        .social-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            text-decoration: none;
+        }
+
+        .social-instagram {
+            background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);
+        }
+
+        .social-github {
+            background: linear-gradient(45deg, #333, #555);
+        }
+
+        .social-linkedin {
+            background: linear-gradient(45deg, #0077B5, #00A0DC);
+        }
+
+        .tech-stack {
+            margin-top: 30px;
+        }
+
+        .tech-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f8f9fa;
+        }
+
+        .tech-icons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .tech-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            color: #667eea;
+            font-size: 1.8rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .tech-icon:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .project-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+            font-weight: 600;
+        }
+
+        .developer-quote {
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(32, 201, 151, 0.1));
+            border-left: 4px solid #28a745;
+            padding: 20px;
+            margin-top: 25px;
+            border-radius: 10px;
+            font-style: italic;
+        }
+
+        .quote-text {
+            font-size: 1.1rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .quote-author {
+            text-align: right;
+            font-weight: 600;
+            color: #28a745;
+        }
     </style>
     <!-- ==================== END CSS ==================== -->
 </head>
@@ -886,25 +1276,31 @@
                         </div>
                     </li>
 
-                    <!-- User Profile Section -->
-                    <li class="nav-item sidebar-user-actions mt-3">
-                        <div class="profile-display">
-                            <div class="profile-avatar">
-                                <i class="mdi mdi-account"></i>
+                    <!-- User Display & Settings Section - DIBAWAH MASTER DATA -->
+                    <li class="nav-item sidebar-user-actions mt-4">
+                        <div class="settings-logout-section">
+                            <!-- User Info Display -->
+                            <div class="user-display-section">
+                                <div class="user-avatar-small">
+                                    <i class="mdi mdi-account"></i>
+                                </div>
+                                <div class="user-info-small">
+                                    <h5>{{ Auth::user()->name ?? 'Guest' }}</h5>
+                                    <p>ADMIN PARIWISATA DESA</p>
+                                </div>
                             </div>
-                            <div class="profile-info">
-                                <h5>{{ Auth::user()->name ?? 'Guest' }}</h5>
-                                <p>Administrator</p>
-                            </div>
-                        </div>
-                    </li>
 
-                    <li class="nav-item sidebar-user-actions">
-                        <div class="sidebar-user-menu">
-                            <a href="#" class="logout-btn"
-                                onclick="event.preventDefault(); document.getElementById('sidebar-logout-form').submit();">
+                            <!-- Settings Item -->
+                            <div class="settings-item">
+                                <i class="mdi mdi-cog"></i>
+                                <span>Settings</span>
+                            </div>
+
+                            <!-- Logout Item -->
+                            <a href="#" class="logout-item-sidebar"
+                               onclick="event.preventDefault(); document.getElementById('sidebar-logout-form').submit();">
                                 <i class="mdi mdi-logout"></i>
-                                Logout
+                                <span>Logout</span>
                             </a>
                         </div>
                     </li>
@@ -1243,6 +1639,174 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- ==================== START DEVELOPER PAGE ==================== -->
+                    <div class="developer-page-section" style="margin: 40px 0;">
+                        <!-- Developer Header -->
+                        <div class="card-header-section" style="margin-bottom: 30px;">
+                            <div>
+                                <h1 class="card-title">Halaman Pengembang</h1>
+                                <p class="card-subtitle">Informasi developer dan kontributor sistem Bina Desa</p>
+                            </div>
+                            <div class="welcome-message" style="background: linear-gradient(135deg, #667eea, #764ba2); padding: 8px 20px; border-radius: 30px; color: white;">
+                                <i class="mdi mdi-code-tags"></i> Developer Area
+                            </div>
+                        </div>
+
+                        <!-- Developer Profile Card -->
+                        <div class="developer-profile-card">
+                            <!-- Profile Header -->
+                            <div class="developer-profile-header">
+                                <div class="developer-avatar">
+                                    <i class="mdi mdi-account-circle"></i>
+                                </div>
+                                <div class="developer-info">
+                                    <h1 class="developer-name">FARAS ZAKIA INDRANI</h1>
+                                    <div class="developer-title">
+                                        Mahasiswa Sistem Informasi
+                                        <span class="developer-badge">
+                                            <i class="mdi mdi-school"></i> Politeknik Caltex Riau
+                                        </span>
+                                    </div>
+                                    <div class="developer-contact">
+                                        <div class="contact-item">
+                                            <i class="mdi mdi-identifier"></i>
+                                            NIM: 2457301048
+                                        </div>
+                                        <div class="contact-item">
+                                            <i class="mdi mdi-email"></i>
+                                            faras@student.prr.ac.id
+                                        </div>
+                                        <div class="contact-item">
+                                            <i class="mdi mdi-phone"></i>
+                                            +62 812-3456-7890
+                                        </div>
+                                    </div>
+                                    <div class="social-links">
+                                        <a href="https://www.instagram.com/frszakiaa_?igsh=d3cwMXA5c3F4NHly" target="_blank" class="social-link social-instagram">
+                                            <i class="mdi mdi-instagram"></i>
+                                        </a>
+                                        <a href="https://github.com/faraspcr" target="_blank" class="social-link social-github">
+                                            <i class="mdi mdi-github"></i>
+                                        </a>
+                                        <a href="https://www.linkedin.com/in/faras-zakia-indrani-29b4a6360/" target="_blank" class="social-link social-linkedin">
+                                            <i class="mdi mdi-linkedin"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Details Grid -->
+                            <div class="developer-details">
+                                <div class="detail-card">
+                                    <div class="detail-title">NIM</div>
+                                    <div class="detail-content">2457301048</div>
+                                </div>
+                                <div class="detail-card">
+                                    <div class="detail-title">Program Studi</div>
+                                    <div class="detail-content">Sistem Informasi</div>
+                                </div>
+                                <div class="detail-card">
+                                    <div class="detail-title">Kampus</div>
+                                    <div class="detail-content">Politeknik Caltex Riau</div>
+                                </div>
+                                <div class="detail-card">
+                                    <div class="detail-title">Angkatan</div>
+                                    <div class="detail-content">G'24</div>
+                                </div>
+                            </div>
+
+                            <!-- Tech Stack -->
+                            <div class="tech-stack">
+                                <h3 class="tech-title">Tech Stack yang Dikuasai</h3>
+                                <div class="tech-icons">
+                                    <div class="tech-icon" title="HTML5">
+                                        <i class="mdi mdi-language-html5"></i>
+                                    </div>
+                                    <div class="tech-icon" title="CSS3">
+                                        <i class="mdi mdi-language-css3"></i>
+                                    </div>
+                                    <div class="tech-icon" title="JavaScript">
+                                        <i class="mdi mdi-language-javascript"></i>
+                                    </div>
+                                    <div class="tech-icon" title="PHP">
+                                        <i class="mdi mdi-language-php"></i>
+                                    </div>
+                                    <div class="tech-icon" title="Laravel">
+                                        <i class="mdi mdi-laravel"></i>
+                                    </div>
+                                    <div class="tech-icon" title="MySQL">
+                                        <i class="mdi mdi-database"></i>
+                                    </div>
+                                    <div class="tech-icon" title="Bootstrap">
+                                        <i class="mdi mdi-bootstrap"></i>
+                                    </div>
+                                    <div class="tech-icon" title="Git">
+                                        <i class="mdi mdi-git"></i>
+                                    </div>
+                                    <div class="tech-icon" title="Vue.js">
+                                        <i class="mdi mdi-vuejs"></i>
+                                    </div>
+                                    <div class="tech-icon" title="API">
+                                        <i class="mdi mdi-api"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Project Stats -->
+                            <div class="project-stats">
+                                <div class="stat-card">
+                                    <div class="stat-icon" style="color: #667eea;">
+                                        <i class="mdi mdi-code-braces"></i>
+                                    </div>
+                                    <div class="stat-number">15+</div>
+                                    <div class="stat-label">Project Selesai</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon" style="color: #28a745;">
+                                        <i class="mdi mdi-cloud-check"></i>
+                                    </div>
+                                    <div class="stat-number">10+</div>
+                                    <div class="stat-label">API Terintegrasi</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon" style="color: #f093fb;">
+                                        <i class="mdi mdi-database"></i>
+                                    </div>
+                                    <div class="stat-number">20+</div>
+                                    <div class="stat-label">Database Tables</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon" style="color: #4facfe;">
+                                        <i class="mdi mdi-clock-check"></i>
+                                    </div>
+                                    <div class="stat-number">500+</div>
+                                    <div class="stat-label">Jam Coding</div>
+                                </div>
+                            </div>
+
+                            <!-- Quote Section -->
+                            <div class="developer-quote">
+                                <p class="quote-text">
+                                    "Membangun sistem yang tidak hanya berfungsi, tetapi juga memberikan dampak positif bagi masyarakat desa melalui teknologi."
+                                </p>
+                                <p class="quote-author">— Faras Zakia Indrani</p>
+                            </div>
+
+                            <!-- Copyright Notice -->
+                            <div style="margin-top: 30px; padding: 15px; background: #f8f9fa; border-radius: 10px; text-align: center;">
+                                <p style="margin: 0; color: #6c757d; font-size: 0.9rem;">
+                                    <i class="mdi mdi-copyright"></i> 2024 Sistem Bina Desa v2.1.0<br>
+                                    Dikembangkan dengan <i class="mdi mdi-heart" style="color: #e74c3c;"></i> oleh Faras Zakia Indrani
+                                </p>
+                                <div style="margin-top: 10px; font-size: 0.8rem; color: #adb5bd;">
+                                    <i class="mdi mdi-shield-check"></i> Hak Cipta Dilindungi | Privacy Policy | Terms of Service
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ==================== END DEVELOPER PAGE ==================== -->
+
                 </div>
 
                 <!-- ==================== START FOOTER ==================== -->
@@ -1611,8 +2175,32 @@
                 });
             }
 
+            // Developer Page Social Links Animation
+            const socialLinks = document.querySelectorAll('.social-link');
+            socialLinks.forEach(link => {
+                link.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px) scale(1.1)';
+                });
+
+                link.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+
+            // Tech Icons Hover Effect
+            const techIcons = document.querySelectorAll('.tech-icon');
+            techIcons.forEach(icon => {
+                icon.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px) rotate(5deg)';
+                });
+
+                icon.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) rotate(0)';
+                });
+            });
+
             // Add smooth hover effects
-            document.querySelectorAll('.circular-progress-card, .chart-container, .activity-card').forEach(card => {
+            document.querySelectorAll('.circular-progress-card, .chart-container, .activity-card, .developer-profile-card').forEach(card => {
                 card.addEventListener('mouseenter', function() {
                     this.style.transform = 'translateY(-5px)';
                 });

@@ -12,10 +12,7 @@ class UserController extends Controller
 {
     public function __construct()
     {
-        // // Hanya admin yang bisa akses CRUD user lain
-        // $this->middleware('checkrole:admin')->except(['myProfile', 'updateMyProfile', 'deleteMyProfilePhoto']);
-        // // Semua yang login bisa akses profile sendiri
-        // $this->middleware('checkislogin')->only(['myProfile', 'updateMyProfile', 'deleteMyProfilePhoto']);
+        // Middleware sesuai kebutuhan
     }
 
     /**
@@ -23,13 +20,9 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        // Kolom yang bisa di-filter
         $filterableColumns = ['urutan', 'role'];
-
-        // Kolom yang bisa di-search
         $searchableColumns = ['name', 'email', 'id'];
 
-        // Query dengan filter DAN search
         $users = User::filter($request, $filterableColumns)
             ->search($request, $searchableColumns)
             ->paginate(10)
@@ -56,10 +49,13 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8|confirmed',
             'role' => 'required|in:admin,pemilik,warga',
-            'profile_photo' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'profile_photo' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:2048',
         ], [
             'role.required' => 'Role wajib dipilih',
             'role.in' => 'Role harus admin, pemilik, atau warga',
+            'profile_photo.image' => 'File harus berupa gambar',
+            'profile_photo.mimes' => 'Format gambar harus jpg, jpeg, png, gif, atau webp',
+            'profile_photo.max' => 'Ukuran gambar maksimal 2MB',
         ]);
 
         $data = [
@@ -69,31 +65,38 @@ class UserController extends Controller
             'role' => $request->role,
         ];
 
-        // Handle profile photo upload - SIMPAN KE profile_users
+        // ✅ PERBAIKAN: Pakai cara temanmu yang sudah berhasil
         if ($request->hasFile('profile_photo')) {
             $file = $request->file('profile_photo');
 
-            // Buat nama file yang unik
-            $fileName = 'user_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-
-            // Pastikan folder profile_users ada
-            $folderPath = 'public/profile_user'; // PERUBAHAN: profile_users bukan profile_user
-            if (!Storage::exists($folderPath)) {
-                Storage::makeDirectory($folderPath);
+            // Validasi manual tipe file
+            $allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg', 'image/webp'];
+            if (!in_array($file->getMimeType(), $allowedMimes)) {
+                return back()->withErrors([
+                    'profile_photo' => 'Format file tidak didukung. Gunakan jpg, jpeg, png, gif, atau webp.'
+                ])->withInput();
             }
 
-            // Simpan file ke profile_users
-            $file->storeAs($folderPath, $fileName);
-            $data['profile_photo'] = $fileName;
+            // ✅ CARA BENAR: Simpan dengan store() ke folder 'profile_pictures'
+            $path = $request->file('profile_photo')->store('profile_pictures', 'public');
 
-            // Debug info
-            \Log::info('Foto disimpan ke: ' . storage_path('app/' . $folderPath . '/' . $fileName));
+            // Simpan FULL PATH ke database
+            $data['profile_picture'] = $path; // Contoh: 'profile_pictures/filename.jpg'
         }
 
         User::create($data);
 
         return redirect()->route('user.index')
             ->with('success', 'User berhasil ditambahkan');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        $user = User::findOrFail($id);
+        return view('pages.user.show', compact('user'));
     }
 
     /**
@@ -117,10 +120,13 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email,' . $id,
             'password' => 'nullable|min:8|confirmed',
             'role' => 'required|in:admin,pemilik,warga',
-            'profile_photo' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'profile_photo' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:2048',
         ], [
             'role.required' => 'Role wajib dipilih',
             'role.in' => 'Role harus admin, pemilik, atau warga',
+            'profile_photo.image' => 'File harus berupa gambar',
+            'profile_photo.mimes' => 'Format gambar harus jpg, jpeg, png, gif, atau webp',
+            'profile_photo.max' => 'Ukuran gambar maksimal 2MB',
         ]);
 
         $data = [
@@ -129,45 +135,42 @@ class UserController extends Controller
             'role' => $request->role,
         ];
 
-        // Update password if provided
+        // Update password jika diisi
         if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
         }
 
-        // Handle remove photo request
+        // ✅ PERBAIKAN: Handle hapus foto (seperti temanmu)
         if ($request->has('remove_photo') && $request->remove_photo == '1') {
-            // Delete old photo if exists - HAPUS DARI profile_users
-            if ($user->profile_photo && Storage::exists('public/profile_user/' . $user->profile_photo)) {
-                Storage::delete('public/profile_user/' . $user->profile_photo);
+            // Hapus file dari storage
+            if ($user->profile_picture) {
+                Storage::disk('public')->delete($user->profile_picture);
             }
-            $data['profile_photo'] = null;
+            $data['profile_picture'] = null;
         }
 
-        // Handle profile photo upload - SIMPAN KE profile_users
+        // ✅ PERBAIKAN: Handle upload foto baru (seperti temanmu)
         if ($request->hasFile('profile_photo')) {
-            // Delete old photo if exists - HAPUS DARI profile_users
-            if ($user->profile_photo && Storage::exists('public/profile_user/' . $user->profile_photo)) {
-                Storage::delete('public/profile_user/' . $user->profile_photo);
+            // Hapus foto lama jika ada
+            if ($user->profile_picture) {
+                Storage::disk('public')->delete($user->profile_picture);
             }
 
-            // Upload new photo
             $file = $request->file('profile_photo');
 
-            // Buat nama file yang unik
-            $fileName = 'user_' . $user->id . '_' . time() . '.' . $file->getClientOriginalExtension();
-
-            // Pastikan folder profile_users ada
-            $folderPath = 'public/profile_user'; // PERUBAHAN: profile_users bukan profile_user
-            if (!Storage::exists($folderPath)) {
-                Storage::makeDirectory($folderPath);
+            // Validasi manual tipe file
+            $allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg', 'image/webp'];
+            if (!in_array($file->getMimeType(), $allowedMimes)) {
+                return back()->withErrors([
+                    'profile_photo' => 'Format file tidak didukung. Gunakan jpg, jpeg, png, gif, atau webp.'
+                ])->withInput();
             }
 
-            // Simpan file ke profile_users
-            $file->storeAs($folderPath, $fileName);
-            $data['profile_photo'] = $fileName;
+            // ✅ CARA BENAR: Simpan dengan store()
+            $path = $request->file('profile_photo')->store('profile_pictures', 'public');
 
-            // Debug info
-            \Log::info('Foto diupdate ke: ' . storage_path('app/' . $folderPath . '/' . $fileName));
+            // Simpan FULL PATH ke database
+            $data['profile_picture'] = $path;
         }
 
         $user->update($data);
@@ -183,109 +186,14 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-        // Delete profile photo if exists - HAPUS DARI profile_users
-        if ($user->profile_photo && Storage::exists('public/profile_user/' . $user->profile_photo)) {
-            Storage::delete('public/profile_user/' . $user->profile_photo);
+        // ✅ PERBAIKAN: Hapus foto profil jika ada (seperti temanmu)
+        if ($user->profile_picture) {
+            Storage::disk('public')->delete($user->profile_picture);
         }
 
         $user->delete();
 
         return redirect()->route('user.index')
             ->with('success', 'User berhasil dihapus');
-    }
-
-    // ==================== PROFILE METHODS (UNTUK USER LOGIN SENDIRI) ====================
-
-    /**
-     * Show my profile (untuk user yang login edit profile sendiri)
-     */
-    public function myProfile()
-    {
-        $user = Auth::user();
-        return view('pages.user.my-profile', compact('user'));
-    }
-
-    /**
-     * Update my profile (untuk user yang login edit profile sendiri)
-     */
-    public function updateMyProfile(Request $request)
-    {
-        $user = Auth::user();
-
-        $request->validate([
-            'name' => 'required|string|max:100',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'current_password' => 'nullable|string',
-            'new_password' => 'nullable|min:8|confirmed',
-            'profile_photo' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
-        ]);
-
-        // Update basic info
-        $user->name = $request->name;
-        $user->email = $request->email;
-
-        // Update password if provided
-        if ($request->filled('current_password') && $request->filled('new_password')) {
-            if (Hash::check($request->current_password, $user->password)) {
-                $user->password = Hash::make($request->new_password);
-            } else {
-                return back()->withErrors(['current_password' => 'Password saat ini salah']);
-            }
-        }
-
-        // Handle remove photo request untuk profile sendiri
-        if ($request->has('remove_photo') && $request->remove_photo == '1') {
-            // Delete old photo if exists - HAPUS DARI profile_users
-            if ($user->profile_photo && Storage::exists('public/profile_user/' . $user->profile_photo)) {
-                Storage::delete('public/profile_user/' . $user->profile_photo);
-            }
-            $user->profile_photo = null;
-        }
-
-        // Handle profile photo upload - SIMPAN KE profile_users
-        if ($request->hasFile('profile_photo')) {
-            // Delete old photo if exists - HAPUS DARI profile_users
-            if ($user->profile_photo && Storage::exists('public/profile_user/' . $user->profile_photo)) {
-                Storage::delete('public/profile_user/' . $user->profile_photo);
-            }
-
-            // Upload new photo
-            $file = $request->file('profile_photo');
-
-            // Buat nama file yang unik
-            $fileName = 'user_' . $user->id . '_' . time() . '.' . $file->getClientOriginalExtension();
-
-            // Pastikan folder profile_users ada
-            $folderPath = 'public/profile_user'; // PERUBAHAN: profile_users bukan profile_user
-            if (!Storage::exists($folderPath)) {
-                Storage::makeDirectory($folderPath);
-            }
-
-            // Simpan file ke profile_users
-            $file->storeAs($folderPath, $fileName);
-            $user->profile_photo = $fileName;
-        }
-
-        $user->save();
-
-        return redirect()->route('user.my-profile')->with('success', 'Profile berhasil diperbarui');
-    }
-
-    /**
-     * Delete my profile photo (untuk user yang login)
-     */
-    public function deleteMyProfilePhoto()
-    {
-        $user = Auth::user();
-
-        if ($user->profile_photo && Storage::exists('public/profile_user/' . $user->profile_photo)) {
-            Storage::delete('public/profile_user/' . $user->profile_photo);
-            $user->profile_photo = null;
-            $user->save();
-
-            return back()->with('success', 'Foto profile berhasil dihapus');
-        }
-
-        return back()->with('error', 'Tidak ada foto untuk dihapus');
     }
 }

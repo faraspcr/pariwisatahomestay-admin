@@ -117,9 +117,62 @@
                             <!-- Profile Photo - PERBAIKAN UTAMA DI SINI -->
                             <div class="form-group">
                                 <label for="profile_photo" class="form-label">Foto Profile</label>
+
+                                <!-- ✅ Current Photo Section -->
+                                <div class="mb-3">
+                                    <p class="mb-1">Foto Saat Ini:</p>
+                                    <div class="text-center">
+                                        @if($user->profile_picture)
+                                            {{-- Foto Custom --}}
+                                            <div class="position-relative d-inline-block">
+                                                <img src="{{ $user->profile_photo_url }}"
+                                                     alt="Profile {{ $user->name }}"
+                                                     class="rounded-circle border shadow mb-2"
+                                                     style="width: 120px; height: 120px; object-fit: cover;"
+                                                     onerror="this.onerror=null; this.src='{{ $user->profile_photo_url }}'">
+                                                <span class="badge bg-success position-absolute" style="bottom: 5px; right: 5px;">
+                                                    <i class="mdi mdi-check"></i> Custom
+                                                </span>
+                                            </div>
+                                            <div class="form-check d-inline-block mt-2">
+                                                <input class="form-check-input" type="checkbox"
+                                                       name="remove_photo"
+                                                       id="remove_photo" value="1">
+                                                <label class="form-check-label text-danger" for="remove_photo">
+                                                    <i class="mdi mdi-trash-can-outline mr-1"></i> Hapus foto custom
+                                                </label>
+                                            </div>
+                                            <div class="mt-2">
+                                                <small class="text-muted">
+                                                    <i class="mdi mdi-information-outline mr-1"></i>
+                                                    Jika dihapus, akan kembali ke avatar default
+                                                </small>
+                                            </div>
+                                        @else
+                                            {{-- ✅ Default Avatar --}}
+                                            <div class="position-relative d-inline-block">
+                                                <div class="default-avatar-placeholder rounded-circle border shadow mb-2 d-flex align-items-center justify-content-center mx-auto"
+                                                     style="width: 120px; height: 120px; background-color: #f8f9fa; border: 2px dashed #dee2e6 !important;">
+                                                    <svg width="60" height="60" viewBox="0 0 40 40">
+                                                        <!-- Kepala -->
+                                                        <circle cx="20" cy="15" r="8" fill="none" stroke="#6c757d" stroke-width="2"/>
+                                                        <!-- Badan -->
+                                                        <ellipse cx="20" cy="30" rx="10" ry="8" fill="none" stroke="#6c757d" stroke-width="2"/>
+                                                    </svg>
+                                                </div>
+                                                <span class="badge bg-secondary position-absolute" style="bottom: 5px; right: 5px;">
+                                                    <i class="mdi mdi-account"></i> Default
+                                                </span>
+                                            </div>
+                                            <p class="text-muted mb-0">Avatar default</p>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <!-- Upload Foto Baru -->
                                 <div class="custom-file">
                                     <input type="file" class="custom-file-input @error('profile_photo') is-invalid @enderror"
-                                           id="profile_photo" name="profile_photo" accept="image/*">
+                                           id="profile_photo" name="profile_photo" accept=".jpg,.jpeg,.png,.gif,.webp">
                                     <label class="custom-file-label" for="profile_photo" id="profile_photo_label">
                                         Pilih file baru...
                                     </label>
@@ -127,52 +180,7 @@
                                 @error('profile_photo')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
-                                <small class="text-muted">Format: JPG, PNG, GIF (Maks 2MB)</small>
-
-                                <!-- Show current profile photo -->
-                                <div class="mt-3">
-                                    <p class="mb-1">Foto Saat Ini:</p>
-
-                                    @if($user->profile_photo)
-                                        @php
-                                            // Cek apakah file ada di storage
-                                            $fileExists = Storage::disk('public')->exists('profile_user/' . $user->profile_photo);
-                                            $currentPhotoUrl = $fileExists ? Storage::url('profile_user/' . $user->profile_photo) : '#';
-                                        @endphp
-
-                                        @if($fileExists)
-                                            <div class="d-flex align-items-start">
-                                                <img src="{{ $currentPhotoUrl }}"
-                                                     alt="Profile Photo"
-                                                     class="img-thumbnail current-photo"
-                                                     style="width: 120px; height: 120px; object-fit: cover; margin-right: 15px;">
-                                                <div>
-                                                    <small class="text-muted d-block mb-2">Nama file: {{ $user->profile_photo }}</small>
-                                                    <button type="button" class="btn btn-sm btn-outline-danger" id="removePhotoBtn">
-                                                        <i class="mdi mdi-delete mr-1"></i>Hapus Foto
-                                                    </button>
-                                                    <input type="hidden" name="remove_photo" id="remove_photo" value="0">
-                                                </div>
-                                            </div>
-                                        @else
-                                            <div class="alert alert-warning p-2">
-                                                <small>
-                                                    <i class="mdi mdi-alert-circle-outline mr-1"></i>
-                                                    File gambar tidak ditemukan di server
-                                                </small>
-                                            </div>
-                                            <div class="text-center bg-light p-3 rounded">
-                                                <i class="mdi mdi-account-circle" style="font-size: 48px; color: #ccc;"></i>
-                                                <p class="text-muted mb-0">Gambar tidak tersedia</p>
-                                            </div>
-                                        @endif
-                                    @else
-                                        <div class="text-center bg-light p-3 rounded">
-                                            <i class="mdi mdi-account-circle" style="font-size: 48px; color: #ccc;"></i>
-                                            <p class="text-muted mb-0">Belum ada foto profile</p>
-                                        </div>
-                                    @endif
-                                </div>
+                                <small class="text-muted">Format: JPG, JPEG, PNG, GIF, WEBP (Maks 2MB)</small>
 
                                 <!-- Preview New Image -->
                                 <div class="mt-3" id="imagePreview" style="display: none;">
@@ -180,8 +188,8 @@
                                     <img id="previewImage"
                                          src=""
                                          alt="Preview"
-                                         class="img-thumbnail"
-                                         style="width: 120px; height: 120px; object-fit: cover;">
+                                         class="img-thumbnail rounded-circle"
+                                         style="width: 100px; height: 100px; object-fit: cover;">
                                 </div>
                             </div>
 
@@ -253,14 +261,34 @@
     content: "Browse";
 }
 
+/* ✅ STYLE KHUSUS UNTUK DEFAULT AVATAR */
+.default-avatar-placeholder {
+    background-color: #f8f9fa;
+    border: 2px dashed #dee2e6 !important;
+    transition: all 0.3s ease;
+}
+
+.default-avatar-placeholder:hover {
+    background-color: #e9ecef;
+    border-color: #adb5bd !important;
+}
+
+.avatar-icon svg {
+    opacity: 0.7;
+}
+
+.avatar-icon svg:hover {
+    opacity: 1;
+}
+
 /* Styling untuk Current Photo */
-.current-photo {
+.rounded-circle.border.shadow {
     border: 2px solid #4e73df;
     box-shadow: 0 2px 4px rgba(78, 115, 223, 0.2);
     transition: all 0.3s ease;
 }
 
-.current-photo:hover {
+.rounded-circle.border.shadow:hover {
     transform: scale(1.05);
     box-shadow: 0 4px 8px rgba(78, 115, 223, 0.3);
 }
@@ -287,14 +315,21 @@
     border-color: #adb5bd;
 }
 
-/* Styling untuk Remove Photo Button */
-#removePhotoBtn {
-    transition: all 0.3s ease;
+/* Styling untuk Checkbox Hapus Foto */
+.form-check-input:checked {
+    background-color: #e74a3b;
+    border-color: #e74a3b;
 }
 
-#removePhotoBtn:hover {
-    background-color: #dc3545;
-    color: white;
+.form-check-label {
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* Badge position */
+.position-relative .badge {
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 </style>
 
@@ -305,12 +340,32 @@ document.addEventListener('DOMContentLoaded', function() {
     const profilePhotoLabel = document.getElementById('profile_photo_label');
     const imagePreview = document.getElementById('imagePreview');
     const previewImage = document.getElementById('previewImage');
+    const removePhotoCheckbox = document.getElementById('remove_photo');
 
     if (profilePhotoInput) {
         profilePhotoInput.addEventListener('change', function(e) {
             const file = e.target.files[0];
 
             if (file) {
+                // Validasi ukuran file (max 2MB)
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('Ukuran file maksimal 2MB');
+                    this.value = '';
+                    imagePreview.style.display = 'none';
+                    profilePhotoLabel.textContent = 'Pilih file baru...';
+                    return;
+                }
+
+                // Validasi tipe file
+                const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp'];
+                if (!validTypes.includes(file.type)) {
+                    alert('Format file tidak didukung. Gunakan JPG, JPEG, PNG, GIF, atau WEBP.');
+                    this.value = '';
+                    imagePreview.style.display = 'none';
+                    profilePhotoLabel.textContent = 'Pilih file baru...';
+                    return;
+                }
+
                 // Update label
                 profilePhotoLabel.textContent = file.name;
 
@@ -321,6 +376,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     imagePreview.style.display = 'block';
                 }
                 reader.readAsDataURL(file);
+
+                // Uncheck remove photo checkbox jika upload foto baru
+                if (removePhotoCheckbox) {
+                    removePhotoCheckbox.checked = false;
+                }
             } else {
                 profilePhotoLabel.textContent = 'Pilih file baru...';
                 imagePreview.style.display = 'none';
@@ -328,34 +388,24 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Remove Photo Button
-    const removePhotoBtn = document.getElementById('removePhotoBtn');
-    const removePhotoInput = document.getElementById('remove_photo');
+    // Jika checkbox hapus foto dicentang, disable input upload
+    if (removePhotoCheckbox) {
+        removePhotoCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                profilePhotoInput.disabled = true;
+                profilePhotoInput.value = '';
+                imagePreview.style.display = 'none';
+                profilePhotoLabel.textContent = 'Pilih file baru...';
 
-    if (removePhotoBtn) {
-        removePhotoBtn.addEventListener('click', function() {
-            if (confirm('Apakah Anda yakin ingin menghapus foto profil ini?')) {
-                // Hide current photo
-                const currentPhoto = document.querySelector('.current-photo');
-                if (currentPhoto) {
-                    currentPhoto.style.opacity = '0.5';
-                    currentPhoto.style.filter = 'grayscale(100%)';
+                // Tampilkan alert konfirmasi
+                if (confirm('Yakin ingin menghapus foto profil? Foto akan diganti dengan avatar default.')) {
+                    // Tetap centang
+                } else {
+                    this.checked = false;
+                    profilePhotoInput.disabled = false;
                 }
-
-                // Set remove flag
-                removePhotoInput.value = '1';
-
-                // Change button text and disable
-                this.innerHTML = '<i class="mdi mdi-check mr-1"></i>Foto akan dihapus';
-                this.classList.remove('btn-outline-danger');
-                this.classList.add('btn-danger');
-                this.disabled = true;
-
-                // Show info message
-                const warningDiv = document.createElement('div');
-                warningDiv.className = 'alert alert-warning mt-2 p-2';
-                warningDiv.innerHTML = '<small><i class="mdi mdi-information-outline mr-1"></i>Foto akan dihapus saat data disimpan</small>';
-                this.parentNode.appendChild(warningDiv);
+            } else {
+                profilePhotoInput.disabled = false;
             }
         });
     }
@@ -403,7 +453,34 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('Password dan Konfirmasi Password tidak sama!');
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = '<i class="mdi mdi-content-save mr-1"></i>Simpan Perubahan';
+                return false;
             }
+
+            // Validasi file upload
+            if (profilePhotoInput && profilePhotoInput.files.length > 0) {
+                const file = profilePhotoInput.files[0];
+
+                // Validasi ukuran file (max 2MB)
+                if (file.size > 2 * 1024 * 1024) {
+                    e.preventDefault();
+                    alert('Ukuran file maksimal 2MB');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="mdi mdi-content-save mr-1"></i>Simpan Perubahan';
+                    return false;
+                }
+
+                // Validasi tipe file
+                const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp'];
+                if (!validTypes.includes(file.type)) {
+                    e.preventDefault();
+                    alert('Format file tidak didukung. Gunakan JPG, JPEG, PNG, GIF, atau WEBP.');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="mdi mdi-content-save mr-1"></i>Simpan Perubahan';
+                    return false;
+                }
+            }
+
+            return true;
         });
     }
 });

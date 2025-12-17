@@ -113,12 +113,41 @@
 
                         <!-- Kolom Kanan -->
                         <div class="col-md-6">
-                            <!-- Profile Photo -->
+                            <!-- ✅ Profile Photo dengan Info Default Avatar -->
                             <div class="form-group">
                                 <label for="profile_photo" class="form-label">Foto Profile</label>
+
+                                <!-- Info Default Avatar -->
+                                <div class="mb-3">
+                                    <div class="alert alert-info p-2">
+                                        <div class="d-flex align-items-center">
+                                            <i class="mdi mdi-information-outline mr-2"></i>
+                                            <div>
+                                                <small>
+                                                    <strong>Default Avatar:</strong> Jika tidak upload foto, akan digunakan avatar default
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        <!-- Default Avatar SVG -->
+                                        <div class="default-avatar-placeholder rounded-circle border d-inline-flex align-items-center justify-content-center mx-auto"
+                                             style="width: 80px; height: 80px; background-color: #f8f9fa; border: 2px dashed #dee2e6 !important;">
+                                            <svg width="40" height="40" viewBox="0 0 40 40">
+                                                <!-- Kepala -->
+                                                <circle cx="20" cy="15" r="8" fill="none" stroke="#6c757d" stroke-width="2"/>
+                                                <!-- Badan -->
+                                                <ellipse cx="20" cy="30" rx="10" ry="8" fill="none" stroke="#6c757d" stroke-width="2"/>
+                                            </svg>
+                                        </div>
+                                        <p class="text-muted mb-0 mt-2">Avatar default</p>
+                                    </div>
+                                </div>
+
+                                <!-- Upload Foto -->
                                 <div class="custom-file">
                                     <input type="file" class="custom-file-input @error('profile_photo') is-invalid @enderror"
-                                           id="profile_photo" name="profile_photo" accept="image/*">
+                                           id="profile_photo" name="profile_photo" accept=".jpg,.jpeg,.png,.gif,.webp">
                                     <label class="custom-file-label" for="profile_photo" id="profile_photo_label">
                                         Pilih file...
                                     </label>
@@ -126,7 +155,7 @@
                                 @error('profile_photo')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
-                                <small class="text-muted">Format: JPG, PNG, GIF (Maks 2MB)</small>
+                                <small class="text-muted">Format: JPG, JPEG, PNG, GIF, WEBP (Maks 2MB)</small>
 
                                 <!-- Preview Image -->
                                 <div class="mt-3" id="imagePreview" style="display: none;">
@@ -134,8 +163,8 @@
                                     <img id="previewImage"
                                          src=""
                                          alt="Preview"
-                                         class="img-thumbnail"
-                                         style="width: 120px; height: 120px; object-fit: cover;">
+                                         class="img-thumbnail rounded-circle"
+                                         style="width: 100px; height: 100px; object-fit: cover;">
                                 </div>
                             </div>
 
@@ -204,16 +233,28 @@
     content: "Browse";
 }
 
+/* ✅ STYLE KHUSUS UNTUK DEFAULT AVATAR */
+.default-avatar-placeholder {
+    background-color: #f8f9fa;
+    border: 2px dashed #dee2e6 !important;
+    transition: all 0.3s ease;
+}
+
+.default-avatar-placeholder:hover {
+    background-color: #e9ecef;
+    border-color: #adb5bd !important;
+}
+
 /* Styling untuk Preview Image */
 #previewImage {
-    border: 2px solid #dee2e6;
+    border: 2px solid #28a745;
     border-radius: 8px;
     transition: all 0.3s ease;
 }
 
 #previewImage:hover {
     transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
 }
 
 /* Styling untuk Toggle Password Button */
@@ -224,6 +265,13 @@
 #togglePassword:hover, #togglePasswordConfirmation:hover {
     background-color: #e9ecef;
     border-color: #adb5bd;
+}
+
+/* Alert info */
+.alert-info {
+    background-color: #e8f4fc;
+    border-color: #b6e0fe;
+    color: #2c3e50;
 }
 </style>
 
@@ -240,6 +288,25 @@ document.addEventListener('DOMContentLoaded', function() {
             const file = e.target.files[0];
 
             if (file) {
+                // Validasi ukuran file (max 2MB)
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('Ukuran file maksimal 2MB');
+                    this.value = '';
+                    imagePreview.style.display = 'none';
+                    profilePhotoLabel.textContent = 'Pilih file...';
+                    return;
+                }
+
+                // Validasi tipe file
+                const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp'];
+                if (!validTypes.includes(file.type)) {
+                    alert('Format file tidak didukung. Gunakan JPG, JPEG, PNG, GIF, atau WEBP.');
+                    this.value = '';
+                    imagePreview.style.display = 'none';
+                    profilePhotoLabel.textContent = 'Pilih file...';
+                    return;
+                }
+
                 // Update label
                 profilePhotoLabel.textContent = file.name;
 

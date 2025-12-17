@@ -23,8 +23,37 @@
 
         <div class="brand-section">
             <div class="brand-logo">
-                🏝️
-            </div>
+                <!-- Logo menggunakan gambar file -->
+                <!--
+                    PILIH SALAH SATU CARA DI BAWAH UNTUK MENGATUR UKURAN:
+
+                    OPTION 1: Gunakan inline style (paling fleksibel)
+                    OPTION 2: Gunakan class custom (logo-small, logo-medium, logo-large)
+                    OPTION 3: Gunakan kombinasi keduanya
+                -->
+{{--
+                <!-- OPTION 1: Inline Style (rekomendasi) -->
+                <img src="{{ asset('assets-admin/images/logobinadesa.png') }}"
+                     alt="Logo Desa Pariwisata"
+                     class="logo-image"
+                     style="width: 180px; height: auto; max-width: 200px;"
+                     onerror="this.onerror=null; this.src='{{ asset('images/logo-default.png') }}'; this.alt='Logo Default'">
+
+                <!--
+                    OPTION 2: Custom Class
+                    <img src="{{ asset('assets-admin/images/logobinadesa.png') }}"
+                         alt="Logo Desa Pariwisata"
+                         class="logo-image logo-medium"
+                         onerror="this.onerror=null; this.src='{{ asset('images/logo-default.png') }}'; this.alt='Logo Default'">
+                --> --}}
+
+
+                   <img src="{{ asset('assets-admin/images/logobinadesa.png') }}"
+         alt="Logo Desa Pariwisata"
+         class="logo-image"
+         style="width: 200px; height: auto; max-width: 100%; object-fit: contain;"
+         onerror="this.onerror=null; this.src='{{ asset('images/logo-default.png') }}'; this.alt='Logo Default'">
+</div>
             <h1>PARIWISATA DESA</h1>
             <p>Selamat datang di sistem administrasi Pariwisata dan Homestay desa.</p>
         </div>
@@ -164,6 +193,124 @@
             background-color: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c2c7;
+        }
+
+        /* CSS untuk logo baru - BASE STYLE */
+        .brand-logo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Style dasar untuk semua logo */
+        .logo-image {
+            display: block;
+            margin: 0 auto;
+            transition: all 0.3s ease;
+            object-fit: contain; /* Gambar utuh terlihat */
+            object-position: center; /* Posisi gambar di tengah */
+        }
+
+        /* Hover effect untuk semua logo */
+        .logo-image:hover {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+        }
+
+        /* ===== PILIHAN UKURAN LOGO ===== */
+
+        /* Option A: Ukuran Custom dengan Inline Style (rekomendasi) */
+        /* Contoh: style="width: 180px; height: auto;" */
+
+        /* Option B: Ukuran dengan Class */
+        .logo-small {
+            width: 120px;
+            height: auto;
+            max-width: 120px;
+        }
+
+        .logo-medium {
+            width: 180px;
+            height: auto;
+            max-width: 180px;
+        }
+
+        .logo-large {
+            width: 250px;
+            height: auto;
+            max-width: 250px;
+        }
+
+        .logo-xlarge {
+            width: 300px;
+            height: auto;
+            max-width: 300px;
+        }
+
+        /* Option C: Ukuran dengan rasio tetap */
+        .logo-square-100 {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+        }
+
+        .logo-square-150 {
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
+        }
+
+        .logo-square-200 {
+            width: 200px;
+            height: 200px;
+            object-fit: contain;
+        }
+
+        /* Option D: Logo memenuhi lebar parent */
+        .logo-full-width {
+            width: 100%;
+            height: auto;
+            max-width: 250px; /* Batas maksimal */
+        }
+
+        /* Option E: Logo dengan background */
+        .logo-with-bg {
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Option F: Logo bulat */
+        .logo-circle {
+            border-radius: 50%;
+            border: 3px solid #f0f0f0;
+            padding: 10px;
+            background-color: white;
+        }
+
+        /* Responsive logo - akan override ukuran di atas */
+        @media (max-width: 768px) {
+            .logo-image {
+                max-width: 200px !important; /* Force maximum width on tablet */
+            }
+
+            .logo-large, .logo-xlarge {
+                width: 180px;
+                max-width: 180px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo-image {
+                max-width: 150px !important; /* Force maximum width on mobile */
+            }
+
+            .logo-medium, .logo-large {
+                width: 150px;
+                max-width: 150px;
+            }
         }
     </style>
 
