@@ -81,11 +81,11 @@ class AuthController extends Controller
             'password.min' => 'Password minimal 6 karakter'
         ]);
 
-        // TAMBAHKAN: Cari user dan gunakan Auth::login() seperti materi
+        // TAMBAHKAN: Cari user dan gunakan Auth::login()
         $user = User::where('email', $request->email)->first();
 
         if ($user && Hash::check($request->password, $user->password)) {
-            // TAMBAHKAN: Auth::login() seperti di materi
+            // TAMBAHKAN: Auth::login()
             Auth::login($user);
 
             // TAMBAHKAN: Simpan waktu login WIB ke session

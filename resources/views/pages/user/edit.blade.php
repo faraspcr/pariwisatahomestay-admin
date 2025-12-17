@@ -153,12 +153,9 @@
                                             <div class="position-relative d-inline-block">
                                                 <div class="default-avatar-placeholder rounded-circle border shadow mb-2 d-flex align-items-center justify-content-center mx-auto"
                                                      style="width: 120px; height: 120px; background-color: #f8f9fa; border: 2px dashed #dee2e6 !important;">
-                                                    <svg width="60" height="60" viewBox="0 0 40 40">
-                                                        <!-- Kepala -->
-                                                        <circle cx="20" cy="15" r="8" fill="none" stroke="#6c757d" stroke-width="2"/>
-                                                        <!-- Badan -->
-                                                        <ellipse cx="20" cy="30" rx="10" ry="8" fill="none" stroke="#6c757d" stroke-width="2"/>
-                                                    </svg>
+                                                    <img src="{{ $user->profile_photo_url }}"
+                                                         alt="Default Avatar"
+                                                         style="width: 60px; height: 60px;">
                                                 </div>
                                                 <span class="badge bg-secondary position-absolute" style="bottom: 5px; right: 5px;">
                                                     <i class="mdi mdi-account"></i> Default
@@ -172,7 +169,7 @@
                                 <!-- Upload Foto Baru -->
                                 <div class="custom-file">
                                     <input type="file" class="custom-file-input @error('profile_photo') is-invalid @enderror"
-                                           id="profile_photo" name="profile_photo" accept=".jpg,.jpeg,.png,.gif,.webp">
+                                           id="profile_photo" name="profile_photo" accept="image/*">
                                     <label class="custom-file-label" for="profile_photo" id="profile_photo_label">
                                         Pilih file baru...
                                     </label>
@@ -271,14 +268,6 @@
 .default-avatar-placeholder:hover {
     background-color: #e9ecef;
     border-color: #adb5bd !important;
-}
-
-.avatar-icon svg {
-    opacity: 0.7;
-}
-
-.avatar-icon svg:hover {
-    opacity: 1;
 }
 
 /* Styling untuk Current Photo */
@@ -454,30 +443,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = '<i class="mdi mdi-content-save mr-1"></i>Simpan Perubahan';
                 return false;
-            }
-
-            // Validasi file upload
-            if (profilePhotoInput && profilePhotoInput.files.length > 0) {
-                const file = profilePhotoInput.files[0];
-
-                // Validasi ukuran file (max 2MB)
-                if (file.size > 2 * 1024 * 1024) {
-                    e.preventDefault();
-                    alert('Ukuran file maksimal 2MB');
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = '<i class="mdi mdi-content-save mr-1"></i>Simpan Perubahan';
-                    return false;
-                }
-
-                // Validasi tipe file
-                const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp'];
-                if (!validTypes.includes(file.type)) {
-                    e.preventDefault();
-                    alert('Format file tidak didukung. Gunakan JPG, JPEG, PNG, GIF, atau WEBP.');
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = '<i class="mdi mdi-content-save mr-1"></i>Simpan Perubahan';
-                    return false;
-                }
             }
 
             return true;

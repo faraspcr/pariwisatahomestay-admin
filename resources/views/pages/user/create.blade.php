@@ -147,7 +147,7 @@
                                 <!-- Upload Foto -->
                                 <div class="custom-file">
                                     <input type="file" class="custom-file-input @error('profile_photo') is-invalid @enderror"
-                                           id="profile_photo" name="profile_photo" accept=".jpg,.jpeg,.png,.gif,.webp">
+                                           id="profile_photo" name="profile_photo" accept="image/*">
                                     <label class="custom-file-label" for="profile_photo" id="profile_photo_label">
                                         Pilih file...
                                     </label>
@@ -367,7 +367,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('Password dan Konfirmasi Password tidak sama!');
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = '<i class="mdi mdi-content-save mr-1"></i>Simpan User';
+                return false;
             }
+
+            return true;
         });
     }
 });
