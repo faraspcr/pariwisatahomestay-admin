@@ -21,39 +21,16 @@
             <button class="carousel-btn next">❯</button>
         </div>
 
+        <!-- BRAND SECTION - FIXED LIKE IMAGE.PNG 117.27KB -->
         <div class="brand-section">
             <div class="brand-logo">
-                <!-- Logo menggunakan gambar file -->
-                <!--
-                    PILIH SALAH SATU CARA DI BAWAH UNTUK MENGATUR UKURAN:
-
-                    OPTION 1: Gunakan inline style (paling fleksibel)
-                    OPTION 2: Gunakan class custom (logo-small, logo-medium, logo-large)
-                    OPTION 3: Gunakan kombinasi keduanya
-                -->
-{{--
-                <!-- OPTION 1: Inline Style (rekomendasi) -->
-                <img src="{{ asset('assets-admin/images/logobinadesa.png') }}"
+                <!-- LOGO SESUAI IMAGE.PNG 117.27KB - NAMA FILE: logopariwisata.png -->
+                <img src="{{ asset('assets-admin/images/logopariwisata.png') }}"
                      alt="Logo Desa Pariwisata"
                      class="logo-image"
-                     style="width: 180px; height: auto; max-width: 200px;"
+                     style="width: 120x; height: 120px; object-fit: contain; background: transparent;"
                      onerror="this.onerror=null; this.src='{{ asset('images/logo-default.png') }}'; this.alt='Logo Default'">
-
-                <!--
-                    OPTION 2: Custom Class
-                    <img src="{{ asset('assets-admin/images/logobinadesa.png') }}"
-                         alt="Logo Desa Pariwisata"
-                         class="logo-image logo-medium"
-                         onerror="this.onerror=null; this.src='{{ asset('images/logo-default.png') }}'; this.alt='Logo Default'">
-                --> --}}
-
-
-                   <img src="{{ asset('assets-admin/images/logobinadesa.png') }}"
-         alt="Logo Desa Pariwisata"
-         class="logo-image"
-         style="width: 200px; height: auto; max-width: 100%; object-fit: contain;"
-         onerror="this.onerror=null; this.src='{{ asset('images/logo-default.png') }}'; this.alt='Logo Default'">
-</div>
+            </div>
             <h1>PARIWISATA DESA</h1>
             <p>Selamat datang di sistem administrasi Pariwisata dan Homestay desa.</p>
         </div>

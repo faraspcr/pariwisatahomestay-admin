@@ -21,9 +21,21 @@
             <button class="carousel-btn next">❯</button>
         </div>
 
-        <div class="brand-section">
+        <!-- BRAND SECTION - LOGO DI NAIKKAN -->
+        <div class="brand-section" style="margin-top: -30px;"> <!-- NAIKKAN LOGO -->
             <div class="brand-logo">
-                🏝️
+                <!-- LOGO DIATAS SEDIKIT -->
+                <img src="{{ asset('assets-admin/images/logopariwisata.png') }}"
+                     alt="Logo Desa Pariwisata"
+                     class="logo-image"
+                     style="
+                         width: 120px;
+                         height: 120px;
+                         object-fit: contain;
+                         background: transparent;
+                         margin-top: -20px; /* NAIKKAN LOGO */
+                     "
+                     onerror="this.onerror=null; this.src='{{ asset('images/logo-default.png') }}'; this.alt='Logo Default'">
             </div>
             <h1>PARIWISATA DESA</h1>
             <p>Selamat datang di sistem administrasi Pariwisata dan Homestay desa.</p>
@@ -132,6 +144,90 @@
         </div>
     </div>
 
+    <style>
+        /* PERBAIKAN UTAMA: LOGO DI NAIKKAN */
+        .brand-section {
+            margin-top: -30px !important; /* NAIKKAN SECTION LOGO */
+            padding-top: 20px !important;
+        }
+
+        .brand-logo {
+            margin-top: -20px !important; /* NAIKKAN LOGO */
+            margin-bottom: 10px !important;
+        }
+
+        .brand-section h1 {
+            margin-top: 5px !important; /* ATUR JARAK TEKS */
+        }
+
+        /* CSS untuk error states */
+        .form-control.error {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .flash-message {
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0.375rem;
+            display: none;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 500;
+        }
+
+        .flash-success {
+            background-color: #d1e7dd;
+            color: #0f5132;
+            border: 1px solid #badbcc;
+        }
+
+        .flash-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c2c7;
+        }
+
+        /* Password Requirements */
+        .password-requirements {
+            margin-top: 10px;
+        }
+
+        .requirement {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            margin-bottom: 5px;
+            color: #666;
+        }
+
+        .requirement.met {
+            color: #28a745;
+        }
+
+        .requirement.unmet {
+            color: #666;
+        }
+
+        .requirement span {
+            font-size: 14px;
+        }
+
+        .requirement.met span {
+            color: #28a745;
+        }
+    </style>
+
     <script>
         // Real-time password validation
         document.getElementById('password').addEventListener('input', function() {
@@ -231,6 +327,43 @@
                     showFlashMessage('Terjadi kesalahan saat registrasi. Silakan coba lagi.', 'error');
                 }
             }, 2000);
+        }
+
+        // Helper Functions
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        function showError(fieldId, message) {
+            const errorElement = document.getElementById(fieldId + 'Error');
+            if (errorElement) {
+                errorElement.textContent = message;
+                errorElement.style.display = 'flex';
+                document.getElementById(fieldId).classList.add('error');
+            }
+        }
+
+        function resetErrors() {
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.style.display = 'none';
+            });
+            document.querySelectorAll('.form-control.error').forEach(el => {
+                el.classList.remove('error');
+            });
+        }
+
+        function showFlashMessage(message, type) {
+            const flashMessage = document.getElementById('flashMessage');
+            if (flashMessage) {
+                flashMessage.textContent = message;
+                flashMessage.className = `flash-message flash-${type}`;
+                flashMessage.style.display = 'flex';
+
+                setTimeout(() => {
+                    flashMessage.style.display = 'none';
+                }, 5000);
+            }
         }
     </script>
 @endsection

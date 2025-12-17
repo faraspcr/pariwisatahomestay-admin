@@ -36,13 +36,6 @@ class UserSeeder extends Seeder
             'role' => 'pemilik',
         ]);
 
-        // Pemilik 2
-        User::create([
-            'name' => 'Siti Pemilik',
-            'email' => 'siti@desa.id',
-            'password' => Hash::make('pemilik123'),
-            'role' => 'pemilik',
-        ]);
 
         // Warga
         User::create([

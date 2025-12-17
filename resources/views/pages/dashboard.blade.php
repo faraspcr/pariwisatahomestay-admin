@@ -25,6 +25,163 @@
 
     <!-- ==================== START CSS ==================== -->
     <style>
+        /* HEADER LOGO */
+        .navbar-brand-wrapper .brand-logo {
+            padding: 0 !important;
+            height: 60px !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+
+        .header-logo {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-logo img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: contain !important;
+            display: block !important;
+            background: none !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        .header-logo-text {
+            color: #28a745;
+            font-size: 20px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .brand-logo-mini .header-logo {
+            width: 35px !important;
+            height: 35px !important;
+            margin-right: 0 !important;
+        }
+
+        .brand-logo-mini .header-logo-text {
+            font-size: 16px !important;
+        }
+
+        /* SIDEBAR LOGO */
+        .sidebar-logo-section {
+            text-align: center;
+            padding: 20px 15px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-logo {
+            margin: 0 auto 15px auto;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        .sidebar-logo img {
+            width: 120px !important;
+            height: 120px !important;
+            max-width: 100% !important;
+            max-height: 100% !important;
+            object-fit: contain !important;
+            object-position: center !important;
+            display: block !important;
+            margin: 0 auto !important;
+            background: none !important;
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+            filter: none !important;
+            border-radius: 0 !important;
+            padding: 0 !important;
+            transition: none !important;
+        }
+
+        .sidebar-logo-title {
+            font-size: 18px !important;
+            font-weight: 700 !important;
+            color: white !important;
+            margin: 5px 0 !important;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3) !important;
+            letter-spacing: 0.5px !important;
+        }
+
+        .sidebar-logo-subtitle {
+            font-size: 12px !important;
+            color: rgba(255, 255, 255, 0.8) !important;
+            margin: 0 !important;
+            line-height: 1.3 !important;
+            font-weight: 300 !important;
+        }
+
+        /* Sidebar Menu Items */
+        .nav {
+            padding: 0 10px;
+        }
+
+        .nav-category {
+            margin-top: 15px !important;
+            font-size: 11px !important;
+            padding: 8px 15px !important;
+        }
+
+        /* Menu Item Style */
+        .nav-item .nav-link {
+            padding: 12px 15px !important;
+            border-radius: 8px !important;
+            margin-bottom: 5px !important;
+        }
+
+        .nav-item .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        .nav-item .nav-link .menu-icon {
+            font-size: 18px !important;
+            margin-right: 10px !important;
+        }
+
+        .nav-item .nav-link .menu-title {
+            font-size: 14px !important;
+            font-weight: 500 !important;
+        }
+
+        /* Sub-menu Style */
+        .sub-menu {
+            padding-left: 15px !important;
+        }
+
+        .sub-menu .nav-link {
+            padding: 8px 15px !important;
+            font-size: 13px !important;
+        }
+
+        .sub-menu .nav-link i {
+            font-size: 14px !important;
+            margin-right: 8px !important;
+        }
+
+        /* User Display & Settings di Sidebar */
+        .sidebar-user-actions {
+            margin-top: 20px !important;
+            padding: 15px 10px !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+
+        /* Original CSS styles tetap ada di bawah */
         .nav-dropdown {
             list-style: none;
             padding-left: 0;
@@ -595,6 +752,35 @@
                 gap: 15px;
                 text-align: center;
             }
+
+            /* Header Logo Responsive */
+            .header-logo {
+                width: 35px !important;
+                height: 35px !important;
+            }
+
+            .header-logo-text {
+                font-size: 18px !important;
+            }
+
+            /* Sidebar Logo Responsive */
+            .sidebar-logo {
+                width: 80px !important;
+                height: 80px !important;
+            }
+
+            .sidebar-logo img {
+                width: 80px !important;
+                height: 80px !important;
+            }
+
+            .sidebar-logo-title {
+                font-size: 16px !important;
+            }
+
+            .sidebar-logo-subtitle {
+                font-size: 10px !important;
+            }
         }
 
         /* Visitor Stats Badge */
@@ -1042,15 +1228,24 @@
         <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
             <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
                 <a class="navbar-brand brand-logo" href="{{ route('dashboard') }}">
-                    <div
-                        style="color: #28a745; font-size: 24px; font-weight: bold; display: flex; align-items: center; justify-content: center; width: 100%;">
-                        <i class="mdi mdi-home-group mr-2"></i>BINA DESA
+                    <div style="display: flex; align-items: center; justify-content: center; width: 100%;">
+                        <!-- LOGO di HEADER -->
+                        <div class="header-logo">
+                            <img src="{{ asset('assets-admin/images/logopariwisata.png') }}"
+                                 alt="Logo"
+                                 onerror="this.onerror=null; this.src='{{ asset('images/logo-default.png') }}';">
+                        </div>
+                        <div class="header-logo-text">BINA DESA</div>
                     </div>
                 </a>
                 <a class="navbar-brand brand-logo-mini" href="{{ route('dashboard') }}">
-                    <div
-                        style="color: #28a745; font-size: 18px; font-weight: bold; display: flex; align-items: center; justify-content: center;">
-                        BD
+                    <div style="display: flex; align-items: center; justify-content: center;">
+                        <!-- LOGO mini di HEADER -->
+                        <div class="header-logo">
+                            <img src="{{ asset('assets-admin/images/logopariwisata.png') }}"
+                                 alt="Logo"
+                                 onerror="this.onerror=null; this.src='{{ asset('images/logo-default.png') }}';">
+                        </div>
                     </div>
                 </a>
             </div>
@@ -1188,6 +1383,17 @@
 
             <!-- ==================== START SIDEBAR ==================== -->
             <nav class="sidebar sidebar-offcanvas" id="sidebar">
+                <!-- LOGO SIDEBAR DI SINI -->
+                <div class="sidebar-logo-section">
+                    <div class="sidebar-logo">
+                        <img src="{{ asset('assets-admin/images/logopariwisata.png') }}"
+                             alt="Logo Pariwisata"
+                             onerror="this.onerror=null; this.src='{{ asset('images/logo-default.png') }}';">
+                    </div>
+                    <h3 class="sidebar-logo-title">BINA DESA</h3>
+                    <p class="sidebar-logo-subtitle">Sistem Administrasi<br>Pariwisata & Homestay Desa</p>
+                </div>
+
                 <ul class="nav">
                     <li class="nav-item nav-category">Menu Utama</li>
 
@@ -1675,11 +1881,11 @@
                                         </div>
                                         <div class="contact-item">
                                             <i class="mdi mdi-email"></i>
-                                            faras@student.prr.ac.id
+                                            faras24si@.pcr.ac.id
                                         </div>
                                         <div class="contact-item">
                                             <i class="mdi mdi-phone"></i>
-                                            +62 812-3456-7890
+                                            +62 813-6358-9715
                                         </div>
                                     </div>
                                     <div class="social-links">
@@ -1696,94 +1902,6 @@
                                 </div>
                             </div>
 
-                            <!-- Details Grid -->
-                            <div class="developer-details">
-                                <div class="detail-card">
-                                    <div class="detail-title">NIM</div>
-                                    <div class="detail-content">2457301048</div>
-                                </div>
-                                <div class="detail-card">
-                                    <div class="detail-title">Program Studi</div>
-                                    <div class="detail-content">Sistem Informasi</div>
-                                </div>
-                                <div class="detail-card">
-                                    <div class="detail-title">Kampus</div>
-                                    <div class="detail-content">Politeknik Caltex Riau</div>
-                                </div>
-                                <div class="detail-card">
-                                    <div class="detail-title">Angkatan</div>
-                                    <div class="detail-content">G'24</div>
-                                </div>
-                            </div>
-
-                            <!-- Tech Stack -->
-                            <div class="tech-stack">
-                                <h3 class="tech-title">Tech Stack yang Dikuasai</h3>
-                                <div class="tech-icons">
-                                    <div class="tech-icon" title="HTML5">
-                                        <i class="mdi mdi-language-html5"></i>
-                                    </div>
-                                    <div class="tech-icon" title="CSS3">
-                                        <i class="mdi mdi-language-css3"></i>
-                                    </div>
-                                    <div class="tech-icon" title="JavaScript">
-                                        <i class="mdi mdi-language-javascript"></i>
-                                    </div>
-                                    <div class="tech-icon" title="PHP">
-                                        <i class="mdi mdi-language-php"></i>
-                                    </div>
-                                    <div class="tech-icon" title="Laravel">
-                                        <i class="mdi mdi-laravel"></i>
-                                    </div>
-                                    <div class="tech-icon" title="MySQL">
-                                        <i class="mdi mdi-database"></i>
-                                    </div>
-                                    <div class="tech-icon" title="Bootstrap">
-                                        <i class="mdi mdi-bootstrap"></i>
-                                    </div>
-                                    <div class="tech-icon" title="Git">
-                                        <i class="mdi mdi-git"></i>
-                                    </div>
-                                    <div class="tech-icon" title="Vue.js">
-                                        <i class="mdi mdi-vuejs"></i>
-                                    </div>
-                                    <div class="tech-icon" title="API">
-                                        <i class="mdi mdi-api"></i>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Project Stats -->
-                            <div class="project-stats">
-                                <div class="stat-card">
-                                    <div class="stat-icon" style="color: #667eea;">
-                                        <i class="mdi mdi-code-braces"></i>
-                                    </div>
-                                    <div class="stat-number">15+</div>
-                                    <div class="stat-label">Project Selesai</div>
-                                </div>
-                                <div class="stat-card">
-                                    <div class="stat-icon" style="color: #28a745;">
-                                        <i class="mdi mdi-cloud-check"></i>
-                                    </div>
-                                    <div class="stat-number">10+</div>
-                                    <div class="stat-label">API Terintegrasi</div>
-                                </div>
-                                <div class="stat-card">
-                                    <div class="stat-icon" style="color: #f093fb;">
-                                        <i class="mdi mdi-database"></i>
-                                    </div>
-                                    <div class="stat-number">20+</div>
-                                    <div class="stat-label">Database Tables</div>
-                                </div>
-                                <div class="stat-card">
-                                    <div class="stat-icon" style="color: #4facfe;">
-                                        <i class="mdi mdi-clock-check"></i>
-                                    </div>
-                                    <div class="stat-number">500+</div>
-                                    <div class="stat-label">Jam Coding</div>
-                                </div>
-                            </div>
 
                             <!-- Quote Section -->
                             <div class="developer-quote">

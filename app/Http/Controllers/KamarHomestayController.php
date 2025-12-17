@@ -348,7 +348,7 @@ class KamarHomestayController extends Controller
         $oldFileName = $file->file_name;
         $newFilename = $request->new_filename;
 
-        // Dapatkan ekstensi file lama
+        // Dapatkan ekstensi file lamafr
         $extension = pathinfo($oldFileName, PATHINFO_EXTENSION);
 
         // Buat nama file baru dengan ekstensi
