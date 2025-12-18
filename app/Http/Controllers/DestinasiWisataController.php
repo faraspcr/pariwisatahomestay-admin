@@ -246,7 +246,7 @@ class DestinasiWisataController extends Controller
         $filename = basename($file->file_name);
         $originalName = substr($filename, strpos($filename, '_') + 1);
 
-        // **UBAH SEDIKIT: Download dengan cara yang sama**
+
         return Storage::disk('public')->download($file->file_name, $originalName);
     }
 
