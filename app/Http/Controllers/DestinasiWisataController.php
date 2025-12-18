@@ -262,7 +262,7 @@ class DestinasiWisataController extends Controller
             ->where('ref_id', $destinasi->destinasi_id)
             ->firstOrFail();
 
-        // **UBAH SEDIKIT: Gunakan Storage::disk('public')**
+
         if (!Storage::disk('public')->exists($file->file_name)) {
             abort(404, 'File tidak ditemukan');
         }
