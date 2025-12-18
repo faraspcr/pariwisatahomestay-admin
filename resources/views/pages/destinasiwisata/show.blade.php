@@ -33,7 +33,7 @@
         @endif
 
         <div class="row">
-            <!-- Informasi Destinasi Wisata - STRUKTUR SAMA -->
+            <!-- Informasi Destinasi Wisata -->
             <div class="col-lg-5 mb-4">
                 <div class="card card-detail">
                     <div class="card-header bg-info text-white">
@@ -75,7 +75,7 @@
                                 </div>
                             </div>
 
-                            <!-- Jam Buka (Ganti Fasilitas) -->
+                            <!-- Jam Buka -->
                             <div class="detail-item">
                                 <div class="detail-label">
                                     <i class="mdi mdi-clock-outline text-primary"></i>
@@ -161,7 +161,7 @@
                 </div>
             </div>
 
-            <!-- Foto Destinasi Wisata - STRUKTUR SAMA -->
+            <!-- Foto Destinasi Wisata -->
             <div class="col-lg-7 mb-4">
                 <div class="card border-0 shadow card-gallery">
                     <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
@@ -205,7 +205,7 @@
                                 </div>
                             </div>
 
-                            <!-- Main Photo Preview - DIPERBESAR -->
+                            <!-- Main Photo Preview -->
                             <div class="main-photo-container mb-4">
                                 <div class="main-photo-wrapper">
                                     @php
@@ -221,7 +221,7 @@
                                     @endphp
 
                                     @if($isImage)
-                                        <!-- Gambar - DIPERBESAR -->
+                                        <!-- Gambar -->
                                         <img src="{{ asset('storage/' . $firstFile->file_name) }}"
                                              id="currentMainPhoto"
                                              class="main-photo"
@@ -400,10 +400,47 @@
                                 @endforeach
                             </div>
                         @else
-                            <div class="text-center py-5 empty-gallery">
-                                <i class="mdi mdi-image-off fa-4x text-muted mb-3"></i>
-                                <h5 class="text-muted">Belum ada file yang diupload</h5>
-                                <p class="text-muted">Upload file untuk menampilkan galeri destinasi wisata</p>
+                            <!-- TEMPAT PLACEHOLDER KETIKA TIDAK ADA FILE -->
+                            <div class="placeholder-section">
+                                <!-- Main Photo Placeholder -->
+                                <div class="main-photo-container mb-4">
+                                    <div class="main-photo-wrapper placeholder-wrapper">
+                                        <div class="placeholder-content">
+                                            <i class="mdi mdi-image-off placeholder-icon"></i>
+                                            <h4 class="placeholder-title">Belum ada file yang diupload</h4>
+                                            <p class="placeholder-text">Destinasi ini belum memiliki galeri foto</p>
+                                            <div class="placeholder-actions">
+                                                <button class="btn btn-primary btn-sm" onclick="showUploadForm()">
+                                                    <i class="mdi mdi-cloud-upload mr-1"></i> Upload File
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="photo-info text-center mt-2">
+                                        <small class="text-muted">0 File</small>
+                                    </div>
+                                </div>
+
+                                <!-- Thumbnail Gallery Placeholder -->
+                                <h6 class="border-bottom pb-2 mb-3">
+                                    <i class="mdi mdi-image-multiple mr-2"></i>Daftar File
+                                </h6>
+
+                                <div class="row g-2 placeholder-thumbnails">
+                                    @for($i = 1; $i <= 4; $i++)
+                                        <div class="col-md-3 col-4">
+                                            <div class="thumbnail-card placeholder-thumbnail">
+                                                <div class="file-thumbnail text-center py-3">
+                                                    <i class="mdi mdi-image-off text-muted" style="font-size: 40px;"></i>
+                                                    <small class="d-block text-truncate mt-1">Empty</small>
+                                                </div>
+                                                <div class="thumbnail-overlay placeholder-overlay">
+                                                    <span class="badge badge-order">{{ $i }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endfor
+                                </div>
                             </div>
                         @endif
 
@@ -521,7 +558,7 @@
     </div>
 </div>
 
-{{-- ====================== START JS TAMBAHAN DENGAN SLIDESHOW ====================== --}}
+{{-- ====================== START JS TAMBAHAN DENGAN PLACEHOLDER ====================== --}}
 <script>
     // Variables
     let currentPhotoIndex = 0;
@@ -554,8 +591,37 @@
         return '{{ route("destinasiwisata.show-file", [$destinasiWisata->destinasi_id, "FILE_ID"]) }}'.replace('FILE_ID', fileId);
     }
 
+    // ============ PLACEHOLDER FUNCTIONS ============
+    function showUploadForm() {
+        document.getElementById('uploadForm').scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+        });
+
+        // Highlight upload form
+        const uploadForm = document.getElementById('uploadForm');
+        uploadForm.style.border = '2px solid #4e73df';
+        uploadForm.style.borderRadius = '10px';
+        uploadForm.style.padding = '15px';
+        uploadForm.style.backgroundColor = '#f8f9fa';
+
+        setTimeout(() => {
+            uploadForm.style.border = '';
+            uploadForm.style.borderRadius = '';
+            uploadForm.style.padding = '';
+            uploadForm.style.backgroundColor = '';
+        }, 3000);
+
+        showToast('info', 'Silahkan upload file untuk destinasi ini');
+    }
+
     // ============ SLIDESHOW FUNCTIONS ============
     function toggleSlideshow() {
+        if (photos.length === 0) {
+            showToast('warning', 'Tidak ada file untuk slideshow');
+            return;
+        }
+
         if (slideshowActive) {
             stopSlideshow();
         } else {
@@ -564,10 +630,7 @@
     }
 
     function startSlideshow() {
-        if (photos.length === 0) {
-            showToast('warning', 'Tidak ada file untuk slideshow');
-            return;
-        }
+        if (photos.length === 0) return;
 
         // Filter hanya file gambar untuk slideshow
         const imageFiles = photos.filter(photo => photo.mime_type.includes('image'));
@@ -769,7 +832,6 @@
 
         // Jika masih error, tampilkan placeholder
         img.onerror = function() {
-            // Tampilkan placeholder yang lebih baik
             const svg = `
                 <svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
                     <rect width="800" height="500" fill="#f8f9fa"/>
@@ -785,8 +847,6 @@
 
             img.src = 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
             img.style.cursor = 'default';
-
-            // Tampilkan pesan toast
             showToast('error', `Gagal memuat: ${fileName.split('/').pop()}`);
         };
     }
@@ -957,7 +1017,6 @@
     function downloadCurrentPhoto() {
         if (currentFileId) {
             const downloadUrl = getDownloadUrl(currentFileId);
-            console.log('Download current file:', downloadUrl);
             window.open(downloadUrl, '_blank');
         }
     }
@@ -965,7 +1024,6 @@
     function downloadFullscreenPhoto() {
         if (currentFileId) {
             const downloadUrl = getDownloadUrl(currentFileId);
-            console.log('Download fullscreen file:', downloadUrl);
             window.open(downloadUrl, '_blank');
         }
     }
@@ -982,7 +1040,6 @@
         photos.forEach((photo, index) => {
             setTimeout(() => {
                 const downloadUrl = getDownloadUrl(photo.media_id);
-                console.log(`Downloading ${index + 1}/${photos.length}:`, downloadUrl);
 
                 // Buat link download secara dinamis
                 const link = document.createElement('a');
@@ -1194,10 +1251,6 @@
             document.getElementById('imageFullscreenTitle').textContent = basename(firstFile.file_name);
         }
 
-        // Tambahkan console log untuk debugging
-        console.log('Files loaded:', photos);
-        console.log('Destinasi ID:', destinasiId);
-
         // Add keyboard shortcuts
         document.addEventListener('keydown', function(e) {
             // Esc untuk keluar dari fullscreen dan stop slideshow
@@ -1301,20 +1354,6 @@
     border-left: 3px solid #4e73df;
 }
 
-.fasilitas-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-}
-
-.fasilitas-list .badge {
-    padding: 6px 12px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    display: inline-flex;
-    align-items: center;
-}
-
 /* ==================== BADGE STYLES ==================== */
 .badge-biru {
     background: linear-gradient(45deg, #2196F3, #64B5F6);
@@ -1340,20 +1379,134 @@
     font-weight: 600;
 }
 
-.badge-danger {
-    background: linear-gradient(45deg, #DC3545, #E74C3C);
-    color: white;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-weight: 600;
+/* ==================== PLACEHOLDER STYLES ==================== */
+.placeholder-section {
+    animation: fadeIn 0.8s ease;
 }
 
-.badge-secondary {
-    background: linear-gradient(45deg, #6C757D, #868E96);
-    color: white;
-    padding: 6px 12px;
-    border-radius: 20px;
+.placeholder-wrapper {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 500px;
+    max-height: 600px;
+    border: 3px dashed #dee2e6;
+    transition: all 0.3s ease;
+}
+
+.placeholder-wrapper:hover {
+    border-color: #4e73df;
+    background: linear-gradient(135deg, #f0f5ff 0%, #e3e9ff 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(78, 115, 223, 0.15);
+}
+
+.placeholder-content {
+    text-align: center;
+    padding: 40px;
+    max-width: 500px;
+}
+
+.placeholder-icon {
+    font-size: 120px;
+    color: #adb5bd;
+    margin-bottom: 25px;
+    display: block;
+    transition: all 0.5s ease;
+    opacity: 0.6;
+}
+
+.placeholder-wrapper:hover .placeholder-icon {
+    color: #4e73df;
+    transform: scale(1.1) rotate(5deg);
+    opacity: 0.8;
+}
+
+.placeholder-title {
+    color: #495057;
     font-weight: 600;
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+}
+
+.placeholder-text {
+    color: #6c757d;
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.placeholder-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.placeholder-actions .btn {
+    padding: 10px 25px;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.placeholder-actions .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(78, 115, 223, 0.25);
+}
+
+.placeholder-actions .btn-primary {
+    background: linear-gradient(135deg, #4e73df, #224abe);
+    border: none;
+}
+
+.placeholder-actions .btn-outline-primary {
+    border: 2px solid #4e73df;
+    color: #4e73df;
+    background: transparent;
+}
+
+.placeholder-actions .btn-outline-primary:hover {
+    background: #4e73df;
+    color: white;
+}
+
+.placeholder-thumbnails {
+    animation: fadeIn 1s ease;
+}
+
+.placeholder-thumbnail {
+    cursor: default !important;
+    animation: pulsePlaceholder 2s infinite;
+}
+
+.placeholder-thumbnail:hover {
+    transform: none !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+}
+
+.placeholder-overlay {
+    opacity: 1 !important;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.3)) !important;
+}
+
+.placeholder-overlay .badge-order {
+    background: rgba(108, 117, 125, 0.8);
+}
+
+@keyframes pulsePlaceholder {
+    0% {
+        opacity: 0.7;
+    }
+    50% {
+        opacity: 0.9;
+    }
+    100% {
+        opacity: 0.7;
+    }
 }
 
 /* ==================== SLIDESHOW CONTROLS ==================== */
@@ -1470,7 +1623,7 @@
     color: white;
 }
 
-/* PERBAIKAN BESAR: Main photo container lebih besar */
+/* Main photo container */
 .main-photo-container {
     position: relative;
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
@@ -1498,7 +1651,6 @@
     box-shadow: 0 12px 30px rgba(0,0,0,0.2);
 }
 
-/* PERBAIKAN BESAR: Main photo lebih besar */
 .main-photo {
     max-width: 100%;
     max-height: 550px;
@@ -1751,7 +1903,6 @@
 }
 
 /* ==================== FULLSCREEN MODAL STYLES ==================== */
-/* Modal untuk Gambar */
 #imageFullscreenModal .modal-dialog {
     max-width: 95%;
     margin: 10px auto;
@@ -1946,34 +2097,6 @@
     transform: none !important;
 }
 
-/* ==================== EMPTY GALLERY ==================== */
-.empty-gallery {
-    padding: 80px 20px;
-    background: #f8f9fa;
-    border-radius: 15px;
-    border: 3px dashed #dee2e6;
-    margin: 30px 0;
-}
-
-.empty-gallery i {
-    opacity: 0.5;
-    transition: opacity 0.3s ease;
-    font-size: 5rem;
-}
-
-.empty-gallery:hover i {
-    opacity: 0.8;
-}
-
-.empty-gallery h5 {
-    font-size: 1.5rem;
-    margin: 20px 0 10px;
-}
-
-.empty-gallery p {
-    font-size: 1.1rem;
-}
-
 /* ==================== TOAST NOTIFICATION ==================== */
 .toast-notification {
     position: fixed;
@@ -2102,9 +2225,17 @@
         max-height: 500px;
     }
 
-    #imageFullscreenModal .modal-dialog {
-        max-width: 100%;
-        margin: 5px auto;
+    .placeholder-wrapper {
+        min-height: 450px;
+        max-height: 500px;
+    }
+
+    .placeholder-icon {
+        font-size: 100px;
+    }
+
+    .placeholder-title {
+        font-size: 1.6rem;
     }
 }
 
@@ -2120,6 +2251,23 @@
 
     .main-photo {
         max-height: 450px;
+    }
+
+    .placeholder-wrapper {
+        min-height: 400px;
+        max-height: 450px;
+    }
+
+    .placeholder-content {
+        padding: 30px;
+    }
+
+    .placeholder-icon {
+        font-size: 90px;
+    }
+
+    .placeholder-title {
+        font-size: 1.4rem;
     }
 
     .thumbnail-card {
@@ -2168,6 +2316,27 @@
 
     .main-photo {
         max-height: 400px;
+    }
+
+    .placeholder-wrapper {
+        min-height: 350px;
+        max-height: 400px;
+    }
+
+    .placeholder-content {
+        padding: 20px;
+    }
+
+    .placeholder-icon {
+        font-size: 80px;
+    }
+
+    .placeholder-title {
+        font-size: 1.3rem;
+    }
+
+    .placeholder-text {
+        font-size: 1rem;
     }
 
     .thumbnail-card {
@@ -2225,6 +2394,37 @@
 
     .main-photo {
         max-height: 350px;
+    }
+
+    .placeholder-wrapper {
+        min-height: 300px;
+        max-height: 350px;
+    }
+
+    .placeholder-content {
+        padding: 15px;
+    }
+
+    .placeholder-icon {
+        font-size: 70px;
+    }
+
+    .placeholder-title {
+        font-size: 1.2rem;
+    }
+
+    .placeholder-text {
+        font-size: 0.95rem;
+    }
+
+    .placeholder-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .placeholder-actions .btn {
+        width: 200px;
+        max-width: 100%;
     }
 
     .thumbnail-card {
@@ -2289,6 +2489,24 @@
 
     .main-photo {
         max-height: 300px;
+    }
+
+    .placeholder-wrapper {
+        min-height: 250px;
+        max-height: 300px;
+        padding: 10px;
+    }
+
+    .placeholder-icon {
+        font-size: 60px;
+    }
+
+    .placeholder-title {
+        font-size: 1.1rem;
+    }
+
+    .placeholder-text {
+        font-size: 0.9rem;
     }
 
     .thumbnail-card {

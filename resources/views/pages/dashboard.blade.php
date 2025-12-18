@@ -6,7 +6,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Bina Desa - Admin</title>
+    <title>Pariwisata Desa - Admin</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="{{ asset('assets-admin/vendors/mdi/css/materialdesignicons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets-admin/vendors/flag-icon-css/css/flag-icon.min.css') }}">
@@ -25,7 +25,7 @@
 
     <!-- ==================== START CSS ==================== -->
     <style>
-        /* HEADER LOGO */
+        /* HEADER LOGO - DENGAN LOGO DAN TEKS */
         .navbar-brand-wrapper .brand-logo {
             padding: 0 !important;
             height: 60px !important;
@@ -71,18 +71,18 @@
             font-size: 16px !important;
         }
 
-        /* SIDEBAR LOGO */
+        /* SIDEBAR LOGO - DIUBAH UKURANNYA SEPERTI TEMPLATE LAMA */
         .sidebar-logo-section {
             text-align: center;
-            padding: 20px 15px;
+            padding: 15px 10px;
             margin-bottom: 10px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .sidebar-logo {
-            margin: 0 auto 15px auto;
-            width: 120px;
-            height: 120px;
+            margin: 0 auto 10px auto;
+            width: 60px;
+            height: 60px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -92,8 +92,8 @@
         }
 
         .sidebar-logo img {
-            width: 120px !important;
-            height: 120px !important;
+            width: 60px !important;
+            height: 60px !important;
             max-width: 100% !important;
             max-height: 100% !important;
             object-fit: contain !important;
@@ -111,7 +111,7 @@
         }
 
         .sidebar-logo-title {
-            font-size: 18px !important;
+            font-size: 16px !important;
             font-weight: 700 !important;
             color: white !important;
             margin: 5px 0 !important;
@@ -120,64 +120,93 @@
         }
 
         .sidebar-logo-subtitle {
-            font-size: 12px !important;
+            font-size: 11px !important;
             color: rgba(255, 255, 255, 0.8) !important;
             margin: 0 !important;
             line-height: 1.3 !important;
             font-weight: 300 !important;
         }
 
-        /* Sidebar Menu Items */
+        /* Sidebar Menu Items - DIUBAH UKURAN SEPERTI TEMPLATE LAMA */
         .nav {
-            padding: 0 10px;
+            padding: 0 5px;
         }
 
         .nav-category {
-            margin-top: 15px !important;
-            font-size: 11px !important;
-            padding: 8px 15px !important;
+            margin-top: 10px !important;
+            font-size: 10px !important;
+            padding: 8px 10px !important;
+            color: rgba(255, 255, 255, 0.6) !important;
+            font-weight: 600 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.5px !important;
         }
 
-        /* Menu Item Style */
+        /* Menu Item Style - DIUBAH SEPERTI TEMPLATE LAMA */
         .nav-item .nav-link {
-            padding: 12px 15px !important;
+            padding: 10px 12px !important;
             border-radius: 8px !important;
-            margin-bottom: 5px !important;
+            margin-bottom: 3px !important;
+            display: flex !important;
+            align-items: center !important;
         }
 
         .nav-item .nav-link:hover {
             background: rgba(255, 255, 255, 0.1) !important;
         }
 
-        .nav-item .nav-link .menu-icon {
-            font-size: 18px !important;
+        .nav-item .nav-link .icon-bg {
             margin-right: 10px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        .nav-item .nav-link .menu-icon {
+            font-size: 16px !important;
+            color: rgba(255, 255, 255, 0.8) !important;
         }
 
         .nav-item .nav-link .menu-title {
-            font-size: 14px !important;
+            font-size: 13px !important;
             font-weight: 500 !important;
+            color: rgba(255, 255, 255, 0.9) !important;
         }
 
-        /* Sub-menu Style */
+        /* Sub-menu Style - DIUBAH SEPERTI TEMPLATE LAMA */
         .sub-menu {
-            padding-left: 15px !important;
+            padding-left: 10px !important;
+            margin-top: 3px !important;
+            margin-bottom: 3px !important;
         }
 
         .sub-menu .nav-link {
-            padding: 8px 15px !important;
-            font-size: 13px !important;
+            padding: 6px 10px !important;
+            font-size: 12px !important;
+            border-radius: 6px !important;
+            margin-bottom: 2px !important;
         }
 
         .sub-menu .nav-link i {
-            font-size: 14px !important;
-            margin-right: 8px !important;
+            font-size: 12px !important;
+            margin-right: 6px !important;
+            width: 16px !important;
+            text-align: center !important;
+            color: rgba(255, 255, 255, 0.7) !important;
         }
 
-        /* User Display & Settings di Sidebar */
+        .sub-menu .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+        }
+
+        .sub-menu .nav-link:hover {
+            background: rgba(255, 255, 255, 0.05) !important;
+        }
+
+        /* User Display & Settings di Sidebar - DIUBAH SEPERTI TEMPLATE LAMA */
         .sidebar-user-actions {
-            margin-top: 20px !important;
-            padding: 15px 10px !important;
+            margin-top: 15px !important;
+            padding: 10px 5px !important;
             border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
         }
 
@@ -196,20 +225,7 @@
         }
 
         .nav-dropdown .nav-item {
-            padding-left: 30px;
-        }
-
-        .nav-dropdown .nav-link {
-            padding: 8px 15px;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-        }
-
-        .nav-dropdown .nav-link i {
-            margin-right: 10px;
-            width: 20px;
-            text-align: center;
+            padding-left: 20px;
         }
 
         .dropdown-toggle {
@@ -221,13 +237,14 @@
             content: '\f140';
             font-family: 'Material Design Icons';
             position: absolute;
-            right: 15px;
+            right: 12px;
             top: 50%;
             transform: translateY(-50%);
             transition: transform 0.3s ease;
             border: none !important;
             width: auto;
             height: auto;
+            color: rgba(255, 255, 255, 0.7);
         }
 
         .dropdown-toggle[aria-expanded="true"]::after {
@@ -765,17 +782,17 @@
 
             /* Sidebar Logo Responsive */
             .sidebar-logo {
-                width: 80px !important;
-                height: 80px !important;
+                width: 50px !important;
+                height: 50px !important;
             }
 
             .sidebar-logo img {
-                width: 80px !important;
-                height: 80px !important;
+                width: 50px !important;
+                height: 50px !important;
             }
 
             .sidebar-logo-title {
-                font-size: 16px !important;
+                font-size: 14px !important;
             }
 
             .sidebar-logo-subtitle {
@@ -829,56 +846,56 @@
 
         /* ==================== DEVELOPER IDENTITY & SETTINGS CSS ==================== */
         .settings-logout-section {
-            margin-top: 20px;
-            padding: 15px;
+            margin-top: 15px;
+            padding: 10px;
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
+            border-radius: 8px;
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .user-display-section {
             display: flex;
             align-items: center;
-            padding: 10px;
+            padding: 8px;
             background: linear-gradient(135deg, rgba(40, 167, 69, 0.2), rgba(32, 201, 151, 0.1));
-            border-radius: 8px;
-            margin-bottom: 15px;
+            border-radius: 6px;
+            margin-bottom: 10px;
             border: 1px solid rgba(40, 167, 69, 0.3);
         }
 
         .user-avatar-small {
-            width: 40px;
-            height: 40px;
+            width: 35px;
+            height: 35px;
             background: linear-gradient(135deg, #28a745, #20c997);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 1.2rem;
-            margin-right: 12px;
+            font-size: 1rem;
+            margin-right: 10px;
             box-shadow: 0 3px 10px rgba(40, 167, 69, 0.3);
         }
 
         .user-info-small h5 {
             margin: 0;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             font-weight: 700;
             color: white;
         }
 
         .user-info-small p {
             margin: 0;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: rgba(255, 255, 255, 0.8);
         }
 
         .settings-item {
             display: flex;
             align-items: center;
-            padding: 10px 12px;
-            border-radius: 8px;
-            margin-bottom: 8px;
+            padding: 8px 10px;
+            border-radius: 6px;
+            margin-bottom: 6px;
             transition: all 0.3s ease;
             cursor: pointer;
             background: rgba(255, 255, 255, 0.05);
@@ -886,19 +903,19 @@
 
         .settings-item:hover {
             background: rgba(255, 255, 255, 0.1);
-            transform: translateX(5px);
+            transform: translateX(3px);
         }
 
         .settings-item i {
-            margin-right: 10px;
-            width: 20px;
+            margin-right: 8px;
+            width: 18px;
             text-align: center;
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: rgba(255, 255, 255, 0.9);
         }
 
         .settings-item span {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 500;
             color: rgba(255, 255, 255, 0.9);
         }
@@ -906,8 +923,8 @@
         .logout-item-sidebar {
             display: flex;
             align-items: center;
-            padding: 12px;
-            border-radius: 8px;
+            padding: 10px;
+            border-radius: 6px;
             background: rgba(220, 53, 69, 0.15);
             border: 1px solid rgba(220, 53, 69, 0.3);
             transition: all 0.3s ease;
@@ -917,20 +934,20 @@
 
         .logout-item-sidebar:hover {
             background: rgba(220, 53, 69, 0.25);
-            transform: translateX(5px);
+            transform: translateX(3px);
             text-decoration: none;
         }
 
         .logout-item-sidebar i {
-            margin-right: 10px;
-            width: 20px;
+            margin-right: 8px;
+            width: 18px;
             text-align: center;
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: #dc3545;
         }
 
         .logout-item-sidebar span {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
             color: #dc3545;
         }
@@ -1229,13 +1246,13 @@
             <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
                 <a class="navbar-brand brand-logo" href="{{ route('dashboard') }}">
                     <div style="display: flex; align-items: center; justify-content: center; width: 100%;">
-                        <!-- LOGO di HEADER -->
+                        <!-- LOGO di HEADER - DENGAN LOGO DAN TEKS PARIWISATA DESA -->
                         <div class="header-logo">
                             <img src="{{ asset('assets-admin/images/logopariwisata.png') }}"
                                  alt="Logo"
                                  onerror="this.onerror=null; this.src='{{ asset('images/logo-default.png') }}';">
                         </div>
-                        <div class="header-logo-text">BINA DESA</div>
+                        <div class="header-logo-text">PARIWISATA DESA</div>
                     </div>
                 </a>
                 <a class="navbar-brand brand-logo-mini" href="{{ route('dashboard') }}">
@@ -1383,14 +1400,14 @@
 
             <!-- ==================== START SIDEBAR ==================== -->
             <nav class="sidebar sidebar-offcanvas" id="sidebar">
-                <!-- LOGO SIDEBAR DI SINI -->
+                <!-- LOGO SIDEBAR DI SINI - DIUBAH UKURAN SEPERTI TEMPLATE LAMA -->
                 <div class="sidebar-logo-section">
                     <div class="sidebar-logo">
                         <img src="{{ asset('assets-admin/images/logopariwisata.png') }}"
                              alt="Logo Pariwisata"
                              onerror="this.onerror=null; this.src='{{ asset('images/logo-default.png') }}';">
                     </div>
-                    <h3 class="sidebar-logo-title">BINA DESA</h3>
+                    <h3 class="sidebar-logo-title">PARIWISATA DESA</h3>
                     <p class="sidebar-logo-subtitle">Sistem Administrasi<br>Pariwisata & Homestay Desa</p>
                 </div>
 
@@ -1498,7 +1515,7 @@
 
                             <!-- Settings Item -->
                             <div class="settings-item">
-                                <i class="mdi mdi-cog"></i>
+                                <i class="mdi mdi-settings"></i>
                                 <span>Settings</span>
                             </div>
 
@@ -1521,7 +1538,7 @@
                         <div>
                             <h1 class="card-title">Dashboard Overview</h1>
                             <p class="card-subtitle">
-                                Selamat datang <span class="welcome-message">{{ Auth::user()->name ?? 'Admin' }}</span> di dashboard Bina Desa
+                                Selamat datang <span class="welcome-message">{{ Auth::user()->name ?? 'Admin' }}</span> di dashboard Pariwisata Desa
                             </p>
                         </div>
                         <div class="period-selector">
@@ -1852,7 +1869,7 @@
                         <div class="card-header-section" style="margin-bottom: 30px;">
                             <div>
                                 <h1 class="card-title">Halaman Pengembang</h1>
-                                <p class="card-subtitle">Informasi developer dan kontributor sistem Bina Desa</p>
+                                <p class="card-subtitle">Informasi developer dan kontributor sistem Pariwisata Desa</p>
                             </div>
                             <div class="welcome-message" style="background: linear-gradient(135deg, #667eea, #764ba2); padding: 8px 20px; border-radius: 30px; color: white;">
                                 <i class="mdi mdi-code-tags"></i> Developer Area
@@ -1863,9 +1880,12 @@
                         <div class="developer-profile-card">
                             <!-- Profile Header -->
                             <div class="developer-profile-header">
-                                <div class="developer-avatar">
-                                    <i class="mdi mdi-account-circle"></i>
-                                </div>
+                               <div class="developer-avatar">
+    <!-- Foto Profile Pengembang -->
+    <img src="{{ asset('assets-admin/images/fotofaras.jpg') }}"
+         alt="Faras Zakia Indrani"
+         onerror="this.onerror=null; this.src='{{ asset('assets-admin/images/default-profile.jpg') }}';">
+</div>
                                 <div class="developer-info">
                                     <h1 class="developer-name">FARAS ZAKIA INDRANI</h1>
                                     <div class="developer-title">
@@ -1893,8 +1913,8 @@
                                             <i class="mdi mdi-instagram"></i>
                                         </a>
                                         <a href="https://github.com/faraspcr" target="_blank" class="social-link social-github">
-                                            <i class="mdi mdi-github"></i>
-                                        </a>
+    <i class="fa fa-github" aria-hidden="true"></i>
+</a>
                                         <a href="https://www.linkedin.com/in/faras-zakia-indrani-29b4a6360/" target="_blank" class="social-link social-linkedin">
                                             <i class="mdi mdi-linkedin"></i>
                                         </a>
@@ -1914,7 +1934,7 @@
                             <!-- Copyright Notice -->
                             <div style="margin-top: 30px; padding: 15px; background: #f8f9fa; border-radius: 10px; text-align: center;">
                                 <p style="margin: 0; color: #6c757d; font-size: 0.9rem;">
-                                    <i class="mdi mdi-copyright"></i> 2024 Sistem Bina Desa v2.1.0<br>
+                                    <i class="mdi mdi-copyright"></i> 2024 Sistem Pariwisata Desa v2.1.0<br>
                                     Dikembangkan dengan <i class="mdi mdi-heart" style="color: #e74c3c;"></i> oleh Faras Zakia Indrani
                                 </p>
                                 <div style="margin-top: 10px; font-size: 0.8rem; color: #adb5bd;">
@@ -1932,7 +1952,7 @@
                     <div class="footer-inner-wraper">
                         <div class="d-sm-flex justify-content-center justify-content-sm-between">
                             <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">
-                                &copy; 2024 Bina Desa - Sistem Manajemen Desa
+                                &copy; 2024 Pariwisata Desa - Sistem Manajemen Desa
                             </span>
                             <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">
                                 Versi 2.1.0 | Terakhir update: <span id="currentDate"></span>
@@ -2286,7 +2306,7 @@
                 whatsappFloat.addEventListener('click', function() {
                     const phoneNumber = '6281234567890';
                     const defaultMessage =
-                        'Halo Admin Bina Desa! Saya perlu bantuan terkait sistem Bina Desa. Bisa dibantu?';
+                        'Halo Admin Pariwisata Desa! Saya perlu bantuan terkait sistem Pariwisata Desa. Bisa dibantu?';
                     const encodedMessage = encodeURIComponent(defaultMessage);
                     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
                     window.open(whatsappUrl, '_blank');

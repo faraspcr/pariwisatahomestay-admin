@@ -39,6 +39,7 @@ Route::middleware(['checkislogin'])->group(function () {
         Route::resource('user', UserController::class);
         Route::resource('warga', WargaController::class);
         Route::resource('destinasiwisata', DestinasiWisataController::class);
+        Route::resource('kamarhomestay', KamarHomestayController::class);
 
         // KAMAR HOMESTAY - ADMIN (SEDERHANA TANPA DUPLIKAT)
         Route::get('kamar_homestay', [KamarHomestayController::class, 'index'])->name('kamar_homestay.index');
@@ -82,9 +83,6 @@ Route::middleware(['checkislogin'])->group(function () {
         Route::put('homestay/{id}', [HomestayController::class, 'update'])->name('homestay.update');
         Route::delete('homestay/{id}', [HomestayController::class, 'destroy'])->name('homestay.destroy');
 
-        // Juga berikan akses ke route 'kamar.my' untuk admin
-        Route::get('kamar-homestay-saya', [KamarHomestayController::class, 'index'])->name('kamar.my');
-
         // Booking Homestay
         Route::get('booking-homestay', [BookingHomestayController::class, 'index'])->name('booking-homestay.index');
         Route::get('booking-homestay/{id}', [BookingHomestayController::class, 'show'])->name('booking-homestay.show');
@@ -97,6 +95,11 @@ Route::middleware(['checkislogin'])->group(function () {
         Route::delete('ulasan_wisata/{id}', [UlasanWisataController::class, 'destroy'])->name('ulasan_wisata.destroy');
     });
 
+    // ============ ADMIN & PEMILIK ============
+    Route::middleware(['checkrole:admin,pemilik'])->group(function () {
+        Route::get('kamar-homestay-saya', [KamarHomestayController::class, 'index'])->name('kamar.my');
+    });
+
     // ============ HANYA PEMILIK ============
     Route::middleware(['checkrole:pemilik'])->group(function () {
         // Homestay Saya
@@ -105,9 +108,6 @@ Route::middleware(['checkislogin'])->group(function () {
         Route::post('homestay-saya', [HomestayController::class, 'store'])->name('homestay.my.store');
         Route::get('homestay-saya/{id}/edit', [HomestayController::class, 'edit'])->name('homestay.my.edit');
         Route::put('homestay-saya/{id}', [HomestayController::class, 'update'])->name('homestay.my.update');
-
-        // Kamar Homestay Saya
-        Route::get('kamar-homestay-saya', [KamarHomestayController::class, 'index'])->name('kamar.my');
 
         // CRUD kamar untuk pemilik - GUNAKAN ROUTE YANG BERBEDA
         Route::prefix('kamar-pemilik')->group(function () {
@@ -190,7 +190,7 @@ Route::middleware(['checkislogin'])->group(function () {
             ->name('booking-homestay.rename-file');
     });
 
-    // ============ ADMIN & PEMILIK ============
+    // ============ ADMIN & PEMILIK (UNTUK FILE UPLOAD) ============
     Route::middleware(['checkrole:admin,pemilik'])->group(function () {
         // File upload untuk homestay
         Route::post('homestay/{id}/upload-files', [HomestayController::class, 'uploadFiles'])
