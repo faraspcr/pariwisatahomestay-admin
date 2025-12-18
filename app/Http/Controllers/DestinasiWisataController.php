@@ -65,8 +65,6 @@ class DestinasiWisataController extends Controller
                 // Simpan dengan nama asli + timestamp agar unique
                 $originalName = $file->getClientOriginalName();
                 $filename = time() . '_' . $originalName;
-
-                // **TAMBAHKAN INI SAJA: Simpan dengan cara yang sama seperti teman Anda**
                 $file->storeAs('destinasi_wisata', $filename, 'public'); // TAMBAH: , 'public'
 
                 // SIMPAN KE MEDIA - TAMBAHKAN PATH LENGKAP
