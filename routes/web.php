@@ -32,6 +32,8 @@ Route::middleware(['checkislogin'])->group(function () {
         Route::get('/', [UserController::class, 'myProfile'])->name('user.my-profile');
         Route::put('/', [UserController::class, 'updateMyProfile'])->name('user.update-my-profile');
         Route::delete('/photo', [UserController::class, 'deleteMyProfilePhoto'])->name('user.delete-my-profile-photo');
+        Route::get('/my-profile', [UserController::class, 'myProfile'])->name('user.my-profile');
+Route::post('/my-profile', [UserController::class, 'updateMyProfile'])->name('user.update-my-profile');
     });
 
     // ============ HANYA ADMIN ============

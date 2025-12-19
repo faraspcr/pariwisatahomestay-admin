@@ -71,7 +71,260 @@
             font-size: 16px !important;
         }
 
-        /* SIDEBAR LOGO - DIUBAH UKURANNYA SEPERTI TEMPLATE LAMA */
+        /* ==================== PROFILE SECTION STYLES ==================== */
+        /* Avatar dengan foto profil */
+        .profile-avatar-circle {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            border: 2px solid white;
+        }
+
+        .nav-profile .profile-avatar-circle {
+            width: 40px;
+            height: 40px;
+            font-size: 1.2rem;
+        }
+
+        /* Avatar yang menampilkan gambar profil */
+        .avatar-with-image {
+            background: none !important;
+        }
+
+        .avatar-with-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .avatar-with-image i {
+            display: none;
+        }
+
+        .nav-profile .nav-profile-text {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            line-height: 1.2 !important;
+        }
+
+        .nav-profile .profile-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 2px;
+        }
+
+        .nav-profile .profile-email {
+            font-size: 12px;
+            color: #666;
+            max-width: 180px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Dropdown Profile Menu */
+        .profile-dropdown-header {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            padding: 25px 20px;
+            text-align: center;
+            color: white;
+            position: relative;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .profile-avatar-large {
+            margin-bottom: 15px;
+        }
+
+        .avatar-circle {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            border: 3px solid white;
+        }
+
+        /* Avatar besar dengan gambar */
+        .avatar-circle.has-image {
+            background: none !important;
+        }
+
+        .avatar-circle.has-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .avatar-circle.has-image i {
+            display: none;
+        }
+
+        .avatar-circle i {
+            font-size: 2.5rem;
+            color: #28a745;
+        }
+
+        .profile-info-header h5 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin: 0 0 5px 0;
+            color: white;
+        }
+
+        .profile-info-header p {
+            font-size: 0.9rem;
+            margin: 0 0 5px 0;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .user-role-badge {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .user-role-badge i {
+            margin-right: 5px;
+            font-size: 0.8rem;
+        }
+
+        .profile-dropdown-body {
+            padding: 15px 0;
+        }
+
+        .dropdown-item-section {
+            padding: 0 15px;
+        }
+
+        .dropdown-section-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #6c757d;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin: 0 0 10px 0;
+            padding-left: 10px;
+        }
+
+        /* PROFIL ITEM STYLE - TAMPILAN VERTIKAL RAPI */
+        .profile-item {
+            display: flex !important;
+            align-items: center !important;
+            padding: 12px 15px !important;
+            border-radius: 8px !important;
+            margin: 5px 10px !important;
+            transition: all 0.3s ease !important;
+            border: none !important;
+            color: #333 !important;
+            background: transparent !important;
+            text-align: left;
+            width: calc(100% - 20px);
+        }
+
+        .profile-item:hover {
+            background-color: #f8f9fa !important;
+            transform: translateX(5px) !important;
+            text-decoration: none !important;
+        }
+
+        .profile-item .item-icon {
+            width: 36px;
+            height: 36px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            color: #28a745;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .profile-item .item-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .profile-item .item-title {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 3px;
+            line-height: 1.2;
+        }
+
+        .profile-item .item-subtitle {
+            display: block;
+            font-size: 0.75rem;
+            color: #6c757d;
+            line-height: 1.2;
+        }
+
+        .profile-item .mdi-chevron-right {
+            color: #adb5bd;
+            font-size: 1.1rem;
+            margin-left: 10px;
+            flex-shrink: 0;
+        }
+
+        /* LOGOUT ITEM STYLE */
+        .logout-section .logout-item {
+            background-color: rgba(220, 53, 69, 0.05) !important;
+            border: 1px solid rgba(220, 53, 69, 0.1) !important;
+        }
+
+        .logout-section .logout-item:hover {
+            background-color: rgba(220, 53, 69, 0.1) !important;
+            border-color: rgba(220, 53, 69, 0.2) !important;
+        }
+
+        .logout-section .item-icon {
+            background: rgba(220, 53, 69, 0.1) !important;
+            color: #dc3545 !important;
+        }
+
+        /* ITEM TANPA ICON CHEVRON */
+        .profile-item.no-chevron .mdi-chevron-right {
+            display: none;
+        }
+
+        /* MEMASTIKAN SEMUA ITEM SEJAJAR VERTIKAL */
+        .profile-item-container {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        .dropdown-divider {
+            margin: 10px 15px !important;
+            border-color: #e9ecef !important;
+        }
+
+        /* ==================== SIDEBAR PROFILE STYLES ==================== */
         .sidebar-logo-section {
             text-align: center;
             padding: 15px 10px;
@@ -208,6 +461,62 @@
             margin-top: 15px !important;
             padding: 10px 5px !important;
             border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+
+        /* Sidebar Profile dengan Foto */
+        .user-avatar-small {
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+            margin-right: 10px;
+            box-shadow: 0 3px 10px rgba(40, 167, 69, 0.3);
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            flex-shrink: 0;
+        }
+
+        /* Avatar kecil dengan gambar */
+        .user-avatar-small.has-image {
+            background: none !important;
+        }
+
+        .user-avatar-small.has-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-avatar-small.has-image i {
+            display: none;
+        }
+
+        .user-display-section {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.2), rgba(32, 201, 151, 0.1));
+            border-radius: 6px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+
+        .user-info-small h5 {
+            margin: 0;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .user-info-small p {
+            margin: 0;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.8);
         }
 
         /* Original CSS styles tetap ada di bawah */
@@ -630,7 +939,7 @@
             font-weight: 600;
         }
 
-        /* Profile Section Styles */
+        /* Profile Display Styles */
         .profile-display {
             display: flex;
             align-items: center;
@@ -700,6 +1009,8 @@
             display: flex !important;
             align-items: center !important;
             padding: 8px 15px !important;
+            border-radius: 30px !important;
+            transition: all 0.3s ease !important;
         }
 
         .navbar-nav-right .nav-profile .nav-profile-img {
@@ -713,8 +1024,8 @@
 
         /* Hover effect untuk profile header */
         .navbar-nav-right .nav-profile .nav-link:hover {
-            background: rgba(0, 0, 0, 0.05);
-            border-radius: 30px;
+            background: rgba(0, 0, 0, 0.05) !important;
+            transform: translateY(-2px) !important;
         }
 
         /* New Cards Section */
@@ -798,6 +1109,29 @@
             .sidebar-logo-subtitle {
                 font-size: 10px !important;
             }
+
+            /* Profile Responsive */
+            .nav-profile .profile-email {
+                max-width: 120px;
+            }
+
+            .profile-dropdown-header {
+                padding: 20px 15px;
+            }
+
+            .avatar-circle {
+                width: 60px;
+                height: 60px;
+            }
+
+            .avatar-circle i {
+                font-size: 2rem;
+            }
+
+            .profile-item {
+                padding: 10px 12px !important;
+                margin: 3px 8px !important;
+            }
         }
 
         /* Visitor Stats Badge */
@@ -851,43 +1185,6 @@
             background: rgba(255, 255, 255, 0.05);
             border-radius: 8px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .user-display-section {
-            display: flex;
-            align-items: center;
-            padding: 8px;
-            background: linear-gradient(135deg, rgba(40, 167, 69, 0.2), rgba(32, 201, 151, 0.1));
-            border-radius: 6px;
-            margin-bottom: 10px;
-            border: 1px solid rgba(40, 167, 69, 0.3);
-        }
-
-        .user-avatar-small {
-            width: 35px;
-            height: 35px;
-            background: linear-gradient(135deg, #28a745, #20c997);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1rem;
-            margin-right: 10px;
-            box-shadow: 0 3px 10px rgba(40, 167, 69, 0.3);
-        }
-
-        .user-info-small h5 {
-            margin: 0;
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: white;
-        }
-
-        .user-info-small p {
-            margin: 0;
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.8);
         }
 
         .settings-item {
@@ -1339,51 +1636,119 @@
                         </div>
                     </li>
 
+                    <!-- ==================== PROFILE SECTION DENGAN FOTO PROFIL ==================== -->
+                    @php
+                        $user = Auth::user();
+                        $hasProfilePicture = !empty($user->profile_picture);
+                    @endphp
+
                     <li class="nav-item nav-profile dropdown">
                         <a class="nav-link dropdown-toggle d-flex align-items-center" id="profileDropdown"
                             href="#" data-toggle="dropdown" aria-expanded="false">
                             <div class="nav-profile-img mr-3">
-                                <div class="profile-avatar" style="width: 35px; height: 35px; font-size: 1.2rem;">
-                                    <i class="mdi mdi-account"></i>
+                                <div class="profile-avatar-circle {{ $hasProfilePicture ? 'avatar-with-image' : '' }}">
+                                    @if($hasProfilePicture)
+                                        <img src="{{ asset('storage/' . $user->profile_picture) }}"
+                                             alt="{{ $user->name }}"
+                                             onerror="this.onerror=null; this.classList.add('error'); this.parentElement.innerHTML='<i class=\"mdi mdi-account\"></i>';">
+                                    @else
+                                        <i class="mdi mdi-account"></i>
+                                    @endif
                                 </div>
                             </div>
-                            <div class="nav-profile-text d-flex align-items-center">
-                                <p class="mb-0 text-black">{{ Auth::user()->name ?? 'Guest' }}</p>
+                            <div class="nav-profile-text d-flex flex-column">
+                                <span class="profile-name">{{ $user->name ?? 'Guest' }}</span>
+                                <span class="profile-email">{{ $user->email ?? 'admin@example.com' }}</span>
                             </div>
                         </a>
-                        <div class="dropdown-menu navbar-dropdown dropdown-menu-right p-0 border-0 font-size-sm"
-                            aria-labelledby="profileDropdown" data-x-placement="bottom-end">
-                            <div class="p-3 text-center bg-primary">
-                                <div class="profile-avatar"
-                                    style="margin: 0 auto 15px; width: 70px; height: 70px; font-size: 2rem;">
-                                    <i class="mdi mdi-account"></i>
+                        <div class="dropdown-menu navbar-dropdown dropdown-menu-right p-0 border-0"
+                            aria-labelledby="profileDropdown" data-x-placement="bottom-end" style="min-width: 300px;">
+
+                            <!-- Profile Header -->
+                            <div class="profile-dropdown-header">
+                                <div class="profile-avatar-large">
+                                    <div class="avatar-circle {{ $hasProfilePicture ? 'has-image' : '' }}">
+                                        @if($hasProfilePicture)
+                                            <img src="{{ asset('storage/' . $user->profile_picture) }}"
+                                                 alt="{{ $user->name }}"
+                                                 onerror="this.onerror=null; this.classList.add('error'); this.parentElement.innerHTML='<i class=\"mdi mdi-account\"></i>';">
+                                        @else
+                                            <i class="mdi mdi-account"></i>
+                                        @endif
+                                    </div>
                                 </div>
-                                <p class="mt-2 mb-0 text-white" style="font-weight: 700;">{{ Auth::user()->name ?? 'Guest' }}</p>
-                                <small class="text-white">{{ Auth::user()->email ?? 'admin@example.com' }}</small>
+                                <div class="profile-info-header">
+                                    <h5>{{ $user->name ?? 'Guest' }}</h5>
+                                    <p>{{ $user->email ?? 'admin@example.com' }}</p>
+                                    <div class="user-role-badge">
+                                        <i class="mdi mdi-shield-check"></i> {{ strtoupper($user->role ?? 'ADMIN') }}
+                                    </div>
+                                </div>
                             </div>
-                            <div class="p-2">
-                                <h5 class="dropdown-header text-uppercase pl-2 text-dark">Akun Pengguna</h5>
-                                <a class="dropdown-item py-2 d-flex align-items-center justify-content-between"
-                                    href="#">
-                                    <span>Profil Saya</span>
-                                    <i class="mdi mdi-account-outline ml-1"></i>
-                                </a>
-                                <a class="dropdown-item py-2 d-flex align-items-center justify-content-between"
-                                    href="javascript:void(0)">
-                                    <span>Pengaturan</span>
-                                    <i class="mdi mdi-settings"></i>
-                                </a>
-                                <a class="dropdown-item py-2 d-flex align-items-center justify-content-between" href="#" style="cursor: default;">
-                                    <span>Login Terakhir</span>
-                                    <span class="text-muted">{{ session('last_login') ?? now()->format('d/m/Y H:i') }}</span>
-                                </a>
-                                <div role="separator" class="dropdown-divider"></div>
-                                <a class="dropdown-item py-2 d-flex align-items-center justify-content-between"
-                                    href="#"
-                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                    <span>Logout</span>
-                                    <i class="mdi mdi-logout ml-1"></i>
-                                </a>
+
+                            <!-- Profile Menu Items - DIPERBAIKI AGAR RAPI DAN VERTIKAL -->
+                            <div class="profile-dropdown-body">
+                                <div class="dropdown-item-section">
+                                    <h6 class="dropdown-section-title">AKUN PENGGUNA</h6>
+
+                                    <div class="profile-item-container">
+                                        <!-- Profil Saya -->
+                                        <a class="dropdown-item profile-item" href="{{ route('user.my-profile') }}">
+                                            <div class="item-icon">
+                                                <i class="mdi mdi-account-circle"></i>
+                                            </div>
+                                            <div class="item-content">
+                                                <span class="item-title">Profil Saya</span>
+                                                <span class="item-subtitle">Kelola informasi profil Anda</span>
+                                            </div>
+                                            <i class="mdi mdi-chevron-right"></i>
+                                        </a>
+
+                                        <!-- Pengaturan -->
+                                        <a class="dropdown-item profile-item" href="#">
+                                            <div class="item-icon">
+                                                <i class="mdi mdi-cog"></i>
+                                            </div>
+                                            <div class="item-content">
+                                                <span class="item-title">Pengaturan</span>
+                                                <span class="item-subtitle">Personalasi sistem Anda</span>
+                                            </div>
+                                            <i class="mdi mdi-chevron-right"></i>
+                                        </a>
+
+                                        <!-- Login Terakhir -->
+                                        <div class="dropdown-item profile-item no-chevron">
+                                            <div class="item-icon">
+                                                <i class="mdi mdi-clock-outline"></i>
+                                            </div>
+                                            <div class="item-content">
+                                                <span class="item-title">Login Terakhir</span>
+                                                <span class="item-subtitle">
+                                                    {{ session('last_login') ?? now()->format('Y-m-d H:i:s') }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="dropdown-divider"></div>
+
+                                <!-- Logout Section -->
+                                <div class="logout-section">
+                                    <div class="profile-item-container">
+                                        <a class="dropdown-item logout-item" href="#"
+                                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                            <div class="item-icon">
+                                                <i class="mdi mdi-logout"></i>
+                                            </div>
+                                            <div class="item-content">
+                                                <span class="item-title">Logout</span>
+                                                <span class="item-subtitle">Keluar dari sistem</span>
+                                            </div>
+                                            <i class="mdi mdi-chevron-right"></i>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </li>
@@ -1499,25 +1864,36 @@
                         </div>
                     </li>
 
-                    <!-- User Display & Settings Section - DIBAWAH MASTER DATA -->
+                    <!-- User Display & Settings Section - DIBAWAH MASTER DATA DENGAN FOTO PROFIL -->
                     <li class="nav-item sidebar-user-actions mt-4">
                         <div class="settings-logout-section">
-                            <!-- User Info Display -->
+                            @php
+                                $user = Auth::user();
+                                $hasProfilePicture = !empty($user->profile_picture);
+                            @endphp
+
+                            <!-- User Info Display dengan Foto Profil -->
                             <div class="user-display-section">
-                                <div class="user-avatar-small">
-                                    <i class="mdi mdi-account"></i>
+                                <div class="user-avatar-small {{ $hasProfilePicture ? 'has-image' : '' }}">
+                                    @if($hasProfilePicture)
+                                        <img src="{{ asset('storage/' . $user->profile_picture) }}"
+                                             alt="{{ $user->name }}"
+                                             onerror="this.onerror=null; this.classList.add('error'); this.parentElement.innerHTML='<i class=\"mdi mdi-account\"></i>';">
+                                    @else
+                                        <i class="mdi mdi-account"></i>
+                                    @endif
                                 </div>
                                 <div class="user-info-small">
-                                    <h5>{{ Auth::user()->name ?? 'Guest' }}</h5>
-                                    <p>ADMIN PARIWISATA DESA</p>
+                                    <h5>{{ $user->name ?? 'Guest' }}</h5>
+                                    <p>{{ strtoupper($user->role ?? 'ADMIN') }} PARIWISATA DESA</p>
                                 </div>
                             </div>
 
                             <!-- Settings Item -->
-                            <div class="settings-item">
+                            <a class="settings-item" href="{{ route('user.my-profile') }}">
                                 <i class="mdi mdi-settings"></i>
                                 <span>Settings</span>
-                            </div>
+                            </a>
 
                             <!-- Logout Item -->
                             <a href="#" class="logout-item-sidebar"
@@ -1868,7 +2244,7 @@
                         <!-- Developer Header -->
                         <div class="card-header-section" style="margin-bottom: 30px;">
                             <div>
-                                <h1 class="card-title">Halaman Pengembang</h1>
+                                <h1 class="card-title">Profile Pengembang</h1>
                                 <p class="card-subtitle">Informasi developer dan kontributor sistem Pariwisata Desa</p>
                             </div>
                             <div class="welcome-message" style="background: linear-gradient(135deg, #667eea, #764ba2); padding: 8px 20px; border-radius: 30px; color: white;">
@@ -1931,31 +2307,28 @@
                                 <p class="quote-author">— Faras Zakia Indrani</p>
                             </div>
 
-                            <!-- Copyright Notice -->
-                            <div style="margin-top: 30px; padding: 15px; background: #f8f9fa; border-radius: 10px; text-align: center;">
-                                <p style="margin: 0; color: #6c757d; font-size: 0.9rem;">
-                                    <i class="mdi mdi-copyright"></i> 2024 Sistem Pariwisata Desa v2.1.0<br>
-                                    Dikembangkan dengan <i class="mdi mdi-heart" style="color: #e74c3c;"></i> oleh Faras Zakia Indrani
-                                </p>
-                                <div style="margin-top: 10px; font-size: 0.8rem; color: #adb5bd;">
-                                    <i class="mdi mdi-shield-check"></i> Hak Cipta Dilindungi | Privacy Policy | Terms of Service
-                                </div>
-                            </div>
+
+
                         </div>
                     </div>
                     <!-- ==================== END DEVELOPER PAGE ==================== -->
 
                 </div>
 
-                <!-- ==================== START FOOTER ==================== -->
+                <!-- ==================== START FOOTER YANG DIUBAH ==================== -->
                 <footer class="footer">
                     <div class="footer-inner-wraper">
-                        <div class="d-sm-flex justify-content-center justify-content-sm-between">
-                            <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">
-                                &copy; 2024 Pariwisata Desa - Sistem Manajemen Desa
-                            </span>
-                            <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">
-                                Versi 2.1.0 | Terakhir update: <span id="currentDate"></span>
+                        <div class="text-center">
+                            <span class="text-muted d-block">
+                                <div style="margin-bottom: 10px; font-size: 14px; color: #666;">
+                                    2024 Sistem Pariwisata Desa v2.1.0
+                                </div>
+                                <div style="margin-bottom: 10px; font-size: 13px; color: #888;">
+                                    Dikembangkan dengan <i class="mdi mdi-heart" style="color: #e74c3c;"></i> oleh Faras Zakia Indrani
+                                </div>
+                                <div style="margin-top: 15px; font-size: 12px; color: #999; padding-top: 15px; border-top: 1px solid #eee;">
+                                    <i class="mdi mdi-shield-check"></i> Hak Cipta Dilindungi | Privacy Policy | Terms of Service
+                                </div>
                             </span>
                         </div>
                     </div>
@@ -2008,15 +2381,6 @@
                     welcomeMessage.textContent = userName;
                 }
             @endif
-
-            // Set current date
-            const now = new Date();
-            const options = {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
-            };
-            document.getElementById('currentDate').textContent = now.toLocaleDateString('id-ID', options);
 
             // Initialize Chart.js
             let visitorChart = null;
@@ -2347,6 +2711,19 @@
                     this.style.transform = 'translateY(0)';
                 });
             });
+
+            // Profile Dropdown Animation
+            const profileDropdown = document.getElementById('profileDropdown');
+            if (profileDropdown) {
+                profileDropdown.addEventListener('click', function() {
+                    setTimeout(() => {
+                        const dropdownMenu = this.nextElementSibling;
+                        if (dropdownMenu && dropdownMenu.classList.contains('show')) {
+                            dropdownMenu.style.animation = 'slideDown 0.3s ease';
+                        }
+                    }, 10);
+                });
+            }
 
             // Simulate real-time data updates
             function simulateRealTimeUpdates() {
