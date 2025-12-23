@@ -25,53 +25,580 @@
 
     <!-- ==================== START CSS ==================== -->
     <style>
-        /* HEADER LOGO - DENGAN LOGO DAN TEKS */
-        .navbar-brand-wrapper .brand-logo {
-            padding: 0 !important;
-            height: 60px !important;
-            display: flex !important;
-            align-items: center !important;
+        /* ==================== HEADER YANG DIPERBAIKI ==================== */
+        .navbar.default-layout-navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1030;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
-        .header-logo {
-            width: 40px;
-            height: 40px;
-            margin-right: 10px;
+        .navbar-brand-wrapper {
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
+            width: auto;
+            min-width: 250px;
+            padding: 0 15px;
         }
 
-        .header-logo img {
+        .brand-logo {
+            display: flex !important;
+            align-items: center !important;
+            text-decoration: none !important;
+            height: 70px !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        /* Container utama header dengan flex horizontal */
+        .header-logo-container {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: flex-start !important;
+            gap: 15px !important;
+            width: 100% !important;
+            height: 100% !important;
+            padding: 5px 0 !important;
+            overflow: hidden !important;
+        }
+
+        /* Wrapper untuk logo - hanya satu logo */
+        .logo-wrapper {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            min-width: 60px !important;
+            height: 60px !important;
+            flex-shrink: 0;
+        }
+
+        /* Logo gambar - ukuran proporsional */
+        .header-logo-img {
             width: 100% !important;
             height: 100% !important;
             object-fit: contain !important;
             display: block !important;
             background: none !important;
             border: none !important;
-            box-shadow: none !important;
         }
 
-        .header-logo-text {
+        /* Container teks */
+        .header-text-container {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            justify-content: center !important;
+            line-height: 1.2 !important;
+            max-width: 280px !important;
+            min-height: 60px !important;
+            overflow: hidden !important;
+        }
+
+        /* Judul utama - satu baris */
+        .header-title {
+            color: #28a745 !important;
+            font-size: 16.1px !important;
+            font-weight: 800 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            text-align: center !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            letter-spacing: 0.5px;
+        }
+
+        /* Subjudul - maksimal dua baris */
+        .header-subtitle {
+            color: #6c757d !important;
+            font-size: 8.7px !important;
+            font-weight: 500 !important;
+            margin: 2px 0 0 0 !important;
+            padding: 0 !important;
+            text-align: center !important;
+            white-space: normal !important;
+            line-height: 1.3 !important;
+            overflow: hidden !important;
+            display: -webkit-box !important;
+            -webkit-line-clamp: 2 !important;
+            -webkit-box-orient: vertical !important;
+            max-width: 100% !important;
+        }
+
+
+
+        /* Navbar menu wrapper */
+        .navbar-menu-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+
+        /* Navbar nav right */
+        .navbar-nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Hamburger menu button */
+        .navbar-toggler {
+            border: none;
+            background: transparent;
+            color: #495057;
+            font-size: 1.5rem;
+            padding: 8px;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-toggler:hover {
             color: #28a745;
-            font-size: 20px;
-            font-weight: bold;
+            transform: scale(1.1);
+        }
+
+        /* Profile dropdown */
+        .nav-profile .nav-link {
+            padding: 5px 12px !important;
+            border-radius: 20px !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .nav-profile .nav-link:hover {
+            background: rgba(40, 167, 69, 0.1) !important;
+        }
+
+        /* Responsive design untuk header */
+        @media (max-width: 991px) {
+            .navbar-brand-wrapper {
+                min-width: 200px;
+            }
+
+            .header-title {
+                font-size: 16px !important;
+            }
+
+            .header-subtitle {
+                font-size: 10px !important;
+                -webkit-line-clamp: 1 !important;
+            }
+
+            .search-field {
+                max-width: 300px;
+                margin: 0 10px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar-brand-wrapper {
+                min-width: 180px;
+                padding: 0 10px;
+            }
+
+            .logo-wrapper {
+                min-width: 50px !important;
+                height: 50px !important;
+            }
+
+            .header-title {
+                font-size: 14px !important;
+            }
+
+            .header-subtitle {
+                font-size: 9px !important;
+                -webkit-line-clamp: 1 !important;
+            }
+
+            .search-field {
+                display: none !important;
+            }
+
+            .navbar-menu-wrapper {
+                padding: 0 10px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .navbar-brand-wrapper {
+                min-width: 150px;
+            }
+
+            .header-text-container {
+                max-width: 120px !important;
+            }
+
+            .header-title {
+                font-size: 12px !important;
+                white-space: normal !important;
+                -webkit-line-clamp: 1 !important;
+            }
+
+            .header-subtitle {
+                display: none !important;
+            }
+        }
+
+        /* Pastikan logo tidak duplikat saat sidebar collapse */
+        @media (max-width: 991px) {
+            .navbar-brand-wrapper .brand-logo {
+                display: flex !important;
+            }
+
+            .navbar-brand-wrapper .brand-logo-mini {
+                display: none !important;
+            }
+        }
+
+        /* ==================== HEADER RESPONSIVE FIXES ==================== */
+        /* Responsive design untuk header - Mode Mobile/Split Screen */
+        @media (max-width: 991px) {
+            /* Sembunyikan teks header di bagian kiri */
+            .header-text-container {
+                display: none !important;
+            }
+
+            /* Hanya tampilkan logo saja */
+            .navbar-brand-wrapper {
+                min-width: auto !important;
+                width: auto !important;
+            }
+
+            .logo-wrapper {
+                min-width: 50px !important;
+                height: 50px !important;
+            }
+
+            /* Atur ulang navbar menu wrapper */
+            .navbar-menu-wrapper {
+                justify-content: flex-end !important;
+                padding: 0 10px !important;
+                flex: 1;
+            }
+
+            /* Posisikan notification dan profile ke kanan */
+            .navbar-nav-right {
+                display: flex !important;
+                align-items: center !important;
+                gap: 5px !important;
+                margin-left: auto !important;
+            }
+
+            /* Hamburger menu di kiri */
+            .navbar-toggler[data-toggle="minimize"] {
+                order: -1;
+                margin-right: 10px;
+            }
+
+            /* Notification bell */
+            .nav-item.dropdown {
+                margin-right: 5px;
+            }
+
+            /* Profile section - tampilkan hanya avatar di mobile */
+            .nav-profile .nav-profile-text {
+                display: none !important;
+            }
+
+            .nav-profile .nav-profile-img {
+                margin-right: 0 !important;
+            }
+
+            /* Profile dropdown tetap full */
+            .nav-profile .dropdown-menu {
+                min-width: 280px !important;
+            }
+        }
+
+        /* Untuk tampilan sangat kecil (mobile kecil) */
+        @media (max-width: 576px) {
+            .navbar-brand-wrapper {
+                min-width: 60px !important;
+            }
+
+            .logo-wrapper {
+                min-width: 45px !important;
+                height: 45px !important;
+            }
+
+            /* Search field disembunyikan di mobile */
+            .search-field {
+                display: none !important;
+            }
+
+            /* Perkecil notification icon */
+            .nav-link.count-indicator {
+                padding: 5px !important;
+            }
+
+            /* Perkecil profile avatar */
+            .nav-profile .profile-avatar-circle {
+                width: 35px !important;
+                height: 35px !important;
+            }
+        }
+
+        /* Untuk tampilan desktop/laptop - tetap seperti semula */
+        @media (min-width: 992px) {
+            .navbar-brand-wrapper {
+                min-width: 250px !important;
+            }
+
+            .header-text-container {
+                display: flex !important;
+            }
+
+            .navbar-menu-wrapper {
+                justify-content: space-between !important;
+            }
+
+            .nav-profile .nav-profile-text {
+                display: flex !important;
+            }
+        }
+
+        /* ==================== SLIDESHOW YANG DIPERBAIKI ==================== */
+        .slideshow-section {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 30px 0 40px 0;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Slideshow slides */
+        .slideshow-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 1;
+        }
+
+        .slideshow-slide.active {
+            opacity: 1;
+            z-index: 2;
+        }
+
+        /* Carousel overlay - DIPERBAIKI: overlay hanya untuk gambar, tidak untuk teks */
+        .carousel-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 3;
+            pointer-events: none; /* Agar tidak mengganggu interaksi dengan konten */
+        }
+
+        /* Slideshow content - tanpa overlay di dalam teks */
+        .slideshow-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 4;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 30px;
+            color: white;
+            pointer-events: none; /* Agar tidak mengganggu slider */
+        }
+
+        /* Container untuk Selamat Datang dan Nama - SEJAJAR */
+        .welcome-container {
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 10px;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+            pointer-events: auto; /* Mengizinkan seleksi teks */
         }
 
-        .brand-logo-mini .header-logo {
-            width: 35px !important;
-            height: 35px !important;
-            margin-right: 0 !important;
+        /* Selamat Datang - WARNA COKLAT dan TEBAL */
+        .welcome-title {
+            font-size: 2rem !important;
+            font-weight: 800 !important;
+            margin: 0 !important;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+            color: #FFFFFF !important;
+            line-height: 1.1;
+            pointer-events: auto;
         }
 
-        .brand-logo-mini .header-logo-text {
-            font-size: 16px !important;
+        /* Nama pengguna - PUTIH dan TEBAL */
+        .user-name {
+            font-size: 2rem !important;
+            font-weight: 800 !important;
+            color: #FFFFFF !important; /* Warna putih */
+            margin: 0 !important;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+            line-height: 1.1;
+            pointer-events: auto;
         }
 
-        /* ==================== PROFILE SECTION STYLES ==================== */
+        /* Dashboard Monitoring - PUTIH TANPA OVERLAY dalam teks */
+        .welcome-subtitle {
+            font-size: 1.2rem !important;
+            font-weight: 500 !important;
+            max-width: 800px;
+            line-height: 1.1;
+            margin: 0 !important;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
+            color: #FFFFFF !important; /* Warna putih */
+            padding: 10px 20px;
+            border-radius: 8px;
+            pointer-events: auto;
+        }
+
+        /* Carousel buttons */
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 5;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            pointer-events: auto;
+        }
+
+        .carousel-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .carousel-btn.prev {
+            left: 20px;
+        }
+
+        .carousel-btn.next {
+            right: 20px;
+        }
+
+        /* Slideshow controls */
+        .slideshow-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 5;
+            pointer-events: auto;
+        }
+
+        .slide-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .slide-indicator.active {
+            background: #28a745;
+            transform: scale(1.2);
+        }
+
+        /* Responsive slideshow */
+        @media (max-width: 768px) {
+            .slideshow-section {
+                height: 200px;
+                margin: 20px 0 30px 0;
+            }
+
+            .welcome-title {
+                font-size: 1.5rem !important;
+            }
+
+            .user-name {
+                font-size: 1.5rem !important;
+            }
+
+            .welcome-subtitle {
+                font-size: 1rem !important;
+                padding: 8px 15px;
+            }
+
+            .welcome-container {
+                gap: 5px;
+                margin-bottom: 15px;
+            }
+
+            .carousel-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .slideshow-section {
+                height: 180px;
+                margin: 15px 0 25px 0;
+            }
+
+            .welcome-title {
+                font-size: 1.2rem !important;
+            }
+
+            .user-name {
+                font-size: 1.2rem !important;
+            }
+
+            .welcome-subtitle {
+                font-size: 0.9rem !important;
+                padding: 6px 12px;
+            }
+
+            .slideshow-content {
+                padding: 20px;
+            }
+
+            .welcome-container {
+                flex-direction: column;
+                gap: 2px;
+                margin-bottom: 10px;
+            }
+        }
+
+        /* HAPUS Dashboard Overview */
+        .card-header-section {
+            display: none !important;
+        }
+
+        /* ==================== PROFILE SECTION STYLES TIDAK BERUBAH ==================== */
         /* Avatar dengan foto profil */
         .profile-avatar-circle {
             background: linear-gradient(135deg, #28a745, #20c997);
@@ -325,61 +852,6 @@
         }
 
         /* ==================== SIDEBAR PROFILE STYLES ==================== */
-        .sidebar-logo-section {
-            text-align: center;
-            padding: 15px 10px;
-            margin-bottom: 10px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .sidebar-logo {
-            margin: 0 auto 10px auto;
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: transparent !important;
-            border: none !important;
-            box-shadow: none !important;
-        }
-
-        .sidebar-logo img {
-            width: 60px !important;
-            height: 60px !important;
-            max-width: 100% !important;
-            max-height: 100% !important;
-            object-fit: contain !important;
-            object-position: center !important;
-            display: block !important;
-            margin: 0 auto !important;
-            background: none !important;
-            border: none !important;
-            outline: none !important;
-            box-shadow: none !important;
-            filter: none !important;
-            border-radius: 0 !important;
-            padding: 0 !important;
-            transition: none !important;
-        }
-
-        .sidebar-logo-title {
-            font-size: 16px !important;
-            font-weight: 700 !important;
-            color: white !important;
-            margin: 5px 0 !important;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3) !important;
-            letter-spacing: 0.5px !important;
-        }
-
-        .sidebar-logo-subtitle {
-            font-size: 11px !important;
-            color: rgba(255, 255, 255, 0.8) !important;
-            margin: 0 !important;
-            line-height: 1.3 !important;
-            font-weight: 300 !important;
-        }
-
         /* Sidebar Menu Items - DIUBAH UKURAN SEPERTI TEMPLATE LAMA */
         .nav {
             padding: 0 5px;
@@ -560,7 +1032,7 @@
             transform: translateY(-50%) rotate(180deg);
         }
 
-        /* Floating WhatsApp Button */
+        /* ==================== FLOATING WHATSAPP BUTTON ==================== */
         .whatsapp-float {
             position: fixed;
             width: 60px;
@@ -909,17 +1381,6 @@
         }
 
         /* Header Styles */
-        .card-header-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding: 15px 20px;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        }
-
         .card-title {
             font-size: 1.5rem;
             font-weight: 700;
@@ -1042,7 +1503,7 @@
             border-bottom: 2px solid #28a745;
         }
 
-        /* Responsive Design */
+        /* Responsive Design untuk bagian lain */
         @media (max-width: 768px) {
             .whatsapp-float {
                 width: 50px;
@@ -1069,45 +1530,10 @@
                 text-align: center;
             }
 
-            .card-header-section {
-                flex-direction: column;
-                text-align: center;
-                gap: 15px;
-            }
-
             .chart-header {
                 flex-direction: column;
                 gap: 15px;
                 text-align: center;
-            }
-
-            /* Header Logo Responsive */
-            .header-logo {
-                width: 35px !important;
-                height: 35px !important;
-            }
-
-            .header-logo-text {
-                font-size: 18px !important;
-            }
-
-            /* Sidebar Logo Responsive */
-            .sidebar-logo {
-                width: 50px !important;
-                height: 50px !important;
-            }
-
-            .sidebar-logo img {
-                width: 50px !important;
-                height: 50px !important;
-            }
-
-            .sidebar-logo-title {
-                font-size: 14px !important;
-            }
-
-            .sidebar-logo-subtitle {
-                font-size: 10px !important;
             }
 
             /* Profile Responsive */
@@ -1249,286 +1675,627 @@
             color: #dc3545;
         }
 
-        /* ==================== DEVELOPER PAGE CSS ==================== */
-        .developer-profile-card {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            margin-bottom: 25px;
-            transition: transform 0.3s ease;
+        /* ==================== PROFIL PENGEMBANG YANG DIREDESAIN ULANG ==================== */
+        .developer-profile-new {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            margin: 40px 0;
             position: relative;
             overflow: hidden;
+            border: 1px solid rgba(40, 167, 69, 0.15);
+            transition: all 0.4s ease;
         }
 
-        .developer-profile-card:hover {
+        .developer-profile-new:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
         }
 
-        .developer-profile-card::before {
+        .developer-profile-new::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 5px;
-            background: linear-gradient(90deg, #667eea, #764ba2, #28a745, #20c997);
+            background: linear-gradient(90deg, #28a745, #20c997, #667eea);
         }
 
-        .developer-profile-header {
+        /* ==================== LAYOUT FOTO DAN INFORMASI YANG LEBIH BAIK ==================== */
+        .developer-profile-header-new {
             display: flex;
-            align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #f8f9fa;
+            align-items: flex-start;
+            margin-bottom: 30px;
+            padding-bottom: 25px;
+            border-bottom: 2px solid rgba(40, 167, 69, 0.1);
+            flex-wrap: wrap;
+            gap: 40px;
         }
 
-        .developer-avatar {
-            width: 120px;
-            height: 120px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 3rem;
-            margin-right: 25px;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-            border: 5px solid white;
+        /* Foto yang lebih menarik */
+        .developer-photo-new {
+            width: 220px;
+            height: 310px;
+            border-radius: 15px;
             overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            border: 8px solid rgb(93, 134, 96);
+            flex-shrink: 0;
+            position: relative;
+            transition: all 0.4s ease;
         }
 
-        .developer-avatar img {
+        .developer-photo-new:hover {
+            transform: scale(1.02);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+        }
+
+        .developer-photo-new::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(102, 126, 234, 0.1));
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .developer-photo-new img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            display: block;
+            transition: transform 0.6s ease;
         }
 
-        .developer-info {
+        .developer-photo-new:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Informasi Developer */
+        .developer-info-new {
             flex: 1;
+            min-width: 300px;
         }
 
+        /* NAMA BESAR YANG MENARIK */
         .developer-name {
-            font-size: 1.8rem;
-            font-weight: 800;
+            font-size: 2.8rem;
+            font-weight: 900;
             color: #2c3e50;
-            margin-bottom: 5px;
+            margin-bottom: 30px;
+            letter-spacing: 1.5px;
+            line-height: 1.1;
+            text-align: left;
+            background: linear-gradient(135deg, #28a745, #20c997, #667eea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
         }
 
-        .developer-title {
-            font-size: 1.1rem;
-            color: #6c757d;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
+        .developer-name::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #28a745, #20c997);
+            border-radius: 2px;
         }
 
-        .developer-badge {
-            display: inline-flex;
-            align-items: center;
-            background: linear-gradient(135deg, #28a745, #20c997);
-            color: white;
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-left: 10px;
-        }
-
-        .developer-contact {
-            display: flex;
-            gap: 15px;
-            margin-top: 10px;
-        }
-
-        .contact-item {
-            display: flex;
-            align-items: center;
-            color: #6c757d;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .contact-item:hover {
-            color: #667eea;
-            text-decoration: none;
-        }
-
-        .contact-item i {
-            margin-right: 5px;
-            font-size: 1.1rem;
-        }
-
-        .developer-details {
+        /* INFORMASI DUA KOLOM YANG RAPI */
+        .developer-details-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
         }
 
-        .detail-card {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .detail-card:hover {
-            background: white;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .detail-title {
-            font-size: 0.9rem;
-            color: #6c757d;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-
-        .detail-content {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #2c3e50;
-        }
-
-        .social-links {
+        .detail-item {
             display: flex;
-            gap: 15px;
-            margin-top: 15px;
+            flex-direction: column;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 12px;
+            border-left: 4px solid #28a745;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
 
-        .social-link {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+        .detail-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            background: white;
+        }
+
+        .detail-label {
+            font-size: 0.85rem;
+            color: #6c757d;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.2rem;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            text-decoration: none;
+            gap: 8px;
         }
 
-        .social-link:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            text-decoration: none;
+        .detail-label i {
+            color: #28a745;
+            font-size: 1rem;
         }
 
-        .social-instagram {
-            background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);
-        }
-
-        .social-github {
-            background: linear-gradient(45deg, #333, #555);
-        }
-
-        .social-linkedin {
-            background: linear-gradient(45deg, #0077B5, #00A0DC);
-        }
-
-        .tech-stack {
-            margin-top: 30px;
-        }
-
-        .tech-title {
+        .detail-value {
             font-size: 1.2rem;
             font-weight: 700;
             color: #2c3e50;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #f8f9fa;
+            padding: 8px 0;
+            border-bottom: none;
         }
 
-        .tech-icons {
+        .detail-value a {
+            color: #28a745;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .detail-value a:hover {
+            color: #20c997;
+            transform: translateX(3px);
+        }
+
+        .detail-value a i {
+            font-size: 1.1rem;
+        }
+
+        /* Judul Profil */
+        .profile-title-new {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            text-align: center;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .profile-subtitle-new {
+            font-size: 1.2rem;
+            color: #6c757d;
+            margin-bottom: 30px;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        /* Deskripsi Proyek yang Diperbaiki */
+        .project-description {
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.08), rgba(32, 201, 151, 0.08));
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            border-left: 6px solid #28a745;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-description::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%2328a745' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.3;
+        }
+
+        .project-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #2c3e50;
+            margin-bottom: 20px;
             display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            z-index: 2;
         }
 
-        .tech-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 10px;
+        .project-title i {
+            color: #28a745;
+            font-size: 1.6rem;
+        }
+
+        .project-text {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: #495057;
+            margin-bottom: 0;
+            position: relative;
+            z-index: 2;
+            text-align: justify;
+        }
+
+        .project-text strong {
+            color: #28a745;
+            font-weight: 700;
+        }
+
+        /* Quote Section yang Lebih Menarik */
+        .quote-section-new {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.08), rgba(117, 75, 162, 0.08));
+            border-radius: 15px;
+            padding: 35px 40px;
+            margin: 30px 0;
+            position: relative;
+            border-left: 6px solid #667eea;
+            overflow: hidden;
+        }
+
+        .quote-section-new::before {
+            content: '❝';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 5rem;
+            color: rgba(102, 126, 234, 0.1);
+            font-family: serif;
+        }
+
+        .quote-section-new::after {
+            content: '❞';
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 5rem;
+            color: rgba(102, 126, 234, 0.1);
+            font-family: serif;
+        }
+
+        .quote-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2.5rem;
+            color: rgba(102, 126, 234, 0.2);
+            z-index: 1;
+        }
+
+        .quote-text-new {
+            font-size: 1.25rem;
+            font-style: italic;
+            line-height: 1.6;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            font-weight: 500;
+        }
+
+        .quote-author-new {
+            text-align: right;
+            font-weight: 700;
+            color: #667eea;
+            font-size: 1.1rem;
+            padding-top: 15px;
+            border-top: 2px solid rgba(102, 126, 234, 0.2);
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ==================== SOCIAL MEDIA LOGOS YANG LEBIH BAGUS ==================== */
+        .social-links-new {
+            display: flex;
+            gap: 25px;
+            margin-top: 35px;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 249, 250, 0.9));
+            border-radius: 15px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .social-link-new {
             display: flex;
             align-items: center;
             justify-content: center;
-            background: white;
-            color: #667eea;
-            font-size: 1.8rem;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
-        }
-
-        .tech-icon:hover {
-            transform: translateY(-5px);
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: all 0.4s ease;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-link-new::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .social-link-new:hover {
+            transform: translateY(-8px) scale(1.1);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .social-link-new:hover::before {
+            opacity: 1;
+        }
+
+        .social-link-new i {
+            font-size: 28px;
             color: white;
-        }
-
-        .project-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 25px;
-        }
-
-        .stat-card {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            z-index: 2;
             transition: transform 0.3s ease;
         }
 
-        .stat-card:hover {
-            transform: translateY(-5px);
+        .social-link-new:hover i {
+            transform: scale(1.2);
         }
 
-        .stat-icon {
-            font-size: 2rem;
-            margin-bottom: 10px;
+        /* Instagram - Gradient yang Lebih Bagus */
+        .social-instagram-new {
+            background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D, #F56040, #F77737, #FCAF45, #FFDC80);
+            background-size: 400% 400%;
+            animation: instagram-gradient 3s ease infinite;
         }
 
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 800;
-            color: #667eea;
-            margin-bottom: 5px;
+        @keyframes instagram-gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        .stat-label {
-            font-size: 0.9rem;
-            color: #6c757d;
+        /* LinkedIn - Blue */
+        .social-linkedin-new {
+            background: linear-gradient(135deg, #0077B5, #00A0DC, #0A66C2);
+        }
+
+        /* GitHub - Dark Theme */
+        .social-github-new {
+            background: linear-gradient(135deg, #333333, #24292e, #0d1117);
+        }
+
+        /* Email - Green */
+        .social-email-new {
+            background: linear-gradient(135deg, #28a745, #20c997, #1ed760);
+        }
+
+        /* Tooltip untuk logo */
+        .social-tooltip {
+            position: absolute;
+            bottom: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
             font-weight: 600;
+            white-space: nowrap;
+            opacity: 0;
+            transition: all 0.3s ease;
+            pointer-events: none;
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
-        .developer-quote {
-            background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(32, 201, 151, 0.1));
-            border-left: 4px solid #28a745;
-            padding: 20px;
-            margin-top: 25px;
-            border-radius: 10px;
-            font-style: italic;
+        .social-tooltip::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 6px solid rgba(0, 0, 0, 0.85);
         }
 
-        .quote-text {
-            font-size: 1.1rem;
-            color: #2c3e50;
-            margin-bottom: 10px;
+        .social-link-new:hover .social-tooltip {
+            opacity: 1;
+            bottom: -30px;
         }
 
-        .quote-author {
-            text-align: right;
-            font-weight: 600;
-            color: #28a745;
+        /* ==================== RESPONSIVE UNTUK PROFIL PENGEMBANG ==================== */
+        @media (max-width: 1024px) {
+            .developer-profile-header-new {
+                gap: 30px;
+            }
+
+            .developer-photo-new {
+                width: 200px;
+                height: 260px;
+            }
+
+            .developer-name {
+                font-size: 2.4rem;
+            }
+
+            .developer-details-grid {
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .developer-profile-new {
+                padding: 30px;
+            }
+
+            .developer-profile-header-new {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                gap: 25px;
+            }
+
+            .developer-photo-new {
+                width: 180px;
+                height: 230px;
+            }
+
+            .developer-info-new {
+                min-width: 100%;
+                text-align: center;
+            }
+
+            .developer-name {
+                font-size: 2.2rem;
+                text-align: center;
+            }
+
+            .developer-name::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .developer-details-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+                text-align: left;
+            }
+
+            .detail-item {
+                text-align: left;
+            }
+
+            .social-links-new {
+                gap: 20px;
+            }
+
+            .social-link-new {
+                width: 65px;
+                height: 65px;
+            }
+
+            .social-link-new i {
+                font-size: 26px;
+            }
+
+            .quote-text-new {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .developer-profile-new {
+                padding: 25px 20px;
+            }
+
+            .developer-photo-new {
+                width: 160px;
+                height: 200px;
+            }
+
+            .developer-name {
+                font-size: 1.8rem;
+            }
+
+            .profile-title-new {
+                font-size: 1.6rem;
+            }
+
+            .profile-subtitle-new {
+                font-size: 1rem;
+            }
+
+            .project-description,
+            .quote-section-new {
+                padding: 20px;
+            }
+
+            .project-title {
+                font-size: 1.2rem;
+            }
+
+            .project-text {
+                font-size: 0.95rem;
+            }
+
+            .quote-text-new {
+                font-size: 1rem;
+            }
+
+            .social-links-new {
+                gap: 15px;
+                padding: 15px;
+            }
+
+            .social-link-new {
+                width: 60px;
+                height: 60px;
+            }
+
+            .social-link-new i {
+                font-size: 24px;
+            }
+
+            .detail-value {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .developer-profile-header-new {
+                gap: 20px;
+            }
+
+            .developer-photo-new {
+                width: 140px;
+                height: 180px;
+                border-width: 6px;
+            }
+
+            .developer-name {
+                font-size: 1.6rem;
+                margin-bottom: 20px;
+            }
+
+            .social-links-new {
+                gap: 12px;
+            }
+
+            .social-link-new {
+                width: 55px;
+                height: 55px;
+            }
+
+            .social-link-new i {
+                font-size: 22px;
+            }
+
+            .social-tooltip {
+                font-size: 11px;
+                padding: 6px 10px;
+                bottom: -30px;
+            }
+
+            .social-link-new:hover .social-tooltip {
+                bottom: -25px;
+            }
         }
     </style>
     <!-- ==================== END CSS ==================== -->
@@ -1538,36 +2305,48 @@
 <body>
     <div class="container-scroller">
 
-        <!-- ==================== START HEADER ==================== -->
+        <!-- ==================== START HEADER YANG DIPERBAIKI ==================== -->
         <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
             <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+                <!-- LOGO UTAMA - HANYA SATU -->
                 <a class="navbar-brand brand-logo" href="{{ route('dashboard') }}">
-                    <div style="display: flex; align-items: center; justify-content: center; width: 100%;">
-                        <!-- LOGO di HEADER - DENGAN LOGO DAN TEKS PARIWISATA DESA -->
-                        <div class="header-logo">
+                    <div class="header-logo-container">
+                        <!-- Logo di kiri -->
+                        <div class="logo-wrapper">
                             <img src="{{ asset('assets-admin/images/logopariwisata.png') }}"
-                                 alt="Logo"
-                                 onerror="this.onerror=null; this.src='{{ asset('images/logo-default.png') }}';">
+                                 class="header-logo-img"
+                                 alt="Logo Pariwisata Desa"
+                                 onerror="this.onerror=null; this.src='{{ asset('assets-admin/images/logo-default.png') }}';">
                         </div>
-                        <div class="header-logo-text">PARIWISATA DESA</div>
+                        <!-- Teks di kanan - akan disembunyikan di mobile -->
+                        <div class="header-text-container">
+                            <div class="header-title">PARIWISATA DESA</div>
+                            <div class="header-subtitle">SISTEM ADMINISTRASI PARIWISATA DAN HOMESTAY DESA</div>
+                        </div>
                     </div>
                 </a>
-                <a class="navbar-brand brand-logo-mini" href="{{ route('dashboard') }}">
-                    <div style="display: flex; align-items: center; justify-content: center;">
-                        <!-- LOGO mini di HEADER -->
-                        <div class="header-logo">
+
+                <!-- LOGO MINI - DISEMBUNYIKAN -->
+                <a class="navbar-brand brand-logo-mini" href="{{ route('dashboard') }}" style="display: none;">
+                    <div class="header-logo-container">
+                        <div class="logo-wrapper">
                             <img src="{{ asset('assets-admin/images/logopariwisata.png') }}"
+                                 class="header-logo-img"
                                  alt="Logo"
-                                 onerror="this.onerror=null; this.src='{{ asset('images/logo-default.png') }}';">
+                                 onerror="this.onerror=null; this.src='{{ asset('assets-admin/images/logo-default.png') }}';">
                         </div>
                     </div>
                 </a>
             </div>
+
+            <!-- ==================== BAGIAN KANAN HEADER ==================== -->
             <div class="navbar-menu-wrapper d-flex align-items-stretch">
+                <!-- Hamburger menu untuk toggle sidebar -->
                 <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
                     <span class="mdi mdi-menu"></span>
                 </button>
 
+                <!-- Search field -->
                 <div class="search-field d-none d-xl-block">
                     <form class="d-flex align-items-center h-100" action="#">
                         <div class="input-group">
@@ -1636,7 +2415,7 @@
                         </div>
                     </li>
 
-                    <!-- ==================== PROFILE SECTION DENGAN FOTO PROFIL ==================== -->
+                    <!-- Profile Section -->
                     @php
                         $user = Auth::user();
                         $hasProfilePicture = !empty($user->profile_picture);
@@ -1686,7 +2465,7 @@
                                 </div>
                             </div>
 
-                            <!-- Profile Menu Items - DIPERBAIKI AGAR RAPI DAN VERTIKAL -->
+                            <!-- Profile Menu Items -->
                             <div class="profile-dropdown-body">
                                 <div class="dropdown-item-section">
                                     <h6 class="dropdown-section-title">AKUN PENGGUNA</h6>
@@ -1707,10 +2486,10 @@
                                         <!-- Pengaturan -->
                                         <a class="dropdown-item profile-item" href="#">
                                             <div class="item-icon">
-                                                <i class="mdi mdi-cog"></i>
+                                                 <i class="mdi mdi-settings"></i>
                                             </div>
                                             <div class="item-content">
-                                                <span class="item-title">Pengaturan</span>
+                                                <span class="item-title">Setting</span>
                                                 <span class="item-subtitle">Personalasi sistem Anda</span>
                                             </div>
                                             <i class="mdi mdi-chevron-right"></i>
@@ -1753,6 +2532,8 @@
                         </div>
                     </li>
                 </ul>
+
+                <!-- Hamburger menu untuk mobile -->
                 <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
                     data-toggle="offcanvas">
                     <span class="mdi mdi-menu"></span>
@@ -1765,17 +2546,6 @@
 
             <!-- ==================== START SIDEBAR ==================== -->
             <nav class="sidebar sidebar-offcanvas" id="sidebar">
-                <!-- LOGO SIDEBAR DI SINI - DIUBAH UKURAN SEPERTI TEMPLATE LAMA -->
-                <div class="sidebar-logo-section">
-                    <div class="sidebar-logo">
-                        <img src="{{ asset('assets-admin/images/logopariwisata.png') }}"
-                             alt="Logo Pariwisata"
-                             onerror="this.onerror=null; this.src='{{ asset('images/logo-default.png') }}';">
-                    </div>
-                    <h3 class="sidebar-logo-title">PARIWISATA DESA</h3>
-                    <p class="sidebar-logo-subtitle">Sistem Administrasi<br>Pariwisata & Homestay Desa</p>
-                </div>
-
                 <ul class="nav">
                     <li class="nav-item nav-category">Menu Utama</li>
 
@@ -1864,7 +2634,15 @@
                         </div>
                     </li>
 
-                    <!-- User Display & Settings Section - DIBAWAH MASTER DATA DENGAN FOTO PROFIL -->
+                    <!-- ==================== DOCUMENTATION MENU ==================== -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <span class="icon-bg"><i class="mdi mdi-book-open-page-variant menu-icon"></i></span>
+                            <span class="menu-title">Documentation</span>
+                        </a>
+                    </li>
+
+                    <!-- User Display & Settings Section -->
                     <li class="nav-item sidebar-user-actions mt-4">
                         <div class="settings-logout-section">
                             @php
@@ -1907,22 +2685,43 @@
             </nav>
             <!-- ==================== END SIDEBAR ==================== -->
 
+            <!-- ==================== START MAIN CONTENT ==================== -->
             <div class="main-panel">
                 <div class="content-wrapper">
-                    <!-- Dashboard Header -->
-                    <div class="card-header-section">
-                        <div>
-                            <h1 class="card-title">Dashboard Overview</h1>
-                            <p class="card-subtitle">
-                                Selamat datang <span class="welcome-message">{{ Auth::user()->name ?? 'Admin' }}</span> di dashboard Pariwisata Desa
-                            </p>
-                        </div>
-                        <div class="period-selector">
-                            <div class="btn-group" role="group" aria-label="Period selector">
-                                <button type="button" class="btn btn-period active">7 Hari</button>
-                                <button type="button" class="btn btn-period">1 Bulan</button>
-                                <button type="button" class="btn btn-period">3 Bulan</button>
+
+                    <!-- ==================== SLIDESHOW SECTION YANG DIPERBAIKI ==================== -->
+                    <div class="slideshow-section">
+                        <!-- 5 GAMBAR UNTUK SLIDESHOW -->
+                        <div class="slideshow-slide active" style="background-image: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');"></div>
+                        <div class="slideshow-slide" style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');"></div>
+                        <div class="slideshow-slide" style="background-image: url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');"></div>
+                        <div class="slideshow-slide" style="background-image: url('https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');"></div>
+                        <div class="slideshow-slide" style="background-image: url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');"></div>
+
+                        <!-- Carousel overlay - HANYA UNTUK GAMBAR -->
+                        <div class="carousel-overlay"></div>
+
+                        <!-- Content - TEKS TANPA OVERLAY DI DALAM -->
+                        <div class="slideshow-content">
+                            <!-- Container untuk Selamat Datang dan Nama - SEJAJAR -->
+                            <div class="welcome-container">
+                                <h1 class="welcome-title">Selamat Datang</h1>
+                                <div class="user-name">{{ Auth::user()->name ?? 'Admin' }}!</div>
                             </div>
+                            <div class="welcome-subtitle">Dashboard Monitoring Sistem Pariwisata & Homestay Desa</div>
+                        </div>
+
+                        <!-- Tombol Navigasi < > -->
+                        <button class="carousel-btn prev">❮</button>
+                        <button class="carousel-btn next">❯</button>
+
+                        <!-- Controls -->
+                        <div class="slideshow-controls">
+                            <div class="slide-indicator active" data-slide="0"></div>
+                            <div class="slide-indicator" data-slide="1"></div>
+                            <div class="slide-indicator" data-slide="2"></div>
+                            <div class="slide-indicator" data-slide="3"></div>
+                            <div class="slide-indicator" data-slide="4"></div>
                         </div>
                     </div>
 
@@ -2123,12 +2922,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="circular-progress-info">
-                                        <div class="circular-progress-title">Ulasan Wisata</div>
-                                        <div class="circular-progress-trend trend-up">
-                                            <i class="mdi mdi-arrow-up"></i>
-                                            <span>Meningkat sejak kemarin 6.7%</span>
-                                        </div>
+                                </div>
+                                <div class="circular-progress-info">
+                                    <div class="circular-progress-title">Ulasan Wisata</div>
+                                    <div class="circular-progress-trend trend-up">
+                                        <i class="mdi mdi-arrow-up"></i>
+                                        <span>Meningkat sejak kemarin 6.7%</span>
                                     </div>
                                 </div>
                             </div>
@@ -2239,79 +3038,133 @@
                         </div>
                     </div>
 
-                    <!-- ==================== START DEVELOPER PAGE ==================== -->
-                    <div class="developer-page-section" style="margin: 40px 0;">
-                        <!-- Developer Header -->
-                        <div class="card-header-section" style="margin-bottom: 30px;">
-                            <div>
-                                <h1 class="card-title">Profile Pengembang</h1>
-                                <p class="card-subtitle">Informasi developer dan kontributor sistem Pariwisata Desa</p>
-                            </div>
-                            <div class="welcome-message" style="background: linear-gradient(135deg, #667eea, #764ba2); padding: 8px 20px; border-radius: 30px; color: white;">
-                                <i class="mdi mdi-code-tags"></i> Developer Area
-                            </div>
+                    <!-- ==================== START PROFIL PENGEMBANG YANG DIREDESAIN ULANG ==================== -->
+                    <div class="developer-profile-new">
+                        <!-- Judul Utama -->
+                        <div class="text-center mb-5">
+                            <h1 class="profile-title-new">PROFIL PENGEMBANG</h1>
+                            <p class="profile-subtitle-new">Developer & Creator of Sistem Pariwisata Desa</p>
                         </div>
 
-                        <!-- Developer Profile Card -->
-                        <div class="developer-profile-card">
-                            <!-- Profile Header -->
-                            <div class="developer-profile-header">
-                               <div class="developer-avatar">
-    <!-- Foto Profile Pengembang -->
-    <img src="{{ asset('assets-admin/images/fotofaras.jpg') }}"
-         alt="Faras Zakia Indrani"
-         onerror="this.onerror=null; this.src='{{ asset('assets-admin/images/default-profile.jpg') }}';">
-</div>
-                                <div class="developer-info">
-                                    <h1 class="developer-name">FARAS ZAKIA INDRANI</h1>
-                                    <div class="developer-title">
-                                        Mahasiswa Sistem Informasi
-                                        <span class="developer-badge">
-                                            <i class="mdi mdi-school"></i> Politeknik Caltex Riau
-                                        </span>
-                                    </div>
-                                    <div class="developer-contact">
-                                        <div class="contact-item">
+                        <!-- Header dengan Foto dan Informasi -->
+                        <div class="developer-profile-header-new">
+                            <!-- Foto (Persegi Panjang yang Lebih Menarik) -->
+                            <div class="developer-photo-new">
+                                <img src="{{ asset('assets-admin/images/farasfoto.jpg') }}"
+                                     alt="Faras Zakia Indrani"
+                                     onerror="this.onerror=null; this.src='{{ asset('assets-admin/images/default-profile.jpg') }}';">
+                            </div>
+
+                            <!-- Informasi Developer -->
+                            <div class="developer-info-new">
+                                <!-- Nama Besar dengan Gradient -->
+                                <h2 class="developer-name">
+                                    FARAS ZAKIA INDRANI
+                                </h2>
+
+                                <!-- Informasi dalam 2 Kolom yang Rapi -->
+                                <div class="developer-details-grid">
+                                    <!-- Baris 1: Kiri - NIM -->
+                                    <div class="detail-item">
+                                        <div class="detail-label">
                                             <i class="mdi mdi-identifier"></i>
-                                            NIM: 2457301048
+                                            NIM
                                         </div>
-                                        <div class="contact-item">
-                                            <i class="mdi mdi-email"></i>
-                                            faras24si@.pcr.ac.id
+                                        <div class="detail-value">2457301048</div>
+                                    </div>
+
+                                    <!-- Kanan - Institusi -->
+                                    <div class="detail-item">
+                                        <div class="detail-label">
+                                            <i class="mdi mdi-school"></i>
+                                            Institusi
                                         </div>
-                                        <div class="contact-item">
-                                            <i class="mdi mdi-phone"></i>
-                                            +62 813-6358-9715
+                                        <div class="detail-value">
+                                            <a href="https://pcr.ac.id/" target="_blank">
+                                                <i class="mdi mdi-open-in-new"></i>
+                                                Politeknik Caltex Riau
+                                            </a>
                                         </div>
                                     </div>
-                                    <div class="social-links">
-                                        <a href="https://www.instagram.com/frszakiaa_?igsh=d3cwMXA5c3F4NHly" target="_blank" class="social-link social-instagram">
-                                            <i class="mdi mdi-instagram"></i>
-                                        </a>
-                                        <a href="https://github.com/faraspcr" target="_blank" class="social-link social-github">
-    <i class="fa fa-github" aria-hidden="true"></i>
-</a>
-                                        <a href="https://www.linkedin.com/in/faras-zakia-indrani-29b4a6360/" target="_blank" class="social-link social-linkedin">
-                                            <i class="mdi mdi-linkedin"></i>
-                                        </a>
+
+                                    <!-- Baris 2: Kiri - Program Studi -->
+                                    <div class="detail-item">
+                                        <div class="detail-label">
+                                            <i class="mdi mdi-book-education"></i>
+                                            Program Studi
+                                        </div>
+                                        <div class="detail-value">Sistem Informasi</div>
+                                    </div>
+
+                                    <!-- Kanan - Telepon -->
+                                    <div class="detail-item">
+                                        <div class="detail-label">
+                                            <i class="mdi mdi-phone"></i>
+                                            Telepon
+                                        </div>
+                                        <div class="detail-value">+62 813-6358-9715</div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
-
-                            <!-- Quote Section -->
-                            <div class="developer-quote">
-                                <p class="quote-text">
-                                    "Membangun sistem yang tidak hanya berfungsi, tetapi juga memberikan dampak positif bagi masyarakat desa melalui teknologi."
-                                </p>
-                                <p class="quote-author">— Faras Zakia Indrani</p>
+                        <!-- Deskripsi Proyek yang Diperbaiki -->
+                        <div class="project-description">
+                            <div class="project-title">
+                                <i class="mdi mdi-information-outline"></i>
+                                Tentang Proyek Ini
                             </div>
+                            <p class="project-text">
+                                <strong>Sistem Informasi Pariwisata dan Homestay Desa</strong> adalah aplikasi web yang saya kembangkan sebagai bagian dari tugas mata kuliah Pengembangan Aplikasi Berbasis Web. Sistem ini dirancang khusus untuk membantu pengelolaan destinasi wisata dan homestay di desa secara digital. Dengan fitur yang komprehensif mulai dari manajemen data wisata, pemesanan homestay online, hingga analisis statistik pengunjung, aplikasi ini bertujuan untuk memudahkan administrasi dan meningkatkan aksesibilitas potensi wisata desa kepada masyarakat luas.
+                            </p>
+                        </div>
 
+                        <!-- Quote Section yang Lebih Menarik -->
+                        <div class="quote-section-new">
+                            <div class="quote-icon">
+                                <i class="mdi mdi-format-quote-close"></i>
+                            </div>
+                            <p class="quote-text-new">
+                                "Membangun sistem yang tidak hanya berfungsi, tetapi juga memberikan dampak positif bagi masyarakat desa melalui teknologi."
+                            </p>
+                            <div class="quote-author-new">
+                                — Faras Zakia Indrani
+                            </div>
+                        </div>
 
+                        <!-- Social Media Links - LOGO LINGKARAN YANG LEBIH BAGUS -->
+                        <div class="social-links-new">
+                            <a href="https://www.instagram.com/frszakiaa_?igsh=d3cwMXA5c3F4NHly"
+                               target="_blank"
+                               class="social-link-new social-instagram-new">
+                                <i class="mdi mdi-instagram"></i>
+                                <span class="social-tooltip">Instagram</span>
+                            </a>
 
+                            <a href="https://www.linkedin.com/in/faras-zakia-indrani-29b4a6360/"
+                               target="_blank"
+                               class="social-link-new social-linkedin-new">
+                                <i class="mdi mdi-linkedin"></i>
+                                <span class="social-tooltip">LinkedIn</span>
+                            </a>
+
+                            <a href="https://github.com/faraspcr"
+                               target="_blank"
+                               class="social-link-new social-github-new">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white">
+        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+    </svg>
+    <span class="social-tooltip">GitHub</span>
+</a>
+
+                            <a href="mailto:faras24si@mahasiswa.pcr.ac.id"
+                               class="social-link-new social-email-new">
+                                <i class="mdi mdi-email"></i>
+                                <span class="social-tooltip">Email</span>
+                            </a>
                         </div>
                     </div>
-                    <!-- ==================== END DEVELOPER PAGE ==================== -->
+                    <!-- ==================== END PROFIL PENGEMBANG YANG DIREDESAIN ULANG ==================== -->
 
                 </div>
 
@@ -2372,6 +3225,105 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // ==================== SLIDESHOW FUNCTIONALITY ====================
+            let currentSlide = 0;
+            const slides = document.querySelectorAll('.slideshow-slide');
+            const indicators = document.querySelectorAll('.slide-indicator');
+            const prevBtn = document.querySelector('.carousel-btn.prev');
+            const nextBtn = document.querySelector('.carousel-btn.next');
+            const overlay = document.querySelector('.carousel-overlay');
+
+            function showSlide(index) {
+                // Hide all slides
+                slides.forEach(slide => slide.classList.remove('active'));
+                indicators.forEach(indicator => indicator.classList.remove('active'));
+
+                // Show current slide
+                currentSlide = (index + slides.length) % slides.length;
+                slides[currentSlide].classList.add('active');
+                indicators[currentSlide].classList.add('active');
+
+                // Update overlay position
+                if (overlay) {
+                    overlay.style.zIndex = '3';
+                }
+            }
+
+            // Auto slide every 5 seconds
+            let slideInterval = setInterval(() => {
+                showSlide(currentSlide + 1);
+            }, 5000);
+
+            // Previous button
+            if (prevBtn) {
+                prevBtn.addEventListener('click', () => {
+                    clearInterval(slideInterval);
+                    showSlide(currentSlide - 1);
+
+                    // Restart auto slide
+                    slideInterval = setInterval(() => {
+                        showSlide(currentSlide + 1);
+                    }, 5000);
+                });
+            }
+
+            // Next button
+            if (nextBtn) {
+                nextBtn.addEventListener('click', () => {
+                    clearInterval(slideInterval);
+                    showSlide(currentSlide + 1);
+
+                    // Restart auto slide
+                    slideInterval = setInterval(() => {
+                        showSlide(currentSlide + 1);
+                    }, 5000);
+                });
+            }
+
+            // Indicator click event
+            indicators.forEach((indicator, index) => {
+                indicator.addEventListener('click', () => {
+                    clearInterval(slideInterval);
+                    showSlide(index);
+
+                    // Restart auto slide
+                    slideInterval = setInterval(() => {
+                        showSlide(currentSlide + 1);
+                    }, 5000);
+                });
+            });
+
+            // ==================== HEADER FIXES ====================
+            // Pastikan hanya satu logo yang ditampilkan
+            const brandLogo = document.querySelector('.brand-logo');
+            const brandLogoMini = document.querySelector('.brand-logo-mini');
+
+            if (brandLogo && brandLogoMini) {
+                // Sembunyikan logo mini
+                brandLogoMini.style.display = 'none';
+
+                // Pastikan logo utama selalu terlihat
+                brandLogo.style.display = 'flex';
+            }
+
+            // Handle hamburger menu untuk sidebar
+            const sidebarToggler = document.querySelector('.navbar-toggler[data-toggle="minimize"]');
+            if (sidebarToggler) {
+                sidebarToggler.addEventListener('click', function() {
+                    // Tidak perlu melakukan perubahan pada logo
+                    // Biarkan CSS yang mengatur tampilan
+                });
+            }
+
+            // Handle mobile hamburger menu
+            const mobileToggler = document.querySelector('.navbar-toggler-right');
+            if (mobileToggler) {
+                mobileToggler.addEventListener('click', function() {
+                    // Tidak perlu melakukan perubahan pada logo
+                    // Biarkan CSS yang mengatur tampilan
+                });
+            }
+
             // Set user name dari Auth
             @if(Auth::check())
                 const userName = "{{ Auth::user()->name }}";
@@ -2678,10 +3630,10 @@
             }
 
             // Developer Page Social Links Animation
-            const socialLinks = document.querySelectorAll('.social-link');
+            const socialLinks = document.querySelectorAll('.social-link-new');
             socialLinks.forEach(link => {
                 link.addEventListener('mouseenter', function() {
-                    this.style.transform = 'translateY(-5px) scale(1.1)';
+                    this.style.transform = 'translateY(-8px) scale(1.1)';
                 });
 
                 link.addEventListener('mouseleave', function() {
@@ -2689,20 +3641,8 @@
                 });
             });
 
-            // Tech Icons Hover Effect
-            const techIcons = document.querySelectorAll('.tech-icon');
-            techIcons.forEach(icon => {
-                icon.addEventListener('mouseenter', function() {
-                    this.style.transform = 'translateY(-5px) rotate(5deg)';
-                });
-
-                icon.addEventListener('mouseleave', function() {
-                    this.style.transform = 'translateY(0) rotate(0)';
-                });
-            });
-
-            // Add smooth hover effects
-            document.querySelectorAll('.circular-progress-card, .chart-container, .activity-card, .developer-profile-card').forEach(card => {
+            // Add smooth hover effects untuk kartu
+            document.querySelectorAll('.circular-progress-card, .chart-container, .activity-card, .developer-profile-new').forEach(card => {
                 card.addEventListener('mouseenter', function() {
                     this.style.transform = 'translateY(-5px)';
                 });
@@ -2712,18 +3652,18 @@
                 });
             });
 
-            // Profile Dropdown Animation
-            const profileDropdown = document.getElementById('profileDropdown');
-            if (profileDropdown) {
-                profileDropdown.addEventListener('click', function() {
-                    setTimeout(() => {
-                        const dropdownMenu = this.nextElementSibling;
-                        if (dropdownMenu && dropdownMenu.classList.contains('show')) {
-                            dropdownMenu.style.animation = 'slideDown 0.3s ease';
-                        }
-                    }, 10);
+            // Detail item hover effects
+            document.querySelectorAll('.detail-item').forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateX(5px)';
+                    this.style.boxShadow = '0 8px 20px rgba(0, 0, 0, 0.1)';
                 });
-            }
+
+                item.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateX(0)';
+                    this.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.05)';
+                });
+            });
 
             // Simulate real-time data updates
             function simulateRealTimeUpdates() {
@@ -2744,5 +3684,4 @@
     </script>
     <!-- ==================== END JS ==================== -->
 </body>
-
 </html>
