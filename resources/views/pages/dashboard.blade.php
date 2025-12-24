@@ -31,8 +31,8 @@
             top: 0;
             width: 100%;
             z-index: 1030;
-            background: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+           background: transparent !important;
+    box-shadow: none !important;
         }
 
         .navbar-brand-wrapper {
@@ -100,7 +100,7 @@
         /* Judul utama - satu baris */
         .header-title {
             color: #28a745 !important;
-            font-size: 16.1px !important;
+            font-size: 16px !important;
             font-weight: 800 !important;
             margin: 0 !important;
             padding: 0 !important;
@@ -175,36 +175,157 @@
             background: rgba(40, 167, 69, 0.1) !important;
         }
 
-        /* Responsive design untuk header */
-        @media (max-width: 991px) {
+        /* ==================== HEADER MOBILE FIXES BARU ==================== */
+        /* Untuk layar kecil (mobile) */
+        @media (max-width: 768px) {
+            /* Header container utama */
             .navbar-brand-wrapper {
-                min-width: 200px;
+                min-width: auto !important;
+                width: auto !important;
+                padding: 0 5px !important;
+                margin-right: 0 !important;
             }
 
+            /* Container logo */
+            .header-logo-container {
+                gap: 8px !important;
+                padding: 0 !important;
+            }
+
+            /* Wrapper untuk logo */
+            .logo-wrapper {
+                min-width: 40px !important;
+                height: 40px !important;
+                flex-shrink: 0;
+            }
+
+            /* Container teks - BATASI LEBIH KETAT */
+            .header-text-container {
+                max-width: 120px !important;
+                min-height: 40px !important;
+                overflow: hidden !important;
+            }
+
+            /* Judul utama - UKURAN LEBIH KECIL */
             .header-title {
-                font-size: 16px !important;
+                font-size: 11px !important;
+                font-weight: 700 !important;
+                line-height: 1.1 !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+                letter-spacing: 0.3px;
             }
 
+            /* Subjudul - UKURAN SANGAT KECIL, MAKSIMAL SATU BARIS */
             .header-subtitle {
-                font-size: 10px !important;
+                font-size: 6px !important;
+                font-weight: 500 !important;
+                line-height: 1.1 !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
                 -webkit-line-clamp: 1 !important;
+                margin-top: 1px !important;
             }
 
+            /* Navbar menu wrapper */
+            .navbar-menu-wrapper {
+                padding: 0 5px !important;
+                justify-content: flex-end !important;
+            }
+
+            /* Search field disembunyikan di mobile */
             .search-field {
-                max-width: 300px;
-                margin: 0 10px;
+                display: none !important;
+            }
+
+            /* Profile section - perbaiki layout */
+            .nav-profile .nav-link {
+                padding: 5px 8px !important;
+            }
+
+            .nav-profile .profile-avatar-circle {
+                width: 32px !important;
+                height: 32px !important;
+                font-size: 1rem !important;
+            }
+
+            .nav-profile .nav-profile-text {
+                display: none !important; /* Sembunyikan teks di mobile */
             }
         }
 
-        @media (max-width: 768px) {
+        /* Untuk tampilan sangat kecil (mobile kecil) */
+        @media (max-width: 480px) {
             .navbar-brand-wrapper {
-                min-width: 180px;
-                padding: 0 10px;
+                min-width: 60px !important;
+            }
+
+            .header-text-container {
+                max-width: 100px !important;
+            }
+
+            .header-title {
+                font-size: 10px !important;
+            }
+
+            .header-subtitle {
+                font-size: 5px !important;
             }
 
             .logo-wrapper {
-                min-width: 50px !important;
-                height: 50px !important;
+                min-width: 35px !important;
+                height: 35px !important;
+            }
+
+            /* Notification icon lebih kecil */
+            .nav-link.count-indicator {
+                padding: 3px !important;
+                font-size: 0.9rem !important;
+            }
+
+            .count-symbol {
+                width: 18px !important;
+                height: 18px !important;
+                font-size: 0.7rem !important;
+            }
+        }
+
+        /* Untuk tablet (768px - 991px) */
+        @media (min-width: 769px) and (max-width: 991px) {
+            .navbar-brand-wrapper {
+                min-width: 200px !important;
+            }
+
+            .header-text-container {
+                max-width: 180px !important;
+            }
+
+            .header-title {
+                font-size: 13px !important;
+            }
+
+            .header-subtitle {
+                font-size: 8px !important;
+                -webkit-line-clamp: 2 !important;
+                white-space: normal !important;
+            }
+
+            .logo-wrapper {
+                min-width: 45px !important;
+                height: 45px !important;
+            }
+        }
+
+        /* Untuk desktop kecil (992px - 1199px) */
+        @media (min-width: 992px) and (max-width: 1199px) {
+            .navbar-brand-wrapper {
+                min-width: 220px !important;
+            }
+
+            .header-text-container {
+                max-width: 200px !important;
             }
 
             .header-title {
@@ -213,50 +334,71 @@
 
             .header-subtitle {
                 font-size: 9px !important;
-                -webkit-line-clamp: 1 !important;
-            }
-
-            .search-field {
-                display: none !important;
-            }
-
-            .navbar-menu-wrapper {
-                padding: 0 10px;
             }
         }
 
-        @media (max-width: 576px) {
+        /* Untuk desktop normal (1200px ke atas) */
+        @media (min-width: 1200px) {
             .navbar-brand-wrapper {
-                min-width: 150px;
+                min-width: 250px !important;
             }
 
             .header-text-container {
-                max-width: 120px !important;
+                max-width: 280px !important;
             }
 
             .header-title {
-                font-size: 12px !important;
-                white-space: normal !important;
-                -webkit-line-clamp: 1 !important;
+                font-size: 16px !important;
             }
 
             .header-subtitle {
-                display: none !important;
+                font-size: 10px !important;
             }
         }
 
-        /* Pastikan logo tidak duplikat saat sidebar collapse */
-        @media (max-width: 991px) {
-            .navbar-brand-wrapper .brand-logo {
-                display: flex !important;
-            }
+        /* Tambahan untuk menghindari breaking layout di semua ukuran */
+        .navbar.default-layout-navbar {
+            min-height: 70px;
+        }
 
-            .navbar-brand-wrapper .brand-logo-mini {
-                display: none !important;
+        .navbar-brand-wrapper {
+            transition: all 0.3s ease;
+        }
+
+        /* Pastikan tidak ada overflow horizontal */
+        .navbar-nav-right {
+            flex-wrap: nowrap;
+            overflow: visible;
+        }
+
+        /* Hamburger button positioning */
+        .navbar-toggler[data-toggle="minimize"] {
+            margin-left: 5px;
+            margin-right: 10px;
+        }
+
+        /* Fix untuk dropdown profile di mobile */
+        @media (max-width: 768px) {
+            .nav-profile .dropdown-menu {
+                position: fixed !important;
+                top: 70px !important;
+                right: 10px !important;
+                left: auto !important;
+                min-width: 280px !important;
+                transform: none !important;
             }
         }
 
-        /* ==================== HEADER RESPONSIVE FIXES ==================== */
+        /* Pastikan logo selalu terlihat dengan baik */
+        .header-logo-img {
+            transition: all 0.3s ease;
+        }
+
+        /* Hover effect untuk logo */
+        .brand-logo:hover .header-logo-img {
+            transform: scale(1.05);
+        }
+
         /* Responsive design untuk header - Mode Mobile/Split Screen */
         @media (max-width: 991px) {
             /* Sembunyikan teks header di bagian kiri */
@@ -858,7 +1000,7 @@
         }
 
         .nav-category {
-            margin-top: 10px !important;
+            margin-top:30px !important;
             font-size: 10px !important;
             padding: 8px 10px !important;
             color: rgba(255, 255, 255, 0.6) !important;
