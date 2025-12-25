@@ -1,23 +1,19 @@
-{{-- ====================== START FOOTER ====================== --}}
-<footer class="footer border-top pt-3" style="background-color: #f8f9fa;">
+{{-- ==================== START FOOTER ==================== --}}
+<footer class="footer">
     <div class="footer-inner-wraper">
-        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center">
-            <div class="mb-2 mb-sm-0">
-                <span class="text-muted">
-                    <span style="font-size: 1.1em;">©</span> 2024
-                    <strong class="text-primary">DesaWisata</strong> |
-                    Sistem Homestay & Pariwisata
-                </span>
-            </div>
-            <div>
-                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25">
-                    🏡 Homestay Desa
-                </span>
-            </div>
-        </div>
-        <div class="text-center mt-2">
-            <small class="text-muted">Kelola pariwisata desa dengan mudah</small>
+        <div class="text-center">
+            <span class="text-muted d-block">
+                <div style="margin-bottom: 8px; font-size: 14px; color: #666;">
+                    © 2025 Sistem Pariwisata Desa v2.1.0
+                </div>
+                <div style="margin-bottom: 8px; font-size: 13px; color: #888;">
+                    Dikembangkan oleh Faras Zakia Indrani
+                </div>
+                <div style="margin-top: 12px; font-size: 12px; color: #999; padding-top: 12px; border-top: 1px solid #eaeaea;">
+                    <i class="mdi mdi-shield-check"></i> Hak Cipta Dilindungi | Privacy Policy | Terms of Service
+                </div>
+            </span>
         </div>
     </div>
 </footer>
-{{-- ====================== END FOOTER ====================== --}}
+{{-- ==================== END FOOTER ==================== --}}

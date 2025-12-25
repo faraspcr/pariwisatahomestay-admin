@@ -1,15 +1,6 @@
 <!-- ==================== START SIDEBAR ==================== -->
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
-    <!-- LOGO SIDEBAR DI ATAS MENU -->
-    <div class="sidebar-logo-section">
-        <div class="sidebar-logo">
-            <img src="{{ asset('assets-admin/images/logopariwisata.png') }}"
-                 alt="Logo Pariwisata"
-                 onerror="this.onerror=null; this.src='{{ asset('images/logo-default.png') }}';">
-        </div>
-        <h3 class="sidebar-logo-title">PARIWISATA DESA</h3>
-        <p class="sidebar-logo-subtitle">Sistem Administrasi<br>Pariwisata & Homestay Desa</p>
-    </div>
+
 
     <ul class="nav">
         <!-- Kategori: Menu Utama -->
@@ -112,22 +103,33 @@
         <!-- Bagian User & Settings di Bawah Sidebar -->
         <li class="nav-item sidebar-user-actions mt-4">
             <div class="settings-logout-section">
+                @php
+                    $user = Auth::user();
+                    $hasProfilePicture = !empty($user->profile_picture);
+                @endphp
+
                 <!-- Info User -->
                 <div class="user-display-section">
-                    <div class="user-avatar-small">
-                        <i class="mdi mdi-account"></i>
+                    <div class="user-avatar-small {{ $hasProfilePicture ? 'has-image' : '' }}">
+                        @if($hasProfilePicture)
+                            <img src="{{ asset('storage/' . $user->profile_picture) }}"
+                                 alt="{{ $user->name }}"
+                                 style="width: 100%; height: 100%; object-fit: cover;">
+                        @else
+                            <i class="mdi mdi-account"></i>
+                        @endif
                     </div>
                     <div class="user-info-small">
-                        <h5>{{ Auth::user()->name ?? 'Guest' }}</h5>
-                        <p>ADMIN PARIWISATA DESA</p>
+                        <h5>{{ $user->name ?? 'Guest' }}</h5>
+                        <p>{{ strtoupper($user->role ?? 'ADMIN') }} PARIWISATA DESA</p>
                     </div>
                 </div>
 
                 <!-- Item Settings -->
-                <div class="settings-item">
+                <a class="settings-item" href="{{ route('user.my-profile') }}">
                     <i class="mdi mdi-cog"></i>
                     <span>Settings</span>
-                </div>
+                </a>
 
                 <!-- Item Logout -->
                 <a href="#" class="logout-item-sidebar"
@@ -141,47 +143,13 @@
 </nav>
 <!-- ==================== END SIDEBAR ==================== -->
 
+<!-- Logout Form untuk Sidebar -->
+<form id="sidebar-logout-form" action="{{ route('auth.logout') }}" method="POST" style="display: none;">
+    @csrf
+</form>
+
 <style>
 /* ==================== CSS SIDEBAR LENGKAP ==================== */
-
-/* SIDEBAR LOGO - DIUBAH UKURANNYA SEPERTI TEMPLATE LAMA */
-.sidebar-logo-section {
-    text-align: center;
-    padding: 15px 10px;
-    margin-bottom: 10px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.sidebar-logo {
-    margin: 0 auto 10px auto;
-    width: 60px;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-}
-
-.sidebar-logo img {
-    width: 60px !important;
-    height: 60px !important;
-    max-width: 100% !important;
-    max-height: 100% !important;
-    object-fit: contain !important;
-    object-position: center !important;
-    display: block !important;
-    margin: 0 auto !important;
-    background: none !important;
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-    filter: none !important;
-    border-radius: 0 !important;
-    padding: 0 !important;
-    transition: none !important;
-}
 
 .sidebar-logo-title {
     font-size: 16px !important;
@@ -206,7 +174,7 @@
 }
 
 .nav-category {
-    margin-top: 10px !important;
+    margin-top: 30px !important;
     font-size: 10px !important;
     padding: 8px 10px !important;
     color: rgba(255, 255, 255, 0.6) !important;
@@ -315,6 +283,39 @@
     border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
+/* User Avatar dengan Foto */
+.user-avatar-small {
+    width: 35px;
+    height: 35px;
+    background: linear-gradient(135deg, #28a745, #20c997);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1rem;
+    margin-right: 10px;
+    box-shadow: 0 3px 10px rgba(40, 167, 69, 0.3);
+    overflow: hidden;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    flex-shrink: 0;
+}
+
+/* Avatar kecil dengan gambar */
+.user-avatar-small.has-image {
+    background: none !important;
+}
+
+.user-avatar-small.has-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.user-avatar-small.has-image i {
+    display: none;
+}
+
 /* Dropdown Toggle Animation */
 .dropdown-toggle {
     position: relative;
@@ -358,20 +359,6 @@
     border: 1px solid rgba(40, 167, 69, 0.3);
 }
 
-.user-avatar-small {
-    width: 35px;
-    height: 35px;
-    background: linear-gradient(135deg, #28a745, #20c997);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1rem;
-    margin-right: 10px;
-    box-shadow: 0 3px 10px rgba(40, 167, 69, 0.3);
-}
-
 .user-info-small h5 {
     margin: 0;
     font-size: 0.85rem;
@@ -394,11 +381,13 @@
     transition: all 0.3s ease;
     cursor: pointer;
     background: rgba(255, 255, 255, 0.05);
+    text-decoration: none;
 }
 
 .settings-item:hover {
     background: rgba(255, 255, 255, 0.1);
     transform: translateX(3px);
+    text-decoration: none;
 }
 
 .settings-item i {
@@ -497,15 +486,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const toggle = $('[href="#' + this.id + '"]');
         toggle.attr('aria-expanded', 'false');
     });
-
-    // Logout form handler untuk sidebar
-    const sidebarLogoutForm = document.getElementById('sidebar-logout-form');
-    if (sidebarLogoutForm) {
-        sidebarLogoutForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            this.submit();
-        });
-    }
 
     // ========== ACTIVE MENU DETECTION ==========
     function setActiveMenu() {
@@ -622,8 +602,3 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-
-<!-- ==================== LOGOUT FORM UNTUK SIDEBAR ==================== -->
-<form id="sidebar-logout-form" action="{{ route('auth.logout') }}" method="POST" style="display: none;">
-    @csrf
-</form>

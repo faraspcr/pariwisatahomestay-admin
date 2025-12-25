@@ -248,7 +248,7 @@
                                 </div>
                             </div>
 
-                            <!-- Main Photo Preview - DIPERBESAR -->
+                            <!-- Main Photo Preview - DIPERBESAR SECARA SIGNIFIKAN -->
                             <div class="main-photo-container mb-4">
                                 <div class="main-photo-wrapper">
                                     @php
@@ -264,11 +264,11 @@
                                     @endphp
 
                                     @if($isImage)
-                                        <!-- Gambar - DIPERBESAR -->
+                                        <!-- Gambar - DIPERBESAR SECARA SIGNIFIKAN -->
                                         <img src="{{ asset('storage/' . $firstFile->file_name) }}"
                                              id="currentMainPhoto"
-                                             class="main-photo"
-                                             alt="Foto Utama"
+                                             class="main-photo img-fluid"
+                                             alt="Foto Utama Homestay"
                                              onerror="handleImageError(this, '{{ $firstFile->file_name }}')">
                                     @elseif($isPDF)
                                         <!-- PDF Preview -->
@@ -511,17 +511,17 @@
 
 {{-- ====================== MODAL FULLSCREEN GAMBAR ====================== --}}
 <div class="modal fade" id="imageFullscreenModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-dialog modal-dialog-centered modal-fullscreen">
         <div class="modal-content bg-dark">
             <div class="modal-header border-0">
                 <h6 class="modal-title text-white" id="imageFullscreenTitle"></h6>
                 <button type="button" class="btn-close btn-close-white" data-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body p-0 d-flex align-items-center justify-content-center" style="min-height: 80vh;">
+            <div class="modal-body p-0 d-flex align-items-center justify-content-center" style="min-height: 90vh;">
                 <div class="image-container" style="width: 100%; height: 100%;">
                     <img id="fullscreenImage" src=""
-                         class="img-fluid"
-                         style="max-width: 100%; max-height: 80vh; width: auto; height: auto; display: block; margin: 0 auto;"
+                         class="img-fluid w-100 h-auto"
+                         style="max-width: 100%; max-height: 90vh; width: auto; height: auto; display: block; margin: 0 auto; object-fit: contain;"
                          onerror="handleFullscreenImageError(this)">
                 </div>
             </div>
@@ -891,29 +891,42 @@
         const photoCounter = document.getElementById('photoCounter');
 
         // Hide semua preview terlebih dahulu
-        mainPhoto.style.display = 'none';
+        if (mainPhoto) mainPhoto.style.display = 'none';
         if (pdfPreviewContainer) pdfPreviewContainer.style.display = 'none';
         if (docPreview) docPreview.style.display = 'none';
 
         // Tampilkan preview sesuai jenis file
         if (isImage) {
-            // Tampilkan gambar
+            // Tampilkan gambar - MENGGUNAKAN CACHE BUSTING UNTUK REFRESH GAMBAR
             const timestamp = new Date().getTime();
             const fullPath = 'storage/' + fileName;
-            mainPhoto.src = "{{ asset('') }}" + fullPath + '?t=' + timestamp;
+            const imageUrl = "{{ asset('') }}" + fullPath + '?t=' + timestamp;
+
+            mainPhoto.src = imageUrl;
             mainPhoto.style.display = 'block';
+            mainPhoto.classList.add('img-fluid');
+            mainPhoto.style.maxWidth = '100%';
+            mainPhoto.style.maxHeight = '100%';
+            mainPhoto.style.objectFit = 'contain';
 
             // Update juga untuk fullscreen modal
-            document.getElementById('fullscreenImage').src = "{{ asset('') }}" + fullPath + '?t=' + timestamp;
+            document.getElementById('fullscreenImage').src = imageUrl;
             document.getElementById('imageFullscreenTitle').textContent = currentFileDisplayName;
             currentPDFPreviewUrl = '';
+
+            console.log('Changing to image:', imageUrl);
         } else if (isPDF) {
             // Tampilkan preview PDF
             currentPDFPreviewUrl = getPreviewUrl(fileId);
 
             // Update container PDF
             const pdfContainer = document.querySelector('.pdf-preview-container') || createPDFPreview();
-            pdfContainer.style.display = 'block';
+            if (pdfContainer) {
+                pdfContainer.style.display = 'block';
+                pdfContainer.querySelector('h5').textContent = currentFileDisplayName;
+                const viewBtn = pdfContainer.querySelector('a');
+                if (viewBtn) viewBtn.href = currentPDFPreviewUrl;
+            }
 
             // Update fullscreen untuk PDF
             document.getElementById('pdfFullscreenTitle').textContent = currentFileDisplayName + ' (PDF)';
@@ -938,20 +951,26 @@
                 color = 'text-info';
             }
 
-            const newDocPreview = document.createElement('div');
-            newDocPreview.className = 'document-preview text-center py-4';
-            newDocPreview.innerHTML = `
-                <i class="mdi ${icon} ${color}" style="font-size: 100px;"></i>
-                <h5 class="mt-3">${currentFileDisplayName}</h5>
-                <p class="text-muted">${mimeType}</p>
-            `;
-
             const mainPhotoWrapper = document.querySelector('.main-photo-wrapper');
             const existingDocPreview = mainPhotoWrapper.querySelector('.document-preview');
+
             if (existingDocPreview) {
-                existingDocPreview.remove();
+                existingDocPreview.innerHTML = `
+                    <i class="mdi ${icon} ${color}" style="font-size: 100px;"></i>
+                    <h5 class="mt-3">${currentFileDisplayName}</h5>
+                    <p class="text-muted">${mimeType}</p>
+                `;
+                existingDocPreview.style.display = 'block';
+            } else {
+                const newDocPreview = document.createElement('div');
+                newDocPreview.className = 'document-preview text-center py-4';
+                newDocPreview.innerHTML = `
+                    <i class="mdi ${icon} ${color}" style="font-size: 100px;"></i>
+                    <h5 class="mt-3">${currentFileDisplayName}</h5>
+                    <p class="text-muted">${mimeType}</p>
+                `;
+                mainPhotoWrapper.insertBefore(newDocPreview, mainPhotoWrapper.firstChild);
             }
-            mainPhotoWrapper.insertBefore(newDocPreview, mainPhotoWrapper.firstChild);
             currentPDFPreviewUrl = '';
 
             // Stop slideshow jika dokumen non-gambar ditampilkan
@@ -1063,9 +1082,10 @@
             // Atur gambar agar benar-benar fullscreen
             const img = document.getElementById('fullscreenImage');
             img.style.maxWidth = '100%';
-            img.style.maxHeight = '80vh';
+            img.style.maxHeight = '90vh';
             img.style.width = 'auto';
             img.style.height = 'auto';
+            img.style.objectFit = 'contain';
             img.style.display = 'block';
             img.style.margin = '0 auto';
 
@@ -1513,19 +1533,20 @@
     color: white;
 }
 
-/* PERBAIKAN BESAR: Main photo container lebih besar */
+/* ==================== PERBAIKAN BESAR: Main Photo Container ==================== */
 .main-photo-container {
     position: relative;
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    padding: 25px;
+    padding: 30px;
     border-radius: 15px;
-    border: 2px solid #e0e0e0;
-    margin-bottom: 25px;
+    border: 3px solid #e0e0e0;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
 .main-photo-wrapper {
     position: relative;
-    border-radius: 12px;
+    border-radius: 15px;
     overflow: hidden;
     min-height: 500px;
     max-height: 600px;
@@ -1533,36 +1554,49 @@
     align-items: center;
     justify-content: center;
     background: white;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     transition: all 0.3s ease;
+    width: 100%;
+    height: auto;
 }
 
 .main-photo-wrapper:hover {
-    box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
 }
 
-/* PERBAIKAN BESAR: Main photo lebih besar */
+/* ==================== PERBAIKAN BESAR: Main Photo Lebih Besar ==================== */
 .main-photo {
     max-width: 100%;
     max-height: 550px;
-    width: auto;
-    height: auto;
+    width: auto !important;
+    height: auto !important;
     object-fit: contain;
     transition: transform 0.5s ease;
     cursor: pointer;
+    display: block;
+    margin: 0 auto;
 }
 
 .main-photo:hover {
-    transform: scale(1.03);
+    transform: scale(1.05);
+}
+
+/* ==================== PERBAIKAN: Responsive Image Scaling ==================== */
+.main-photo.img-fluid {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 550px !important;
+    object-fit: contain !important;
 }
 
 /* Styling khusus untuk PDF Preview */
 .pdf-preview-container {
     width: 100%;
-    padding: 40px 30px;
+    padding: 50px 40px;
     background: #f8f9fa;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    border-radius: 15px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    margin: 0 auto;
 }
 
 .pdf-preview-container i {
@@ -1577,19 +1611,23 @@
 .pdf-preview-container h5 {
     font-weight: 600;
     color: #495057;
-    margin-top: 15px !important;
+    margin-top: 20px !important;
+    font-size: 1.3rem;
 }
 
 .pdf-preview-container .btn {
-    margin: 5px;
+    margin: 8px;
+    padding: 10px 20px;
+    font-size: 1rem;
 }
 
 .document-preview {
     width: 100%;
-    padding: 40px 30px;
+    padding: 50px 40px;
     background: #f8f9fa;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    border-radius: 15px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    margin: 0 auto;
 }
 
 .document-preview i {
@@ -1604,15 +1642,16 @@
 .document-preview h5 {
     font-weight: 600;
     color: #495057;
-    margin-top: 15px !important;
+    margin-top: 20px !important;
+    font-size: 1.3rem;
 }
 
 .photo-overlay {
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 25px;
+    right: 25px;
     display: flex;
-    gap: 10px;
+    gap: 12px;
     opacity: 0;
     transition: opacity 0.3s ease;
     z-index: 10;
@@ -1623,21 +1662,22 @@
 }
 
 .photo-overlay .btn {
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
     background: white;
     border: 1px solid #dee2e6;
     transition: all 0.3s ease;
+    font-size: 18px;
 }
 
 .photo-overlay .btn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transform: scale(1.15);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
 }
 
 .photo-overlay .btn-light:hover {
@@ -1648,50 +1688,52 @@
 
 .photo-info {
     background: white;
-    padding: 15px 20px;
-    border-radius: 10px;
-    margin-top: 20px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-    border: 1px solid #e9ecef;
+    padding: 20px 25px;
+    border-radius: 12px;
+    margin-top: 25px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border: 2px solid #e9ecef;
 }
 
 .photo-info #currentPhotoName {
-    font-size: 1rem;
-    font-weight: 600;
+    font-size: 1.1rem;
+    font-weight: 700;
     color: #495057;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+    padding: 0 10px;
 }
 
 .photo-controls .badge {
-    font-size: 0.9rem;
-    padding: 8px 15px;
-    border-radius: 20px;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border-radius: 25px;
     background: linear-gradient(135deg, #4e73df, #224abe);
-    font-weight: 600;
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(78, 115, 223, 0.3);
 }
 
 /* ==================== THUMBNAIL STYLES ==================== */
 .thumbnail-card {
     position: relative;
-    border-radius: 10px;
+    border-radius: 12px;
     overflow: hidden;
     cursor: pointer;
     transition: all 0.3s ease;
-    height: 130px;
+    height: 140px;
     border: 3px solid transparent;
     background: white;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
 }
 
 .thumbnail-card.active {
     border-color: #4e73df;
-    transform: scale(1.08);
-    box-shadow: 0 8px 20px rgba(78, 115, 223, 0.4);
+    transform: scale(1.1);
+    box-shadow: 0 10px 25px rgba(78, 115, 223, 0.5);
 }
 
 .thumbnail-card:hover {
-    transform: translateY(-5px) scale(1.05);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    transform: translateY(-8px) scale(1.08);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.25);
 }
 
 .thumbnail-img {
@@ -1702,7 +1744,7 @@
 }
 
 .thumbnail-card:hover .thumbnail-img {
-    transform: scale(1.15);
+    transform: scale(1.2);
 }
 
 .file-thumbnail {
@@ -1712,7 +1754,7 @@
     align-items: center;
     justify-content: center;
     background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-    padding: 15px;
+    padding: 20px;
 }
 
 .file-thumbnail i {
@@ -1721,7 +1763,7 @@
 }
 
 .thumbnail-card:hover .file-thumbnail i {
-    transform: scale(1.2);
+    transform: scale(1.3);
     opacity: 1;
 }
 
@@ -1731,14 +1773,14 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.8));
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.85));
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 10px;
     opacity: 0;
     transition: opacity 0.3s ease;
-    padding: 15px;
+    padding: 20px;
 }
 
 .thumbnail-card:hover .thumbnail-overlay {
@@ -1746,8 +1788,8 @@
 }
 
 .delete-thumbnail, .download-thumbnail, .view-thumbnail {
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     padding: 0;
     display: flex;
     align-items: center;
@@ -1755,100 +1797,107 @@
     border-radius: 50%;
     border: none;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+    font-size: 16px;
 }
 
 .delete-thumbnail:hover {
     background-color: #dc3545 !important;
-    transform: scale(1.15);
-    box-shadow: 0 4px 10px rgba(220, 53, 69, 0.4);
+    transform: scale(1.2);
+    box-shadow: 0 5px 15px rgba(220, 53, 69, 0.5);
 }
 
 .download-thumbnail:hover {
     background-color: #17a2b8 !important;
-    transform: scale(1.15);
-    box-shadow: 0 4px 10px rgba(23, 162, 184, 0.4);
+    transform: scale(1.2);
+    box-shadow: 0 5px 15px rgba(23, 162, 184, 0.5);
 }
 
 .view-thumbnail:hover {
     background-color: #ffc107 !important;
-    transform: scale(1.15);
-    box-shadow: 0 4px 10px rgba(255, 193, 7, 0.4);
+    transform: scale(1.2);
+    box-shadow: 0 5px 15px rgba(255, 193, 7, 0.5);
 }
 
 .badge-order {
     position: absolute;
-    top: 8px;
-    left: 8px;
-    background: rgba(0,0,0,0.8);
+    top: 10px;
+    left: 10px;
+    background: rgba(0,0,0,0.9);
     color: white;
-    font-size: 11px;
-    width: 24px;
-    height: 24px;
+    font-size: 12px;
+    width: 28px;
+    height: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
     font-weight: bold;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.4);
 }
 
 /* ==================== FULLSCREEN MODAL STYLES ==================== */
-/* Modal untuk Gambar */
+/* Modal untuk Gambar - PERBAIKAN FULLSCREEN */
 #imageFullscreenModal .modal-dialog {
-    max-width: 95%;
-    margin: 10px auto;
+    max-width: 100%;
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
+#imageFullscreenModal .modal-content {
+    background: rgba(0, 0, 0, 0.95);
+    border: none;
+    border-radius: 0;
+    height: 100vh;
 }
 
 #imageFullscreenModal .modal-body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(0, 0, 0, 0.9);
-    min-height: 85vh;
+    background-color: rgba(0, 0, 0, 0.95);
+    height: calc(100vh - 120px);
     padding: 0;
-}
-
-#imageFullscreenModal .modal-content {
-    background: transparent;
-    border: none;
+    margin: 0;
 }
 
 #fullscreenImage {
     max-width: 100%;
-    max-height: 85vh;
-    width: auto;
-    height: auto;
+    max-height: 90vh;
+    width: auto !important;
+    height: auto !important;
     object-fit: contain;
     display: block;
     margin: 0 auto;
 }
 
 #imageFullscreenModal .modal-header {
-    background: rgba(0, 0, 0, 0.7);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 15px 20px;
+    background: rgba(0, 0, 0, 0.8);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 20px 25px;
 }
 
 #imageFullscreenModal .modal-footer {
-    background: rgba(0, 0, 0, 0.7);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 15px 20px;
+    background: rgba(0, 0, 0, 0.8);
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 20px 25px;
 }
 
 /* Modal untuk PDF */
 #pdfFullscreenModal .modal-content {
     background: rgba(0, 0, 0, 0.95);
+    border-radius: 0;
 }
 
 #pdfFullscreenModal .modal-header {
-    background: rgba(0, 0, 0, 0.8);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.85);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 #pdfFullscreenModal .modal-footer {
-    background: rgba(0, 0, 0, 0.8);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.85);
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 #pdfFullscreenIframe {
@@ -1856,32 +1905,34 @@
 }
 
 .modal-footer .btn-light {
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.95);
     border: none;
-    font-weight: 600;
-    padding: 10px 20px;
+    font-weight: 700;
+    padding: 12px 25px;
     transition: all 0.3s ease;
+    font-size: 1rem;
+    border-radius: 10px;
 }
 
 .modal-footer .btn-light:hover {
     background: white;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
 }
 
 /* ==================== UPLOAD STYLES ==================== */
 .upload-section {
-    background: #f8f9fa;
-    padding: 25px;
-    border-radius: 12px;
-    margin-top: 30px;
-    border: 3px dashed #dee2e6;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    padding: 30px;
+    border-radius: 15px;
+    margin-top: 35px;
+    border: 4px dashed #dee2e6;
     transition: all 0.3s ease;
 }
 
 .upload-section:hover {
     border-color: #4e73df;
-    background: #f0f5ff;
+    background: linear-gradient(135deg, #f0f5ff, #e6f7ff);
 }
 
 .custom-file-upload {
@@ -1889,7 +1940,7 @@
     overflow: hidden;
     display: inline-block;
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 .custom-file-upload input[type="file"] {
@@ -1904,31 +1955,33 @@
 
 .upload-label {
     display: block;
-    padding: 25px;
+    padding: 30px;
     background: white;
-    border: 3px dashed #4e73df;
-    border-radius: 12px;
+    border: 4px dashed #4e73df;
+    border-radius: 15px;
     text-align: center;
     color: #4e73df;
-    font-weight: 700;
+    font-weight: 800;
     cursor: pointer;
     transition: all 0.3s ease;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .upload-label:hover {
     background: #4e73df;
     color: white;
     border-color: #4e73df;
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(78, 115, 223, 0.3);
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(78, 115, 223, 0.4);
 }
 
 .upload-preview-card {
     position: relative;
-    border-radius: 10px;
+    border-radius: 12px;
     overflow: hidden;
-    height: 140px;
+    height: 150px;
     border: 3px solid #e0e0e0;
     background: white;
     transition: all 0.3s ease;
@@ -1936,18 +1989,19 @@
 
 .upload-preview-card:hover {
     border-color: #4e73df;
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(78, 115, 223, 0.2);
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(78, 115, 223, 0.25);
 }
 
 .upload-preview-img {
     width: 100%;
-    height: 100px;
+    height: 110px;
     object-fit: cover;
+    object-position: center;
 }
 
 .upload-preview-doc {
-    height: 100px;
+    height: 110px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1959,27 +2013,27 @@
     bottom: 0;
     left: 0;
     right: 0;
-    background: rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.85);
     color: white;
-    padding: 5px 8px;
-    font-size: 11px;
+    padding: 8px 10px;
+    font-size: 12px;
 }
 
 .upload-btn {
-    padding: 15px;
-    border-radius: 12px;
-    font-weight: 700;
-    font-size: 1rem;
+    padding: 18px;
+    border-radius: 15px;
+    font-weight: 800;
+    font-size: 1.1rem;
     transition: all 0.3s ease;
     border: none;
     background: linear-gradient(135deg, #4CAF50, #66BB6A);
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
 }
 
 .upload-btn:hover:not(:disabled) {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(76, 175, 80, 0.5);
     background: linear-gradient(135deg, #43A047, #5CB85C);
 }
 
@@ -1991,17 +2045,17 @@
 
 /* ==================== EMPTY GALLERY ==================== */
 .empty-gallery {
-    padding: 80px 20px;
-    background: #f8f9fa;
-    border-radius: 15px;
-    border: 3px dashed #dee2e6;
-    margin: 30px 0;
+    padding: 100px 30px;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border-radius: 20px;
+    border: 4px dashed #dee2e6;
+    margin: 40px 0;
 }
 
 .empty-gallery i {
     opacity: 0.5;
     transition: opacity 0.3s ease;
-    font-size: 5rem;
+    font-size: 6rem;
 }
 
 .empty-gallery:hover i {
@@ -2009,47 +2063,52 @@
 }
 
 .empty-gallery h5 {
-    font-size: 1.5rem;
-    margin: 20px 0 10px;
+    font-size: 1.8rem;
+    margin: 25px 0 15px;
+    font-weight: 700;
 }
 
 .empty-gallery p {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
 }
 
 /* ==================== TOAST NOTIFICATION ==================== */
 .toast-notification {
     position: fixed;
-    bottom: 30px;
-    right: 30px;
+    bottom: 40px;
+    right: 40px;
     background: white;
-    border-radius: 12px;
-    padding: 18px 25px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+    border-radius: 15px;
+    padding: 20px 30px;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.3);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    min-width: 350px;
-    max-width: 450px;
+    min-width: 400px;
+    max-width: 500px;
     z-index: 9999;
-    animation: slideIn 0.3s ease;
-    border-left: 5px solid;
+    animation: slideIn 0.4s ease;
+    border-left: 6px solid;
 }
 
 .toast-success {
     border-left-color: #4CAF50;
+    background: linear-gradient(135deg, #f8fff8, #ffffff);
 }
 
 .toast-error {
     border-left-color: #f44336;
+    background: linear-gradient(135deg, #fff8f8, #ffffff);
 }
 
 .toast-info {
     border-left-color: #2196F3;
+    background: linear-gradient(135deg, #f8fbff, #ffffff);
 }
 
 .toast-warning {
     border-left-color: #FF9800;
+    background: linear-gradient(135deg, #fffbf8, #ffffff);
 }
 
 .toast-content {
@@ -2059,8 +2118,8 @@
 }
 
 .toast-content i {
-    font-size: 24px;
-    margin-right: 12px;
+    font-size: 28px;
+    margin-right: 15px;
 }
 
 .toast-success .toast-content i {
@@ -2082,17 +2141,18 @@
 .toast-close {
     background: none;
     border: none;
-    font-size: 22px;
+    font-size: 24px;
     cursor: pointer;
     color: #999;
     padding: 0;
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
     transition: all 0.3s ease;
+    margin-left: 20px;
 }
 
 .toast-close:hover {
@@ -2113,60 +2173,67 @@
 
 /* ==================== BUTTON ACTIONS ==================== */
 .btn-action {
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-weight: 600;
+    padding: 12px 25px;
+    border-radius: 10px;
+    font-weight: 700;
     transition: all 0.3s ease;
+    font-size: 1rem;
 }
 
 .btn-action:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.2);
 }
 
 /* ==================== ANIMATIONS ==================== */
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
+    from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
 .card-detail, .card-gallery {
-    animation: fadeIn 0.5s ease;
+    animation: fadeIn 0.6s ease;
 }
 
 /* ==================== RESPONSIVE ==================== */
-@media (max-width: 1200px) {
+@media (max-width: 1400px) {
     .main-photo-wrapper {
-        min-height: 450px;
-        max-height: 500px;
+        min-height: 550px;
+        max-height: 650px;
     }
 
     .main-photo {
-        max-height: 500px;
+        max-height: 600px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .main-photo-wrapper {
+        min-height: 500px;
+        max-height: 580px;
     }
 
-    #imageFullscreenModal .modal-dialog {
-        max-width: 100%;
-        margin: 5px auto;
+    .main-photo {
+        max-height: 550px;
     }
 }
 
 @media (max-width: 992px) {
     .card-detail, .card-gallery {
-        margin-bottom: 25px;
+        margin-bottom: 30px;
     }
 
     .main-photo-wrapper {
-        min-height: 400px;
-        max-height: 450px;
+        min-height: 450px;
+        max-height: 520px;
     }
 
     .main-photo {
-        max-height: 450px;
+        max-height: 500px;
     }
 
     .thumbnail-card {
-        height: 120px;
+        height: 130px;
     }
 
     .gallery-nav {
@@ -2175,22 +2242,16 @@
 
     .gallery-nav .btn {
         flex: 1;
-        min-width: 140px;
-        margin-bottom: 8px;
+        min-width: 160px;
+        margin-bottom: 10px;
+        padding: 10px 18px;
+        font-size: 1rem;
     }
 
     .slideshow-controls-overlay .btn-round {
-        width: 45px;
-        height: 45px;
-        font-size: 22px;
-    }
-
-    #imageFullscreenModal .modal-body {
-        min-height: 80vh;
-    }
-
-    #fullscreenImage {
-        max-height: 80vh;
+        width: 48px;
+        height: 48px;
+        font-size: 24px;
     }
 }
 
@@ -2201,12 +2262,62 @@
 
     .detail-label {
         min-width: auto;
-        margin-bottom: 5px;
+        margin-bottom: 8px;
     }
 
     .main-photo-wrapper {
+        min-height: 400px;
+        max-height: 480px;
+    }
+
+    .main-photo {
+        max-height: 450px;
+    }
+
+    .thumbnail-card {
+        height: 110px;
+    }
+
+    .photo-overlay {
+        opacity: 1;
+        top: 20px;
+        right: 20px;
+        gap: 10px;
+    }
+
+    .photo-overlay .btn {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+
+    .slideshow-controls-overlay .btn-round {
+        width: 42px;
+        height: 42px;
+        font-size: 22px;
+    }
+
+    .gallery-nav .btn {
+        padding: 9px 15px;
+        font-size: 0.95rem;
+        min-width: 140px;
+    }
+
+    .toast-notification {
+        min-width: 320px;
+        max-width: 350px;
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+        bottom: 25px;
+        padding: 18px 25px;
+    }
+}
+
+@media (max-width: 576px) {
+    .main-photo-wrapper {
         min-height: 350px;
-        max-height: 400px;
+        max-height: 420px;
     }
 
     .main-photo {
@@ -2217,53 +2328,52 @@
         height: 100px;
     }
 
-    .photo-overlay {
-        opacity: 1;
-        top: 15px;
-        right: 15px;
+    .thumbnail-overlay {
+        padding: 15px;
         gap: 8px;
     }
 
-    .photo-overlay .btn {
-        width: 35px;
-        height: 35px;
-        font-size: 16px;
+    .delete-thumbnail, .download-thumbnail, .view-thumbnail {
+        width: 32px;
+        height: 32px;
+        font-size: 15px;
     }
 
     .slideshow-controls-overlay .btn-round {
-        width: 40px;
-        height: 40px;
+        width: 38px;
+        height: 38px;
         font-size: 20px;
+        padding: 0;
     }
 
-    .gallery-nav .btn {
-        padding: 7px 12px;
-        font-size: 0.85rem;
-        min-width: 120px;
+    .slideshow-controls-overlay {
+        padding: 0 15px;
     }
 
-    .toast-notification {
-        min-width: 280px;
-        max-width: 320px;
-        left: 50%;
-        right: auto;
-        transform: translateX(-50%);
-        bottom: 20px;
+    .photo-info #currentPhotoName {
+        font-size: 1rem;
     }
 
-    #imageFullscreenModal .modal-body {
-        min-height: 70vh;
+    .photo-controls .badge {
+        font-size: 0.9rem;
+        padding: 8px 16px;
     }
 
-    #fullscreenImage {
-        max-height: 70vh;
+    .upload-label {
+        padding: 25px;
+        font-size: 1.1rem;
+    }
+
+    .upload-btn {
+        padding: 15px;
+        font-size: 1rem;
     }
 }
 
-@media (max-width: 576px) {
+@media (max-width: 400px) {
     .main-photo-wrapper {
         min-height: 300px;
-        max-height: 350px;
+        max-height: 380px;
     }
 
     .main-photo {
@@ -2274,91 +2384,19 @@
         height: 90px;
     }
 
-    .thumbnail-overlay {
-        padding: 10px;
-        gap: 6px;
-    }
-
-    .delete-thumbnail, .download-thumbnail, .view-thumbnail {
-        width: 28px;
-        height: 28px;
-        font-size: 14px;
-    }
-
-    .slideshow-controls-overlay .btn-round {
-        width: 35px;
-        height: 35px;
-        font-size: 18px;
-        padding: 0;
-    }
-
-    .slideshow-controls-overlay {
-        padding: 0 10px;
-    }
-
-    .photo-info #currentPhotoName {
-        font-size: 0.9rem;
-    }
-
-    .photo-controls .badge {
-        font-size: 0.8rem;
-        padding: 6px 12px;
-    }
-
-    .upload-label {
-        padding: 20px;
-        font-size: 1rem;
-    }
-
-    .upload-btn {
-        padding: 12px;
-        font-size: 0.95rem;
-    }
-
-    #imageFullscreenModal .modal-body {
-        min-height: 60vh;
-    }
-
-    #fullscreenImage {
-        max-height: 60vh;
-    }
-}
-
-@media (max-width: 400px) {
-    .main-photo-wrapper {
-        min-height: 250px;
-        max-height: 300px;
-    }
-
-    .main-photo {
-        max-height: 300px;
-    }
-
-    .thumbnail-card {
-        height: 80px;
-    }
-
     .gallery-nav .btn {
         min-width: 100%;
-        margin-bottom: 5px;
+        margin-bottom: 8px;
     }
 
     .slideshow-controls-overlay {
-        display: none;
+        display: flex;
     }
 
     .slideshow-controls-overlay .btn-round {
-        width: 30px;
-        height: 30px;
-        font-size: 16px;
-    }
-
-    #imageFullscreenModal .modal-body {
-        min-height: 50vh;
-    }
-
-    #fullscreenImage {
-        max-height: 50vh;
+        width: 34px;
+        height: 34px;
+        font-size: 18px;
     }
 }
 </style>

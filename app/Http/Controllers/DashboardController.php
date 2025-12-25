@@ -1,16 +1,15 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Warga;
 use App\Models\DestinasiWisata;
 use App\Models\User;
-use App\Models\Homestay; // TAMBAHKAN INI
-use App\Models\KamarHomestay; // TAMBAHKAN INI
-use App\Models\BookingHomestay; // TAMBAHKAN INI
-use App\Models\UlasanWisata; // TAMBAHKAN INI
+use App\Models\Homestay;
+use App\Models\KamarHomestay;
+use App\Models\BookingHomestay;
+use App\Models\UlasanWisata;
 
 class DashboardController extends Controller
 {
@@ -19,47 +18,47 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        // ========== TAMBAHKAN INI: Cek apakah user sudah login ==========
+        // ========== Cek apakah user sudah login ==========
         if (!Auth::check()) {
             return redirect()->route('auth.login')->with('error', 'Silakan login terlebih dahulu!');
         }
 
-        // ========== TAMBAHKAN INI: Ambil data user yang login ==========
+        // ========== Ambil data user yang login ==========
         $user = Auth::user();
         $lastLogin = session('last_login');
 
-        // Data statistik yang sudah ada
+        // ========== Data statistik yang sudah ada
         $totalWarga = Warga::count();
         $totalDestinasi = DestinasiWisata::count();
         $totalUser = User::count();
-        $totalAktivitas = 25; // TAMBAHKAN: Contoh data aktivitas
+        $totalAktivitas = 25;
 
-        // ========== TAMBAHKAN INI: Data untuk fitur baru ==========
+        // ========== Data untuk fitur baru ==========
         $totalHomestay = Homestay::count();
         $totalKamar = KamarHomestay::count();
         $totalBooking = BookingHomestay::count();
         $totalUlasan = UlasanWisata::count();
 
-        // Data untuk WhatsApp button
+        // ========== Data untuk WhatsApp button
         $whatsappData = [
-            'phone_number' => '6281234567890', // Ganti dengan nomor admin
+            'phone_number' => '6281234567890',
             'default_message' => 'Halo Admin Bina Desa! Saya perlu bantuan terkait sistem Bina Desa. Bisa dibantu?',
             'admin_name' => 'Admin Bina Desa'
         ];
 
-        // ========== TAMBAHKAN INI: Kirim SEMUA data ke view ==========
+        // ========== Kirim SEMUA data ke view ==========
         return view('pages.dashboard', compact(
             'totalWarga',
             'totalDestinasi',
             'totalUser',
             'whatsappData',
-            'user',           // TAMBAHKAN: data user
-            'lastLogin',      // TAMBAHKAN: last login dari session
-            'totalAktivitas', // TAMBAHKAN: total aktivitas
-            'totalHomestay',  // TAMBAHKAN: total homestay
-            'totalKamar',     // TAMBAHKAN: total kamar homestay
-            'totalBooking',   // TAMBAHKAN: total booking
-            'totalUlasan'     // TAMBAHKAN: total ulasan wisata
+            'user',
+            'lastLogin',
+            'totalAktivitas',
+            'totalHomestay',
+            'totalKamar',
+            'totalBooking',
+            'totalUlasan'
         ));
     }
 

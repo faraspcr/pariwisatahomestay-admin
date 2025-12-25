@@ -10,9 +10,6 @@ use Illuminate\Support\Facades\Storage;
 
 class KamarHomestayController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         // Kolom yang bisa di-filter
@@ -30,13 +27,9 @@ class KamarHomestayController extends Controller
 
         // Ambil data homestay untuk dropdown filter
         $homestays = Homestay::all();
-
         return view('pages.kamar_homestay.index', compact('kamarHomestay', 'homestays'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $homestays = Homestay::all();
@@ -118,9 +111,6 @@ class KamarHomestayController extends Controller
         return view('pages.kamar_homestay.show', compact('kamar', 'files'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit($id)
     {
         $kamar = KamarHomestay::findOrFail($id);

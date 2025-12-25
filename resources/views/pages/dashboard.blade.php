@@ -31,8 +31,8 @@
             top: 0;
             width: 100%;
             z-index: 1030;
-           background: transparent !important;
-    box-shadow: none !important;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .navbar-brand-wrapper {
@@ -100,7 +100,7 @@
         /* Judul utama - satu baris */
         .header-title {
             color: #28a745 !important;
-            font-size: 16px !important;
+            font-size: 16.1px !important;
             font-weight: 800 !important;
             margin: 0 !important;
             padding: 0 !important;
@@ -128,8 +128,6 @@
             max-width: 100% !important;
         }
 
-
-
         /* Navbar menu wrapper */
         .navbar-menu-wrapper {
             flex: 1;
@@ -138,7 +136,6 @@
             justify-content: space-between;
             padding: 0 20px;
         }
-
 
         /* Navbar nav right */
         .navbar-nav-right {
@@ -175,176 +172,10 @@
             background: rgba(40, 167, 69, 0.1) !important;
         }
 
-        /* ==================== HEADER MOBILE FIXES BARU ==================== */
-        /* Untuk layar kecil (mobile) */
-        @media (max-width: 768px) {
-            /* Header container utama */
+        /* Responsive design untuk header */
+        @media (max-width: 991px) {
             .navbar-brand-wrapper {
-                min-width: auto !important;
-                width: auto !important;
-                padding: 0 5px !important;
-                margin-right: 0 !important;
-            }
-
-            /* Container logo */
-            .header-logo-container {
-                gap: 8px !important;
-                padding: 0 !important;
-            }
-
-            /* Wrapper untuk logo */
-            .logo-wrapper {
-                min-width: 40px !important;
-                height: 40px !important;
-                flex-shrink: 0;
-            }
-
-            /* Container teks - BATASI LEBIH KETAT */
-            .header-text-container {
-                max-width: 120px !important;
-                min-height: 40px !important;
-                overflow: hidden !important;
-            }
-
-            /* Judul utama - UKURAN LEBIH KECIL */
-            .header-title {
-                font-size: 11px !important;
-                font-weight: 700 !important;
-                line-height: 1.1 !important;
-                white-space: nowrap !important;
-                overflow: hidden !important;
-                text-overflow: ellipsis !important;
-                letter-spacing: 0.3px;
-            }
-
-            /* Subjudul - UKURAN SANGAT KECIL, MAKSIMAL SATU BARIS */
-            .header-subtitle {
-                font-size: 6px !important;
-                font-weight: 500 !important;
-                line-height: 1.1 !important;
-                white-space: nowrap !important;
-                overflow: hidden !important;
-                text-overflow: ellipsis !important;
-                -webkit-line-clamp: 1 !important;
-                margin-top: 1px !important;
-            }
-
-            /* Navbar menu wrapper */
-            .navbar-menu-wrapper {
-                padding: 0 5px !important;
-                justify-content: flex-end !important;
-            }
-
-            /* Search field disembunyikan di mobile */
-            .search-field {
-                display: none !important;
-            }
-
-            /* Profile section - perbaiki layout */
-            .nav-profile .nav-link {
-                padding: 5px 8px !important;
-            }
-
-            .nav-profile .profile-avatar-circle {
-                width: 32px !important;
-                height: 32px !important;
-                font-size: 1rem !important;
-            }
-
-            .nav-profile .nav-profile-text {
-                display: none !important; /* Sembunyikan teks di mobile */
-            }
-        }
-
-        /* Untuk tampilan sangat kecil (mobile kecil) */
-        @media (max-width: 480px) {
-            .navbar-brand-wrapper {
-                min-width: 60px !important;
-            }
-
-            .header-text-container {
-                max-width: 100px !important;
-            }
-
-            .header-title {
-                font-size: 10px !important;
-            }
-
-            .header-subtitle {
-                font-size: 5px !important;
-            }
-
-            .logo-wrapper {
-                min-width: 35px !important;
-                height: 35px !important;
-            }
-
-            /* Notification icon lebih kecil */
-            .nav-link.count-indicator {
-                padding: 3px !important;
-                font-size: 0.9rem !important;
-            }
-
-            .count-symbol {
-                width: 18px !important;
-                height: 18px !important;
-                font-size: 0.7rem !important;
-            }
-        }
-
-        /* Untuk tablet (768px - 991px) */
-        @media (min-width: 769px) and (max-width: 991px) {
-            .navbar-brand-wrapper {
-                min-width: 200px !important;
-            }
-
-            .header-text-container {
-                max-width: 180px !important;
-            }
-
-            .header-title {
-                font-size: 13px !important;
-            }
-
-            .header-subtitle {
-                font-size: 8px !important;
-                -webkit-line-clamp: 2 !important;
-                white-space: normal !important;
-            }
-
-            .logo-wrapper {
-                min-width: 45px !important;
-                height: 45px !important;
-            }
-        }
-
-        /* Untuk desktop kecil (992px - 1199px) */
-        @media (min-width: 992px) and (max-width: 1199px) {
-            .navbar-brand-wrapper {
-                min-width: 220px !important;
-            }
-
-            .header-text-container {
-                max-width: 200px !important;
-            }
-
-            .header-title {
-                font-size: 14px !important;
-            }
-
-            .header-subtitle {
-                font-size: 9px !important;
-            }
-        }
-
-        /* Untuk desktop normal (1200px ke atas) */
-        @media (min-width: 1200px) {
-            .navbar-brand-wrapper {
-                min-width: 250px !important;
-            }
-
-            .header-text-container {
-                max-width: 280px !important;
+                min-width: 200px;
             }
 
             .header-title {
@@ -353,52 +184,76 @@
 
             .header-subtitle {
                 font-size: 10px !important;
+                -webkit-line-clamp: 1 !important;
+            }
+
+            .search-field {
+                max-width: 300px;
+                margin: 0 10px;
             }
         }
 
-        /* Tambahan untuk menghindari breaking layout di semua ukuran */
-        .navbar.default-layout-navbar {
-            min-height: 70px;
-        }
-
-        .navbar-brand-wrapper {
-            transition: all 0.3s ease;
-        }
-
-        /* Pastikan tidak ada overflow horizontal */
-        .navbar-nav-right {
-            flex-wrap: nowrap;
-            overflow: visible;
-        }
-
-        /* Hamburger button positioning */
-        .navbar-toggler[data-toggle="minimize"] {
-            margin-left: 5px;
-            margin-right: 10px;
-        }
-
-        /* Fix untuk dropdown profile di mobile */
         @media (max-width: 768px) {
-            .nav-profile .dropdown-menu {
-                position: fixed !important;
-                top: 70px !important;
-                right: 10px !important;
-                left: auto !important;
-                min-width: 280px !important;
-                transform: none !important;
+            .navbar-brand-wrapper {
+                min-width: 180px;
+                padding: 0 10px;
+            }
+
+            .logo-wrapper {
+                min-width: 50px !important;
+                height: 50px !important;
+            }
+
+            .header-title {
+                font-size: 14px !important;
+            }
+
+            .header-subtitle {
+                font-size: 9px !important;
+                -webkit-line-clamp: 1 !important;
+            }
+
+            .search-field {
+                display: none !important;
+            }
+
+            .navbar-menu-wrapper {
+                padding: 0 10px;
             }
         }
 
-        /* Pastikan logo selalu terlihat dengan baik */
-        .header-logo-img {
-            transition: all 0.3s ease;
+        @media (max-width: 576px) {
+            .navbar-brand-wrapper {
+                min-width: 150px;
+            }
+
+            .header-text-container {
+                max-width: 120px !important;
+            }
+
+            .header-title {
+                font-size: 12px !important;
+                white-space: normal !important;
+                -webkit-line-clamp: 1 !important;
+            }
+
+            .header-subtitle {
+                display: none !important;
+            }
         }
 
-        /* Hover effect untuk logo */
-        .brand-logo:hover .header-logo-img {
-            transform: scale(1.05);
+        /* Pastikan logo tidak duplikat saat sidebar collapse */
+        @media (max-width: 991px) {
+            .navbar-brand-wrapper .brand-logo {
+                display: flex !important;
+            }
+
+            .navbar-brand-wrapper .brand-logo-mini {
+                display: none !important;
+            }
         }
 
+        /* ==================== HEADER RESPONSIVE FIXES ==================== */
         /* Responsive design untuk header - Mode Mobile/Split Screen */
         @media (max-width: 991px) {
             /* Sembunyikan teks header di bagian kiri */
@@ -1079,20 +934,20 @@
 
         /* Sidebar Profile dengan Foto */
         .user-avatar-small {
-            width: 35px;
-            height: 35px;
-            background: linear-gradient(135deg, #28a745, #20c997);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1rem;
-            margin-right: 10px;
-            box-shadow: 0 3px 10px rgba(40, 167, 69, 0.3);
-            overflow: hidden;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            flex-shrink: 0;
+            width: 35px !important;
+            height: 35px !important;
+            background: linear-gradient(135deg, #28a745, #20c997) !important;
+            border-radius: 50% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            color: white !important;
+            font-size: 1rem !important;
+            margin-right: 10px !important;
+            box-shadow: 0 3px 10px rgba(40, 167, 69, 0.3) !important;
+            overflow: hidden !important;
+            border: 2px solid rgba(255, 255, 255, 0.3) !important;
+            flex-shrink: 0 !important;
         }
 
         /* Avatar kecil dengan gambar */
@@ -1101,36 +956,45 @@
         }
 
         .user-avatar-small.has-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            display: block !important;
         }
 
         .user-avatar-small.has-image i {
-            display: none;
+            display: none !important;
         }
 
+        /* User Display Section */
         .user-display-section {
-            display: flex;
-            align-items: center;
-            padding: 8px;
-            background: linear-gradient(135deg, rgba(40, 167, 69, 0.2), rgba(32, 201, 151, 0.1));
-            border-radius: 6px;
-            margin-bottom: 10px;
-            border: 1px solid rgba(40, 167, 69, 0.3);
+            display: flex !important;
+            align-items: center !important;
+            padding: 8px !important;
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.2), rgba(32, 201, 151, 0.1)) !important;
+            border-radius: 6px !important;
+            margin-bottom: 10px !important;
+            border: 1px solid rgba(40, 167, 69, 0.3) !important;
+        }
+
+        /* User Info Small */
+        .user-info-small {
+            flex: 1 !important;
         }
 
         .user-info-small h5 {
-            margin: 0;
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: white;
+            margin: 0 !important;
+            font-size: 0.85rem !important;
+            font-weight: 700 !important;
+            color: white !important;
+            line-height: 1.2 !important;
         }
 
         .user-info-small p {
-            margin: 0;
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.8);
+            margin: 0 !important;
+            font-size: 0.75rem !important;
+            color: rgba(255, 255, 255, 0.8) !important;
+            line-height: 1.2 !important;
         }
 
         /* Original CSS styles tetap ada di bawah */
@@ -1243,7 +1107,7 @@
             }
         }
 
-        /* Circular Progress Styles - Like Reference */
+        /* ==================== STATISTIK KARTU YANG DIKEMBANGKAN ==================== */
         .circular-progress-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -1258,12 +1122,21 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             position: relative;
             overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
         }
 
         .circular-progress-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border-color: var(--progress-color);
+        }
+
+        /* Efek klik pada kartu */
+        .circular-progress-card:active {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
         .circular-progress-wrapper {
@@ -1314,7 +1187,7 @@
         }
 
         .circular-progress-value {
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             font-weight: 700;
             color: #2c3e50;
             line-height: 1;
@@ -1325,7 +1198,7 @@
         }
 
         .circular-progress-title {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: 700;
             color: #2c3e50;
             margin-bottom: 8px;
@@ -1335,19 +1208,12 @@
             display: flex;
             align-items: center;
             gap: 5px;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-weight: 600;
+            margin-top: 5px;
         }
 
-        .trend-up {
-            color: #28a745;
-        }
-
-        .trend-down {
-            color: #dc3545;
-        }
-
-        /* Color variations for circular progress */
+        /* Warna untuk setiap kartu statistik */
         .progress-warga {
             --progress-color: #667eea;
             --progress-percent: 75%;
@@ -1361,11 +1227,6 @@
         .progress-user {
             --progress-color: #4facfe;
             --progress-percent: 60%;
-        }
-
-        .progress-aktivitas {
-            --progress-color: #43e97b;
-            --progress-percent: 85%;
         }
 
         .progress-homestay {
@@ -1384,7 +1245,7 @@
         }
 
         .progress-ulasan {
-            --progress-color: #ffecd2;
+            --progress-color: #e6c393;
             --progress-percent: 55%;
         }
 
@@ -1631,11 +1492,7 @@
             transform: translateY(-2px) !important;
         }
 
-        /* New Cards Section */
-        .new-cards-section {
-            margin-top: 30px;
-        }
-
+        /* Section Title */
         .section-title {
             font-size: 1.3rem;
             font-weight: 700;
@@ -1700,6 +1557,10 @@
                 padding: 10px 12px !important;
                 margin: 3px 8px !important;
             }
+
+            .circular-progress-container {
+                grid-template-columns: 1fr;
+            }
         }
 
         /* Visitor Stats Badge */
@@ -1756,65 +1617,69 @@
         }
 
         .settings-item {
-            display: flex;
-            align-items: center;
-            padding: 8px 10px;
-            border-radius: 6px;
-            margin-bottom: 6px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            background: rgba(255, 255, 255, 0.05);
+            display: flex !important;
+            align-items: center !important;
+            padding: 8px 10px !important;
+            border-radius: 6px !important;
+            margin-bottom: 6px !important;
+            transition: all 0.3s ease !important;
+            cursor: pointer !important;
+            background: rgba(255, 255, 255, 0.05) !important;
+            text-decoration: none !important;
+            color: white !important;
         }
 
         .settings-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateX(3px);
+            background: rgba(255, 255, 255, 0.1) !important;
+            transform: translateX(3px) !important;
+            text-decoration: none !important;
         }
 
         .settings-item i {
-            margin-right: 8px;
-            width: 18px;
-            text-align: center;
-            font-size: 1rem;
-            color: rgba(255, 255, 255, 0.9);
+            margin-right: 8px !important;
+            width: 18px !important;
+            text-align: center !important;
+            font-size: 1rem !important;
+            color: rgba(255, 255, 255, 0.9) !important;
         }
 
         .settings-item span {
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.85rem !important;
+            font-weight: 500 !important;
+            color: rgba(255, 255, 255, 0.9) !important;
         }
 
+        /* Logout Item Sidebar */
         .logout-item-sidebar {
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            border-radius: 6px;
-            background: rgba(220, 53, 69, 0.15);
-            border: 1px solid rgba(220, 53, 69, 0.3);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            text-decoration: none;
+            display: flex !important;
+            align-items: center !important;
+            padding: 10px !important;
+            border-radius: 6px !important;
+            background: rgba(220, 53, 69, 0.15) !important;
+            border: 1px solid rgba(220, 53, 69, 0.3) !important;
+            transition: all 0.3s ease !important;
+            cursor: pointer !important;
+            text-decoration: none !important;
         }
 
         .logout-item-sidebar:hover {
-            background: rgba(220, 53, 69, 0.25);
-            transform: translateX(3px);
-            text-decoration: none;
+            background: rgba(220, 53, 69, 0.25) !important;
+            transform: translateX(3px) !important;
+            text-decoration: none !important;
         }
 
         .logout-item-sidebar i {
-            margin-right: 8px;
-            width: 18px;
-            text-align: center;
-            font-size: 1rem;
-            color: #dc3545;
+            margin-right: 8px !important;
+            width: 18px !important;
+            text-align: center !important;
+            font-size: 1rem !important;
+            color: #dc3545 !important;
         }
 
         .logout-item-sidebar span {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #dc3545;
+            font-size: 0.85rem !important;
+            font-weight: 600 !important;
+            color: #dc3545 !important;
         }
 
         /* ==================== PROFIL PENGEMBANG YANG DIREDESAIN ULANG ==================== */
@@ -2439,6 +2304,105 @@
                 bottom: -25px;
             }
         }
+
+        /* ==================== CSS TAMBAHAN UNTUK NAVIGASI STATISTIK ==================== */
+        .clickable-stat {
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .clickable-stat::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(40, 167, 69, 0.05);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .clickable-stat:hover::after {
+            opacity: 1;
+        }
+
+        .clickable-stat:hover .circular-progress-title {
+            color: var(--progress-color);
+        }
+
+        .clickable-stat:active {
+            transform: translateY(2px);
+        }
+
+        /* Efek hover untuk ikon */
+        .circular-progress-icon {
+            transition: all 0.3s ease;
+        }
+
+        .clickable-stat:hover .circular-progress-icon {
+            transform: scale(1.2);
+        }
+
+        /* Indikator klik */
+        .click-indicator {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .clickable-stat:hover .click-indicator {
+            opacity: 1;
+        }
+
+        /* Loading effect saat klik */
+        .stat-loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .stat-loading.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--progress-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
     <!-- ==================== END CSS ==================== -->
 </head>
@@ -2571,10 +2535,10 @@
                                     @if($hasProfilePicture)
                                         <img src="{{ asset('storage/' . $user->profile_picture) }}"
                                              alt="{{ $user->name }}"
-                                             onerror="this.onerror=null; this.classList.add('error'); this.parentElement.innerHTML='<i class=\"mdi mdi-account\"></i>';">
-                                    @else
-                                        <i class="mdi mdi-account"></i>
-                                    @endif
+  style="width: 100%; height: 100%; object-fit: cover;">
+                        @else
+                            <i class="mdi mdi-account"></i>
+                        @endif
                                 </div>
                             </div>
                             <div class="nav-profile-text d-flex flex-column">
@@ -2589,13 +2553,13 @@
                             <div class="profile-dropdown-header">
                                 <div class="profile-avatar-large">
                                     <div class="avatar-circle {{ $hasProfilePicture ? 'has-image' : '' }}">
-                                        @if($hasProfilePicture)
-                                            <img src="{{ asset('storage/' . $user->profile_picture) }}"
-                                                 alt="{{ $user->name }}"
-                                                 onerror="this.onerror=null; this.classList.add('error'); this.parentElement.innerHTML='<i class=\"mdi mdi-account\"></i>';">
-                                        @else
-                                            <i class="mdi mdi-account"></i>
-                                        @endif
+                                       @if($hasProfilePicture)
+                                        <img src="{{ asset('storage/' . $user->profile_picture) }}"
+                                             alt="{{ $user->name }}"
+  style="width: 100%; height: 100%; object-fit: cover;">
+                        @else
+                            <i class="mdi mdi-account"></i>
+                        @endif
                                     </div>
                                 </div>
                                 <div class="profile-info-header">
@@ -2686,7 +2650,7 @@
 
         <div class="container-fluid page-body-wrapper">
 
-            <!-- ==================== START SIDEBAR ==================== -->
+            <!-- ==================== START SIDEBAR YANG DIUBAH ==================== -->
             <nav class="sidebar sidebar-offcanvas" id="sidebar">
                 <ul class="nav">
                     <li class="nav-item nav-category">Menu Utama</li>
@@ -2776,13 +2740,7 @@
                         </div>
                     </li>
 
-                    <!-- ==================== DOCUMENTATION MENU ==================== -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <span class="icon-bg"><i class="mdi mdi-book-open-page-variant menu-icon"></i></span>
-                            <span class="menu-title">Documentation</span>
-                        </a>
-                    </li>
+                    <!-- MENGHAPUS BAGIAN DOCUMENTATION -->
 
                     <!-- User Display & Settings Section -->
                     <li class="nav-item sidebar-user-actions mt-4">
@@ -2796,14 +2754,14 @@
                             <div class="user-display-section">
                                 <div class="user-avatar-small {{ $hasProfilePicture ? 'has-image' : '' }}">
                                     @if($hasProfilePicture)
-                                        <img src="{{ asset('storage/' . $user->profile_picture) }}"
-                                             alt="{{ $user->name }}"
-                                             onerror="this.onerror=null; this.classList.add('error'); this.parentElement.innerHTML='<i class=\"mdi mdi-account\"></i>';">
-                                    @else
-                                        <i class="mdi mdi-account"></i>
-                                    @endif
-                                </div>
-                                <div class="user-info-small">
+                                         <img src="{{ asset('storage/' . $user->profile_picture) }}"
+                                 alt="{{ $user->name }}"
+                                 style="width: 100%; height: 100%; object-fit: cover;">
+                        @else
+                            <i class="mdi mdi-account"></i>
+                        @endif
+                    </div>
+                    <div class="user-info-small">
                                     <h5>{{ $user->name ?? 'Guest' }}</h5>
                                     <p>{{ strtoupper($user->role ?? 'ADMIN') }} PARIWISATA DESA</p>
                                 </div>
@@ -2867,10 +2825,10 @@
                         </div>
                     </div>
 
-                    <!-- Circular Progress Charts - Data Dinamis dari Database -->
+                    <!-- Circular Progress Charts - Semua Statistik Digabung (TANPA AKTIVITAS) -->
                     <div class="circular-progress-container">
                         <!-- Data Warga Progress -->
-                        <div class="circular-progress-card progress-warga">
+                        <div class="circular-progress-card progress-warga clickable-stat" data-url="{{ route('warga.index') }}">
                             <div class="circular-progress-wrapper">
                                 <div class="circular-progress">
                                     <div class="circular-progress-bg">
@@ -2887,15 +2845,20 @@
                                 <div class="circular-progress-info">
                                     <div class="circular-progress-title">Data Warga</div>
                                     <div class="circular-progress-trend trend-up">
-                                        <i class="mdi mdi-arrow-up"></i>
-                                        <span>Meningkat sejak kemarin 12.5%</span>
+                                        <span>Klik untuk melihat detail</span>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="stat-loading">
+                                <div class="loading-spinner"></div>
+                            </div>
+                            <div class="click-indicator">
+                                <i class="mdi mdi-open-in-new"></i>
                             </div>
                         </div>
 
                         <!-- Destinasi Wisata Progress -->
-                        <div class="circular-progress-card progress-wisata">
+                        <div class="circular-progress-card progress-wisata clickable-stat" data-url="{{ route('destinasiwisata.index') }}">
                             <div class="circular-progress-wrapper">
                                 <div class="circular-progress">
                                     <div class="circular-progress-bg">
@@ -2912,15 +2875,20 @@
                                 <div class="circular-progress-info">
                                     <div class="circular-progress-title">Destinasi Wisata</div>
                                     <div class="circular-progress-trend trend-up">
-                                        <i class="mdi mdi-arrow-up"></i>
-                                        <span>Meningkat sejak kemarin 8.3%</span>
+                                        <span>Klik untuk melihat detail</span>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="stat-loading">
+                                <div class="loading-spinner"></div>
+                            </div>
+                            <div class="click-indicator">
+                                <i class="mdi mdi-open-in-new"></i>
                             </div>
                         </div>
 
                         <!-- Total User Progress -->
-                        <div class="circular-progress-card progress-user">
+                        <div class="circular-progress-card progress-user clickable-stat" data-url="{{ route('user.index') }}">
                             <div class="circular-progress-wrapper">
                                 <div class="circular-progress">
                                     <div class="circular-progress-bg">
@@ -2937,15 +2905,80 @@
                                 <div class="circular-progress-info">
                                     <div class="circular-progress-title">Total User</div>
                                     <div class="circular-progress-trend trend-up">
-                                        <i class="mdi mdi-arrow-up"></i>
-                                        <span>Meningkat sejak kemarin 5.2%</span>
+                                        <span>Klik untuk melihat detail</span>
                                     </div>
                                 </div>
                             </div>
+                            <div class="stat-loading">
+                                <div class="loading-spinner"></div>
+                            </div>
+                            <div class="click-indicator">
+                                <i class="mdi mdi-open-in-new"></i>
+                            </div>
                         </div>
 
-                        <!-- Aktivitas Progress -->
-                        <div class="circular-progress-card progress-aktivitas">
+                        <!-- Homestay Progress -->
+                        <div class="circular-progress-card progress-homestay clickable-stat" data-url="{{ route('homestay.index') }}">
+                            <div class="circular-progress-wrapper">
+                                <div class="circular-progress">
+                                    <div class="circular-progress-bg">
+                                        <div class="circular-progress-ring"></div>
+                                        <div class="circular-progress-content">
+                                            <div class="circular-progress-icon">
+                                                <i class="mdi mdi-home"></i>
+                                            </div>
+                                            <div class="circular-progress-value" id="homestay-count">
+                                                {{ $totalHomestay ?? 0 }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="circular-progress-info">
+                                    <div class="circular-progress-title">Homestay</div>
+                                    <div class="circular-progress-trend trend-up">
+                                        <span>Klik untuk melihat detail</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="stat-loading">
+                                <div class="loading-spinner"></div>
+                            </div>
+                            <div class="click-indicator">
+                                <i class="mdi mdi-open-in-new"></i>
+                            </div>
+                        </div>
+
+                        <!-- Kamar Homestay Progress -->
+                        <div class="circular-progress-card progress-kamar clickable-stat" data-url="{{ route('kamar.my') }}">
+                            <div class="circular-progress-wrapper">
+                                <div class="circular-progress">
+                                    <div class="circular-progress-bg">
+                                        <div class="circular-progress-ring"></div>
+                                        <div class="circular-progress-content">
+                                            <div class="circular-progress-icon">
+                                                <i class="mdi mdi-door-closed"></i>
+                                            </div>
+                                            <div class="circular-progress-value" id="kamar-count">
+                                                {{ $totalKamar ?? 0 }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="circular-progress-info">
+                                    <div class="circular-progress-title">Kamar Homestay</div>
+                                    <div class="circular-progress-trend trend-up">
+                                        <span>Klik untuk melihat detail</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="stat-loading">
+                                <div class="loading-spinner"></div>
+                            </div>
+                            <div class="click-indicator">
+                                <i class="mdi mdi-open-in-new"></i>
+                            </div>
+                        </div>
+
+                        <!-- Booking Progress -->
+                        <div class="circular-progress-card progress-booking clickable-stat" data-url="{{ route('booking-homestay.index') }}">
                             <div class="circular-progress-wrapper">
                                 <div class="circular-progress">
                                     <div class="circular-progress-bg">
@@ -2954,124 +2987,53 @@
                                             <div class="circular-progress-icon">
                                                 <i class="mdi mdi-calendar-check"></i>
                                             </div>
-                                            <div class="circular-progress-value" id="aktivitas-count">
-                                                {{ $totalAktivitas ?? 25 }}</div>
+                                            <div class="circular-progress-value" id="booking-count">
+                                                {{ $totalBooking ?? 0 }}</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="circular-progress-info">
-                                    <div class="circular-progress-title">Aktivitas</div>
-                                    <div class="circular-progress-trend trend-down">
-                                        <i class="mdi mdi-arrow-down"></i>
-                                        <span>Menurun sejak kemarin 2.3%</span>
+                                    <div class="circular-progress-title">Booking</div>
+                                    <div class="circular-progress-trend trend-up">
+                                        <span>Klik untuk melihat detail</span>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="stat-loading">
+                                <div class="loading-spinner"></div>
+                            </div>
+                            <div class="click-indicator">
+                                <i class="mdi mdi-open-in-new"></i>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- New Circular Progress Cards for Additional Features -->
-                    <div class="new-cards-section">
-                        <h3 class="section-title">Statistik Tambahan</h3>
-                        <div class="circular-progress-container">
-                            <!-- Homestay Progress -->
-                            <div class="circular-progress-card progress-homestay">
-                                <div class="circular-progress-wrapper">
-                                    <div class="circular-progress">
-                                        <div class="circular-progress-bg">
-                                            <div class="circular-progress-ring"></div>
-                                            <div class="circular-progress-content">
-                                                <div class="circular-progress-icon">
-                                                    <i class="mdi mdi-home"></i>
-                                                </div>
-                                                <div class="circular-progress-value" id="homestay-count">
-                                                    {{ $totalHomestay ?? 0 }}</div>
+                        <!-- Ulasan Wisata Progress -->
+                        <div class="circular-progress-card progress-ulasan clickable-stat" data-url="{{ route('ulasan_wisata.index') }}">
+                            <div class="circular-progress-wrapper">
+                                <div class="circular-progress">
+                                    <div class="circular-progress-bg">
+                                        <div class="circular-progress-ring"></div>
+                                        <div class="circular-progress-content">
+                                            <div class="circular-progress-icon">
+                                                <i class="mdi mdi-star-circle"></i>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="circular-progress-info">
-                                        <div class="circular-progress-title">Homestay</div>
-                                        <div class="circular-progress-trend trend-up">
-                                            <i class="mdi mdi-arrow-up"></i>
-                                            <span>Meningkat sejak kemarin 7.8%</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Kamar Homestay Progress -->
-                            <div class="circular-progress-card progress-kamar">
-                                <div class="circular-progress-wrapper">
-                                    <div class="circular-progress">
-                                        <div class="circular-progress-bg">
-                                            <div class="circular-progress-ring"></div>
-                                            <div class="circular-progress-content">
-                                                <div class="circular-progress-icon">
-                                                    <i class="mdi mdi-door-closed"></i>
-                                                </div>
-                                                <div class="circular-progress-value" id="kamar-count">
-                                                    {{ $totalKamar ?? 0 }}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="circular-progress-info">
-                                        <div class="circular-progress-title">Kamar Homestay</div>
-                                        <div class="circular-progress-trend trend-up">
-                                            <i class="mdi mdi-arrow-up"></i>
-                                            <span>Meningkat sejak kemarin 9.2%</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Booking Progress -->
-                            <div class="circular-progress-card progress-booking">
-                                <div class="circular-progress-wrapper">
-                                    <div class="circular-progress">
-                                        <div class="circular-progress-bg">
-                                            <div class="circular-progress-ring"></div>
-                                            <div class="circular-progress-content">
-                                                <div class="circular-progress-icon">
-                                                    <i class="mdi mdi-calendar-check"></i>
-                                                </div>
-                                                <div class="circular-progress-value" id="booking-count">
-                                                    {{ $totalBooking ?? 0 }}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="circular-progress-info">
-                                        <div class="circular-progress-title">Booking</div>
-                                        <div class="circular-progress-trend trend-up">
-                                            <i class="mdi mdi-arrow-up"></i>
-                                            <span>Meningkat sejak kemarin 15.4%</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Ulasan Wisata Progress -->
-                            <div class="circular-progress-card progress-ulasan">
-                                <div class="circular-progress-wrapper">
-                                    <div class="circular-progress">
-                                        <div class="circular-progress-bg">
-                                            <div class="circular-progress-ring"></div>
-                                            <div class="circular-progress-content">
-                                                <div class="circular-progress-icon">
-                                                    <i class="mdi mdi-star-circle"></i>
-                                                </div>
-                                                <div class="circular-progress-value" id="ulasan-count">
-                                                    {{ $totalUlasan ?? 0 }}</div>
-                                            </div>
+                                            <div class="circular-progress-value" id="ulasan-count">
+                                                {{ $totalUlasan ?? 0 }}</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="circular-progress-info">
                                     <div class="circular-progress-title">Ulasan Wisata</div>
                                     <div class="circular-progress-trend trend-up">
-                                        <i class="mdi mdi-arrow-up"></i>
-                                        <span>Meningkat sejak kemarin 6.7%</span>
+                                        <span>Klik untuk melihat detail</span>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="stat-loading">
+                                <div class="loading-spinner"></div>
+                            </div>
+                            <div class="click-indicator">
+                                <i class="mdi mdi-open-in-new"></i>
                             </div>
                         </div>
                     </div>
@@ -3106,7 +3068,7 @@
                             </div>
                         </div>
 
-                        <!-- Right Column - Metrics -->
+                        <!-- Right Column - Aktivitas Terbaru -->
                         <div class="col-md-4 grid-margin">
                             <!-- Recent Activity -->
                             <div class="activity-card">
@@ -3199,7 +3161,7 @@
 
                             <!-- Informasi Developer -->
                             <div class="developer-info-new">
-                                <!-- Nama Besar dengan Gradient -->
+                                <!-- NAMA BESAR dengan Gradient -->
                                 <h2 class="developer-name">
                                     FARAS ZAKIA INDRANI
                                 </h2>
@@ -3466,15 +3428,34 @@
                 });
             }
 
-            // Set user name dari Auth
-            @if(Auth::check())
-                const userName = "{{ Auth::user()->name }}";
-                // Update welcome message
-                const welcomeMessage = document.querySelector('.welcome-message');
-                if (welcomeMessage) {
-                    welcomeMessage.textContent = userName;
-                }
-            @endif
+            // ==================== FUNGSI KLIK PADA STATISTIK ====================
+            const statCards = document.querySelectorAll('.clickable-stat');
+
+            statCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const url = this.getAttribute('data-url');
+                    if (url) {
+                        // Tampilkan loading spinner
+                        const loadingElement = this.querySelector('.stat-loading');
+                        if (loadingElement) {
+                            loadingElement.classList.add('active');
+                        }
+
+                        // Tambahkan efek klik
+                        this.style.transform = 'translateY(0)';
+
+                        // Navigasi ke halaman setelah delay kecil untuk efek visual
+                        setTimeout(() => {
+                            window.location.href = url;
+                        }, 300);
+                    }
+                });
+
+                // Tambahkan efek hover
+                card.addEventListener('mouseenter', function() {
+                    this.style.cursor = 'pointer';
+                });
+            });
 
             // Initialize Chart.js
             let visitorChart = null;
@@ -3572,7 +3553,6 @@
                 const wargaCount = {{ $totalWarga ?? 0 }};
                 const wisataCount = {{ $totalDestinasi ?? 0 }};
                 const userCount = {{ $totalUser ?? 0 }};
-                const aktivitasCount = {{ $totalAktivitas ?? 25 }};
                 const homestayCount = {{ $totalHomestay ?? 0 }};
                 const kamarCount = {{ $totalKamar ?? 0 }};
                 const bookingCount = {{ $totalBooking ?? 0 }};
@@ -3582,7 +3562,6 @@
                 document.getElementById('warga-count').textContent = wargaCount;
                 document.getElementById('wisata-count').textContent = wisataCount;
                 document.getElementById('user-count').textContent = userCount;
-                document.getElementById('aktivitas-count').textContent = aktivitasCount;
                 document.getElementById('homestay-count').textContent = homestayCount;
                 document.getElementById('kamar-count').textContent = kamarCount;
                 document.getElementById('booking-count').textContent = bookingCount;
@@ -3592,7 +3571,6 @@
                 updateProgressPercent('progress-warga', wargaCount, 200);
                 updateProgressPercent('progress-wisata', wisataCount, 50);
                 updateProgressPercent('progress-user', userCount, 50);
-                updateProgressPercent('progress-aktivitas', aktivitasCount, 50);
                 updateProgressPercent('progress-homestay', homestayCount, 30);
                 updateProgressPercent('progress-kamar', kamarCount, 100);
                 updateProgressPercent('progress-booking', bookingCount, 50);
@@ -3611,7 +3589,7 @@
                 }
             }
 
-            // Load recent activities dari database
+            // Load recent activities
             function loadRecentActivities() {
                 // Data contoh aktivitas
                 const activities = [
@@ -3681,17 +3659,6 @@
                     container.innerHTML += activityHTML;
                 });
             }
-
-            // Initialize data
-            updateCircularProgress();
-            initVisitorChart();
-            loadRecentActivities();
-
-            // Auto refresh data setiap 30 detik
-            setInterval(() => {
-                updateCircularProgress();
-                loadRecentActivities();
-            }, 30000);
 
             // Period selector for chart
             document.querySelectorAll('[data-period]').forEach(button => {
@@ -3821,7 +3788,17 @@
                 }, 10000); // Update every 10 seconds
             }
 
+            // Initialize semua fungsi
+            updateCircularProgress();
+            initVisitorChart();
+            loadRecentActivities();
             simulateRealTimeUpdates();
+
+            // Auto refresh data setiap 30 detik
+            setInterval(() => {
+                updateCircularProgress();
+                loadRecentActivities();
+            }, 30000);
         });
     </script>
     <!-- ==================== END JS ==================== -->

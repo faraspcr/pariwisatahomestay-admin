@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use App\Models\DestinasiWisata;
 use App\Models\Media;
@@ -9,9 +7,6 @@ use Illuminate\Support\Facades\Storage;
 
 class DestinasiWisataController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         // Kolom yang bisa di-filter

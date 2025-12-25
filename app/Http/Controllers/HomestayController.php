@@ -10,9 +10,6 @@ use Illuminate\Support\Facades\Storage;
 
 class HomestayController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         // Kolom yang bisa di-filter
@@ -31,9 +28,6 @@ class HomestayController extends Controller
         return view('pages.homestay.index', compact('homestays'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $wargas = Warga::all();
@@ -114,9 +108,6 @@ class HomestayController extends Controller
         return view('pages.homestay.show', compact('homestay', 'files'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit($id)
     {
         $homestay = Homestay::findOrFail($id);

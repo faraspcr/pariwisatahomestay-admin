@@ -11,9 +11,6 @@ use Illuminate\Support\Facades\Storage;
 
 class BookingHomestayController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         // Kolom yang bisa di-filter
@@ -37,9 +34,6 @@ class BookingHomestayController extends Controller
         return view('pages.booking_homestay.index', compact('bookings', 'kamars', 'wargas'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $kamars = KamarHomestay::with('homestay')->get();
@@ -125,9 +119,6 @@ class BookingHomestayController extends Controller
         return view('pages.booking_homestay.show', compact('booking', 'files'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit($id)
     {
         $booking = BookingHomestay::with(['kamar', 'warga'])->findOrFail($id);
