@@ -1,9 +1,6 @@
 @extends('layouts.app')
 @section('content')
 
-<div class="main-panel">
-    <div class="content-wrapper">
-
         {{-- ====================== START MAIN CONTENT ====================== --}}
 
         <!-- Header -->
@@ -282,8 +279,6 @@
         </div>
 
         {{-- ====================== END MAIN CONTENT ====================== --}}
-    </div>
-</div>
 
 <!-- Modal Preview Gambar -->
 <div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-hidden="true">

@@ -1,513 +1,508 @@
 @extends('layouts.app')
 @section('content')
 
-<div class="main-panel">
-    <div class="content-wrapper">
+{{-- ====================== START MAIN CONTENT ====================== --}}
 
-        {{-- ====================== START MAIN CONTENT ====================== --}}
+<!-- Header -->
+<div class="page-header">
+    <h3 class="page-title">
+        <i class="mdi mdi-eye text-primary mr-2"></i>
+        Detail Homestay
+    </h3>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('homestay.index') }}">Homestay</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Detail Homestay</li>
+        </ol>
+    </nav>
+</div>
 
-        <!-- Header -->
-        <div class="page-header">
-            <h3 class="page-title">
-                <i class="mdi mdi-eye text-primary mr-2"></i>
-                Detail Homestay
-            </h3>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('homestay.index') }}">Homestay</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Detail Homestay</li>
-                </ol>
-            </nav>
-        </div>
+<!-- Alert Success -->
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="mdi mdi-check-circle-outline mr-2"></i>
+        <strong>Sukses!</strong> {{ session('success') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
 
-        <!-- Alert Success -->
-        @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="mdi mdi-check-circle-outline mr-2"></i>
-                <strong>Sukses!</strong> {{ session('success') }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+<div class="row">
+    <!-- Informasi Homestay - STRUKTUR SAMA -->
+    <div class="col-lg-5 mb-4">
+        <div class="card card-detail">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="mdi mdi-information mr-2"></i>Informasi Homestay</h5>
             </div>
-        @endif
-
-        <div class="row">
-            <!-- Informasi Homestay - STRUKTUR SAMA -->
-            <div class="col-lg-5 mb-4">
-                <div class="card card-detail">
-                    <div class="card-header bg-info text-white">
-                        <h5 class="mb-0"><i class="mdi mdi-information mr-2"></i>Informasi Homestay</h5>
+            <div class="card-body">
+                <div class="detail-info">
+                    <div class="detail-item">
+                        <div class="detail-label">
+                            <i class="mdi mdi-home text-primary"></i>
+                            <span>Nama Homestay</span>
+                        </div>
+                        <div class="detail-value">{{ $homestay->nama }}</div>
                     </div>
-                    <div class="card-body">
-                        <div class="detail-info">
-                            <div class="detail-item">
-                                <div class="detail-label">
-                                    <i class="mdi mdi-home text-primary"></i>
-                                    <span>Nama Homestay</span>
-                                </div>
-                                <div class="detail-value">{{ $homestay->nama }}</div>
-                            </div>
 
-                            <div class="detail-item">
-                                <div class="detail-label">
-                                    <i class="mdi mdi-account text-primary"></i>
-                                    <span>Pemilik</span>
-                                </div>
-                                <div class="detail-value">{{ $homestay->pemilik->nama ?? 'Tidak ada data' }}</div>
-                            </div>
+                    <div class="detail-item">
+                        <div class="detail-label">
+                            <i class="mdi mdi-account text-primary"></i>
+                            <span>Pemilik</span>
+                        </div>
+                        <div class="detail-value">{{ $homestay->pemilik->nama ?? 'Tidak ada data' }}</div>
+                    </div>
 
-                            <div class="detail-item">
-                                <div class="detail-label">
-                                    <i class="mdi mdi-home-map-marker text-primary"></i>
-                                    <span>Alamat</span>
-                                </div>
-                                <div class="detail-value">{{ $homestay->alamat }}</div>
-                            </div>
+                    <div class="detail-item">
+                        <div class="detail-label">
+                            <i class="mdi mdi-home-map-marker text-primary"></i>
+                            <span>Alamat</span>
+                        </div>
+                        <div class="detail-value">{{ $homestay->alamat }}</div>
+                    </div>
 
-                            <div class="detail-item">
-                                <div class="detail-label">
-                                    <i class="mdi mdi-map-marker-radius text-primary"></i>
-                                    <span>RT/RW</span>
-                                </div>
-                                <div class="detail-value">
-                                    <span class="badge-biru">{{ $homestay->rt }}/{{ $homestay->rw }}</span>
-                                </div>
-                            </div>
+                    <div class="detail-item">
+                        <div class="detail-label">
+                            <i class="mdi mdi-map-marker-radius text-primary"></i>
+                            <span>RT/RW</span>
+                        </div>
+                        <div class="detail-value">
+                            <span class="badge-biru">{{ $homestay->rt }}/{{ $homestay->rw }}</span>
+                        </div>
+                    </div>
 
-                            <!-- Fasilitas -->
-                            <div class="detail-item">
-                                <div class="detail-label">
-                                    <i class="mdi mdi-wifi text-primary"></i>
-                                    <span>Fasilitas</span>
-                                </div>
-                                <div class="detail-value detail-desc">
-                                    @php
-                                        $fasilitasData = $homestay->fasilitas_json;
-                                        $fasilitasList = [];
+                    <!-- Fasilitas -->
+                    <div class="detail-item">
+                        <div class="detail-label">
+                            <i class="mdi mdi-wifi text-primary"></i>
+                            <span>Fasilitas</span>
+                        </div>
+                        <div class="detail-value detail-desc">
+                            @php
+                                $fasilitasData = $homestay->fasilitas_json;
+                                $fasilitasList = [];
 
-                                        if (!empty($fasilitasData)) {
-                                            if (is_array($fasilitasData)) {
-                                                // Jika sudah array (karena casting di model)
-                                                $fasilitasList = array_filter($fasilitasData);
-                                            } elseif (is_string($fasilitasData)) {
-                                                // Jika masih string JSON
-                                                $decoded = json_decode($fasilitasData, true);
-                                                if (is_array($decoded)) {
-                                                    $fasilitasList = array_filter($decoded);
-                                                }
-                                            }
+                                if (!empty($fasilitasData)) {
+                                    if (is_array($fasilitasData)) {
+                                        // Jika sudah array (karena casting di model)
+                                        $fasilitasList = array_filter($fasilitasData);
+                                    } elseif (is_string($fasilitasData)) {
+                                        // Jika masih string JSON
+                                        $decoded = json_decode($fasilitasData, true);
+                                        if (is_array($decoded)) {
+                                            $fasilitasList = array_filter($decoded);
                                         }
-                                    @endphp
+                                    }
+                                }
+                            @endphp
 
-                                    @if(count($fasilitasList) > 0)
-                                        <div class="fasilitas-list">
-                                            @foreach($fasilitasList as $fasilitas => $status)
-                                                @if($status)
-                                                    <span class="badge bg-light text-dark mb-1 mr-1">
-                                                        @if(in_array(strtolower($fasilitas), ['wifi', 'internet']))
-                                                            <i class="mdi mdi-wifi mr-1"></i>
-                                                        @elseif(in_array(strtolower($fasilitas), ['ac', 'air conditioner']))
-                                                            <i class="mdi mdi-air-conditioner mr-1"></i>
-                                                        @elseif(in_array(strtolower($fasilitas), ['tv', 'television']))
-                                                            <i class="mdi mdi-television mr-1"></i>
-                                                        @elseif(strpos(strtolower($fasilitas), 'kolam') !== false || strpos(strtolower($fasilitas), 'renang') !== false)
-                                                            <i class="mdi mdi-pool mr-1"></i>
-                                                        @elseif(strpos(strtolower($fasilitas), 'parkir') !== false)
-                                                            <i class="mdi mdi-parking mr-1"></i>
-                                                        @elseif(strpos(strtolower($fasilitas), 'dapur') !== false)
-                                                            <i class="mdi mdi-silverware-fork-knife mr-1"></i>
-                                                        @else
-                                                            <i class="mdi mdi-check-circle mr-1"></i>
-                                                        @endif
-                                                        {{ ucwords(str_replace('_', ' ', $fasilitas)) }}
-                                                    </span>
+                            @if(count($fasilitasList) > 0)
+                                <div class="fasilitas-list">
+                                    @foreach($fasilitasList as $fasilitas => $status)
+                                        @if($status)
+                                            <span class="badge bg-light text-dark mb-1 mr-1">
+                                                @if(in_array(strtolower($fasilitas), ['wifi', 'internet']))
+                                                    <i class="mdi mdi-wifi mr-1"></i>
+                                                @elseif(in_array(strtolower($fasilitas), ['ac', 'air conditioner']))
+                                                    <i class="mdi mdi-air-conditioner mr-1"></i>
+                                                @elseif(in_array(strtolower($fasilitas), ['tv', 'television']))
+                                                    <i class="mdi mdi-television mr-1"></i>
+                                                @elseif(strpos(strtolower($fasilitas), 'kolam') !== false || strpos(strtolower($fasilitas), 'renang') !== false)
+                                                    <i class="mdi mdi-pool mr-1"></i>
+                                                @elseif(strpos(strtolower($fasilitas), 'parkir') !== false)
+                                                    <i class="mdi mdi-parking mr-1"></i>
+                                                @elseif(strpos(strtolower($fasilitas), 'dapur') !== false)
+                                                    <i class="mdi mdi-silverware-fork-knife mr-1"></i>
+                                                @else
+                                                    <i class="mdi mdi-check-circle mr-1"></i>
                                                 @endif
-                                            @endforeach
-                                        </div>
-                                    @else
-                                        -
-                                    @endif
+                                                {{ ucwords(str_replace('_', ' ', $fasilitas)) }}
+                                            </span>
+                                        @endif
+                                    @endforeach
                                 </div>
-                            </div>
-
-                            <div class="detail-item">
-                                <div class="detail-label">
-                                    <i class="mdi mdi-cash text-primary"></i>
-                                    <span>Harga per Malam</span>
-                                </div>
-                                <div class="detail-value">
-                                    <span class="badge-orange">Rp {{ number_format($homestay->harga_per_malam, 0, ',', '.') }}</span>
-                                </div>
-                            </div>
-
-                            <div class="detail-item">
-                                <div class="detail-label">
-                                    <i class="mdi mdi-check-circle text-primary"></i>
-                                    <span>Status</span>
-                                </div>
-                                <div class="detail-value">
-                                    @if($homestay->status == 'active')
-                                        <span class="badge-hijau">Aktif</span>
-                                    @elseif($homestay->status == 'inactive')
-                                        <span class="badge-danger">Tidak Aktif</span>
-                                    @else
-                                        <span class="badge-secondary">{{ $homestay->status }}</span>
-                                    @endif
-                                </div>
-                            </div>
-
-                            <div class="detail-item">
-                                <div class="detail-label">
-                                    <i class="mdi mdi-identifier text-primary"></i>
-                                    <span>ID Homestay</span>
-                                </div>
-                                <div class="detail-value">
-                                    <span class="badge bg-secondary">#{{ $homestay->homestay_id }}</span>
-                                </div>
-                            </div>
-
-                            <div class="detail-item">
-                                <div class="detail-label">
-                                    <i class="mdi mdi-calendar text-primary"></i>
-                                    <span>Dibuat Tanggal</span>
-                                </div>
-                                <div class="detail-value">{{ $homestay->created_at->format('d F Y H:i') }}</div>
-                            </div>
-
-                            <div class="detail-item">
-                                <div class="detail-label">
-                                    <i class="mdi mdi-update text-primary"></i>
-                                    <span>Diupdate Tanggal</span>
-                                </div>
-                                <div class="detail-value">{{ $homestay->updated_at->format('d F Y H:i') }}</div>
-                            </div>
+                            @else
+                                -
+                            @endif
                         </div>
+                    </div>
 
-                        <div class="d-grid gap-2 d-md-flex mt-4 pt-3 border-top">
-                            <a href="{{ route('homestay.edit', $homestay->homestay_id) }}" class="btn btn-warning me-2 btn-action">
-                                <i class="mdi mdi-pencil mr-1"></i> Edit Data
-                            </a>
-                            <form action="{{ route('homestay.destroy', $homestay->homestay_id) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-action"
-                                        onclick="return confirm('Apakah Anda yakin ingin menghapus homestay ini?')">
-                                    <i class="mdi mdi-delete mr-1"></i> Hapus
-                                </button>
-                            </form>
-                            <a href="{{ route('homestay.index') }}" class="btn btn-secondary ms-auto btn-action">
-                                <i class="mdi mdi-arrow-left mr-1"></i> Kembali
-                            </a>
+                    <div class="detail-item">
+                        <div class="detail-label">
+                            <i class="mdi mdi-cash text-primary"></i>
+                            <span>Harga per Malam</span>
                         </div>
+                        <div class="detail-value">
+                            <span class="badge-orange">Rp {{ number_format($homestay->harga_per_malam, 0, ',', '.') }}</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-label">
+                            <i class="mdi mdi-check-circle text-primary"></i>
+                            <span>Status</span>
+                        </div>
+                        <div class="detail-value">
+                            @if($homestay->status == 'active')
+                                <span class="badge-hijau">Aktif</span>
+                            @elseif($homestay->status == 'inactive')
+                                <span class="badge-danger">Tidak Aktif</span>
+                            @else
+                                <span class="badge-secondary">{{ $homestay->status }}</span>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-label">
+                            <i class="mdi mdi-identifier text-primary"></i>
+                            <span>ID Homestay</span>
+                        </div>
+                        <div class="detail-value">
+                            <span class="badge bg-secondary">#{{ $homestay->homestay_id }}</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-label">
+                            <i class="mdi mdi-calendar text-primary"></i>
+                            <span>Dibuat Tanggal</span>
+                        </div>
+                        <div class="detail-value">{{ $homestay->created_at->format('d F Y H:i') }}</div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-label">
+                            <i class="mdi mdi-update text-primary"></i>
+                            <span>Diupdate Tanggal</span>
+                        </div>
+                        <div class="detail-value">{{ $homestay->updated_at->format('d F Y H:i') }}</div>
                     </div>
                 </div>
+
+                <div class="d-grid gap-2 d-md-flex mt-4 pt-3 border-top">
+                    <a href="{{ route('homestay.edit', $homestay->homestay_id) }}" class="btn btn-warning me-2 btn-action">
+                        <i class="mdi mdi-pencil mr-1"></i> Edit Data
+                    </a>
+                    <form action="{{ route('homestay.destroy', $homestay->homestay_id) }}" method="POST" class="d-inline">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger btn-action"
+                                onclick="return confirm('Apakah Anda yakin ingin menghapus homestay ini?')">
+                            <i class="mdi mdi-delete mr-1"></i> Hapus
+                        </button>
+                    </form>
+                    <a href="{{ route('homestay.index') }}" class="btn btn-secondary ms-auto btn-action">
+                        <i class="mdi mdi-arrow-left mr-1"></i> Kembali
+                    </a>
+                </div>
             </div>
+        </div>
+    </div>
 
-            <!-- Foto Homestay - STRUKTUR SAMA -->
-            <div class="col-lg-7 mb-4">
-                <div class="card border-0 shadow card-gallery">
-                    <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0"><i class="mdi mdi-camera mr-2"></i>Galeri Foto Homestay</h5>
-                        <span class="badge bg-light text-dark">{{ count($files) }} File</span>
+    <!-- Foto Homestay - STRUKTUR SAMA -->
+    <div class="col-lg-7 mb-4">
+        <div class="card border-0 shadow card-gallery">
+            <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="mdi mdi-camera mr-2"></i>Galeri Foto Homestay</h5>
+                <span class="badge bg-light text-dark">{{ count($files) }} File</span>
+            </div>
+            <div class="card-body">
+                @if(count($files) > 0)
+                    <!-- Gallery Navigation dengan Slideshow Controls -->
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <div class="gallery-nav">
+                                <button class="btn btn-sm btn-outline-primary" onclick="showAllPhotos()">
+                                    <i class="mdi mdi-view-grid"></i> Semua File
+                                </button>
+                                <button class="btn btn-sm btn-outline-success" id="slideshowToggleBtn" onclick="toggleSlideshow()">
+                                    <i class="mdi mdi-play" id="slideshowIcon"></i>
+                                    <span id="slideshowText">Mulai Slideshow</span>
+                                </button>
+                                <button class="btn btn-sm btn-outline-info" onclick="downloadAll()">
+                                    <i class="mdi mdi-download"></i> Download Semua
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        @if(count($files) > 0)
-                            <!-- Gallery Navigation dengan Slideshow Controls -->
-                            <div class="row mb-3">
-                                <div class="col-12">
-                                    <div class="gallery-nav">
-                                        <button class="btn btn-sm btn-outline-primary" onclick="showAllPhotos()">
-                                            <i class="mdi mdi-view-grid"></i> Semua File
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-success" id="slideshowToggleBtn" onclick="toggleSlideshow()">
-                                            <i class="mdi mdi-play" id="slideshowIcon"></i>
-                                            <span id="slideshowText">Mulai Slideshow</span>
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-info" onclick="downloadAll()">
-                                            <i class="mdi mdi-download"></i> Download Semua
-                                        </button>
+
+                    <!-- Slideshow Timer Display -->
+                    <div class="row mb-2" id="slideshowTimerContainer" style="display: none;">
+                        <div class="col-12">
+                            <div class="slideshow-timer text-center">
+                                <span class="badge bg-warning text-dark">
+                                    <i class="mdi mdi-timer mr-1"></i>
+                                    Slideshow: <span id="slideshowTimer">5</span> detik
+                                </span>
+                                <div class="slideshow-progress mt-2">
+                                    <div class="progress" style="height: 6px;">
+                                        <div class="progress-bar bg-success" id="slideshowProgress" role="progressbar" style="width: 0%"></div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
 
-                            <!-- Slideshow Timer Display -->
-                            <div class="row mb-2" id="slideshowTimerContainer" style="display: none;">
-                                <div class="col-12">
-                                    <div class="slideshow-timer text-center">
-                                        <span class="badge bg-warning text-dark">
-                                            <i class="mdi mdi-timer mr-1"></i>
-                                            Slideshow: <span id="slideshowTimer">5</span> detik
-                                        </span>
-                                        <div class="slideshow-progress mt-2">
-                                            <div class="progress" style="height: 6px;">
-                                                <div class="progress-bar bg-success" id="slideshowProgress" role="progressbar" style="width: 0%"></div>
-                                            </div>
-                                        </div>
+                    <!-- Main Photo Preview - DIPERBESAR SECARA SIGNIFIKAN -->
+                    <div class="main-photo-container mb-4">
+                        <div class="main-photo-wrapper">
+                            @php
+                                $firstFile = $files[0];
+                                $isImage = str_contains($firstFile->mime_type, 'image');
+                                $isPDF = str_contains($firstFile->mime_type, 'pdf');
+                                $isDocument = str_contains($firstFile->mime_type, 'word') || str_contains($firstFile->mime_type, 'document') ||
+                                              str_contains($firstFile->mime_type, 'excel') || str_contains($firstFile->mime_type, 'sheet') ||
+                                              str_contains($firstFile->mime_type, 'text');
+                                $imageUrl = $isImage ? asset('storage/' . $firstFile->file_name) : '#';
+                                $previewUrl = route('homestay.show-file', [$homestay->homestay_id, $firstFile->media_id]);
+                                $fileNameDisplay = basename($firstFile->file_name);
+                            @endphp
+
+                            @if($isImage)
+                                <!-- Gambar - DIPERBESAR SECARA SIGNIFIKAN -->
+                                <img src="{{ asset('storage/' . $firstFile->file_name) }}"
+                                     id="currentMainPhoto"
+                                     class="main-photo img-fluid"
+                                     alt="Foto Utama Homestay"
+                                     onerror="handleImageError(this, '{{ $firstFile->file_name }}')">
+                            @elseif($isPDF)
+                                <!-- PDF Preview -->
+                                <div class="pdf-preview-container text-center py-4" id="pdfPreviewContainer">
+                                    <i class="mdi mdi-file-pdf-box text-danger" style="font-size: 100px;"></i>
+                                    <h5 class="mt-3">{{ $fileNameDisplay }}</h5>
+                                    <p class="text-muted">PDF Document</p>
+                                    <div class="mt-4">
+                                        <a href="{{ $previewUrl }}"
+                                           class="btn btn-primary btn-sm"
+                                           target="_blank"
+                                           data-toggle="tooltip"
+                                           title="Buka PDF">
+                                            <i class="mdi mdi-eye mr-1"></i> Lihat PDF
+                                        </a>
                                     </div>
                                 </div>
+                            @else
+                                <!-- Dokumen lain -->
+                                <div class="document-preview text-center py-4">
+                                    @if(str_contains($firstFile->mime_type, 'word') || str_contains($firstFile->mime_type, 'document'))
+                                        <i class="mdi mdi-file-word-box text-primary" style="font-size: 100px;"></i>
+                                    @elseif(str_contains($firstFile->mime_type, 'excel') || str_contains($firstFile->mime_type, 'sheet'))
+                                        <i class="mdi mdi-file-excel-box text-success" style="font-size: 100px;"></i>
+                                    @elseif(str_contains($firstFile->mime_type, 'text'))
+                                        <i class="mdi mdi-file-document-box text-info" style="font-size: 100px;"></i>
+                                    @else
+                                        <i class="mdi mdi-file-document-box text-secondary" style="font-size: 100px;"></i>
+                                    @endif
+                                    <h5 class="mt-3">{{ $fileNameDisplay }}</h5>
+                                    <p class="text-muted">{{ $firstFile->mime_type }}</p>
+                                </div>
+                            @endif
+
+                            <!-- Slideshow Controls Overlay -->
+                            <div class="slideshow-controls-overlay">
+                                <button class="btn btn-light btn-round" onclick="prevPhoto()" data-toggle="tooltip" title="Sebelumnya">
+                                    <i class="mdi mdi-chevron-left"></i>
+                                </button>
+                                <button class="btn btn-light btn-round" onclick="nextPhoto()" data-toggle="tooltip" title="Berikutnya">
+                                    <i class="mdi mdi-chevron-right"></i>
+                                </button>
                             </div>
 
-                            <!-- Main Photo Preview - DIPERBESAR SECARA SIGNIFIKAN -->
-                            <div class="main-photo-container mb-4">
-                                <div class="main-photo-wrapper">
-                                    @php
-                                        $firstFile = $files[0];
-                                        $isImage = str_contains($firstFile->mime_type, 'image');
-                                        $isPDF = str_contains($firstFile->mime_type, 'pdf');
-                                        $isDocument = str_contains($firstFile->mime_type, 'word') || str_contains($firstFile->mime_type, 'document') ||
-                                                      str_contains($firstFile->mime_type, 'excel') || str_contains($firstFile->mime_type, 'sheet') ||
-                                                      str_contains($firstFile->mime_type, 'text');
-                                        $imageUrl = $isImage ? asset('storage/' . $firstFile->file_name) : '#';
-                                        $previewUrl = route('homestay.show-file', [$homestay->homestay_id, $firstFile->media_id]);
-                                        $fileNameDisplay = basename($firstFile->file_name);
-                                    @endphp
+                            <!-- Photo Overlay Controls -->
+                            <div class="photo-overlay">
+                                @if($isImage)
+                                    <button class="btn btn-light btn-sm" onclick="downloadCurrentPhoto()"
+                                            data-toggle="tooltip" title="Download">
+                                        <i class="mdi mdi-download"></i>
+                                    </button>
+                                    <button class="btn btn-light btn-sm" onclick="openFullscreenImage()"
+                                            data-toggle="tooltip" title="Fullscreen">
+                                        <i class="mdi mdi-fullscreen"></i>
+                                    </button>
+                                @elseif($isPDF)
+                                    <a href="{{ route('homestay.download-file', [$homestay->homestay_id, $firstFile->media_id]) }}"
+                                       class="btn btn-light btn-sm"
+                                       target="_blank"
+                                       data-toggle="tooltip" title="Download PDF">
+                                        <i class="mdi mdi-download"></i>
+                                    </a>
+                                    <a href="{{ $previewUrl }}"
+                                       class="btn btn-light btn-sm"
+                                       target="_blank"
+                                       data-toggle="tooltip" title="Buka PDF">
+                                        <i class="mdi mdi-eye"></i>
+                                    </a>
+                                @else
+                                    <a href="{{ route('homestay.download-file', [$homestay->homestay_id, $firstFile->media_id]) }}"
+                                       class="btn btn-light btn-sm"
+                                       target="_blank"
+                                       data-toggle="tooltip" title="Download">
+                                        <i class="mdi mdi-download"></i>
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="photo-info text-center mt-2">
+                            <small id="currentPhotoName" class="text-truncate d-block">{{ $fileNameDisplay }}</small>
+                            <div class="photo-controls mt-2">
+                                <span class="badge bg-primary" id="photoCounter">1 / {{ count($files) }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Thumbnail Gallery -->
+                    <h6 class="border-bottom pb-2 mb-3">
+                        <i class="mdi mdi-image-multiple mr-2"></i>Daftar File
+                    </h6>
+
+                    <div class="row g-2" id="thumbnailGallery">
+                        @foreach($files as $index => $file)
+                            @php
+                                $isImage = str_contains($file->mime_type, 'image');
+                                $isPDF = str_contains($file->mime_type, 'pdf');
+                                $fileIcon = 'mdi-file-document-box';
+                                $fileColor = 'text-secondary';
+                                $fileNameDisplay = basename($file->file_name);
+                                $previewUrl = route('homestay.show-file', [$homestay->homestay_id, $file->media_id]);
+
+                                if($isPDF) {
+                                    $fileIcon = 'mdi-file-pdf-box';
+                                    $fileColor = 'text-danger';
+                                } elseif(str_contains($file->mime_type, 'word') || str_contains($file->mime_type, 'document')) {
+                                    $fileIcon = 'mdi-file-word-box';
+                                    $fileColor = 'text-primary';
+                                } elseif(str_contains($file->mime_type, 'excel') || str_contains($file->mime_type, 'sheet')) {
+                                    $fileIcon = 'mdi-file-excel-box';
+                                    $fileColor = 'text-success';
+                                } elseif($isImage) {
+                                    $fileIcon = 'mdi-image';
+                                    $fileColor = 'text-info';
+                                }
+                            @endphp
+
+                            <div class="col-md-3 col-4">
+                                <div class="thumbnail-card {{ $index === 0 ? 'active' : '' }}"
+                                     onclick="changeMainPhoto('{{ $file->file_name }}', {{ $index }}, '{{ $file->mime_type }}', '{{ $file->media_id }}', '{{ $fileNameDisplay }}')"
+                                     data-index="{{ $index }}"
+                                     data-id="{{ $file->media_id }}"
+                                     data-type="{{ $file->mime_type }}"
+                                     data-filename="{{ $fileNameDisplay }}"
+                                     data-preview-url="{{ $isPDF ? $previewUrl : '#' }}">
 
                                     @if($isImage)
-                                        <!-- Gambar - DIPERBESAR SECARA SIGNIFIKAN -->
-                                        <img src="{{ asset('storage/' . $firstFile->file_name) }}"
-                                             id="currentMainPhoto"
-                                             class="main-photo img-fluid"
-                                             alt="Foto Utama Homestay"
-                                             onerror="handleImageError(this, '{{ $firstFile->file_name }}')">
-                                    @elseif($isPDF)
-                                        <!-- PDF Preview -->
-                                        <div class="pdf-preview-container text-center py-4" id="pdfPreviewContainer">
-                                            <i class="mdi mdi-file-pdf-box text-danger" style="font-size: 100px;"></i>
-                                            <h5 class="mt-3">{{ $fileNameDisplay }}</h5>
-                                            <p class="text-muted">PDF Document</p>
-                                            <div class="mt-4">
-                                                <a href="{{ $previewUrl }}"
-                                                   class="btn btn-primary btn-sm"
-                                                   target="_blank"
-                                                   data-toggle="tooltip"
-                                                   title="Buka PDF">
-                                                    <i class="mdi mdi-eye mr-1"></i> Lihat PDF
-                                                </a>
-                                            </div>
-                                        </div>
+                                        <img src="{{ asset('storage/' . $file->file_name) }}"
+                                             class="thumbnail-img"
+                                             alt="Thumbnail {{ $index + 1 }}"
+                                             onerror="handleThumbnailError(this, '{{ $fileNameDisplay }}')">
                                     @else
-                                        <!-- Dokumen lain -->
-                                        <div class="document-preview text-center py-4">
-                                            @if(str_contains($firstFile->mime_type, 'word') || str_contains($firstFile->mime_type, 'document'))
-                                                <i class="mdi mdi-file-word-box text-primary" style="font-size: 100px;"></i>
-                                            @elseif(str_contains($firstFile->mime_type, 'excel') || str_contains($firstFile->mime_type, 'sheet'))
-                                                <i class="mdi mdi-file-excel-box text-success" style="font-size: 100px;"></i>
-                                            @elseif(str_contains($firstFile->mime_type, 'text'))
-                                                <i class="mdi mdi-file-document-box text-info" style="font-size: 100px;"></i>
-                                            @else
-                                                <i class="mdi mdi-file-document-box text-secondary" style="font-size: 100px;"></i>
-                                            @endif
-                                            <h5 class="mt-3">{{ $fileNameDisplay }}</h5>
-                                            <p class="text-muted">{{ $firstFile->mime_type }}</p>
+                                        <div class="file-thumbnail text-center py-3">
+                                            <i class="mdi {{ $fileIcon }} {{ $fileColor }}" style="font-size: 40px;"></i>
+                                            <small class="d-block text-truncate mt-1">{{ pathinfo($file->file_name, PATHINFO_EXTENSION) }}</small>
                                         </div>
                                     @endif
 
-                                    <!-- Slideshow Controls Overlay -->
-                                    <div class="slideshow-controls-overlay">
-                                        <button class="btn btn-light btn-round" onclick="prevPhoto()" data-toggle="tooltip" title="Sebelumnya">
-                                            <i class="mdi mdi-chevron-left"></i>
-                                        </button>
-                                        <button class="btn btn-light btn-round" onclick="nextPhoto()" data-toggle="tooltip" title="Berikutnya">
-                                            <i class="mdi mdi-chevron-right"></i>
-                                        </button>
-                                    </div>
-
-                                    <!-- Photo Overlay Controls -->
-                                    <div class="photo-overlay">
-                                        @if($isImage)
-                                            <button class="btn btn-light btn-sm" onclick="downloadCurrentPhoto()"
-                                                    data-toggle="tooltip" title="Download">
-                                                <i class="mdi mdi-download"></i>
+                                    <div class="thumbnail-overlay">
+                                        <form action="{{ route('homestay.delete-file', [$homestay->homestay_id, $file->media_id]) }}"
+                                              method="POST"
+                                              class="d-inline delete-form">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                    class="btn btn-danger btn-sm delete-thumbnail"
+                                                    onclick="return confirmDelete(event, '{{ $fileNameDisplay }}')"
+                                                    data-toggle="tooltip"
+                                                    title="Hapus File">
+                                                <i class="mdi mdi-delete"></i>
                                             </button>
-                                            <button class="btn btn-light btn-sm" onclick="openFullscreenImage()"
-                                                    data-toggle="tooltip" title="Fullscreen">
-                                                <i class="mdi mdi-fullscreen"></i>
-                                            </button>
-                                        @elseif($isPDF)
-                                            <a href="{{ route('homestay.download-file', [$homestay->homestay_id, $firstFile->media_id]) }}"
-                                               class="btn btn-light btn-sm"
-                                               target="_blank"
-                                               data-toggle="tooltip" title="Download PDF">
-                                                <i class="mdi mdi-download"></i>
-                                            </a>
-                                            <a href="{{ $previewUrl }}"
-                                               class="btn btn-light btn-sm"
-                                               target="_blank"
-                                               data-toggle="tooltip" title="Buka PDF">
-                                                <i class="mdi mdi-eye"></i>
-                                            </a>
-                                        @else
-                                            <a href="{{ route('homestay.download-file', [$homestay->homestay_id, $firstFile->media_id]) }}"
-                                               class="btn btn-light btn-sm"
-                                               target="_blank"
-                                               data-toggle="tooltip" title="Download">
-                                                <i class="mdi mdi-download"></i>
-                                            </a>
+                                        </form>
+                                        <a href="{{ route('homestay.download-file', [$homestay->homestay_id, $file->media_id]) }}"
+                                           class="btn btn-info btn-sm download-thumbnail"
+                                           target="_blank"
+                                           data-toggle="tooltip"
+                                           title="Download File">
+                                            <i class="mdi mdi-download"></i>
+                                        </a>
+                                        @if($isPDF)
+                                        <a href="{{ $previewUrl }}"
+                                           class="btn btn-warning btn-sm view-thumbnail"
+                                           target="_blank"
+                                           data-toggle="tooltip"
+                                           title="Lihat PDF">
+                                            <i class="mdi mdi-eye"></i>
+                                        </a>
                                         @endif
-                                    </div>
-                                </div>
-                                <div class="photo-info text-center mt-2">
-                                    <small id="currentPhotoName" class="text-truncate d-block">{{ $fileNameDisplay }}</small>
-                                    <div class="photo-controls mt-2">
-                                        <span class="badge bg-primary" id="photoCounter">1 / {{ count($files) }}</span>
+                                        <span class="badge badge-order">{{ $index + 1 }}</span>
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- Thumbnail Gallery -->
-                            <h6 class="border-bottom pb-2 mb-3">
-                                <i class="mdi mdi-image-multiple mr-2"></i>Daftar File
-                            </h6>
-
-                            <div class="row g-2" id="thumbnailGallery">
-                                @foreach($files as $index => $file)
-                                    @php
-                                        $isImage = str_contains($file->mime_type, 'image');
-                                        $isPDF = str_contains($file->mime_type, 'pdf');
-                                        $fileIcon = 'mdi-file-document-box';
-                                        $fileColor = 'text-secondary';
-                                        $fileNameDisplay = basename($file->file_name);
-                                        $previewUrl = route('homestay.show-file', [$homestay->homestay_id, $file->media_id]);
-
-                                        if($isPDF) {
-                                            $fileIcon = 'mdi-file-pdf-box';
-                                            $fileColor = 'text-danger';
-                                        } elseif(str_contains($file->mime_type, 'word') || str_contains($file->mime_type, 'document')) {
-                                            $fileIcon = 'mdi-file-word-box';
-                                            $fileColor = 'text-primary';
-                                        } elseif(str_contains($file->mime_type, 'excel') || str_contains($file->mime_type, 'sheet')) {
-                                            $fileIcon = 'mdi-file-excel-box';
-                                            $fileColor = 'text-success';
-                                        } elseif($isImage) {
-                                            $fileIcon = 'mdi-image';
-                                            $fileColor = 'text-info';
-                                        }
-                                    @endphp
-
-                                    <div class="col-md-3 col-4">
-                                        <div class="thumbnail-card {{ $index === 0 ? 'active' : '' }}"
-                                             onclick="changeMainPhoto('{{ $file->file_name }}', {{ $index }}, '{{ $file->mime_type }}', '{{ $file->media_id }}', '{{ $fileNameDisplay }}')"
-                                             data-index="{{ $index }}"
-                                             data-id="{{ $file->media_id }}"
-                                             data-type="{{ $file->mime_type }}"
-                                             data-filename="{{ $fileNameDisplay }}"
-                                             data-preview-url="{{ $isPDF ? $previewUrl : '#' }}">
-
-                                            @if($isImage)
-                                                <img src="{{ asset('storage/' . $file->file_name) }}"
-                                                     class="thumbnail-img"
-                                                     alt="Thumbnail {{ $index + 1 }}"
-                                                     onerror="handleThumbnailError(this, '{{ $fileNameDisplay }}')">
-                                            @else
-                                                <div class="file-thumbnail text-center py-3">
-                                                    <i class="mdi {{ $fileIcon }} {{ $fileColor }}" style="font-size: 40px;"></i>
-                                                    <small class="d-block text-truncate mt-1">{{ pathinfo($file->file_name, PATHINFO_EXTENSION) }}</small>
-                                                </div>
-                                            @endif
-
-                                            <div class="thumbnail-overlay">
-                                                <form action="{{ route('homestay.delete-file', [$homestay->homestay_id, $file->media_id]) }}"
-                                                      method="POST"
-                                                      class="d-inline delete-form">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit"
-                                                            class="btn btn-danger btn-sm delete-thumbnail"
-                                                            onclick="return confirmDelete(event, '{{ $fileNameDisplay }}')"
-                                                            data-toggle="tooltip"
-                                                            title="Hapus File">
-                                                        <i class="mdi mdi-delete"></i>
-                                                    </button>
-                                                </form>
-                                                <a href="{{ route('homestay.download-file', [$homestay->homestay_id, $file->media_id]) }}"
-                                                   class="btn btn-info btn-sm download-thumbnail"
-                                                   target="_blank"
-                                                   data-toggle="tooltip"
-                                                   title="Download File">
-                                                    <i class="mdi mdi-download"></i>
-                                                </a>
-                                                @if($isPDF)
-                                                <a href="{{ $previewUrl }}"
-                                                   class="btn btn-warning btn-sm view-thumbnail"
-                                                   target="_blank"
-                                                   data-toggle="tooltip"
-                                                   title="Lihat PDF">
-                                                    <i class="mdi mdi-eye"></i>
-                                                </a>
-                                                @endif
-                                                <span class="badge badge-order">{{ $index + 1 }}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        @else
-                            <div class="text-center py-5 empty-gallery">
-                                <i class="mdi mdi-image-off fa-4x text-muted mb-3"></i>
-                                <h5 class="text-muted">Belum ada file yang diupload</h5>
-                                <p class="text-muted">Upload file untuk menampilkan galeri homestay</p>
-                            </div>
-                        @endif
-
-                        <!-- Upload Form -->
-                        <div class="upload-section mt-4 pt-4 border-top">
-                            <h6 class="mb-3">
-                                <i class="mdi mdi-cloud-upload text-primary mr-2"></i>
-                                Upload File Baru
-                            </h6>
-                            <form action="{{ route('homestay.upload-files', $homestay->homestay_id) }}"
-                                  method="POST"
-                                  enctype="multipart/form-data"
-                                  id="uploadForm">
-                                @csrf
-                                <div class="mb-3">
-                                    <div class="custom-file-upload">
-                                        <input type="file"
-                                               class="form-control @error('foto_homestay') is-invalid @enderror"
-                                               id="foto_homestay"
-                                               name="foto_homestay[]"
-                                               multiple
-                                               accept=".jpg,.jpeg,.png,.gif,.webp,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv"
-                                               onchange="previewUploadFiles(this)">
-                                        <label for="foto_homestay" class="upload-label">
-                                            <i class="mdi mdi-cloud-upload mr-2"></i>
-                                            <span>Pilih File (Multiple)</span>
-                                        </label>
-                                    </div>
-                                    @error('foto_homestay')
-                                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                                    @enderror
-                                    <small class="form-text text-muted">
-                                        <i class="mdi mdi-information mr-1"></i>
-                                        Pilih multiple file (JPG, PNG, GIF, WEBP, PDF, DOC, DOCX, XLS, XLSX, TXT, CSV). Maksimal 10MB per file.
-                                    </small>
-                                </div>
-
-                                <!-- Upload Preview -->
-                                <div id="uploadPreview" class="mb-3" style="display: none;">
-                                    <h6 class="text-muted mb-2">Preview File yang akan diupload:</h6>
-                                    <div id="previewContainer" class="row g-2"></div>
-                                    <div class="mt-2 text-end">
-                                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="clearPreview()">
-                                            <i class="mdi mdi-trash-can mr-1"></i> Clear Preview
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <button type="submit" class="btn btn-success w-100 upload-btn" id="uploadBtn">
-                                    <i class="mdi mdi-cloud-upload mr-1"></i> Upload File
-                                </button>
-                            </form>
-                        </div>
+                        @endforeach
                     </div>
+                @else
+                    <div class="text-center py-5 empty-gallery">
+                        <i class="mdi mdi-image-off fa-4x text-muted mb-3"></i>
+                        <h5 class="text-muted">Belum ada file yang diupload</h5>
+                        <p class="text-muted">Upload file untuk menampilkan galeri homestay</p>
+                    </div>
+                @endif
+
+                <!-- Upload Form -->
+                <div class="upload-section mt-4 pt-4 border-top">
+                    <h6 class="mb-3">
+                        <i class="mdi mdi-cloud-upload text-primary mr-2"></i>
+                        Upload File Baru
+                    </h6>
+                    <form action="{{ route('homestay.upload-files', $homestay->homestay_id) }}"
+                          method="POST"
+                          enctype="multipart/form-data"
+                          id="uploadForm">
+                        @csrf
+                        <div class="mb-3">
+                            <div class="custom-file-upload">
+                                <input type="file"
+                                       class="form-control @error('foto_homestay') is-invalid @enderror"
+                                       id="foto_homestay"
+                                       name="foto_homestay[]"
+                                       multiple
+                                       accept=".jpg,.jpeg,.png,.gif,.webp,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv"
+                                       onchange="previewUploadFiles(this)">
+                                <label for="foto_homestay" class="upload-label">
+                                    <i class="mdi mdi-cloud-upload mr-2"></i>
+                                    <span>Pilih File (Multiple)</span>
+                                </label>
+                            </div>
+                            @error('foto_homestay')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                            <small class="form-text text-muted">
+                                <i class="mdi mdi-information mr-1"></i>
+                                Pilih multiple file (JPG, PNG, GIF, WEBP, PDF, DOC, DOCX, XLS, XLSX, TXT, CSV). Maksimal 10MB per file.
+                            </small>
+                        </div>
+
+                        <!-- Upload Preview -->
+                        <div id="uploadPreview" class="mb-3" style="display: none;">
+                            <h6 class="text-muted mb-2">Preview File yang akan diupload:</h6>
+                            <div id="previewContainer" class="row g-2"></div>
+                            <div class="mt-2 text-end">
+                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="clearPreview()">
+                                    <i class="mdi mdi-trash-can mr-1"></i> Clear Preview
+                                </button>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100 upload-btn" id="uploadBtn">
+                            <i class="mdi mdi-cloud-upload mr-1"></i> Upload File
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
-
-        {{-- ====================== END MAIN CONTENT ====================== --}}
     </div>
 </div>
+
+{{-- ====================== END MAIN CONTENT ====================== --}}
 
 {{-- ====================== MODAL FULLSCREEN GAMBAR ====================== --}}
 <div class="modal fade" id="imageFullscreenModal" tabindex="-1" aria-hidden="true">
@@ -2381,7 +2376,7 @@
     }
 
     .thumbnail-card {
-        height: 90px;
+        height: 80px;
     }
 
     .gallery-nav .btn {

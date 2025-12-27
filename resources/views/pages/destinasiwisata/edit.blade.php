@@ -1,508 +1,503 @@
 @extends('layouts.app')
 @section('content')
 
-<div class="main-panel">
-    <div class="content-wrapper">
+{{-- ====================== START MAIN CONTENT ====================== --}}
 
-        {{-- ====================== START MAIN CONTENT ====================== --}}
+<!-- Header -->
+<div class="page-header">
+    <h3 class="page-title">
+        <i class="mdi mdi-pencil text-info mr-2"></i>
+        Edit Destinasi Wisata
+    </h3>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('destinasiwisata.index') }}">Destinasi Wisata</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Edit Data</li>
+        </ol>
+    </nav>
+</div>
 
-        <!-- Header -->
-        <div class="page-header">
-            <h3 class="page-title">
-                <i class="mdi mdi-pencil text-info mr-2"></i>
-                Edit Destinasi Wisata
-            </h3>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('destinasiwisata.index') }}">Destinasi Wisata</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Edit Data</li>
-                </ol>
-            </nav>
-        </div>
+<!-- Alert Success -->
+@if (session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="mdi mdi-check-circle-outline mr-2"></i>
+        <strong>Sukses!</strong> {{ session('success') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
 
-        <!-- Alert Success -->
-        @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="mdi mdi-check-circle-outline mr-2"></i>
-                <strong>Sukses!</strong> {{ session('success') }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
+@if (session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="mdi mdi-alert-circle-outline mr-2"></i>
+        <strong>Error!</strong> {{ session('error') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
 
-        @if (session('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="mdi mdi-alert-circle-outline mr-2"></i>
-                <strong>Error!</strong> {{ session('error') }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
+<!-- Error List di Atas Form -->
+@if ($errors->any())
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="mdi mdi-alert-circle-outline mr-2"></i>
+        <strong>Terjadi kesalahan!</strong> Silakan perbaiki data berikut:
+        <ul class="mt-2 mb-0">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
 
-        <!-- Error List di Atas Form -->
-        @if ($errors->any())
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="mdi mdi-alert-circle-outline mr-2"></i>
-                <strong>Terjadi kesalahan!</strong> Silakan perbaiki data berikut:
-                <ul class="mt-2 mb-0">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
-
-        <div class="row">
-            <!-- Form Edit Data -->
-            <div class="col-lg-6 mb-4">
-                <div class="card card-edit">
-                    <div class="card-header bg-info text-white">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0"><i class="mdi mdi-pencil-box mr-2"></i>Form Edit Destinasi Wisata</h5>
-                            <a href="{{ route('destinasiwisata.index') }}" class="btn btn-light btn-sm">
-                                <i class="mdi mdi-arrow-left mr-1"></i>Kembali
-                            </a>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <form action="{{ route('destinasiwisata.update', $destinasi->destinasi_id) }}" method="POST" id="destinasiForm">
-                            @csrf
-                            @method('PUT')
-
-                            <div class="row">
-                                <!-- Kolom Kiri -->
-                                <div class="col-md-6">
-                                    <!-- Nama Destinasi -->
-                                    <div class="form-group">
-                                        <label for="nama" class="form-label">
-                                            <i class="mdi mdi-map-marker text-primary mr-1"></i>
-                                            Nama Destinasi <span class="text-danger">*</span>
-                                        </label>
-                                        <input type="text" class="form-control form-control-sm @error('nama') is-invalid @enderror"
-                                            id="nama" name="nama" value="{{ old('nama', $destinasi->nama) }}"
-                                            placeholder="Masukkan nama destinasi">
-                                        @error('nama')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <!-- Deskripsi -->
-                                    <div class="form-group">
-                                        <label for="deskripsi" class="form-label">
-                                            <i class="mdi mdi-text-box text-primary mr-1"></i>
-                                            Deskripsi <span class="text-danger">*</span>
-                                        </label>
-                                        <textarea class="form-control form-control-sm @error('deskripsi') is-invalid @enderror"
-                                            id="deskripsi" name="deskripsi" rows="4"
-                                            placeholder="Masukkan deskripsi destinasi">{{ old('deskripsi', $destinasi->deskripsi) }}</textarea>
-                                        @error('deskripsi')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                        <small class="text-muted">Minimal 10 karakter</small>
-                                    </div>
-
-                                    <!-- Alamat -->
-                                    <div class="form-group">
-                                        <label for="alamat" class="form-label">
-                                            <i class="mdi mdi-home-map-marker text-primary mr-1"></i>
-                                            Alamat Lengkap <span class="text-danger">*</span>
-                                        </label>
-                                        <textarea class="form-control form-control-sm @error('alamat') is-invalid @enderror"
-                                            id="alamat" name="alamat" rows="3"
-                                            placeholder="Masukkan alamat lengkap">{{ old('alamat', $destinasi->alamat) }}</textarea>
-                                        @error('alamat')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <!-- Kolom Kanan -->
-                                <div class="col-md-6">
-                                    <!-- RT/RW -->
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="rt" class="form-label">
-                                                    <i class="mdi mdi-numeric-1-box text-primary mr-1"></i>
-                                                    RT <span class="text-danger">*</span>
-                                                </label>
-                                                <input type="text" class="form-control form-control-sm @error('rt') is-invalid @enderror"
-                                                    id="rt" name="rt" value="{{ old('rt', $destinasi->rt) }}"
-                                                    placeholder="001" maxlength="3">
-                                                @error('rt')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="rw" class="form-label">
-                                                    <i class="mdi mdi-numeric-2-box text-primary mr-1"></i>
-                                                    RW <span class="text-danger">*</span>
-                                                </label>
-                                                <input type="text" class="form-control form-control-sm @error('rw') is-invalid @enderror"
-                                                    id="rw" name="rw" value="{{ old('rw', $destinasi->rw) }}"
-                                                    placeholder="002" maxlength="3">
-                                                @error('rw')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Jam Buka -->
-                                    <div class="form-group">
-                                        <label for="jam_buka" class="form-label">
-                                            <i class="mdi mdi-clock-outline text-primary mr-1"></i>
-                                            Jam Buka <span class="text-danger">*</span>
-                                        </label>
-                                        <input type="time" class="form-control form-control-sm @error('jam_buka') is-invalid @enderror"
-                                            id="jam_buka" name="jam_buka" value="{{ old('jam_buka', $destinasi->jam_buka) }}">
-                                        @error('jam_buka')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <!-- Tiket -->
-                                    <div class="form-group">
-                                        <label for="tiket" class="form-label">
-                                            <i class="mdi mdi-ticket text-primary mr-1"></i>
-                                            Harga Tiket (Rp) <span class="text-danger">*</span>
-                                        </label>
-                                        <div class="input-group input-group-sm">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">Rp</span>
-                                            </div>
-                                            <input type="number" class="form-control @error('tiket') is-invalid @enderror"
-                                                id="tiket" name="tiket" value="{{ old('tiket', $destinasi->tiket) }}"
-                                                placeholder="Masukkan harga tiket" min="0" step="100">
-                                        </div>
-                                        @error('tiket')
-                                            <div class="invalid-feedback d-block">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <!-- Kontak -->
-                                    <div class="form-group">
-                                        <label for="kontak" class="form-label">
-                                            <i class="mdi mdi-phone text-primary mr-1"></i>
-                                            Kontak <span class="text-danger">*</span>
-                                        </label>
-                                        <input type="text" class="form-control form-control-sm @error('kontak') is-invalid @enderror"
-                                            id="kontak" name="kontak" value="{{ old('kontak', $destinasi->kontak) }}"
-                                            placeholder="Masukkan nomor kontak" maxlength="15">
-                                        @error('kontak')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Tombol Aksi -->
-                            <div class="row mt-4 pt-3 border-top">
-                                <div class="col-12">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="form-check">
-                                            <input type="checkbox" class="form-check-input" id="confirmEdit">
-                                            <label class="form-check-label text-muted" for="confirmEdit">
-                                                Saya yakin data yang diubah sudah benar
-                                            </label>
-                                        </div>
-                                        <div class="d-flex gap-2">
-                                            <a href="{{ route('destinasiwisata.index') }}" class="btn btn-outline-secondary btn-sm">
-                                                <i class="mdi mdi-close mr-1"></i>Batal
-                                            </a>
-                                            <button type="submit" class="btn btn-primary btn-sm" id="submitBtn" disabled>
-                                                <i class="mdi mdi-content-save mr-1"></i>Simpan Perubahan
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+<div class="row">
+    <!-- Form Edit Data -->
+    <div class="col-lg-6 mb-4">
+        <div class="card card-edit">
+            <div class="card-header bg-info text-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="mdi mdi-pencil-box mr-2"></i>Form Edit Destinasi Wisata</h5>
+                    <a href="{{ route('destinasiwisata.index') }}" class="btn btn-light btn-sm">
+                        <i class="mdi mdi-arrow-left mr-1"></i>Kembali
+                    </a>
                 </div>
             </div>
+            <div class="card-body">
+                <form action="{{ route('destinasiwisata.update', $destinasi->destinasi_id) }}" method="POST" id="destinasiForm">
+                    @csrf
+                    @method('PUT')
 
-            <!-- File Pendukung -->
-            <div class="col-lg-6 mb-4">
-                <div class="card border-0 shadow card-gallery">
-                    <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0"><i class="mdi mdi-camera mr-2"></i>Galeri Foto Destinasi</h5>
-                        <span class="badge bg-light text-dark">{{ count($files) }} File</span>
-                    </div>
-                    <div class="card-body">
-                        @if(count($files) > 0)
-                            <!-- Gallery Navigation -->
-                            <div class="row mb-3">
-                                <div class="col-12">
-                                    <div class="gallery-nav">
-                                        <button class="btn btn-sm btn-outline-primary" onclick="showAllPhotos()">
-                                            <i class="mdi mdi-view-grid"></i> Semua File
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-info" onclick="downloadAll()">
-                                            <i class="mdi mdi-download"></i> Download Semua
-                                        </button>
+                    <div class="row">
+                        <!-- Kolom Kiri -->
+                        <div class="col-md-6">
+                            <!-- Nama Destinasi -->
+                            <div class="form-group">
+                                <label for="nama" class="form-label">
+                                    <i class="mdi mdi-map-marker text-primary mr-1"></i>
+                                    Nama Destinasi <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" class="form-control form-control-sm @error('nama') is-invalid @enderror"
+                                    id="nama" name="nama" value="{{ old('nama', $destinasi->nama) }}"
+                                    placeholder="Masukkan nama destinasi">
+                                @error('nama')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- Deskripsi -->
+                            <div class="form-group">
+                                <label for="deskripsi" class="form-label">
+                                    <i class="mdi mdi-text-box text-primary mr-1"></i>
+                                    Deskripsi <span class="text-danger">*</span>
+                                </label>
+                                <textarea class="form-control form-control-sm @error('deskripsi') is-invalid @enderror"
+                                    id="deskripsi" name="deskripsi" rows="4"
+                                    placeholder="Masukkan deskripsi destinasi">{{ old('deskripsi', $destinasi->deskripsi) }}</textarea>
+                                @error('deskripsi')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                                <small class="text-muted">Minimal 10 karakter</small>
+                            </div>
+
+                            <!-- Alamat -->
+                            <div class="form-group">
+                                <label for="alamat" class="form-label">
+                                    <i class="mdi mdi-home-map-marker text-primary mr-1"></i>
+                                    Alamat Lengkap <span class="text-danger">*</span>
+                                </label>
+                                <textarea class="form-control form-control-sm @error('alamat') is-invalid @enderror"
+                                    id="alamat" name="alamat" rows="3"
+                                    placeholder="Masukkan alamat lengkap">{{ old('alamat', $destinasi->alamat) }}</textarea>
+                                @error('alamat')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <!-- Kolom Kanan -->
+                        <div class="col-md-6">
+                            <!-- RT/RW -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="rt" class="form-label">
+                                            <i class="mdi mdi-numeric-1-box text-primary mr-1"></i>
+                                            RT <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="text" class="form-control form-control-sm @error('rt') is-invalid @enderror"
+                                            id="rt" name="rt" value="{{ old('rt', $destinasi->rt) }}"
+                                            placeholder="001" maxlength="3">
+                                        @error('rt')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="rw" class="form-label">
+                                            <i class="mdi mdi-numeric-2-box text-primary mr-1"></i>
+                                            RW <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="text" class="form-control form-control-sm @error('rw') is-invalid @enderror"
+                                            id="rw" name="rw" value="{{ old('rw', $destinasi->rw) }}"
+                                            placeholder="002" maxlength="3">
+                                        @error('rw')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Main Photo Preview - DIPERBESAR -->
-                            <div class="main-photo-container mb-4">
-                                <div class="main-photo-wrapper">
-                                    @php
-                                        $firstFile = $files[0];
-                                        $isImage = str_contains($firstFile->mime_type, 'image');
-                                        $isPDF = str_contains($firstFile->mime_type, 'pdf');
-                                        $isDocument = str_contains($firstFile->mime_type, 'word') || str_contains($firstFile->mime_type, 'document') ||
-                                                      str_contains($firstFile->mime_type, 'excel') || str_contains($firstFile->mime_type, 'sheet') ||
-                                                      str_contains($firstFile->mime_type, 'text');
-                                        $imageUrl = $isImage ? asset('storage/' . $firstFile->file_name) : '#';
-                                        $previewUrl = route('destinasiwisata.show-file', [$destinasi->destinasi_id, $firstFile->media_id]);
-                                        $fileNameDisplay = basename($firstFile->file_name);
-                                    @endphp
+                            <!-- Jam Buka -->
+                            <div class="form-group">
+                                <label for="jam_buka" class="form-label">
+                                    <i class="mdi mdi-clock-outline text-primary mr-1"></i>
+                                    Jam Buka <span class="text-danger">*</span>
+                                </label>
+                                <input type="time" class="form-control form-control-sm @error('jam_buka') is-invalid @enderror"
+                                    id="jam_buka" name="jam_buka" value="{{ old('jam_buka', $destinasi->jam_buka) }}">
+                                @error('jam_buka')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- Tiket -->
+                            <div class="form-group">
+                                <label for="tiket" class="form-label">
+                                    <i class="mdi mdi-ticket text-primary mr-1"></i>
+                                    Harga Tiket (Rp) <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group input-group-sm">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Rp</span>
+                                    </div>
+                                    <input type="number" class="form-control @error('tiket') is-invalid @enderror"
+                                        id="tiket" name="tiket" value="{{ old('tiket', $destinasi->tiket) }}"
+                                        placeholder="Masukkan harga tiket" min="0" step="100">
+                                </div>
+                                @error('tiket')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- Kontak -->
+                            <div class="form-group">
+                                <label for="kontak" class="form-label">
+                                    <i class="mdi mdi-phone text-primary mr-1"></i>
+                                    Kontak <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" class="form-control form-control-sm @error('kontak') is-invalid @enderror"
+                                    id="kontak" name="kontak" value="{{ old('kontak', $destinasi->kontak) }}"
+                                    placeholder="Masukkan nomor kontak" maxlength="15">
+                                @error('kontak')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tombol Aksi -->
+                    <div class="row mt-4 pt-3 border-top">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="confirmEdit">
+                                    <label class="form-check-label text-muted" for="confirmEdit">
+                                        Saya yakin data yang diubah sudah benar
+                                    </label>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <a href="{{ route('destinasiwisata.index') }}" class="btn btn-outline-secondary btn-sm">
+                                        <i class="mdi mdi-close mr-1"></i>Batal
+                                    </a>
+                                    <button type="submit" class="btn btn-primary btn-sm" id="submitBtn" disabled>
+                                        <i class="mdi mdi-content-save mr-1"></i>Simpan Perubahan
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- File Pendukung -->
+    <div class="col-lg-6 mb-4">
+        <div class="card border-0 shadow card-gallery">
+            <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="mdi mdi-camera mr-2"></i>Galeri Foto Destinasi</h5>
+                <span class="badge bg-light text-dark">{{ count($files) }} File</span>
+            </div>
+            <div class="card-body">
+                @if(count($files) > 0)
+                    <!-- Gallery Navigation -->
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <div class="gallery-nav">
+                                <button class="btn btn-sm btn-outline-primary" onclick="showAllPhotos()">
+                                    <i class="mdi mdi-view-grid"></i> Semua File
+                                </button>
+                                <button class="btn btn-sm btn-outline-info" onclick="downloadAll()">
+                                    <i class="mdi mdi-download"></i> Download Semua
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Main Photo Preview - DIPERBESAR -->
+                    <div class="main-photo-container mb-4">
+                        <div class="main-photo-wrapper">
+                            @php
+                                $firstFile = $files[0];
+                                $isImage = str_contains($firstFile->mime_type, 'image');
+                                $isPDF = str_contains($firstFile->mime_type, 'pdf');
+                                $isDocument = str_contains($firstFile->mime_type, 'word') || str_contains($firstFile->mime_type, 'document') ||
+                                              str_contains($firstFile->mime_type, 'excel') || str_contains($firstFile->mime_type, 'sheet') ||
+                                              str_contains($firstFile->mime_type, 'text');
+                                $imageUrl = $isImage ? asset('storage/' . $firstFile->file_name) : '#';
+                                $previewUrl = route('destinasiwisata.show-file', [$destinasi->destinasi_id, $firstFile->media_id]);
+                                $fileNameDisplay = basename($firstFile->file_name);
+                            @endphp
+
+                            @if($isImage)
+                                <!-- Gambar - DIPERBESAR -->
+                                <img src="{{ asset('storage/' . $firstFile->file_name) }}"
+                                     id="currentMainPhoto"
+                                     class="main-photo"
+                                     alt="Foto Utama"
+                                     onerror="handleImageError(this, '{{ $firstFile->file_name }}')">
+                            @elseif($isPDF)
+                                <!-- PDF Preview -->
+                                <div class="pdf-preview-container text-center py-4" id="pdfPreviewContainer">
+                                    <i class="mdi mdi-file-pdf-box text-danger" style="font-size: 100px;"></i>
+                                    <h5 class="mt-3">{{ $fileNameDisplay }}</h5>
+                                    <p class="text-muted">PDF Document</p>
+                                    <div class="mt-4">
+                                        <a href="{{ $previewUrl }}"
+                                           class="btn btn-primary btn-sm"
+                                           target="_blank"
+                                           data-toggle="tooltip"
+                                           title="Buka PDF">
+                                            <i class="mdi mdi-eye mr-1"></i> Lihat PDF
+                                        </a>
+                                    </div>
+                                </div>
+                            @else
+                                <!-- Dokumen lain -->
+                                <div class="document-preview text-center py-4">
+                                    @if(str_contains($firstFile->mime_type, 'word') || str_contains($firstFile->mime_type, 'document'))
+                                        <i class="mdi mdi-file-word-box text-primary" style="font-size: 100px;"></i>
+                                    @elseif(str_contains($firstFile->mime_type, 'excel') || str_contains($firstFile->mime_type, 'sheet'))
+                                        <i class="mdi mdi-file-excel-box text-success" style="font-size: 100px;"></i>
+                                    @elseif(str_contains($firstFile->mime_type, 'text'))
+                                        <i class="mdi mdi-file-document-box text-info" style="font-size: 100px;"></i>
+                                    @else
+                                        <i class="mdi mdi-file-document-box text-secondary" style="font-size: 100px;"></i>
+                                    @endif
+                                    <h5 class="mt-3">{{ $fileNameDisplay }}</h5>
+                                    <p class="text-muted">{{ $firstFile->mime_type }}</p>
+                                </div>
+                            @endif
+                            <div class="photo-overlay">
+                                @if($isImage)
+                                    <button class="btn btn-light btn-sm" onclick="downloadCurrentPhoto()"
+                                            data-toggle="tooltip" title="Download">
+                                        <i class="mdi mdi-download"></i>
+                                    </button>
+                                    <button class="btn btn-light btn-sm" onclick="openFullscreenImage()"
+                                            data-toggle="tooltip" title="Fullscreen">
+                                        <i class="mdi mdi-fullscreen"></i>
+                                    </button>
+                                @elseif($isPDF)
+                                    <a href="{{ route('destinasiwisata.download-file', [$destinasi->destinasi_id, $firstFile->media_id]) }}"
+                                       class="btn btn-light btn-sm"
+                                       target="_blank"
+                                       data-toggle="tooltip" title="Download PDF">
+                                        <i class="mdi mdi-download"></i>
+                                    </a>
+                                    <a href="{{ $previewUrl }}"
+                                       class="btn btn-light btn-sm"
+                                       target="_blank"
+                                       data-toggle="tooltip" title="Buka PDF">
+                                        <i class="mdi mdi-eye"></i>
+                                    </a>
+                                @else
+                                    <a href="{{ route('destinasiwisata.download-file', [$destinasi->destinasi_id, $firstFile->media_id]) }}"
+                                       class="btn btn-light btn-sm"
+                                       target="_blank"
+                                       data-toggle="tooltip" title="Download">
+                                        <i class="mdi mdi-download"></i>
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="photo-info text-center mt-2">
+                            <small id="currentPhotoName" class="text-truncate d-block">{{ $fileNameDisplay }}</small>
+                            <div class="photo-controls mt-2">
+                                <span class="badge bg-primary" id="photoCounter">1 / {{ count($files) }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Thumbnail Gallery -->
+                    <h6 class="border-bottom pb-2 mb-3">
+                        <i class="mdi mdi-image-multiple mr-2"></i>Daftar File
+                    </h6>
+
+                    <div class="row g-2" id="thumbnailGallery">
+                        @foreach($files as $index => $file)
+                            @php
+                                $isImage = str_contains($file->mime_type, 'image');
+                                $isPDF = str_contains($file->mime_type, 'pdf');
+                                $fileIcon = 'mdi-file-document-box';
+                                $fileColor = 'text-secondary';
+                                $fileNameDisplay = basename($file->file_name);
+                                $previewUrl = route('destinasiwisata.show-file', [$destinasi->destinasi_id, $file->media_id]);
+
+                                if($isPDF) {
+                                    $fileIcon = 'mdi-file-pdf-box';
+                                    $fileColor = 'text-danger';
+                                } elseif(str_contains($file->mime_type, 'word') || str_contains($file->mime_type, 'document')) {
+                                    $fileIcon = 'mdi-file-word-box';
+                                    $fileColor = 'text-primary';
+                                } elseif(str_contains($file->mime_type, 'excel') || str_contains($file->mime_type, 'sheet')) {
+                                    $fileIcon = 'mdi-file-excel-box';
+                                    $fileColor = 'text-success';
+                                } elseif($isImage) {
+                                    $fileIcon = 'mdi-image';
+                                    $fileColor = 'text-info';
+                                }
+                            @endphp
+
+                            <div class="col-md-3 col-4">
+                                <div class="thumbnail-card {{ $index === 0 ? 'active' : '' }}"
+                                     onclick="changeMainPhoto('{{ $file->file_name }}', {{ $index }}, '{{ $file->mime_type }}', '{{ $file->media_id }}', '{{ $fileNameDisplay }}')"
+                                     data-index="{{ $index }}"
+                                     data-id="{{ $file->media_id }}"
+                                     data-type="{{ $file->mime_type }}"
+                                     data-filename="{{ $fileNameDisplay }}"
+                                     data-preview-url="{{ $isPDF ? $previewUrl : '#' }}">
 
                                     @if($isImage)
-                                        <!-- Gambar - DIPERBESAR -->
-                                        <img src="{{ asset('storage/' . $firstFile->file_name) }}"
-                                             id="currentMainPhoto"
-                                             class="main-photo"
-                                             alt="Foto Utama"
-                                             onerror="handleImageError(this, '{{ $firstFile->file_name }}')">
-                                    @elseif($isPDF)
-                                        <!-- PDF Preview -->
-                                        <div class="pdf-preview-container text-center py-4" id="pdfPreviewContainer">
-                                            <i class="mdi mdi-file-pdf-box text-danger" style="font-size: 100px;"></i>
-                                            <h5 class="mt-3">{{ $fileNameDisplay }}</h5>
-                                            <p class="text-muted">PDF Document</p>
-                                            <div class="mt-4">
-                                                <a href="{{ $previewUrl }}"
-                                                   class="btn btn-primary btn-sm"
-                                                   target="_blank"
-                                                   data-toggle="tooltip"
-                                                   title="Buka PDF">
-                                                    <i class="mdi mdi-eye mr-1"></i> Lihat PDF
-                                                </a>
-                                            </div>
-                                        </div>
+                                        <img src="{{ asset('storage/' . $file->file_name) }}"
+                                             class="thumbnail-img"
+                                             alt="Thumbnail {{ $index + 1 }}"
+                                             onerror="handleThumbnailError(this, '{{ $fileNameDisplay }}')">
                                     @else
-                                        <!-- Dokumen lain -->
-                                        <div class="document-preview text-center py-4">
-                                            @if(str_contains($firstFile->mime_type, 'word') || str_contains($firstFile->mime_type, 'document'))
-                                                <i class="mdi mdi-file-word-box text-primary" style="font-size: 100px;"></i>
-                                            @elseif(str_contains($firstFile->mime_type, 'excel') || str_contains($firstFile->mime_type, 'sheet'))
-                                                <i class="mdi mdi-file-excel-box text-success" style="font-size: 100px;"></i>
-                                            @elseif(str_contains($firstFile->mime_type, 'text'))
-                                                <i class="mdi mdi-file-document-box text-info" style="font-size: 100px;"></i>
-                                            @else
-                                                <i class="mdi mdi-file-document-box text-secondary" style="font-size: 100px;"></i>
-                                            @endif
-                                            <h5 class="mt-3">{{ $fileNameDisplay }}</h5>
-                                            <p class="text-muted">{{ $firstFile->mime_type }}</p>
+                                        <div class="file-thumbnail text-center py-3">
+                                            <i class="mdi {{ $fileIcon }} {{ $fileColor }}" style="font-size: 40px;"></i>
+                                            <small class="d-block text-truncate mt-1">{{ pathinfo($file->file_name, PATHINFO_EXTENSION) }}</small>
                                         </div>
                                     @endif
-                                    <div class="photo-overlay">
-                                        @if($isImage)
-                                            <button class="btn btn-light btn-sm" onclick="downloadCurrentPhoto()"
-                                                    data-toggle="tooltip" title="Download">
-                                                <i class="mdi mdi-download"></i>
+
+                                    <div class="thumbnail-overlay">
+                                        <form action="{{ route('destinasiwisata.delete-file', [$destinasi->destinasi_id, $file->media_id]) }}"
+                                              method="POST"
+                                              class="d-inline delete-form">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                    class="btn btn-danger btn-sm delete-thumbnail"
+                                                    onclick="return confirmDelete(event, '{{ $fileNameDisplay }}')"
+                                                    data-toggle="tooltip"
+                                                    title="Hapus File">
+                                                <i class="mdi mdi-delete"></i>
                                             </button>
-                                            <button class="btn btn-light btn-sm" onclick="openFullscreenImage()"
-                                                    data-toggle="tooltip" title="Fullscreen">
-                                                <i class="mdi mdi-fullscreen"></i>
-                                            </button>
-                                        @elseif($isPDF)
-                                            <a href="{{ route('destinasiwisata.download-file', [$destinasi->destinasi_id, $firstFile->media_id]) }}"
-                                               class="btn btn-light btn-sm"
-                                               target="_blank"
-                                               data-toggle="tooltip" title="Download PDF">
-                                                <i class="mdi mdi-download"></i>
-                                            </a>
-                                            <a href="{{ $previewUrl }}"
-                                               class="btn btn-light btn-sm"
-                                               target="_blank"
-                                               data-toggle="tooltip" title="Buka PDF">
-                                                <i class="mdi mdi-eye"></i>
-                                            </a>
-                                        @else
-                                            <a href="{{ route('destinasiwisata.download-file', [$destinasi->destinasi_id, $firstFile->media_id]) }}"
-                                               class="btn btn-light btn-sm"
-                                               target="_blank"
-                                               data-toggle="tooltip" title="Download">
-                                                <i class="mdi mdi-download"></i>
-                                            </a>
+                                        </form>
+                                        <a href="{{ route('destinasiwisata.download-file', [$destinasi->destinasi_id, $file->media_id]) }}"
+                                           class="btn btn-info btn-sm download-thumbnail"
+                                           target="_blank"
+                                           data-toggle="tooltip"
+                                           title="Download File">
+                                            <i class="mdi mdi-download"></i>
+                                        </a>
+                                        @if($isPDF)
+                                        <a href="{{ $previewUrl }}"
+                                           class="btn btn-warning btn-sm view-thumbnail"
+                                           target="_blank"
+                                           data-toggle="tooltip"
+                                           title="Lihat PDF">
+                                            <i class="mdi mdi-eye"></i>
+                                        </a>
                                         @endif
-                                    </div>
-                                </div>
-                                <div class="photo-info text-center mt-2">
-                                    <small id="currentPhotoName" class="text-truncate d-block">{{ $fileNameDisplay }}</small>
-                                    <div class="photo-controls mt-2">
-                                        <span class="badge bg-primary" id="photoCounter">1 / {{ count($files) }}</span>
+                                        <span class="badge badge-order">{{ $index + 1 }}</span>
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- Thumbnail Gallery -->
-                            <h6 class="border-bottom pb-2 mb-3">
-                                <i class="mdi mdi-image-multiple mr-2"></i>Daftar File
-                            </h6>
-
-                            <div class="row g-2" id="thumbnailGallery">
-                                @foreach($files as $index => $file)
-                                    @php
-                                        $isImage = str_contains($file->mime_type, 'image');
-                                        $isPDF = str_contains($file->mime_type, 'pdf');
-                                        $fileIcon = 'mdi-file-document-box';
-                                        $fileColor = 'text-secondary';
-                                        $fileNameDisplay = basename($file->file_name);
-                                        $previewUrl = route('destinasiwisata.show-file', [$destinasi->destinasi_id, $file->media_id]);
-
-                                        if($isPDF) {
-                                            $fileIcon = 'mdi-file-pdf-box';
-                                            $fileColor = 'text-danger';
-                                        } elseif(str_contains($file->mime_type, 'word') || str_contains($file->mime_type, 'document')) {
-                                            $fileIcon = 'mdi-file-word-box';
-                                            $fileColor = 'text-primary';
-                                        } elseif(str_contains($file->mime_type, 'excel') || str_contains($file->mime_type, 'sheet')) {
-                                            $fileIcon = 'mdi-file-excel-box';
-                                            $fileColor = 'text-success';
-                                        } elseif($isImage) {
-                                            $fileIcon = 'mdi-image';
-                                            $fileColor = 'text-info';
-                                        }
-                                    @endphp
-
-                                    <div class="col-md-3 col-4">
-                                        <div class="thumbnail-card {{ $index === 0 ? 'active' : '' }}"
-                                             onclick="changeMainPhoto('{{ $file->file_name }}', {{ $index }}, '{{ $file->mime_type }}', '{{ $file->media_id }}', '{{ $fileNameDisplay }}')"
-                                             data-index="{{ $index }}"
-                                             data-id="{{ $file->media_id }}"
-                                             data-type="{{ $file->mime_type }}"
-                                             data-filename="{{ $fileNameDisplay }}"
-                                             data-preview-url="{{ $isPDF ? $previewUrl : '#' }}">
-
-                                            @if($isImage)
-                                                <img src="{{ asset('storage/' . $file->file_name) }}"
-                                                     class="thumbnail-img"
-                                                     alt="Thumbnail {{ $index + 1 }}"
-                                                     onerror="handleThumbnailError(this, '{{ $fileNameDisplay }}')">
-                                            @else
-                                                <div class="file-thumbnail text-center py-3">
-                                                    <i class="mdi {{ $fileIcon }} {{ $fileColor }}" style="font-size: 40px;"></i>
-                                                    <small class="d-block text-truncate mt-1">{{ pathinfo($file->file_name, PATHINFO_EXTENSION) }}</small>
-                                                </div>
-                                            @endif
-
-                                            <div class="thumbnail-overlay">
-                                                <form action="{{ route('destinasiwisata.delete-file', [$destinasi->destinasi_id, $file->media_id]) }}"
-                                                      method="POST"
-                                                      class="d-inline delete-form">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit"
-                                                            class="btn btn-danger btn-sm delete-thumbnail"
-                                                            onclick="return confirmDelete(event, '{{ $fileNameDisplay }}')"
-                                                            data-toggle="tooltip"
-                                                            title="Hapus File">
-                                                        <i class="mdi mdi-delete"></i>
-                                                    </button>
-                                                </form>
-                                                <a href="{{ route('destinasiwisata.download-file', [$destinasi->destinasi_id, $file->media_id]) }}"
-                                                   class="btn btn-info btn-sm download-thumbnail"
-                                                   target="_blank"
-                                                   data-toggle="tooltip"
-                                                   title="Download File">
-                                                    <i class="mdi mdi-download"></i>
-                                                </a>
-                                                @if($isPDF)
-                                                <a href="{{ $previewUrl }}"
-                                                   class="btn btn-warning btn-sm view-thumbnail"
-                                                   target="_blank"
-                                                   data-toggle="tooltip"
-                                                   title="Lihat PDF">
-                                                    <i class="mdi mdi-eye"></i>
-                                                </a>
-                                                @endif
-                                                <span class="badge badge-order">{{ $index + 1 }}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        @else
-                            <div class="text-center py-5 empty-gallery">
-                                <i class="mdi mdi-image-off fa-4x text-muted mb-3"></i>
-                                <h5 class="text-muted">Belum ada file yang diupload</h5>
-                                <p class="text-muted">Upload file untuk menampilkan galeri destinasi</p>
-                            </div>
-                        @endif
-
-                        <!-- Upload Form -->
-                        <div class="upload-section mt-4 pt-4 border-top">
-                            <h6 class="mb-3">
-                                <i class="mdi mdi-cloud-upload text-primary mr-2"></i>
-                                Upload File Baru
-                            </h6>
-                            <form action="{{ route('destinasiwisata.upload-files', $destinasi->destinasi_id) }}"
-                                  method="POST"
-                                  enctype="multipart/form-data"
-                                  id="uploadForm">
-                                @csrf
-                                <div class="mb-3">
-                                    <div class="custom-file-upload">
-                                        <input type="file"
-                                               class="form-control @error('foto_destinasi') is-invalid @enderror"
-                                               id="foto_destinasi"
-                                               name="foto_destinasi[]"
-                                               multiple
-                                               accept=".jpg,.jpeg,.png,.gif,.webp,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv"
-                                               onchange="previewUploadFiles(this)">
-                                        <label for="foto_destinasi" class="upload-label">
-                                            <i class="mdi mdi-cloud-upload mr-2"></i>
-                                            <span>Pilih File (Multiple)</span>
-                                        </label>
-                                    </div>
-                                    @error('foto_destinasi')
-                                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                                    @enderror
-                                    <small class="form-text text-muted">
-                                        <i class="mdi mdi-information mr-1"></i>
-                                        Pilih multiple file (JPG, PNG, GIF, WEBP, PDF, DOC, DOCX, XLS, XLSX, TXT, CSV). Maksimal 5MB per file.
-                                    </small>
-                                </div>
-
-                                <!-- Upload Preview -->
-                                <div id="uploadPreview" class="mb-3" style="display: none;">
-                                    <h6 class="text-muted mb-2">Preview File yang akan diupload:</h6>
-                                    <div id="previewContainer" class="row g-2"></div>
-                                    <div class="mt-2 text-end">
-                                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="clearPreview()">
-                                            <i class="mdi mdi-trash-can mr-1"></i> Clear Preview
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <button type="submit" class="btn btn-success w-100 upload-btn" id="uploadBtn">
-                                    <i class="mdi mdi-cloud-upload mr-1"></i> Upload File
-                                </button>
-                            </form>
-                        </div>
+                        @endforeach
                     </div>
+                @else
+                    <div class="text-center py-5 empty-gallery">
+                        <i class="mdi mdi-image-off fa-4x text-muted mb-3"></i>
+                        <h5 class="text-muted">Belum ada file yang diupload</h5>
+                        <p class="text-muted">Upload file untuk menampilkan galeri destinasi</p>
+                    </div>
+                @endif
+
+                <!-- Upload Form -->
+                <div class="upload-section mt-4 pt-4 border-top">
+                    <h6 class="mb-3">
+                        <i class="mdi mdi-cloud-upload text-primary mr-2"></i>
+                        Upload File Baru
+                    </h6>
+                    <form action="{{ route('destinasiwisata.upload-files', $destinasi->destinasi_id) }}"
+                          method="POST"
+                          enctype="multipart/form-data"
+                          id="uploadForm">
+                        @csrf
+                        <div class="mb-3">
+                            <div class="custom-file-upload">
+                                <input type="file"
+                                       class="form-control @error('foto_destinasi') is-invalid @enderror"
+                                       id="foto_destinasi"
+                                       name="foto_destinasi[]"
+                                       multiple
+                                       accept=".jpg,.jpeg,.png,.gif,.webp,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv"
+                                       onchange="previewUploadFiles(this)">
+                                <label for="foto_destinasi" class="upload-label">
+                                    <i class="mdi mdi-cloud-upload mr-2"></i>
+                                    <span>Pilih File (Multiple)</span>
+                                </label>
+                            </div>
+                            @error('foto_destinasi')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                            <small class="form-text text-muted">
+                                <i class="mdi mdi-information mr-1"></i>
+                                Pilih multiple file (JPG, PNG, GIF, WEBP, PDF, DOC, DOCX, XLS, XLSX, TXT, CSV). Maksimal 5MB per file.
+                            </small>
+                        </div>
+
+                        <!-- Upload Preview -->
+                        <div id="uploadPreview" class="mb-3" style="display: none;">
+                            <h6 class="text-muted mb-2">Preview File yang akan diupload:</h6>
+                            <div id="previewContainer" class="row g-2"></div>
+                            <div class="mt-2 text-end">
+                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="clearPreview()">
+                                    <i class="mdi mdi-trash-can mr-1"></i> Clear Preview
+                                </button>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100 upload-btn" id="uploadBtn">
+                            <i class="mdi mdi-cloud-upload mr-1"></i> Upload File
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
-
-        {{-- ====================== END MAIN CONTENT ====================== --}}
     </div>
 </div>
 
-{{-- ====================== MODAL FULLSCREEN GAMBAR ====================== --}}
+{{-- ====================== END MAIN CONTENT ====================== --}}
+
+<!-- Modal Preview Gambar -->
 <div class="modal fade" id="imageFullscreenModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content bg-dark">
@@ -530,7 +525,7 @@
     </div>
 </div>
 
-{{-- ====================== MODAL FULLSCREEN PDF ====================== --}}
+<!-- Modal Preview PDF -->
 <div class="modal fade" id="pdfFullscreenModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content bg-dark">
@@ -1379,7 +1374,7 @@
 }
 
 .main-photo-wrapper:hover .photo-overlay {
-    opacity: 1;
+    opacity = 1;
 }
 
 .photo-overlay .btn {
@@ -1502,7 +1497,7 @@
 }
 
 .thumbnail-card:hover .thumbnail-overlay {
-    opacity: 1;
+    opacity = 1;
 }
 
 .delete-thumbnail, .download-thumbnail, .view-thumbnail {

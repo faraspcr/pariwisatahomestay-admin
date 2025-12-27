@@ -1,9 +1,6 @@
 @extends('layouts.app')
 @section('content')
 
-<div class="main-panel">
-    <div class="content-wrapper">
-
         <!-- Header -->
         <div class="page-header">
             <h3 class="page-title">
@@ -311,8 +308,6 @@
                 </form>
             </div>
         </div>
-    </div>
-</div>
 
 <!-- Modal Preview Gambar -->
 <div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-hidden="true">

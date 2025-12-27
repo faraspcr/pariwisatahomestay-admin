@@ -3053,12 +3053,7 @@
                                     </h3>
                                     <div class="period-selector">
                                         <div class="btn-group" role="group">
-                                            <button type="button" class="btn btn-period active"
-                                                data-period="minggu-ini">Minggu Ini</button>
-                                            <button type="button" class="btn btn-period"
-                                                data-period="minggu-lalu">Minggu Lalu</button>
-                                            <button type="button" class="btn btn-period"
-                                                data-period="bulan-ini">Bulan Ini</button>
+
                                         </div>
                                     </div>
                                 </div>
@@ -3281,7 +3276,7 @@
                                     2024 Sistem Pariwisata Desa v2.1.0
                                 </div>
                                 <div style="margin-bottom: 10px; font-size: 13px; color: #888;">
-                                    Dikembangkan dengan <i class="mdi mdi-heart" style="color: #e74c3c;"></i> oleh Faras Zakia Indrani
+                                    Dikembangkan oleh Faras Zakia Indrani
                                 </div>
                                 <div style="margin-top: 15px; font-size: 12px; color: #999; padding-top: 15px; border-top: 1px solid #eee;">
                                     <i class="mdi mdi-shield-check"></i> Hak Cipta Dilindungi | Privacy Policy | Terms of Service

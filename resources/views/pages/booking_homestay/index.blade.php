@@ -1,10 +1,7 @@
 @extends('layouts.app')
 @section('content')
 
-<div class="main-panel">
-    <div class="content-wrapper">
-
-        {{-- ====================== START MAIN CONTENT ====================== --}}
+{{-- ====================== START MAIN CONTENT ====================== --}}
         <!-- Alert Success -->
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -242,9 +239,7 @@
             </div>
         </div>
 
-        {{-- ====================== END MAIN CONTENT ====================== --}}
-    </div>
-</div>
+{{-- ====================== END MAIN CONTENT ====================== --}}
 
 <style>
 /* ==================== ANIMASI UNTUK SEARCH & FILTER ==================== */

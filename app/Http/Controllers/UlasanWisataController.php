@@ -14,7 +14,7 @@ class UlasanWisataController extends Controller
         $filterableColumns = ['rating'];
 
         // TAMBAHKAN: Kolom yang bisa dicari (searchable columns)
-        $searchableColumns = ['komentar']; // Sesuaikan dengan kolom yang ingin dicari
+        $searchableColumns = ['komentar'];
 
         // Query dengan filter DAN search
         $ulasan = UlasanWisata::with(['destinasi', 'warga'])
@@ -41,8 +41,8 @@ class UlasanWisataController extends Controller
 
         return view('pages.ulasan_wisata.index', array_merge([
             'ulasan'        => $ulasan,
-            'currentRating' => $request->input('rating'), // Untuk menjaga nilai select
-            'currentSearch' => $request->input('search'), // TAMBAHKAN: Untuk menjaga nilai search
+            'currentRating' => $request->input('rating'),
+            'currentSearch' => $request->input('search'),
         ], $stats));
     }
 

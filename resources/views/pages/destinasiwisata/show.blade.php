@@ -1,9 +1,6 @@
 @extends('layouts.app')
 @section('content')
 
-<div class="main-panel">
-    <div class="content-wrapper">
-
         {{-- ====================== START MAIN CONTENT ====================== --}}
 
         <!-- Header -->
@@ -500,8 +497,6 @@
         </div>
 
         {{-- ====================== END MAIN CONTENT ====================== --}}
-    </div>
-</div>
 
 {{-- ====================== MODAL FULLSCREEN GAMBAR ====================== --}}
 <div class="modal fade" id="imageFullscreenModal" tabindex="-1" aria-hidden="true">

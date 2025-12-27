@@ -1,325 +1,320 @@
 @extends('layouts.app')
 @section('content')
 
-<div class="main-panel">
-    <div class="content-wrapper">
+{{-- ====================== START MAIN CONTENT ====================== --}}
 
-        {{-- ====================== START MAIN CONTENT ====================== --}}
+<!-- Header -->
+<div class="page-header">
+    <h3 class="page-title">
+        <i class="mdi mdi-calendar-plus text-success mr-2"></i>
+        Tambah Booking Homestay
+    </h3>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('booking-homestay.index') }}">Booking Homestay</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Tambah</li>
+        </ol>
+    </nav>
+</div>
 
-        <!-- Header -->
-        <div class="page-header">
-            <h3 class="page-title">
-                <i class="mdi mdi-calendar-plus text-success mr-2"></i>
-                Tambah Booking Homestay
-            </h3>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('booking-homestay.index') }}">Booking Homestay</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Tambah</li>
-                </ol>
-            </nav>
+<!-- Error List di Atas Form -->
+@if($errors->any())
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="mdi mdi-alert-circle-outline mr-2"></i>
+        <strong>Terjadi kesalahan!</strong> Silakan perbaiki data berikut:
+        <ul class="mt-2 mb-0">
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
+
+<!-- Alert Success -->
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="mdi mdi-check-circle-outline mr-2"></i>
+        <strong>Sukses!</strong> {{ session('success') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
+
+@if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="mdi mdi-alert-circle-outline mr-2"></i>
+        <strong>Error!</strong> {{ session('error') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
+
+<!-- Card Form Tambah Booking -->
+<div class="card create-card">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="card-title mb-0">Form Tambah Data Booking</h4>
+            <a href="{{ route('booking-homestay.index') }}" class="btn btn-outline-secondary btn-sm">
+                <i class="mdi mdi-arrow-left mr-1"></i>Kembali ke Data Booking
+            </a>
         </div>
 
-        <!-- Error List di Atas Form -->
-        @if($errors->any())
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="mdi mdi-alert-circle-outline mr-2"></i>
-                <strong>Terjadi kesalahan!</strong> Silakan perbaiki data berikut:
-                <ul class="mt-2 mb-0">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
+        <form action="{{ route('booking-homestay.store') }}" method="POST" id="bookingForm" enctype="multipart/form-data">
+            @csrf
 
-        <!-- Alert Success -->
-        @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="mdi mdi-check-circle-outline mr-2"></i>
-                <strong>Sukses!</strong> {{ session('success') }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
+            <div class="row">
+                <!-- Kolom Kiri -->
+                <div class="col-md-6">
+                    <!-- Kamar Homestay -->
+                    <div class="form-group">
+                        <label for="kamar_id" class="form-label">Kamar Homestay <span class="text-danger">*</span></label>
+                        <select class="form-control @error('kamar_id') is-invalid @enderror"
+                                id="kamarSelect" name="kamar_id" required>
+                            <option value="">-- Pilih Kamar --</option>
+                            @foreach($kamars as $kamar)
+                                <option value="{{ $kamar->kamar_id }}"
+                                    data-harga="{{ $kamar->harga }}"
+                                    data-homestay="{{ $kamar->homestay->nama ?? 'Unknown' }}"
+                                    {{ old('kamar_id') == $kamar->kamar_id ? 'selected' : '' }}>
+                                    {{ $kamar->nama_kamar }} - {{ $kamar->homestay->nama ?? 'Unknown' }}
+                                    (Rp {{ number_format($kamar->harga, 0, ',', '.') }}/malam)
+                                </option>
+                            @endforeach
+                        </select>
+                        <small class="form-text text-muted" id="homestayInfo"></small>
+                        @error('kamar_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
 
-        @if(session('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="mdi mdi-alert-circle-outline mr-2"></i>
-                <strong>Error!</strong> {{ session('error') }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
+                    <!-- Warga -->
+                    <div class="form-group">
+                        <label for="warga_id" class="form-label">Warga <span class="text-danger">*</span></label>
+                        <select class="form-control @error('warga_id') is-invalid @enderror"
+                                id="warga_id" name="warga_id" required>
+                            <option value="">-- Pilih Warga --</option>
+                            @foreach($wargas as $warga)
+                                <option value="{{ $warga->warga_id }}" {{ old('warga_id') == $warga->warga_id ? 'selected' : '' }}>
+                                    {{ $warga->nama }} - {{ $warga->no_ktp }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('warga_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
 
-        <!-- Card Form Tambah Booking -->
-        <div class="card create-card">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h4 class="card-title mb-0">Form Tambah Data Booking</h4>
-                    <a href="{{ route('booking-homestay.index') }}" class="btn btn-outline-secondary btn-sm">
-                        <i class="mdi mdi-arrow-left mr-1"></i>Kembali ke Data Booking
-                    </a>
+                    <!-- Check-in -->
+                    <div class="form-group">
+                        <label for="checkin" class="form-label">Tanggal Check-in <span class="text-danger">*</span></label>
+                        <input type="date" class="form-control @error('checkin') is-invalid @enderror"
+                               id="checkin" name="checkin" value="{{ old('checkin', date('Y-m-d')) }}"
+                               placeholder="Masukkan tanggal check-in" required>
+                        @error('checkin')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <!-- Check-out -->
+                    <div class="form-group">
+                        <label for="checkout" class="form-label">Tanggal Check-out <span class="text-danger">*</span></label>
+                        <input type="date" class="form-control @error('checkout') is-invalid @enderror"
+                               id="checkout" name="checkout" value="{{ old('checkout', date('Y-m-d', strtotime('+1 day'))) }}"
+                               placeholder="Masukkan tanggal check-out" required>
+                        @error('checkout')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
                 </div>
 
-                <form action="{{ route('booking-homestay.store') }}" method="POST" id="bookingForm" enctype="multipart/form-data">
-                    @csrf
-
-                    <div class="row">
-                        <!-- Kolom Kiri -->
-                        <div class="col-md-6">
-                            <!-- Kamar Homestay -->
-                            <div class="form-group">
-                                <label for="kamar_id" class="form-label">Kamar Homestay <span class="text-danger">*</span></label>
-                                <select class="form-control @error('kamar_id') is-invalid @enderror"
-                                        id="kamarSelect" name="kamar_id" required>
-                                    <option value="">-- Pilih Kamar --</option>
-                                    @foreach($kamars as $kamar)
-                                        <option value="{{ $kamar->kamar_id }}"
-                                            data-harga="{{ $kamar->harga }}"
-                                            data-homestay="{{ $kamar->homestay->nama ?? 'Unknown' }}"
-                                            {{ old('kamar_id') == $kamar->kamar_id ? 'selected' : '' }}>
-                                            {{ $kamar->nama_kamar }} - {{ $kamar->homestay->nama ?? 'Unknown' }}
-                                            (Rp {{ number_format($kamar->harga, 0, ',', '.') }}/malam)
-                                        </option>
-                                    @endforeach
-                                </select>
-                                <small class="form-text text-muted" id="homestayInfo"></small>
-                                @error('kamar_id')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <!-- Warga -->
-                            <div class="form-group">
-                                <label for="warga_id" class="form-label">Warga <span class="text-danger">*</span></label>
-                                <select class="form-control @error('warga_id') is-invalid @enderror"
-                                        id="warga_id" name="warga_id" required>
-                                    <option value="">-- Pilih Warga --</option>
-                                    @foreach($wargas as $warga)
-                                        <option value="{{ $warga->warga_id }}" {{ old('warga_id') == $warga->warga_id ? 'selected' : '' }}>
-                                            {{ $warga->nama }} - {{ $warga->no_ktp }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('warga_id')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <!-- Check-in -->
-                            <div class="form-group">
-                                <label for="checkin" class="form-label">Tanggal Check-in <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control @error('checkin') is-invalid @enderror"
-                                       id="checkin" name="checkin" value="{{ old('checkin', date('Y-m-d')) }}"
-                                       placeholder="Masukkan tanggal check-in" required>
-                                @error('checkin')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <!-- Check-out -->
-                            <div class="form-group">
-                                <label for="checkout" class="form-label">Tanggal Check-out <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control @error('checkout') is-invalid @enderror"
-                                       id="checkout" name="checkout" value="{{ old('checkout', date('Y-m-d', strtotime('+1 day'))) }}"
-                                       placeholder="Masukkan tanggal check-out" required>
-                                @error('checkout')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <!-- Kolom Kanan -->
-                        <div class="col-md-6">
-                            <!-- Jumlah Hari -->
-                            <div class="form-group">
-                                <label for="jumlahHari" class="form-label">Jumlah Hari</label>
-                                <input type="text" class="form-control"
-                                       id="jumlahHari" readonly>
-                                <small class="form-text text-muted" id="jumlahHariText">0 Hari</small>
-                            </div>
-
-                            <!-- Total -->
-                            <div class="form-group">
-                                <label for="total" class="form-label">Total Biaya <span class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Rp</span>
-                                    </div>
-                                    <input type="number" class="form-control @error('total') is-invalid @enderror"
-                                           id="total" name="total"
-                                           value="{{ old('total') }}"
-                                           placeholder="Total biaya" min="0" required readonly>
-                                </div>
-                                @error('total')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <!-- Status -->
-                            <div class="form-group">
-                                <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
-                                <select class="form-control @error('status') is-invalid @enderror"
-                                        id="status" name="status" required>
-                                    <option value="">-- Pilih Status --</option>
-                                    <option value="pending" {{ old('status') == 'pending' ? 'selected' : '' }}>Pending</option>
-                                    <option value="confirmed" {{ old('status') == 'confirmed' ? 'selected' : '' }}>Confirmed</option>
-                                    <option value="paid" {{ old('status') == 'paid' ? 'selected' : '' }}>Paid</option>
-                                    <option value="completed" {{ old('status') == 'completed' ? 'selected' : '' }}>Completed</option>
-                                    <option value="cancelled" {{ old('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
-                                </select>
-                                @error('status')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <!-- Metode Bayar -->
-                            <div class="form-group">
-                                <label for="metode_bayar" class="form-label">Metode Bayar</label>
-                                <select class="form-control @error('metode_bayar') is-invalid @enderror"
-                                        id="metode_bayar" name="metode_bayar">
-                                    <option value="">-- Pilih Metode Bayar --</option>
-                                    <option value="cash" {{ old('metode_bayar') == 'cash' ? 'selected' : '' }}>Cash</option>
-                                    <option value="transfer" {{ old('metode_bayar') == 'transfer' ? 'selected' : '' }}>Transfer</option>
-                                    <option value="qris" {{ old('metode_bayar') == 'qris' ? 'selected' : '' }}>QRIS</option>
-                                    <option value="other" {{ old('metode_bayar') == 'other' ? 'selected' : '' }}>Lainnya</option>
-                                </select>
-                                @error('metode_bayar')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
+                <!-- Kolom Kanan -->
+                <div class="col-md-6">
+                    <!-- Jumlah Hari -->
+                    <div class="form-group">
+                        <label for="jumlahHari" class="form-label">Jumlah Hari</label>
+                        <input type="text" class="form-control"
+                               id="jumlahHari" readonly>
+                        <small class="form-text text-muted" id="jumlahHariText">0 Hari</small>
                     </div>
 
-                    <!-- Form Upload File Bukti Bayar (SAMA DENGAN KAMAR HOMESTAY) -->
-                    <div class="row mt-4">
-                        <div class="col-md-12">
-                            <div class="card upload-card">
-                                <div class="card-header bg-gradient-primary text-white">
-                                    <h5 class="mb-0">
-                                        <i class="mdi mdi-receipt mr-2"></i>Upload Bukti Pembayaran
-                                        <span class="badge bg-light text-primary ml-2" id="fileCount">0 File</span>
-                                    </h5>
-                                </div>
-                                <div class="card-body">
-                                    <!-- File Upload Area -->
-                                    <div class="custom-file-upload mb-4">
-                                        <input type="file"
-                                               class="form-control-file @error('bukti_bayar.*') is-invalid @enderror"
-                                               id="bukti_bayar"
-                                               name="bukti_bayar[]"
-                                               multiple
-                                               accept="image/*,.pdf,.doc,.docx"
-                                               onchange="previewFiles(this)">
-                                        <label for="bukti_bayar" class="upload-label">
-                                            <div class="upload-icon">
-                                                <i class="mdi mdi-cloud-upload"></i>
-                                            </div>
-                                            <div class="upload-text">
-                                                <h5>Drop files here or click to upload</h5>
-                                                <p class="text-muted">Format yang didukung: JPG, PNG, GIF, WEBP, PDF, DOC, DOCX</p>
-                                                <p class="text-muted">Maksimal 10MB per file</p>
-                                            </div>
-                                        </label>
-                                        @error('bukti_bayar.*')
-                                            <div class="invalid-feedback d-block">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <!-- File List Preview -->
-                                    <div class="file-list-section">
-                                        <h6 class="section-title">
-                                            <i class="mdi mdi-file-multiple mr-2"></i>
-                                            Daftar File yang akan diupload
-                                            <span class="badge badge-pill badge-info" id="selectedCount">0</span>
-                                        </h6>
-
-                                        <!-- Empty State -->
-                                        <div class="empty-state text-center py-5" id="emptyState">
-                                            <i class="mdi mdi-file-image text-muted" style="font-size: 80px;"></i>
-                                            <h5 class="text-muted mt-3">Belum ada file yang dipilih</h5>
-                                            <p class="text-muted">Upload bukti pembayaran atau dokumen pendukung</p>
-                                        </div>
-
-                                        <!-- File Preview Container -->
-                                        <div class="file-preview-container" id="filePreviewContainer" style="display: none;">
-                                            <div class="row" id="filePreviewRow"></div>
-
-                                            <!-- File Info Summary -->
-                                            <div class="file-summary mt-3 p-3 bg-light rounded">
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <small class="text-muted">
-                                                            <i class="mdi mdi-file mr-1"></i>
-                                                            Total File: <span id="totalFiles">0</span>
-                                                        </small>
-                                                    </div>
-                                                    <div class="col-md-6 text-right">
-                                                        <small class="text-muted">
-                                                            <i class="mdi mdi-weight mr-1"></i>
-                                                            Total Size: <span id="totalSize">0 KB</span>
-                                                        </small>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                    <!-- Total -->
+                    <div class="form-group">
+                        <label for="total" class="form-label">Total Biaya <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Rp</span>
                             </div>
+                            <input type="number" class="form-control @error('total') is-invalid @enderror"
+                                   id="total" name="total"
+                                   value="{{ old('total') }}"
+                                   placeholder="Total biaya" min="0" required readonly>
                         </div>
+                        @error('total')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
-                    <!-- Info Kalkulator -->
-                    <div class="row mt-3">
-                        <div class="col-md-12">
-                            <div class="card bg-light">
-                                <div class="card-body">
-                                    <div class="row text-center">
-                                        <div class="col-md-4">
-                                            <h6>Harga per Malam</h6>
-                                            <h4 id="hargaPerMalam" class="text-primary">Rp 0</h4>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <h6>Jumlah Hari</h6>
-                                            <h4 id="displayJumlahHari" class="text-success">0 Hari</h4>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <h6>Total Seharusnya</h6>
-                                            <h4 id="totalSeharusnya" class="text-success">Rp 0</h4>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <!-- Status -->
+                    <div class="form-group">
+                        <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
+                        <select class="form-control @error('status') is-invalid @enderror"
+                                id="status" name="status" required>
+                            <option value="">-- Pilih Status --</option>
+                            <option value="pending" {{ old('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                            <option value="confirmed" {{ old('status') == 'confirmed' ? 'selected' : '' }}>Confirmed</option>
+                            <option value="paid" {{ old('status') == 'paid' ? 'selected' : '' }}>Paid</option>
+                            <option value="completed" {{ old('status') == 'completed' ? 'selected' : '' }}>Completed</option>
+                            <option value="cancelled" {{ old('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                        </select>
+                        @error('status')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
-                    <!-- Tombol Aksi -->
-                    <div class="row mt-4">
-                        <div class="col-12">
-                            <div class="d-flex justify-content-end gap-2">
-                                <a href="{{ route('booking-homestay.index') }}" class="btn btn-outline-secondary">
-                                    <i class="mdi mdi-arrow-left mr-1"></i>Kembali
-                                </a>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="mdi mdi-content-save mr-1"></i>Simpan Booking
-                                </button>
-                            </div>
-                        </div>
+                    <!-- Metode Bayar -->
+                    <div class="form-group">
+                        <label for="metode_bayar" class="form-label">Metode Bayar</label>
+                        <select class="form-control @error('metode_bayar') is-invalid @enderror"
+                                id="metode_bayar" name="metode_bayar">
+                            <option value="">-- Pilih Metode Bayar --</option>
+                            <option value="cash" {{ old('metode_bayar') == 'cash' ? 'selected' : '' }}>Cash</option>
+                            <option value="transfer" {{ old('metode_bayar') == 'transfer' ? 'selected' : '' }}>Transfer</option>
+                            <option value="qris" {{ old('metode_bayar') == 'qris' ? 'selected' : '' }}>QRIS</option>
+                            <option value="other" {{ old('metode_bayar') == 'other' ? 'selected' : '' }}>Lainnya</option>
+                        </select>
+                        @error('metode_bayar')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
-                </form>
+                </div>
             </div>
-        </div>
 
-        {{-- ====================== END MAIN CONTENT ====================== --}}
+            <!-- Form Upload File Bukti Bayar (SAMA DENGAN KAMAR HOMESTAY) -->
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <div class="card upload-card">
+                        <div class="card-header bg-gradient-primary text-white">
+                            <h5 class="mb-0">
+                                <i class="mdi mdi-receipt mr-2"></i>Upload Bukti Pembayaran
+                                <span class="badge bg-light text-primary ml-2" id="fileCount">0 File</span>
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <!-- File Upload Area -->
+                            <div class="custom-file-upload mb-4">
+                                <input type="file"
+                                       class="form-control-file @error('bukti_bayar.*') is-invalid @enderror"
+                                       id="bukti_bayar"
+                                       name="bukti_bayar[]"
+                                       multiple
+                                       accept="image/*,.pdf,.doc,.docx"
+                                       onchange="previewFiles(this)">
+                                <label for="bukti_bayar" class="upload-label">
+                                    <div class="upload-icon">
+                                        <i class="mdi mdi-cloud-upload"></i>
+                                    </div>
+                                    <div class="upload-text">
+                                        <h5>Drop files here or click to upload</h5>
+                                        <p class="text-muted">Format yang didukung: JPG, PNG, GIF, WEBP, PDF, DOC, DOCX</p>
+                                        <p class="text-muted">Maksimal 10MB per file</p>
+                                    </div>
+                                </label>
+                                @error('bukti_bayar.*')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- File List Preview -->
+                            <div class="file-list-section">
+                                <h6 class="section-title">
+                                    <i class="mdi mdi-file-multiple mr-2"></i>
+                                    Daftar File yang akan diupload
+                                    <span class="badge badge-pill badge-info" id="selectedCount">0</span>
+                                </h6>
+
+                                <!-- Empty State -->
+                                <div class="empty-state text-center py-5" id="emptyState">
+                                    <i class="mdi mdi-file-image text-muted" style="font-size: 80px;"></i>
+                                    <h5 class="text-muted mt-3">Belum ada file yang dipilih</h5>
+                                    <p class="text-muted">Upload bukti pembayaran atau dokumen pendukung</p>
+                                </div>
+
+                                <!-- File Preview Container -->
+                                <div class="file-preview-container" id="filePreviewContainer" style="display: none;">
+                                    <div class="row" id="filePreviewRow"></div>
+
+                                    <!-- File Info Summary -->
+                                    <div class="file-summary mt-3 p-3 bg-light rounded">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <small class="text-muted">
+                                                    <i class="mdi mdi-file mr-1"></i>
+                                                    Total File: <span id="totalFiles">0</span>
+                                                </small>
+                                            </div>
+                                            <div class="col-md-6 text-right">
+                                                <small class="text-muted">
+                                                    <i class="mdi mdi-weight mr-1"></i>
+                                                    Total Size: <span id="totalSize">0 KB</span>
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info Kalkulator -->
+            <div class="row mt-3">
+                <div class="col-md-12">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <div class="row text-center">
+                                <div class="col-md-4">
+                                    <h6>Harga per Malam</h6>
+                                    <h4 id="hargaPerMalam" class="text-primary">Rp 0</h4>
+                                </div>
+                                <div class="col-md-4">
+                                    <h6>Jumlah Hari</h6>
+                                    <h4 id="displayJumlahHari" class="text-success">0 Hari</h4>
+                                </div>
+                                <div class="col-md-4">
+                                    <h6>Total Seharusnya</h6>
+                                    <h4 id="totalSeharusnya" class="text-success">Rp 0</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tombol Aksi -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{{ route('booking-homestay.index') }}" class="btn btn-outline-secondary">
+                            <i class="mdi mdi-arrow-left mr-1"></i>Kembali
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="mdi mdi-content-save mr-1"></i>Simpan Booking
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
+
+{{-- ====================== END MAIN CONTENT ====================== --}}
 
 <!-- Modal Preview Gambar -->
 <div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-hidden="true">

@@ -1,211 +1,204 @@
 @extends('layouts.app')
 @section('content')
+{{-- ====================== START MAIN CONTENT ====================== --}}
+<!-- Alert Success -->
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="mdi mdi-check-circle-outline mr-2"></i>
+        <strong>Sukses!</strong> {{ session('success') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
 
-<div class="main-panel">
-    <div class="content-wrapper">
+@if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="mdi mdi-alert-circle-outline mr-2"></i>
+        <strong>Error!</strong> {{ session('error') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
 
-        {{-- ====================== START MAIN CONTENT ====================== --}}
-        <!-- Alert Success -->
-        @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="mdi mdi-check-circle-outline mr-2"></i>
-                <strong>Sukses!</strong> {{ session('success') }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
+<!-- Card Data Warga -->
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title mb-4">Daftar Warga Terdaftar</h4>
 
-        @if(session('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="mdi mdi-alert-circle-outline mr-2"></i>
-                <strong>Error!</strong> {{ session('error') }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
+        <!-- Form Filter dan Search -->
+        <form method="GET" action="{{ route('warga.index') }}">
+            <div class="row mb-4">
+                <!-- Filter Gender -->
+                <div class="col-md-3">
+                    <select name="jenis_kelamin" onchange="this.form.submit()" class="form-control form-control-sm filter-rating">
+                        <option value="">Semua Gender</option>
+                        <option value="L" {{ request('jenis_kelamin') == 'L' ? 'selected' : '' }}>Laki-laki</option>
+                        <option value="P" {{ request('jenis_kelamin') == 'P' ? 'selected' : '' }}>Perempuan</option>
+                    </select>
+                </div>
 
-        <!-- Card Data Warga -->
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title mb-4">Daftar Warga Terdaftar</h4>
-
-                <!-- Form Filter dan Search -->
-                <form method="GET" action="{{ route('warga.index') }}">
-                    <div class="row mb-4">
-                        <!-- Filter Gender -->
-                        <div class="col-md-3">
-                            <select name="jenis_kelamin" onchange="this.form.submit()" class="form-control form-control-sm filter-rating">
-                                <option value="">Semua Gender</option>
-                                <option value="L" {{ request('jenis_kelamin') == 'L' ? 'selected' : '' }}>Laki-laki</option>
-                                <option value="P" {{ request('jenis_kelamin') == 'P' ? 'selected' : '' }}>Perempuan</option>
-                            </select>
-                        </div>
-
-                        <!-- Form Search -->
-                        <div class="col-md-3">
-                            <div class="input-group search-group">
-                                <input type="text"
-                                       name="search"
-                                       class="form-control form-control-sm search-input"
-                                       placeholder="Cari data warga..."
-                                       value="{{ request('search') }}">
-                                <button type="submit" class="input-group-text search-btn">
-                                    <i class="mdi mdi-magnify"></i>
-                                </button>
-                                @if(request("search"))
-                                <a href="{{ request()->fullUrlWithQuery(['search'=> null]) }}" class="input-group-text clear-btn">
-                                    Clear
-                                </a>
-                                @endif
-                            </div>
-                        </div>
-
-                        <!-- Tombol Tambah -->
-                        <div class="col-md-6 text-right">
-                            <a href="{{ route('warga.create') }}" class="btn btn-primary btn-sm add-btn">
-                                <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah Warga
-                            </a>
-                        </div>
+                <!-- Form Search -->
+                <div class="col-md-3">
+                    <div class="input-group search-group">
+                        <input type="text"
+                               name="search"
+                               class="form-control form-control-sm search-input"
+                               placeholder="Cari data warga..."
+                               value="{{ request('search') }}">
+                        <button type="submit" class="input-group-text search-btn">
+                            <i class="mdi mdi-magnify"></i>
+                        </button>
+                        @if(request("search"))
+                        <a href="{{ request()->fullUrlWithQuery(['search'=> null]) }}" class="input-group-text clear-btn">
+                            Clear
+                        </a>
+                        @endif
                     </div>
-                </form>
-
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th class="text-center">#</th>
-                                <th>No KTP</th>
-                                <th>Nama Lengkap</th>
-                                <th class="text-center">Jenis Kelamin</th>
-                                <th class="text-center">Agama</th>
-                                <th class="text-center">Pekerjaan</th>
-                                <th>Telepon</th>
-                                <th>Email</th>
-                                <th class="text-center">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($warga as $item)
-                            <tr class="table-row">
-                                <td class="text-center">
-                                    <span class="badge badge-info">{{ ($warga->currentPage() - 1) * $warga->perPage() + $loop->iteration }}</span>
-                                </td>
-                                <td>
-                                    <span class="font-weight-bold text-primary">{{ $item->no_ktp }}</span>
-                                </td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <div class="mr-3">
-                                            <i class="mdi mdi-account-circle text-primary" style="font-size: 24px;"></i>
-                                        </div>
-                                        <div>
-                                            <div class="font-weight-bold">{{ $item->nama }}</div>
-                                            <small class="text-muted">ID: {{ $item->warga_id }}</small>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="text-center">
-                                    @if($item->jenis_kelamin == 'L')
-                                        <span class="badge badge-gender-male py-2 px-3">
-                                            <i class="mdi mdi-gender-male mr-1"></i>Laki-laki
-                                        </span>
-                                    @else
-                                        <span class="badge badge-gender-female py-2 px-3">
-                                            <i class="mdi mdi-gender-female mr-1"></i>Perempuan
-                                        </span>
-                                    @endif
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge badge-religion py-2 px-3">
-                                        <i class="mdi mdi-church mr-1"></i>{{ $item->agama }}
-                                    </span>
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge badge-job py-2 px-3">
-                                        <i class="mdi mdi-briefcase mr-1"></i>{{ $item->pekerjaan }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <i class="mdi mdi-phone mr-2 text-success"></i>
-                                        <span class="font-weight-bold">{{ $item->telp }}</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    @if($item->email)
-                                        <div class="d-flex align-items-center">
-                                            <i class="mdi mdi-email mr-2 text-warning"></i>
-                                            <span class="text-truncate" style="max-width: 150px;">{{ $item->email }}</span>
-                                        </div>
-                                    @else
-                                        <span class="text-muted">-</span>
-                                    @endif
-                                </td>
-                                <td class="text-center action-buttons">
-                                    <div class="btn-group" role="group">
-                                        <a href="{{ route('warga.edit', $item->warga_id) }}"
-                                           class="btn btn-outline-info btn-sm action-btn"
-                                           data-toggle="tooltip"
-                                           title="Edit Data">
-                                            <i class="mdi mdi-pencil"></i>
-                                        </a>
-                                        <form action="{{ route('warga.destroy', $item->warga_id) }}" method="POST" style="display:inline">
-                                            @csrf
-                                            @method("DELETE")
-                                            <button type="submit"
-                                                    class="btn btn-outline-danger btn-sm action-btn"
-                                                    data-toggle="tooltip"
-                                                    title="Hapus Data"
-                                                    onclick="return confirm('Apakah Anda yakin ingin menghapus data warga {{ $item->nama }}?')">
-                                                <i class="mdi mdi-delete"></i>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                            @empty
-                            <tr>
-                                <td colspan="9" class="text-center py-5">
-                                    <div class="d-flex flex-column align-items-center empty-state">
-                                        <i class="mdi mdi-account-off-outline text-muted" style="font-size: 64px;"></i>
-                                        <h4 class="text-muted mt-3">Belum ada data warga</h4>
-                                        <p class="text-muted">Silakan tambah data warga terlebih dahulu</p>
-                                        <a href="{{ route('warga.create') }}" class="btn btn-primary mt-2 add-btn">
-                                            <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah Warga Pertama
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
                 </div>
 
-                {{-- ====================== PAGINATION ====================== --}}
-                <div class="mt-4">
-                    {{ $warga->links('pagination::bootstrap-5') }}
+                <!-- Tombol Tambah -->
+                <div class="col-md-6 text-right">
+                    <a href="{{ route('warga.create') }}" class="btn btn-primary btn-sm add-btn">
+                        <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah Warga
+                    </a>
                 </div>
+            </div>
+        </form>
 
-                <!-- Info Summary -->
-                <div class="row mt-4">
-                    <div class="col-md-12">
-                        <div class="alert alert-info summary-card">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th>No KTP</th>
+                        <th>Nama Lengkap</th>
+                        <th class="text-center">Jenis Kelamin</th>
+                        <th class="text-center">Agama</th>
+                        <th class="text-center">Pekerjaan</th>
+                        <th>Telepon</th>
+                        <th>Email</th>
+                        <th class="text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($warga as $item)
+                    <tr class="table-row">
+                        <td class="text-center">
+                            <span class="badge badge-info">{{ ($warga->currentPage() - 1) * $warga->perPage() + $loop->iteration }}</span>
+                        </td>
+                        <td>
+                            <span class="font-weight-bold text-primary">{{ $item->no_ktp }}</span>
+                        </td>
+                        <td>
                             <div class="d-flex align-items-center">
-                                <i class="mdi mdi-information-outline mr-2" style="font-size: 24px;"></i>
+                                <div class="mr-3">
+                                    <i class="mdi mdi-account-circle text-primary" style="font-size: 24px;"></i>
+                                </div>
                                 <div>
-                                    <h6 class="alert-heading mb-1">Total Data Warga: {{ $warga->total() }}</h6>
-                                    <p class="mb-0">Menampilkan {{ $warga->count() }} data dari total {{ $warga->total() }} data warga</p>
-                                    <small class="mb-0">Halaman {{ $warga->currentPage() }} dari {{ $warga->lastPage() }}</small>
+                                    <div class="font-weight-bold">{{ $item->nama }}</div>
+                                    <small class="text-muted">ID: {{ $item->warga_id }}</small>
                                 </div>
                             </div>
+                        </td>
+                        <td class="text-center">
+                            @if($item->jenis_kelamin == 'L')
+                                <span class="badge badge-gender-male py-2 px-3">
+                                    <i class="mdi mdi-gender-male mr-1"></i>Laki-laki
+                                </span>
+                            @else
+                                <span class="badge badge-gender-female py-2 px-3">
+                                    <i class="mdi mdi-gender-female mr-1"></i>Perempuan
+                                </span>
+                            @endif
+                        </td>
+                        <td class="text-center">
+                            <span class="badge badge-religion py-2 px-3">
+                                <i class="mdi mdi-church mr-1"></i>{{ $item->agama }}
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            <span class="badge badge-job py-2 px-3">
+                                <i class="mdi mdi-briefcase mr-1"></i>{{ $item->pekerjaan }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <i class="mdi mdi-phone mr-2 text-success"></i>
+                                <span class="font-weight-bold">{{ $item->telp }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            @if($item->email)
+                                <div class="d-flex align-items-center">
+                                    <i class="mdi mdi-email mr-2 text-warning"></i>
+                                    <span class="text-truncate" style="max-width: 150px;">{{ $item->email }}</span>
+                                </div>
+                            @else
+                                <span class="text-muted">-</span>
+                            @endif
+                        </td>
+                        <td class="text-center action-buttons">
+                            <div class="btn-group" role="group">
+                                <a href="{{ route('warga.edit', $item->warga_id) }}"
+                                   class="btn btn-outline-info btn-sm action-btn"
+                                   data-toggle="tooltip"
+                                   title="Edit Data">
+                                    <i class="mdi mdi-pencil"></i>
+                                </a>
+                                <form action="{{ route('warga.destroy', $item->warga_id) }}" method="POST" style="display:inline">
+                                    @csrf
+                                    @method("DELETE")
+                                    <button type="submit"
+                                            class="btn btn-outline-danger btn-sm action-btn"
+                                            data-toggle="tooltip"
+                                            title="Hapus Data"
+                                            onclick="return confirm('Apakah Anda yakin ingin menghapus data warga {{ $item->nama }}?')">
+                                        <i class="mdi mdi-delete"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="9" class="text-center py-5">
+                            <div class="d-flex flex-column align-items-center empty-state">
+                                <i class="mdi mdi-account-off-outline text-muted" style="font-size: 64px;"></i>
+                                <h4 class="text-muted mt-3">Belum ada data warga</h4>
+                                <p class="text-muted">Silakan tambah data warga terlebih dahulu</p>
+                                <a href="{{ route('warga.create') }}" class="btn btn-primary mt-2 add-btn">
+                                    <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah Warga Pertama
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        {{-- ====================== PAGINATION ====================== --}}
+        <div class="mt-4">
+            {{ $warga->links('pagination::bootstrap-5') }}
+        </div>
+
+        <!-- Info Summary -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="alert alert-info summary-card">
+                    <div class="d-flex align-items-center">
+                        <i class="mdi mdi-information-outline mr-2" style="font-size: 24px;"></i>
+                        <div>
+                            <h6 class="alert-heading mb-1">Total Data Warga: {{ $warga->total() }}</h6>
+                            <p class="mb-0">Menampilkan {{ $warga->count() }} data dari total {{ $warga->total() }} data warga</p>
+                            <small class="mb-0">Halaman {{ $warga->currentPage() }} dari {{ $warga->lastPage() }}</small>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 </div>
 

@@ -1,8 +1,5 @@
 @extends('layouts.app')
 @section('content')
-
-<div class="main-panel">
-    <div class="content-wrapper">
         <!-- Header -->
         <div class="page-header">
             <h3 class="page-title">
@@ -331,8 +328,6 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
 <script>
 // ============ UPLOAD PREVIEW FUNCTIONS ============

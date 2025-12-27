@@ -47,7 +47,6 @@ class DestinasiWisataController extends Controller
             'tiket' => 'required|numeric|min:0',
             'kontak' => 'required|string|min:10|max:15',
             'foto_destinasi' => 'nullable|array',
-            // FORMAT YANG DIDUKUNG: Gambar + PDF + DOC/DOCX
             'foto_destinasi.*' => 'file|mimes:jpg,jpeg,png,gif,webp,bmp,pdf,doc,docx|max:10240',
         ]);
 
@@ -131,9 +130,6 @@ class DestinasiWisataController extends Controller
             ->with('success', 'Data destinasi wisata berhasil diperbarui!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         $destinasi = DestinasiWisata::findOrFail($id);
@@ -148,7 +144,6 @@ class DestinasiWisataController extends Controller
             Storage::disk('public')->delete($file->file_name);
             $file->delete();
         }
-
         $destinasi->delete();
 
         return redirect()->route('destinasiwisata.index')

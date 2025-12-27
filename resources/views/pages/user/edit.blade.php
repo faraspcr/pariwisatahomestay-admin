@@ -1,254 +1,246 @@
 @extends('layouts.app')
 @section('content')
 
-<div class="main-panel">
-    <div class="content-wrapper">
+{{-- ====================== START MAIN CONTENT ====================== --}}
 
-        {{-- ====================== START MAIN CONTENT ====================== --}}
+<!-- Header -->
+<div class="page-header">
+    <h3 class="page-title">
+        <i class="mdi mdi-account-edit text-primary mr-2"></i>
+        Edit User
+    </h3>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('user.index') }}">Data User</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Edit Data</li>
+        </ol>
+    </nav>
+</div>
 
-        <!-- Header -->
-        <div class="page-header">
-            <h3 class="page-title">
-                <i class="mdi mdi-account-edit text-primary mr-2"></i>
-                Edit User
-            </h3>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('user.index') }}">Data User</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Edit Data</li>
-                </ol>
-            </nav>
+<!-- Alert Success -->
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="mdi mdi-check-circle-outline mr-2"></i>
+        <strong>Sukses!</strong> {{ session('success') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
+
+@if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="mdi mdi-alert-circle-outline mr-2"></i>
+        <strong>Error!</strong> {{ session('error') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
+
+<!-- Error List di Atas Form -->
+@if($errors->any())
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="mdi mdi-alert-circle-outline mr-2"></i>
+        <strong>Terjadi kesalahan!</strong> Silakan perbaiki data berikut:
+        <ul class="mt-2 mb-0">
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
+
+<!-- Card Form Edit User -->
+<div class="card">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="card-title mb-0">Form Edit User</h4>
+            <a href="{{ route('user.index') }}" class="btn btn-outline-secondary btn-sm">
+                <i class="mdi mdi-arrow-left mr-1"></i>Kembali ke Data User
+            </a>
         </div>
 
-        <!-- Alert Success -->
-        @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="mdi mdi-check-circle-outline mr-2"></i>
-                <strong>Sukses!</strong> {{ session('success') }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
+        <form action="{{ route('user.update', $user->id) }}" method="POST" id="userForm" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
 
-        @if(session('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="mdi mdi-alert-circle-outline mr-2"></i>
-                <strong>Error!</strong> {{ session('error') }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
+            <div class="row">
+                <!-- Kolom Kiri -->
+                <div class="col-md-6">
+                    <!-- Nama -->
+                    <div class="form-group">
+                        <label for="name" class="form-label">Nama <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control @error('name') is-invalid @enderror"
+                               id="name" name="name" value="{{ old('name', $user->name) }}"
+                               placeholder="Masukkan nama lengkap" required>
+                        @error('name')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
 
-        <!-- Error List di Atas Form -->
-        @if($errors->any())
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="mdi mdi-alert-circle-outline mr-2"></i>
-                <strong>Terjadi kesalahan!</strong> Silakan perbaiki data berikut:
-                <ul class="mt-2 mb-0">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                        <input type="email" class="form-control @error('email') is-invalid @enderror"
+                               id="email" name="email" value="{{ old('email', $user->email) }}"
+                               placeholder="contoh: user@email.com" required>
+                        @error('email')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
 
-        <!-- Card Form Edit User -->
-        <div class="card">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h4 class="card-title mb-0">Form Edit User</h4>
-                    <a href="{{ route('user.index') }}" class="btn btn-outline-secondary btn-sm">
-                        <i class="mdi mdi-arrow-left mr-1"></i>Kembali ke Data User
-                    </a>
+                    <!-- ROLE - 3 PILIHAN -->
+                    <div class="form-group">
+                        <label for="role" class="form-label">Role <span class="text-danger">*</span></label>
+                        <select name="role" id="role" class="form-control @error('role') is-invalid @enderror" required>
+                            <option value="">Pilih Role</option>
+                            <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>Admin</option>
+                            <option value="pemilik" {{ old('role', $user->role) == 'pemilik' ? 'selected' : '' }}>Pemilik Homestay</option>
+                            <option value="warga" {{ old('role', $user->role) == 'warga' ? 'selected' : '' }}>Warga</option>
+                        </select>
+                        @error('role')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
                 </div>
 
-                <form action="{{ route('user.update', $user->id) }}" method="POST" id="userForm" enctype="multipart/form-data">
-                    @csrf
-                    @method('PUT')
+                <!-- Kolom Kanan -->
+                <div class="col-md-6">
+                    <!-- Profile Photo - PERBAIKAN UTAMA DI SINI -->
+                    <div class="form-group">
+                        <label for="profile_photo" class="form-label">Foto Profile</label>
 
-                    <div class="row">
-                        <!-- Kolom Kiri -->
-                        <div class="col-md-6">
-                            <!-- Nama -->
-                            <div class="form-group">
-                                <label for="name" class="form-label">Nama <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                       id="name" name="name" value="{{ old('name', $user->name) }}"
-                                       placeholder="Masukkan nama lengkap" required>
-                                @error('name')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
+                        <!-- ✅ Current Photo Section -->
+                        <div class="mb-3">
+                            <p class="mb-1">Foto Saat Ini:</p>
+                            <div class="text-center">
+                                @if($user->profile_picture)
+                                    {{-- Foto Custom --}}
+                                    <div class="position-relative d-inline-block">
+                                        <img src="{{ $user->profile_photo_url }}"
+                                             alt="Profile {{ $user->name }}"
+                                             class="rounded-circle border shadow mb-2"
+                                             style="width: 120px; height: 120px; object-fit: cover;"
+                                             onerror="this.onerror=null; this.src='{{ $user->profile_photo_url }}'">
 
-                            <!-- Email -->
-                            <div class="form-group">
-                                <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
-                                <input type="email" class="form-control @error('email') is-invalid @enderror"
-                                       id="email" name="email" value="{{ old('email', $user->email) }}"
-                                       placeholder="contoh: user@email.com" required>
-                                @error('email')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <!-- ROLE - 3 PILIHAN -->
-                            <div class="form-group">
-                                <label for="role" class="form-label">Role <span class="text-danger">*</span></label>
-                                <select name="role" id="role" class="form-control @error('role') is-invalid @enderror" required>
-                                    <option value="">Pilih Role</option>
-                                    <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>Admin</option>
-                                    <option value="pemilik" {{ old('role', $user->role) == 'pemilik' ? 'selected' : '' }}>Pemilik Homestay</option>
-                                    <option value="warga" {{ old('role', $user->role) == 'warga' ? 'selected' : '' }}>Warga</option>
-                                </select>
-                                @error('role')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                        </span>
+                                    </div>
+                                    <div class="form-check d-inline-block mt-2">
+                                        <input class="form-check-input" type="checkbox"
+                                               name="remove_photo"
+                                               id="remove_photo" value="1">
+                                        <label class="form-check-label text-danger" for="remove_photo">
+                                            <i class="mdi mdi-trash-can-outline mr-1"></i> Hapus foto custom
+                                        </label>
+                                    </div>
+                                    <div class="mt-2">
+                                        <small class="text-muted">
+                                            <i class="mdi mdi-information-outline mr-1"></i>
+                                            Jika dihapus, akan kembali ke avatar default
+                                        </small>
+                                    </div>
+                                @else
+                                    {{-- ✅ Default Avatar --}}
+                                    <div class="position-relative d-inline-block">
+                                        <div class="default-avatar-placeholder rounded-circle border shadow mb-2 d-flex align-items-center justify-content-center mx-auto"
+                                             style="width: 120px; height: 120px; background-color: #f8f9fa; border: 2px dashed #dee2e6 !important;">
+                                            <img src="{{ $user->profile_photo_url }}"
+                                                 alt="Default Avatar"
+                                                 style="width: 60px; height: 60px;">
+                                        </div>
+                                        <span class="badge bg-secondary position-absolute" style="bottom: 5px; right: 5px;">
+                                            <i class="mdi mdi-account"></i> Default
+                                        </span>
+                                    </div>
+                                    <p class="text-muted mb-0">Avatar default</p>
+                                @endif
                             </div>
                         </div>
 
-                        <!-- Kolom Kanan -->
-                        <div class="col-md-6">
-                            <!-- Profile Photo - PERBAIKAN UTAMA DI SINI -->
-                            <div class="form-group">
-                                <label for="profile_photo" class="form-label">Foto Profile</label>
+                        <!-- Upload Foto Baru -->
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input @error('profile_photo') is-invalid @enderror"
+                                   id="profile_photo" name="profile_photo" accept="image/*">
+                            <label class="custom-file-label" for="profile_photo" id="profile_photo_label">
+                                Pilih file baru...
+                            </label>
+                        </div>
+                        @error('profile_photo')
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                        @enderror
+                        <small class="text-muted">Format: JPG, JPEG, PNG, GIF, WEBP (Maks 2MB)</small>
 
-                                <!-- ✅ Current Photo Section -->
-                                <div class="mb-3">
-                                    <p class="mb-1">Foto Saat Ini:</p>
-                                    <div class="text-center">
-                                        @if($user->profile_picture)
-                                            {{-- Foto Custom --}}
-                                            <div class="position-relative d-inline-block">
-                                                <img src="{{ $user->profile_photo_url }}"
-                                                     alt="Profile {{ $user->name }}"
-                                                     class="rounded-circle border shadow mb-2"
-                                                     style="width: 120px; height: 120px; object-fit: cover;"
-                                                     onerror="this.onerror=null; this.src='{{ $user->profile_photo_url }}'">
-                                                <span class="badge bg-success position-absolute" style="bottom: 5px; right: 5px;">
-                                                    <i class="mdi mdi-check"></i> Custom
-                                                </span>
-                                            </div>
-                                            <div class="form-check d-inline-block mt-2">
-                                                <input class="form-check-input" type="checkbox"
-                                                       name="remove_photo"
-                                                       id="remove_photo" value="1">
-                                                <label class="form-check-label text-danger" for="remove_photo">
-                                                    <i class="mdi mdi-trash-can-outline mr-1"></i> Hapus foto custom
-                                                </label>
-                                            </div>
-                                            <div class="mt-2">
-                                                <small class="text-muted">
-                                                    <i class="mdi mdi-information-outline mr-1"></i>
-                                                    Jika dihapus, akan kembali ke avatar default
-                                                </small>
-                                            </div>
-                                        @else
-                                            {{-- ✅ Default Avatar --}}
-                                            <div class="position-relative d-inline-block">
-                                                <div class="default-avatar-placeholder rounded-circle border shadow mb-2 d-flex align-items-center justify-content-center mx-auto"
-                                                     style="width: 120px; height: 120px; background-color: #f8f9fa; border: 2px dashed #dee2e6 !important;">
-                                                    <img src="{{ $user->profile_photo_url }}"
-                                                         alt="Default Avatar"
-                                                         style="width: 60px; height: 60px;">
-                                                </div>
-                                                <span class="badge bg-secondary position-absolute" style="bottom: 5px; right: 5px;">
-                                                    <i class="mdi mdi-account"></i> Default
-                                                </span>
-                                            </div>
-                                            <p class="text-muted mb-0">Avatar default</p>
-                                        @endif
-                                    </div>
-                                </div>
-
-                                <!-- Upload Foto Baru -->
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input @error('profile_photo') is-invalid @enderror"
-                                           id="profile_photo" name="profile_photo" accept="image/*">
-                                    <label class="custom-file-label" for="profile_photo" id="profile_photo_label">
-                                        Pilih file baru...
-                                    </label>
-                                </div>
-                                @error('profile_photo')
-                                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                                @enderror
-                                <small class="text-muted">Format: JPG, JPEG, PNG, GIF, WEBP (Maks 2MB)</small>
-
-                                <!-- Preview New Image -->
-                                <div class="mt-3" id="imagePreview" style="display: none;">
-                                    <p class="mb-1">Preview Foto Baru:</p>
-                                    <img id="previewImage"
-                                         src=""
-                                         alt="Preview"
-                                         class="img-thumbnail rounded-circle"
-                                         style="width: 100px; height: 100px; object-fit: cover;">
-                                </div>
-                            </div>
-
-                            <!-- Password -->
-                            <div class="form-group">
-                                <label for="password" class="form-label">Password</label>
-                                <div class="input-group">
-                                    <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                           id="password" name="password"
-                                           placeholder="Kosongkan jika tidak ingin mengubah">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                                            <i class="mdi mdi-eye"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <small class="form-text text-muted">
-                                    Biarkan kosong jika tidak ingin mengubah password
-                                </small>
-                                @error('password')
-                                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <!-- Konfirmasi Password -->
-                            <div class="form-group">
-                                <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
-                                <div class="input-group">
-                                    <input type="password" class="form-control @error('password_confirmation') is-invalid @enderror"
-                                           id="password_confirmation" name="password_confirmation"
-                                           placeholder="Ulangi password jika mengubah">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-outline-secondary" type="button" id="togglePasswordConfirmation">
-                                            <i class="mdi mdi-eye"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                @error('password_confirmation')
-                                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                                @enderror
-                            </div>
+                        <!-- Preview New Image -->
+                        <div class="mt-3" id="imagePreview" style="display: none;">
+                            <p class="mb-1">Preview Foto Baru:</p>
+                            <img id="previewImage"
+                                 src=""
+                                 alt="Preview"
+                                 class="img-thumbnail rounded-circle"
+                                 style="width: 100px; height: 100px; object-fit: cover;">
                         </div>
                     </div>
 
-                    <!-- Tombol Aksi -->
-                    <div class="row mt-4">
-                        <div class="col-12">
-                            <div class="d-flex justify-content-end gap-2">
-                                <a href="{{ route('user.index') }}" class="btn btn-outline-secondary">
-                                    <i class="mdi mdi-arrow-left mr-1"></i>Kembali
-                                </a>
-                                <button type="submit" class="btn btn-primary" id="submitBtn">
-                                    <i class="mdi mdi-content-save mr-1"></i>Simpan Perubahan
+                    <!-- Password -->
+                    <div class="form-group">
+                        <label for="password" class="form-label">Password</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control @error('password') is-invalid @enderror"
+                                   id="password" name="password"
+                                   placeholder="Kosongkan jika tidak ingin mengubah">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                    <i class="mdi mdi-eye"></i>
                                 </button>
                             </div>
                         </div>
+                        <small class="form-text text-muted">
+                            Biarkan kosong jika tidak ingin mengubah password
+                        </small>
+                        @error('password')
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                        @enderror
                     </div>
-                </form>
-            </div>
-        </div>
 
-        {{-- ====================== END MAIN CONTENT ====================== --}}
+                    <!-- Konfirmasi Password -->
+                    <div class="form-group">
+                        <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control @error('password_confirmation') is-invalid @enderror"
+                                   id="password_confirmation" name="password_confirmation"
+                                   placeholder="Ulangi password jika mengubah">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" id="togglePasswordConfirmation">
+                                    <i class="mdi mdi-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        @error('password_confirmation')
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tombol Aksi -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{{ route('user.index') }}" class="btn btn-outline-secondary">
+                            <i class="mdi mdi-arrow-left mr-1"></i>Kembali
+                        </a>
+                        <button type="submit" class="btn btn-primary" id="submitBtn">
+                            <i class="mdi mdi-content-save mr-1"></i>Simpan Perubahan
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
 

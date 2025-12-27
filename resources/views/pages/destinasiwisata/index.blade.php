@@ -1,227 +1,222 @@
 @extends('layouts.app')
 @section('content')
 
-<div class="main-panel">
-    <div class="content-wrapper">
+{{-- ====================== START MAIN CONTENT ====================== --}}
+<!-- Alert Success -->
+@if (session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="mdi mdi-check-circle-outline mr-2"></i>
+        <strong>Sukses!</strong> {{ session('success') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
 
-        {{-- ====================== START MAIN CONTENT ====================== --}}
-        <!-- Alert Success -->
-        @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="mdi mdi-check-circle-outline mr-2"></i>
-                <strong>Sukses!</strong> {{ session('success') }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
+@if (session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="mdi mdi-alert-circle-outline mr-2"></i>
+        <strong>Error!</strong> {{ session('error') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
 
-        @if (session('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="mdi mdi-alert-circle-outline mr-2"></i>
-                <strong>Error!</strong> {{ session('error') }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
+<!-- Card Destinasi Wisata -->
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title mb-4">Daftar Destinasi Wisata</h4>
 
-        <!-- Card Destinasi Wisata -->
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title mb-4">Daftar Destinasi Wisata</h4>
+        <!-- ==================== FORM FILTER DAN SEARCH ==================== -->
+        <form method="GET" action="{{ route('destinasiwisata.index') }}">
+            <div class="row mb-4">
+                <!-- Filter Jam Buka -->
+                <div class="col-md-3">
+                    <select name="jam_buka" onchange="this.form.submit()" class="form-control form-control-sm filter-rating">
+                        <option value="">Semua Jam Buka</option>
+                        <option value="dini_hari" {{ request('jam_buka') == 'dini_hari' ? 'selected' : '' }}>🕛 Dini Hari (00:00 - 05:59)</option>
+                        <option value="pagi" {{ request('jam_buka') == 'pagi' ? 'selected' : '' }}>🌅 Pagi (06:00 - 10:59)</option>
+                        <option value="siang" {{ request('jam_buka') == 'siang' ? 'selected' : '' }}>☀️ Siang (11:00 - 14:59)</option>
+                        <option value="sore" {{ request('jam_buka') == 'sore' ? 'selected' : '' }}>🌇 Sore (15:00 - 18:59)</option>
+                        <option value="malam" {{ request('jam_buka') == 'malam' ? 'selected' : '' }}>🌙 Malam (19:00 - 23:59)</option>
+                    </select>
+                </div>
 
-                <!-- ==================== FORM FILTER DAN SEARCH ==================== -->
-                <form method="GET" action="{{ route('destinasiwisata.index') }}">
-                    <div class="row mb-4">
-                        <!-- Filter Jam Buka -->
-                        <div class="col-md-3">
-                            <select name="jam_buka" onchange="this.form.submit()" class="form-control form-control-sm filter-rating">
-                                <option value="">Semua Jam Buka</option>
-                                <option value="dini_hari" {{ request('jam_buka') == 'dini_hari' ? 'selected' : '' }}>🕛 Dini Hari (00:00 - 05:59)</option>
-                                <option value="pagi" {{ request('jam_buka') == 'pagi' ? 'selected' : '' }}>🌅 Pagi (06:00 - 10:59)</option>
-                                <option value="siang" {{ request('jam_buka') == 'siang' ? 'selected' : '' }}>☀️ Siang (11:00 - 14:59)</option>
-                                <option value="sore" {{ request('jam_buka') == 'sore' ? 'selected' : '' }}>🌇 Sore (15:00 - 18:59)</option>
-                                <option value="malam" {{ request('jam_buka') == 'malam' ? 'selected' : '' }}>🌙 Malam (19:00 - 23:59)</option>
-                            </select>
-                        </div>
-
-                        <!-- Form Search -->
-                        <div class="col-md-3">
-                            <div class="input-group search-group">
-                                <input type="text"
-                                       name="search"
-                                       class="form-control form-control-sm search-input"
-                                       placeholder="Cari data destinasi..."
-                                       value="{{ request('search') }}">
-                                <button type="submit" class="input-group-text search-btn">
-                                    <i class="mdi mdi-magnify"></i>
-                                </button>
-                                @if(request("search"))
-                                <a href="{{ request()->fullUrlWithQuery(['search'=> null]) }}" class="input-group-text clear-btn">
-                                    Clear
-                                </a>
-                                @endif
-                            </div>
-                        </div>
-
-                        <!-- Tombol Tambah -->
-                        <div class="col-md-6 text-right">
-                            <a href="{{ route('destinasiwisata.create') }}" class="btn btn-primary btn-sm add-btn">
-                                <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah Destinasi
-                            </a>
-                        </div>
+                <!-- Form Search -->
+                <div class="col-md-3">
+                    <div class="input-group search-group">
+                        <input type="text"
+                               name="search"
+                               class="form-control form-control-sm search-input"
+                               placeholder="Cari data destinasi..."
+                               value="{{ request('search') }}">
+                        <button type="submit" class="input-group-text search-btn">
+                            <i class="mdi mdi-magnify"></i>
+                        </button>
+                        @if(request("search"))
+                        <a href="{{ request()->fullUrlWithQuery(['search'=> null]) }}" class="input-group-text clear-btn">
+                            Clear
+                        </a>
+                        @endif
                     </div>
-                </form>
-                <!-- ==================== END FORM FILTER DAN SEARCH ==================== -->
-
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th class="text-center">#</th>
-                                <th>Nama Destinasi</th>
-                                <th style="min-width: 250px;">Deskripsi</th>
-                                <th>Lokasi</th>
-                                <th class="text-center">RT/RW</th>
-                                <th class="text-center">Jam Buka</th>
-                                <th class="text-center">Tiket</th>
-                                <th>Kontak</th>
-                                <th class="text-center">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($destinasiWisata as $item)
-                                <tr class="destination-card">
-                                    <td class="text-center">
-                                        <span class="badge badge-info">{{ ($destinasiWisata->currentPage() - 1) * $destinasiWisata->perPage() + $loop->iteration }}</span>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="mr-3">
-                                                <i class="mdi mdi-map-marker-circle text-success"
-                                                    style="font-size: 24px;"></i>
-                                            </div>
-                                            <div>
-                                                <div class="font-weight-bold text-success">
-                                                    {{ $item->nama }}</div>
-                                                <small class="text-muted">ID:
-                                                    {{ $item->destinasi_id }}</small>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="description-text" style="white-space: pre-line; max-width: 250px; line-height: 1.4;">
-                                            {{ $item->deskripsi }}
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <i class="mdi mdi-map-marker mr-2 text-primary"></i>
-                                            <span class="text-truncate"
-                                                style="max-width: 150px;">{{ $item->alamat }}</span>
-                                        </div>
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="badge badge-location py-2 px-3">
-                                            <i
-                                                class="mdi mdi-home-map-marker mr-1"></i>{{ $item->rt }}/{{ $item->rw }}
-                                        </span>
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="badge badge-time py-2 px-3">
-                                            <i
-                                                class="mdi mdi-clock-outline mr-1"></i>{{ $item->jam_buka }}
-                                        </span>
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="badge badge-price py-2 px-3">
-                                            <i class="mdi mdi-ticket mr-1"></i>Rp
-                                            {{ number_format($item->tiket, 0, ',', '.') }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <i class="mdi mdi-phone mr-2 text-warning"></i>
-                                            <span class="font-weight-bold">{{ $item->kontak }}</span>
-                                        </div>
-                                    </td>
-                                    <td class="text-center action-buttons">
-                                        <div class="btn-group" role="group">
-                                            <a href="{{ route('destinasiwisata.edit', $item->destinasi_id) }}"
-                                                class="btn btn-outline-info btn-sm action-btn" data-toggle="tooltip"
-                                                title="Edit Data">
-                                                <i class="mdi mdi-pencil"></i>
-                                            </a>
-                                            <a href="{{ route('destinasiwisata.show', $item->destinasi_id) }}"
-                                                class="btn btn-outline-primary btn-sm action-btn"
-                                                data-toggle="tooltip" title="Lihat Detail">
-                                                <i class="mdi mdi-eye"></i>
-                                            </a>
-                                            <form
-                                                action="{{ route('destinasiwisata.destroy', $item->destinasi_id) }}"
-                                                method="POST" style="display:inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    class="btn btn-outline-danger btn-sm action-btn"
-                                                    data-toggle="tooltip" title="Hapus Data"
-                                                    onclick="return confirm('Apakah Anda yakin ingin menghapus destinasi wisata {{ $item->nama }}?')">
-                                                    <i class="mdi mdi-delete"></i>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="9" class="text-center py-5">
-                                        <div class="d-flex flex-column align-items-center empty-state">
-                                            <i class="mdi mdi-map-marker-off text-muted"
-                                                style="font-size: 64px;"></i>
-                                            <h4 class="text-muted mt-3">Belum ada data destinasi wisata
-                                            </h4>
-                                            <p class="text-muted">Silakan tambah destinasi wisata terlebih
-                                                dahulu</p>
-                                            <a href="{{ route('destinasiwisata.create') }}"
-                                                class="btn btn-success mt-2">
-                                                <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah
-                                                Destinasi Pertama
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
                 </div>
 
-                {{-- ====================== PAGINATION ====================== --}}
-                <div class="mt-4">
-                    {{ $destinasiWisata->links('pagination::bootstrap-5') }}
+                <!-- Tombol Tambah -->
+                <div class="col-md-6 text-right">
+                    <a href="{{ route('destinasiwisata.create') }}" class="btn btn-primary btn-sm add-btn">
+                        <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah Destinasi
+                    </a>
                 </div>
+            </div>
+        </form>
+        <!-- ==================== END FORM FILTER DAN SEARCH ==================== -->
 
-                <!-- Info Summary -->
-                <div class="row mt-4">
-                    <div class="col-md-12">
-                        <div class="alert alert-success summary-card">
-                            <div class="d-flex align-items-center">
-                                <i class="mdi mdi-information-outline mr-2" style="font-size: 24px;"></i>
-                                <div>
-                                    <h6 class="alert-heading mb-1">Total Destinasi Wisata: {{ $destinasiWisata->total() }}</h6>
-                                    <p class="mb-0">Menampilkan {{ $destinasiWisata->count() }} data dari total {{ $destinasiWisata->total() }} data destinasi wisata</p>
-                                    <small class="mb-0">Halaman {{ $destinasiWisata->currentPage() }} dari {{ $destinasiWisata->lastPage() }}</small>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th>Nama Destinasi</th>
+                        <th style="min-width: 250px;">Deskripsi</th>
+                        <th>Lokasi</th>
+                        <th class="text-center">RT/RW</th>
+                        <th class="text-center">Jam Buka</th>
+                        <th class="text-center">Tiket</th>
+                        <th>Kontak</th>
+                        <th class="text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($destinasiWisata as $item)
+                        <tr class="destination-card">
+                            <td class="text-center">
+                                <span class="badge badge-info">{{ ($destinasiWisata->currentPage() - 1) * $destinasiWisata->perPage() + $loop->iteration }}</span>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="mr-3">
+                                        <i class="mdi mdi-map-marker-circle text-success"
+                                            style="font-size: 24px;"></i>
+                                    </div>
+                                    <div>
+                                        <div class="font-weight-bold text-success">
+                                            {{ $item->nama }}</div>
+                                        <small class="text-muted">ID:
+                                            {{ $item->destinasi_id }}</small>
+                                    </div>
                                 </div>
-                            </div>
+                            </td>
+                            <td>
+                                <div class="description-text" style="white-space: pre-line; max-width: 250px; line-height: 1.4;">
+                                    {{ $item->deskripsi }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <i class="mdi mdi-map-marker mr-2 text-primary"></i>
+                                    <span class="text-truncate"
+                                        style="max-width: 150px;">{{ $item->alamat }}</span>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge badge-location py-2 px-3">
+                                    <i
+                                        class="mdi mdi-home-map-marker mr-1"></i>{{ $item->rt }}/{{ $item->rw }}
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge badge-time py-2 px-3">
+                                    <i
+                                        class="mdi mdi-clock-outline mr-1"></i>{{ $item->jam_buka }}
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge badge-price py-2 px-3">
+                                    <i class="mdi mdi-ticket mr-1"></i>Rp
+                                    {{ number_format($item->tiket, 0, ',', '.') }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <i class="mdi mdi-phone mr-2 text-warning"></i>
+                                    <span class="font-weight-bold">{{ $item->kontak }}</span>
+                                </div>
+                            </td>
+                            <td class="text-center action-buttons">
+                                <div class="btn-group" role="group">
+                                    <a href="{{ route('destinasiwisata.edit', $item->destinasi_id) }}"
+                                        class="btn btn-outline-info btn-sm action-btn" data-toggle="tooltip"
+                                        title="Edit Data">
+                                        <i class="mdi mdi-pencil"></i>
+                                    </a>
+                                    <a href="{{ route('destinasiwisata.show', $item->destinasi_id) }}"
+                                        class="btn btn-outline-primary btn-sm action-btn"
+                                        data-toggle="tooltip" title="Lihat Detail">
+                                        <i class="mdi mdi-eye"></i>
+                                    </a>
+                                    <form
+                                        action="{{ route('destinasiwisata.destroy', $item->destinasi_id) }}"
+                                        method="POST" style="display:inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="btn btn-outline-danger btn-sm action-btn"
+                                            data-toggle="tooltip" title="Hapus Data"
+                                            onclick="return confirm('Apakah Anda yakin ingin menghapus destinasi wisata {{ $item->nama }}?')">
+                                            <i class="mdi mdi-delete"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="9" class="text-center py-5">
+                                <div class="d-flex flex-column align-items-center empty-state">
+                                    <i class="mdi mdi-map-marker-off text-muted"
+                                        style="font-size: 64px;"></i>
+                                    <h4 class="text-muted mt-3">Belum ada data destinasi wisata
+                                    </h4>
+                                    <p class="text-muted">Silakan tambah destinasi wisata terlebih
+                                        dahulu</p>
+                                    <a href="{{ route('destinasiwisata.create') }}"
+                                        class="btn btn-success mt-2">
+                                        <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah
+                                        Destinasi Pertama
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        {{-- ====================== PAGINATION ====================== --}}
+        <div class="mt-4">
+            {{ $destinasiWisata->links('pagination::bootstrap-5') }}
+        </div>
+
+        <!-- Info Summary -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="alert alert-success summary-card">
+                    <div class="d-flex align-items-center">
+                        <i class="mdi mdi-information-outline mr-2" style="font-size: 24px;"></i>
+                        <div>
+                            <h6 class="alert-heading mb-1">Total Destinasi Wisata: {{ $destinasiWisata->total() }}</h6>
+                            <p class="mb-0">Menampilkan {{ $destinasiWisata->count() }} data dari total {{ $destinasiWisata->total() }} data destinasi wisata</p>
+                            <small class="mb-0">Halaman {{ $destinasiWisata->currentPage() }} dari {{ $destinasiWisata->lastPage() }}</small>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        {{-- ====================== END MAIN CONTENT ====================== --}}
     </div>
 </div>
+
+{{-- ====================== END MAIN CONTENT ====================== --}}
 
 <style>
 /* ==================== ANIMASI UNTUK SEARCH & FILTER ==================== */

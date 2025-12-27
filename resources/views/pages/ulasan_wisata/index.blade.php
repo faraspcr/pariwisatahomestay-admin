@@ -1,304 +1,299 @@
 @extends('layouts.app')
 @section('content')
 
-<div class="main-panel">
-    <div class="content-wrapper">
+{{-- ====================== START MAIN CONTENT ====================== --}}
+<!-- Alert Success -->
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="mdi mdi-check-circle-outline mr-2"></i>
+        <strong>Sukses!</strong> {{ session('success') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
 
-        {{-- ====================== START MAIN CONTENT ====================== --}}
-        <!-- Alert Success -->
-        @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="mdi mdi-check-circle-outline mr-2"></i>
-                <strong>Sukses!</strong> {{ session('success') }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
+@if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="mdi mdi-alert-circle-outline mr-2"></i>
+        <strong>Error!</strong> {{ session('error') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
 
-        @if(session('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="mdi mdi-alert-circle-outline mr-2"></i>
-                <strong>Error!</strong> {{ session('error') }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
-
-        <!-- Stats Cards -->
-        <div class="row mb-4">
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card card-stats">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col">
-                                <h5 class="card-title text-uppercase text-muted mb-0">Total Ulasan</h5>
-                                <span class="h2 font-weight-bold mb-0">{{ $totalUlasan }}</span>
-                            </div>
-                            <div class="col-auto">
-                                <div class="icon icon-shape bg-gradient-primary text-white rounded-circle shadow">
-                                    <i class="mdi mdi-star"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card card-stats">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col">
-                                <h5 class="card-title text-uppercase text-muted mb-0">Rating Rata-rata</h5>
-                                <span class="h2 font-weight-bold mb-0">{{ number_format($avgRating, 1) }}/5</span>
-                            </div>
-                            <div class="col-auto">
-                                <div class="icon icon-shape bg-gradient-success text-white rounded-circle shadow">
-                                    <i class="mdi mdi-chart-line"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card card-stats">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col">
-                                <h5 class="card-title text-uppercase text-muted mb-0">Destinasi Wisata</h5>
-                                <span class="h2 font-weight-bold mb-0">{{ $totalDestinasi }}</span>
-                            </div>
-                            <div class="col-auto">
-                                <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
-                                    <i class="mdi mdi-map-marker"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card card-stats">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col">
-                                <h5 class="card-title text-uppercase text-muted mb-0">Ulasan Bulan Ini</h5>
-                                <span class="h2 font-weight-bold mb-0">{{ $ulasanBulanIni }}</span>
-                            </div>
-                            <div class="col-auto">
-                                <div class="icon icon-shape bg-gradient-warning text-white rounded-circle shadow">
-                                    <i class="mdi mdi-calendar"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Card Data Ulasan Wisata -->
-        <div class="card">
+<!-- Stats Cards -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card card-stats">
             <div class="card-body">
-                <h4 class="card-title mb-4">Data Ulasan Wisata</h4>
-
-                <!-- Form Filter dan Search -->
-                <form method="GET" action="{{ route('ulasan_wisata.index') }}">
-                    <div class="row mb-4">
-                        <!-- Filter Rating -->
-                        <div class="col-md-3">
-                            <select name="rating" onchange="this.form.submit()" class="form-control form-control-sm filter-rating">
-                                <option value="">Semua Rating</option>
-                                <option value="5" {{ request('rating') == '5' ? 'selected' : '' }}>⭐ 5 Bintang</option>
-                                <option value="4" {{ request('rating') == '4' ? 'selected' : '' }}>⭐ 4 Bintang</option>
-                                <option value="3" {{ request('rating') == '3' ? 'selected' : '' }}>⭐ 3 Bintang</option>
-                                <option value="2" {{ request('rating') == '2' ? 'selected' : '' }}>⭐ 2 Bintang</option>
-                                <option value="1" {{ request('rating') == '1' ? 'selected' : '' }}>⭐ 1 Bintang</option>
-                            </select>
-                        </div>
-
-                        <!-- Form Search -->
-                        <div class="col-md-3">
-                            <div class="input-group search-group">
-                                <input type="text"
-                                       name="search"
-                                       class="form-control form-control-sm search-input"
-                                       placeholder="Cari ulasan wisata..."
-                                       value="{{ request('search') }}">
-                                <button type="submit" class="input-group-text search-btn">
-                                    <i class="mdi mdi-magnify"></i>
-                                </button>
-                                @if(request("search"))
-                                <a href="{{ request()->fullUrlWithQuery(['search'=> null]) }}" class="input-group-text clear-btn">
-                                    Clear
-                                </a>
-                                @endif
-                            </div>
-                        </div>
-
-                        <!-- Tombol Tambah -->
-                        <div class="col-md-6 text-right">
-                            <a href="{{ route('ulasan_wisata.create') }}" class="btn btn-primary btn-sm add-btn">
-                                <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah Ulasan
-                            </a>
-                        </div>
+                <div class="row">
+                    <div class="col">
+                        <h5 class="card-title text-uppercase text-muted mb-0">Total Ulasan</h5>
+                        <span class="h2 font-weight-bold mb-0">{{ $totalUlasan }}</span>
                     </div>
-                </form>
-
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th class="text-center">#</th>
-                                <th>Destinasi Wisata</th>
-                                <th>Nama Warga</th>
-                                <th class="text-center">Rating</th>
-                                <th>Komentar</th>
-                                <th class="text-center">Waktu</th>
-                                <th class="text-center">Status</th>
-                                <th class="text-center">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($ulasan as $item)
-                            <tr class="table-row">
-                                <td class="text-center">
-                                    <span class="badge badge-info">{{ ($ulasan->currentPage() - 1) * $ulasan->perPage() + $loop->iteration }}</span>
-                                </td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <div class="mr-3">
-                                            <i class="mdi mdi-map-marker text-primary" style="font-size: 24px;"></i>
-                                        </div>
-                                        <div>
-                                            <div class="font-weight-bold">{{ $item->destinasi->nama }}</div>
-                                            <small class="text-muted">{{ Str::limit($item->destinasi->alamat, 30) }}</small>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <div class="mr-3">
-                                            <i class="mdi mdi-account text-success" style="font-size: 24px;"></i>
-                                        </div>
-                                        <div>
-                                            <div class="font-weight-bold">{{ $item->warga->nama ?? 'N/A' }}</div>
-                                            <small class="text-muted">{{ $item->warga->email ?? '' }}</small>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="text-center">
-                                    <div class="rating-badge mb-1">
-                                        @for($i = 1; $i <= 5; $i++)
-                                            <i class="mdi mdi-star {{ $i <= $item->rating ? 'text-warning' : 'text-light' }}" style="font-size: 16px;"></i>
-                                        @endfor
-                                    </div>
-                                    <span class="badge badge-warning rating-number">{{ $item->rating }}/5</span>
-                                </td>
-                                <!-- Kolom Komentar -->
-                                <td>
-                                    <div class="comment-text" style="white-space: pre-line; word-wrap: break-word; line-height: 1.5; max-width: 300px;">
-                                        {{ $item->komentar }}
-                                    </div>
-                                    @if(strlen($item->komentar) > 150)
-                                    <button class="btn btn-link btn-sm p-0 mt-1 read-more-btn"
-                                            data-comment="{{ $item->komentar }}"
-                                            data-toggle="modal"
-                                            data-target="#commentModal">
-                                        <small><i class="mdi mdi-chevron-double-down mr-1"></i>selengkapnya</small>
-                                    </button>
-                                    @endif
-                                </td>
-                                <td class="text-center">
-                                    <small class="text-muted">
-                                        {{ $item->waktu->format('d M Y') }}<br>
-                                        <span class="text-dark">{{ $item->waktu->format('H:i') }}</span>
-                                    </small>
-                                </td>
-                                <td class="text-center">
-                                    @php
-                                        $statusConfig = [
-                                            1 => ['class' => 'badge-danger', 'text' => 'Sangat Buruk'],
-                                            2 => ['class' => 'badge-warning', 'text' => 'Buruk'],
-                                            3 => ['class' => 'badge-info', 'text' => 'Cukup'],
-                                            4 => ['class' => 'badge-primary', 'text' => 'Baik'],
-                                            5 => ['class' => 'badge-success', 'text' => 'Sangat baik']
-                                        ];
-                                        $status = $statusConfig[$item->rating] ?? ['class' => 'badge-secondary', 'text' => '-'];
-                                    @endphp
-                                    <span class="badge status-badge {{ $status['class'] }} py-2 px-3">
-                                        {{ $status['text'] }}
-                                    </span>
-                                </td>
-                                <td class="text-center action-buttons">
-                                    <div class="btn-group" role="group">
-                                        <a href="{{ route('ulasan_wisata.edit', $item->ulasan_id) }}"
-                                           class="btn btn-outline-info btn-sm action-btn"
-                                           data-toggle="tooltip"
-                                           title="Edit Data">
-                                            <i class="mdi mdi-pencil"></i>
-                                        </a>
-                                        <form action="{{ route('ulasan_wisata.destroy', $item->ulasan_id) }}" method="POST" style="display:inline">
-                                            @csrf
-                                            @method("DELETE")
-                                            <button type="submit"
-                                                    class="btn btn-outline-danger btn-sm action-btn"
-                                                    data-toggle="tooltip"
-                                                    title="Hapus Data"
-                                                    onclick="return confirm('Apakah Anda yakin ingin menghapus ulasan ini?')">
-                                                <i class="mdi mdi-delete"></i>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                            @empty
-                            <tr>
-                                <td colspan="8" class="text-center py-5">
-                                    <div class="d-flex flex-column align-items-center empty-state">
-                                        <i class="mdi mdi-star-off-outline text-muted" style="font-size: 64px;"></i>
-                                        <h4 class="text-muted mt-3">Belum ada data ulasan</h4>
-                                        <p class="text-muted">Silakan tambah data ulasan terlebih dahulu</p>
-                                        <a href="{{ route('ulasan_wisata.create') }}" class="btn btn-primary mt-2 add-btn">
-                                            <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah Ulasan Pertama
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- PAGINATION -->
-                <div class="mt-4">
-                    {{ $ulasan->links('pagination::bootstrap-5') }}
-                </div>
-
-                <!-- Info Summary -->
-                <div class="row mt-4">
-                    <div class="col-md-12">
-                        <div class="alert alert-info summary-card">
-                            <div class="d-flex align-items-center">
-                                <i class="mdi mdi-information-outline mr-2" style="font-size: 24px;"></i>
-                                <div>
-                                    <h6 class="alert-heading mb-1">Total Data Ulasan: {{ $totalUlasan }}</h6>
-                                    <p class="mb-0">Data ulasan wisata yang terdaftar dalam sistem Bina Desa</p>
-                                </div>
-                            </div>
+                    <div class="col-auto">
+                        <div class="icon icon-shape bg-gradient-primary text-white rounded-circle shadow">
+                            <i class="mdi mdi-star"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        {{-- ====================== END MAIN CONTENT ====================== --}}
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card card-stats">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <h5 class="card-title text-uppercase text-muted mb-0">Rating Rata-rata</h5>
+                        <span class="h2 font-weight-bold mb-0">{{ number_format($avgRating, 1) }}/5</span>
+                    </div>
+                    <div class="col-auto">
+                        <div class="icon icon-shape bg-gradient-success text-white rounded-circle shadow">
+                            <i class="mdi mdi-chart-line"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card card-stats">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <h5 class="card-title text-uppercase text-muted mb-0">Destinasi Wisata</h5>
+                        <span class="h2 font-weight-bold mb-0">{{ $totalDestinasi }}</span>
+                    </div>
+                    <div class="col-auto">
+                        <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
+                            <i class="mdi mdi-map-marker"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card card-stats">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <h5 class="card-title text-uppercase text-muted mb-0">Ulasan Bulan Ini</h5>
+                        <span class="h2 font-weight-bold mb-0">{{ $ulasanBulanIni }}</span>
+                    </div>
+                    <div class="col-auto">
+                        <div class="icon icon-shape bg-gradient-warning text-white rounded-circle shadow">
+                            <i class="mdi mdi-calendar"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+<!-- Card Data Ulasan Wisata -->
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title mb-4">Data Ulasan Wisata</h4>
+
+        <!-- Form Filter dan Search -->
+        <form method="GET" action="{{ route('ulasan_wisata.index') }}">
+            <div class="row mb-4">
+                <!-- Filter Rating -->
+                <div class="col-md-3">
+                    <select name="rating" onchange="this.form.submit()" class="form-control form-control-sm filter-rating">
+                        <option value="">Semua Rating</option>
+                        <option value="5" {{ request('rating') == '5' ? 'selected' : '' }}>⭐ 5 Bintang</option>
+                        <option value="4" {{ request('rating') == '4' ? 'selected' : '' }}>⭐ 4 Bintang</option>
+                        <option value="3" {{ request('rating') == '3' ? 'selected' : '' }}>⭐ 3 Bintang</option>
+                        <option value="2" {{ request('rating') == '2' ? 'selected' : '' }}>⭐ 2 Bintang</option>
+                        <option value="1" {{ request('rating') == '1' ? 'selected' : '' }}>⭐ 1 Bintang</option>
+                    </select>
+                </div>
+
+                <!-- Form Search -->
+                <div class="col-md-3">
+                    <div class="input-group search-group">
+                        <input type="text"
+                               name="search"
+                               class="form-control form-control-sm search-input"
+                               placeholder="Cari ulasan wisata..."
+                               value="{{ request('search') }}">
+                        <button type="submit" class="input-group-text search-btn">
+                            <i class="mdi mdi-magnify"></i>
+                        </button>
+                        @if(request("search"))
+                        <a href="{{ request()->fullUrlWithQuery(['search'=> null]) }}" class="input-group-text clear-btn">
+                            Clear
+                        </a>
+                        @endif
+                    </div>
+                </div>
+
+                <!-- Tombol Tambah -->
+                <div class="col-md-6 text-right">
+                    <a href="{{ route('ulasan_wisata.create') }}" class="btn btn-primary btn-sm add-btn">
+                        <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah Ulasan
+                    </a>
+                </div>
+            </div>
+        </form>
+
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th>Destinasi Wisata</th>
+                        <th>Nama Warga</th>
+                        <th class="text-center">Rating</th>
+                        <th>Komentar</th>
+                        <th class="text-center">Waktu</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($ulasan as $item)
+                    <tr class="table-row">
+                        <td class="text-center">
+                            <span class="badge badge-info">{{ ($ulasan->currentPage() - 1) * $ulasan->perPage() + $loop->iteration }}</span>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="mr-3">
+                                    <i class="mdi mdi-map-marker text-primary" style="font-size: 24px;"></i>
+                                </div>
+                                <div>
+                                    <div class="font-weight-bold">{{ $item->destinasi->nama }}</div>
+                                    <small class="text-muted">{{ Str::limit($item->destinasi->alamat, 30) }}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="mr-3">
+                                    <i class="mdi mdi-account text-success" style="font-size: 24px;"></i>
+                                </div>
+                                <div>
+                                    <div class="font-weight-bold">{{ $item->warga->nama ?? 'N/A' }}</div>
+                                    <small class="text-muted">{{ $item->warga->email ?? '' }}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            <div class="rating-badge mb-1">
+                                @for($i = 1; $i <= 5; $i++)
+                                    <i class="mdi mdi-star {{ $i <= $item->rating ? 'text-warning' : 'text-light' }}" style="font-size: 16px;"></i>
+                                @endfor
+                            </div>
+                            <span class="badge badge-warning rating-number">{{ $item->rating }}/5</span>
+                        </td>
+                        <!-- Kolom Komentar -->
+                        <td>
+                            <div class="comment-text" style="white-space: pre-line; word-wrap: break-word; line-height: 1.5; max-width: 300px;">
+                                {{ $item->komentar }}
+                            </div>
+                            @if(strlen($item->komentar) > 150)
+                            <button class="btn btn-link btn-sm p-0 mt-1 read-more-btn"
+                                    data-comment="{{ $item->komentar }}"
+                                    data-toggle="modal"
+                                    data-target="#commentModal">
+                                <small><i class="mdi mdi-chevron-double-down mr-1"></i>selengkapnya</small>
+                            </button>
+                            @endif
+                        </td>
+                        <td class="text-center">
+                            <small class="text-muted">
+                                {{ $item->waktu->format('d M Y') }}<br>
+                                <span class="text-dark">{{ $item->waktu->format('H:i') }}</span>
+                            </small>
+                        </td>
+                        <td class="text-center">
+                            @php
+                                $statusConfig = [
+                                    1 => ['class' => 'badge-danger', 'text' => 'Sangat Buruk'],
+                                    2 => ['class' => 'badge-warning', 'text' => 'Buruk'],
+                                    3 => ['class' => 'badge-info', 'text' => 'Cukup'],
+                                    4 => ['class' => 'badge-primary', 'text' => 'Baik'],
+                                    5 => ['class' => 'badge-success', 'text' => 'Sangat baik']
+                                ];
+                                $status = $statusConfig[$item->rating] ?? ['class' => 'badge-secondary', 'text' => '-'];
+                            @endphp
+                            <span class="badge status-badge {{ $status['class'] }} py-2 px-3">
+                                {{ $status['text'] }}
+                            </span>
+                        </td>
+                        <td class="text-center action-buttons">
+                            <div class="btn-group" role="group">
+                                <a href="{{ route('ulasan_wisata.edit', $item->ulasan_id) }}"
+                                   class="btn btn-outline-info btn-sm action-btn"
+                                   data-toggle="tooltip"
+                                   title="Edit Data">
+                                    <i class="mdi mdi-pencil"></i>
+                                </a>
+                                <form action="{{ route('ulasan_wisata.destroy', $item->ulasan_id) }}" method="POST" style="display:inline">
+                                    @csrf
+                                    @method("DELETE")
+                                    <button type="submit"
+                                            class="btn btn-outline-danger btn-sm action-btn"
+                                            data-toggle="tooltip"
+                                            title="Hapus Data"
+                                            onclick="return confirm('Apakah Anda yakin ingin menghapus ulasan ini?')">
+                                        <i class="mdi mdi-delete"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="8" class="text-center py-5">
+                            <div class="d-flex flex-column align-items-center empty-state">
+                                <i class="mdi mdi-star-off-outline text-muted" style="font-size: 64px;"></i>
+                                <h4 class="text-muted mt-3">Belum ada data ulasan</h4>
+                                <p class="text-muted">Silakan tambah data ulasan terlebih dahulu</p>
+                                <a href="{{ route('ulasan_wisata.create') }}" class="btn btn-primary mt-2 add-btn">
+                                    <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah Ulasan Pertama
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        <!-- PAGINATION -->
+        <div class="mt-4">
+            {{ $ulasan->links('pagination::bootstrap-5') }}
+        </div>
+
+        <!-- Info Summary -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="alert alert-info summary-card">
+                    <div class="d-flex align-items-center">
+                        <i class="mdi mdi-information-outline mr-2" style="font-size: 24px;"></i>
+                        <div>
+                            <h6 class="alert-heading mb-1">Total Data Ulasan: {{ $totalUlasan }}</h6>
+                            <p class="mb-0">Data ulasan wisata yang terdaftar dalam sistem Bina Desa</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- ====================== END MAIN CONTENT ====================== --}}
 
 <!-- Modal for full comment -->
 <div class="modal fade" id="commentModal" tabindex="-1">

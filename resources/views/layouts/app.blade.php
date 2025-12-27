@@ -23,21 +23,20 @@
             @include('layouts.sidebar')
             {{-- ====================== END SIDEBAR ====================== --}}
 
-           @yield('content')
-
-                    <!-- {{-- end main content --}} -->
-                    {{-- ====================== END MAIN CONTENT ====================== --}}
-
+            <!-- INI YANG BENAR -->
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    @yield('content')  <!-- KONTEN DATA WARGA MASUK DI SINI -->
                 </div>
                 <!-- content-wrapper ends -->
 
                 {{-- ====================== START FOOTER ====================== --}}
-               @include('layouts.footer')
+                @include('layouts.footer')
                 {{-- ====================== END FOOTER ====================== --}}
 
-            </div>
-        </div>
-    </div>
+            </div> <!-- end main-panel -->
+        </div> <!-- end page-body-wrapper -->
+    </div> <!-- end container-scroller -->
 
     {{-- ====================== START JS ====================== --}}
     @include('layouts.js')

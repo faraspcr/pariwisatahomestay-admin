@@ -1,197 +1,192 @@
 @extends('layouts.app')
 @section('content')
 
-<div class="main-panel">
-    <div class="content-wrapper">
+{{-- ====================== START MAIN CONTENT ====================== --}}
 
-        {{-- ====================== START MAIN CONTENT ====================== --}}
+<!-- Header -->
+<div class="page-header">
+    <h3 class="page-title">
+        <i class="mdi mdi-star text-warning mr-2"></i>
+        Edit Ulasan Wisata
+    </h3>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('ulasan_wisata.index') }}">Ulasan Wisata</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Edit Ulasan</li>
+        </ol>
+    </nav>
+</div>
 
-        <!-- Header -->
-        <div class="page-header">
-            <h3 class="page-title">
-                <i class="mdi mdi-star text-warning mr-2"></i>
-                Edit Ulasan Wisata
-            </h3>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('ulasan_wisata.index') }}">Ulasan Wisata</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Edit Ulasan</li>
-                </ol>
-            </nav>
+<!-- Alert Success -->
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="mdi mdi-check-circle-outline mr-2"></i>
+        <strong>Sukses!</strong> {{ session('success') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
+
+@if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="mdi mdi-alert-circle-outline mr-2"></i>
+        <strong>Error!</strong> {{ session('error') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
+
+<!-- Card Form -->
+<div class="card">
+    <div class="card-body">
+        <!-- Tombol Kembali di atas form -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="card-title mb-0">Form Edit Ulasan</h4>
+            <a href="{{ route('ulasan_wisata.index') }}" class="btn btn-light btn-lg">
+                <i class="mdi mdi-arrow-left mr-2"></i>Kembali ke Ulasan Wisata
+            </a>
         </div>
 
-        <!-- Alert Success -->
-        @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="mdi mdi-check-circle-outline mr-2"></i>
-                <strong>Sukses!</strong> {{ session('success') }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
+        <p class="card-description">
+            Edit ulasan untuk destinasi wisata
+        </p>
 
-        @if(session('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="mdi mdi-alert-circle-outline mr-2"></i>
-                <strong>Error!</strong> {{ session('error') }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
+        <form action="{{ route('ulasan_wisata.update', $ulasan->ulasan_id) }}" method="POST" id="ulasanForm">
+            @csrf
+            @method('PUT')
 
-        <!-- Card Form -->
-        <div class="card">
-            <div class="card-body">
-                <!-- Tombol Kembali di atas form -->
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h4 class="card-title mb-0">Form Edit Ulasan</h4>
-                    <a href="{{ route('ulasan_wisata.index') }}" class="btn btn-light btn-lg">
-                        <i class="mdi mdi-arrow-left mr-2"></i>Kembali ke Ulasan Wisata
-                    </a>
-                </div>
-
-                <p class="card-description">
-                    Edit ulasan untuk destinasi wisata
-                </p>
-
-                <form action="{{ route('ulasan_wisata.update', $ulasan->ulasan_id) }}" method="POST" id="ulasanForm">
-                    @csrf
-                    @method('PUT')
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="destinasi_id" class="font-weight-bold">
-                                    Destinasi Wisata <span class="text-danger">*</span>
-                                </label>
-                                <select name="destinasi_id" id="destinasi_id"
-                                        class="form-control form-control-lg @error('destinasi_id') is-invalid @enderror" required>
-                                    <option value="">Pilih Destinasi Wisata</option>
-                                    @foreach($destinasi as $dest)
-                                        <option value="{{ $dest->destinasi_id }}"
-                                            {{ $ulasan->destinasi_id == $dest->destinasi_id ? 'selected' : '' }}>
-                                            {{ $dest->nama }} - {{ $dest->alamat }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('destinasi_id')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="warga_id" class="font-weight-bold">
-                                    Nama Warga <span class="text-danger">*</span>
-                                </label>
-                                <select name="warga_id" id="warga_id"
-                                        class="form-control form-control-lg @error('warga_id') is-invalid @enderror" required>
-                                    <option value="">Pilih Warga</option>
-                                    @foreach($warga as $w)
-                                        <option value="{{ $w->warga_id }}"
-                                            {{ $ulasan->warga_id == $w->warga_id ? 'selected' : '' }}>
-                                            {{ $w->nama }} - {{ $w->email ?? $w->no_telepon }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('warga_id')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Rating Section - Menggunakan kodingan yang diinginkan -->
+            <div class="row">
+                <div class="col-md-6">
                     <div class="form-group">
-                        <label class="font-weight-bold">Rating <span class="text-danger">*</span></label>
-                        <div class="rating-input mt-2">
-                            <div class="d-flex justify-content-start">
-                                @for($i = 1; $i <= 5; $i++)
-                                    <div class="rating-option mr-2">
-                                        <input type="radio" name="rating" id="rating{{ $i }}"
-                                               value="{{ $i }}" class="d-none"
-                                               {{ $ulasan->rating == $i ? 'checked' : '' }}>
-                                        <label for="rating{{ $i }}" class="rating-star btn btn-outline-warning d-flex flex-column align-items-center p-3">
-                                            <i class="mdi mdi-star {{ $ulasan->rating >= $i ? 'text-warning' : '' }}" style="font-size: 24px;"></i>
-                                            <span class="mt-1 font-weight-bold">{{ $i }}</span>
-                                        </label>
-                                    </div>
-                                @endfor
-                            </div>
-                            @error('rating')
-                                <div class="text-danger small mt-2">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="komentar" class="font-weight-bold">
-                            Komentar <span class="text-danger">*</span>
+                        <label for="destinasi_id" class="font-weight-bold">
+                            Destinasi Wisata <span class="text-danger">*</span>
                         </label>
-                        <textarea name="komentar" id="komentar" rows="5"
-                                  class="form-control form-control-lg @error('komentar') is-invalid @enderror"
-                                  placeholder="Tuliskan pengalaman Anda mengunjungi destinasi wisata ini..."
-                                  required>{{ old('komentar', $ulasan->komentar) }}</textarea>
-                        <small class="form-text text-muted">Minimal 10 karakter</small>
-                        @error('komentar')
+                        <select name="destinasi_id" id="destinasi_id"
+                                class="form-control form-control-lg @error('destinasi_id') is-invalid @enderror" required>
+                            <option value="">Pilih Destinasi Wisata</option>
+                            @foreach($destinasi as $dest)
+                                <option value="{{ $dest->destinasi_id }}"
+                                    {{ $ulasan->destinasi_id == $dest->destinasi_id ? 'selected' : '' }}>
+                                    {{ $dest->nama }} - {{ $dest->alamat }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('destinasi_id')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
+                </div>
 
-                    <!-- Informasi Ulasan -->
-                    <div class="card bg-light mb-4">
-                        <div class="card-body">
-                            <h6 class="card-title text-primary">
-                                <i class="mdi mdi-information mr-2"></i>Informasi Ulasan
-                            </h6>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <small class="text-muted">Dibuat pada:</small>
-                                    <p class="mb-1 font-weight-bold">{{ $ulasan->waktu->format('d M Y H:i') }}</p>
-                                </div>
-                                <div class="col-md-6">
-                                    <small class="text-muted">Status:</small>
-                                    <p class="mb-0">
-                                        @php
-                                            $statusText = [
-                                                1 => 'Sangat Buruk',
-                                                2 => 'Buruk',
-                                                3 => 'Cukup',
-                                                4 => 'Baik',
-                                                5 => 'Sangat Baik'
-                                            ][$ulasan->rating] ?? 'Unknown';
-                                        @endphp
-                                        <span class="badge badge-{{ $ulasan->rating >= 4 ? 'success' : ($ulasan->rating >= 3 ? 'warning' : 'danger') }}">
-                                            {{ $statusText }}
-                                        </span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="warga_id" class="font-weight-bold">
+                            Nama Warga <span class="text-danger">*</span>
+                        </label>
+                        <select name="warga_id" id="warga_id"
+                                class="form-control form-control-lg @error('warga_id') is-invalid @enderror" required>
+                            <option value="">Pilih Warga</option>
+                            @foreach($warga as $w)
+                                <option value="{{ $w->warga_id }}"
+                                    {{ $ulasan->warga_id == $w->warga_id ? 'selected' : '' }}>
+                                    {{ $w->nama }} - {{ $w->email ?? $w->no_telepon }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('warga_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
-
-                    <!-- Tombol Action di bagian bawah form -->
-                    <div class="form-group mt-5 pt-4 border-top">
-                        <div class="d-flex justify-content-end align-items-center">
-                            <button type="submit" class="btn btn-primary btn-lg mr-3">
-                                <i class="mdi mdi-content-save mr-2"></i>Simpan Perubahan
-                            </button>
-                            <a href="{{ route('ulasan_wisata.index') }}" class="btn btn-secondary btn-lg">
-                                <i class="mdi mdi-close mr-2"></i>Batal
-                            </a>
-                        </div>
-                    </div>
-                </form>
+                </div>
             </div>
-        </div>
 
-        {{-- ====================== END MAIN CONTENT ====================== --}}
+            <!-- Rating Section - Menggunakan kodingan yang diinginkan -->
+            <div class="form-group">
+                <label class="font-weight-bold">Rating <span class="text-danger">*</span></label>
+                <div class="rating-input mt-2">
+                    <div class="d-flex justify-content-start">
+                        @for($i = 1; $i <= 5; $i++)
+                            <div class="rating-option mr-2">
+                                <input type="radio" name="rating" id="rating{{ $i }}"
+                                       value="{{ $i }}" class="d-none"
+                                       {{ $ulasan->rating == $i ? 'checked' : '' }}>
+                                <label for="rating{{ $i }}" class="rating-star btn btn-outline-warning d-flex flex-column align-items-center p-3">
+                                    <i class="mdi mdi-star {{ $ulasan->rating >= $i ? 'text-warning' : '' }}" style="font-size: 24px;"></i>
+                                    <span class="mt-1 font-weight-bold">{{ $i }}</span>
+                                </label>
+                            </div>
+                        @endfor
+                    </div>
+                    @error('rating')
+                        <div class="text-danger small mt-2">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="komentar" class="font-weight-bold">
+                    Komentar <span class="text-danger">*</span>
+                </label>
+                <textarea name="komentar" id="komentar" rows="5"
+                          class="form-control form-control-lg @error('komentar') is-invalid @enderror"
+                          placeholder="Tuliskan pengalaman Anda mengunjungi destinasi wisata ini..."
+                          required>{{ old('komentar', $ulasan->komentar) }}</textarea>
+                <small class="form-text text-muted">Minimal 10 karakter</small>
+                @error('komentar')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <!-- Informasi Ulasan -->
+            <div class="card bg-light mb-4">
+                <div class="card-body">
+                    <h6 class="card-title text-primary">
+                        <i class="mdi mdi-information mr-2"></i>Informasi Ulasan
+                    </h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <small class="text-muted">Dibuat pada:</small>
+                            <p class="mb-1 font-weight-bold">{{ $ulasan->waktu->format('d M Y H:i') }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <small class="text-muted">Status:</small>
+                            <p class="mb-0">
+                                @php
+                                    $statusText = [
+                                        1 => 'Sangat Buruk',
+                                        2 => 'Buruk',
+                                        3 => 'Cukup',
+                                        4 => 'Baik',
+                                        5 => 'Sangat Baik'
+                                    ][$ulasan->rating] ?? 'Unknown';
+                                @endphp
+                                <span class="badge badge-{{ $ulasan->rating >= 4 ? 'success' : ($ulasan->rating >= 3 ? 'warning' : 'danger') }}">
+                                    {{ $statusText }}
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tombol Action di bagian bawah form -->
+            <div class="form-group mt-5 pt-4 border-top">
+                <div class="d-flex justify-content-end align-items-center">
+                    <button type="submit" class="btn btn-primary btn-lg mr-3">
+                        <i class="mdi mdi-content-save mr-2"></i>Simpan Perubahan
+                    </button>
+                    <a href="{{ route('ulasan_wisata.index') }}" class="btn btn-secondary btn-lg">
+                        <i class="mdi mdi-close mr-2"></i>Batal
+                    </a>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
+
+{{-- ====================== END MAIN CONTENT ====================== --}}
 
 <style>
 .rating-input .rating-star {
