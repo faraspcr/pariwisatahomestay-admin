@@ -30,7 +30,8 @@
 
                 {{-- ====================== FILTER DAN SEARCH (SEPERTI WARGA) ====================== --}}
                 <!-- Form Filter dan Search -->
-                <form method="GET" action="{{ route('homestay.index') }}">
+                {{-- PERBAIKAN: GANTI route('homestay.index') MENJADI route('admin.homestay.index') --}}
+                <form method="GET" action="{{ route('admin.homestay.index') }}">
                     <div class="row mb-4">
                         <!-- Filter Status -->
                         <div class="col-md-3">
@@ -63,7 +64,8 @@
 
                         <!-- Tombol Tambah -->
                         <div class="col-md-6 text-right">
-                            <a href="{{ route('homestay.create') }}" class="btn btn-primary btn-sm add-btn">
+                            {{-- PERBAIKAN: GANTI route('homestay.create') MENJADI route('admin.homestay.create') --}}
+                            <a href="{{ route('admin.homestay.create') }}" class="btn btn-primary btn-sm add-btn">
                                 <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah Homestay
                             </a>
                         </div>
@@ -140,15 +142,18 @@
                                     </td>
                                     <td class="text-center action-buttons">
                                         <div class="btn-group" role="group">
-                                            <a href="{{ route('homestay.edit', $item->homestay_id) }}"
+                                            {{-- PERBAIKAN: GANTI route('homestay.edit') MENJADI route('admin.homestay.edit') --}}
+                                            <a href="{{ route('admin.homestay.edit', $item->homestay_id) }}"
                                                class="btn btn-outline-info btn-sm action-btn" data-toggle="tooltip" title="Edit Data">
                                                 <i class="mdi mdi-pencil"></i>
                                             </a>
-                                            <a href="{{ route('homestay.show', $item->homestay_id) }}"
+                                            {{-- PERBAIKAN: GANTI route('homestay.show') MENJADI route('admin.homestay.show') --}}
+                                            <a href="{{ route('admin.homestay.show', $item->homestay_id) }}"
                                                class="btn btn-outline-primary btn-sm action-btn" data-toggle="tooltip" title="Lihat Detail">
                                                 <i class="mdi mdi-eye"></i>
                                             </a>
-                                            <form action="{{ route('homestay.destroy', $item->homestay_id) }}" method="POST" style="display:inline">
+                                            {{-- PERBAIKAN: GANTI route('homestay.destroy') MENJADI route('admin.homestay.destroy') --}}
+                                            <form action="{{ route('admin.homestay.destroy', $item->homestay_id) }}" method="POST" style="display:inline">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-outline-danger btn-sm action-btn"
@@ -173,11 +178,13 @@
                                                 @endif
                                             </h4>
                                             <p class="text-muted">Silakan tambah homestay terlebih dahulu</p>
-                                            <a href="{{ route('homestay.create') }}" class="btn btn-success mt-2">
+                                            {{-- PERBAIKAN: GANTI route('homestay.create') MENJADI route('admin.homestay.create') --}}
+                                            <a href="{{ route('admin.homestay.create') }}" class="btn btn-success mt-2">
                                                 <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah Homestay Pertama
                                             </a>
                                             @if(request()->hasAny(['search', 'status']))
-                                                <a href="{{ route('homestay.index') }}" class="btn btn-secondary mt-2">
+                                                {{-- PERBAIKAN: GANTI route('homestay.index') MENJADI route('admin.homestay.index') --}}
+                                                <a href="{{ route('admin.homestay.index') }}" class="btn btn-secondary mt-2">
                                                     <i class="mdi mdi-refresh mr-1"></i>Reset Filter
                                                 </a>
                                             @endif

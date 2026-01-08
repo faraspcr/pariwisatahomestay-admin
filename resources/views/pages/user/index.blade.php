@@ -29,7 +29,8 @@
         <h4 class="card-title mb-4">Daftar User Terdaftar</h4>
 
         <!-- Form Filter dan Search -->
-        <form method="GET" action="{{ route('user.index') }}">
+        <!-- LINE 32: PERBAIKAN DI SINI -->
+        <form method="GET" action="{{ route('admin.user.index') }}">
             <div class="row mb-4">
                 <!-- Filter Urutan -->
                 <div class="col-md-3 mb-2 mb-md-0">
@@ -72,8 +73,9 @@
                 </div>
 
                 <!-- Tombol Tambah -->
+                <!-- LINE 83: PERBAIKAN DI SINI -->
                 <div class="col-md-3 text-right">
-                    <a href="{{ route('user.create') }}" class="btn btn-primary btn-sm add-btn">
+                    <a href="{{ route('admin.user.create') }}" class="btn btn-primary btn-sm add-btn">
                         <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah User
                     </a>
                 </div>
@@ -170,21 +172,24 @@
                         <td class="text-center action-buttons">
                             <div class="btn-group" role="group">
                                 <!-- Tombol Show -->
-                                <a href="{{ route('user.show', $item->id) }}"
+                                <!-- LINE 150: PERBAIKAN DI SINI -->
+                                <a href="{{ route('admin.user.show', $item->id) }}"
                                    class="btn btn-outline-info btn-sm action-btn"
                                    data-toggle="tooltip"
                                    title="Lihat Detail">
                                     <i class="mdi mdi-eye"></i>
                                 </a>
                                 <!-- Tombol Edit -->
-                                <a href="{{ route('user.edit', $item->id) }}"
+                                <!-- LINE 157: PERBAIKAN DI SINI -->
+                                <a href="{{ route('admin.user.edit', $item->id) }}"
                                    class="btn btn-outline-warning btn-sm action-btn"
                                    data-toggle="tooltip"
                                    title="Edit Data">
                                     <i class="mdi mdi-pencil"></i>
                                 </a>
                                 <!-- Tombol Delete -->
-                                <form action="{{ route('user.destroy', $item->id) }}" method="POST" style="display:inline">
+                                <!-- LINE 164: PERBAIKAN DI SINI -->
+                                <form action="{{ route('admin.user.destroy', $item->id) }}" method="POST" style="display:inline">
                                     @csrf
                                     @method("DELETE")
                                     <button type="submit"
@@ -205,7 +210,8 @@
                                 <i class="mdi mdi-account-off-outline text-muted" style="font-size: 64px;"></i>
                                 <h4 class="text-muted mt-3">Belum ada data user</h4>
                                 <p class="text-muted">Silakan tambah data user terlebih dahulu</p>
-                                <a href="{{ route('user.create') }}" class="btn btn-primary mt-2">
+                                <!-- LINE 188: PERBAIKAN DI SINI -->
+                                <a href="{{ route('admin.user.create') }}" class="btn btn-primary mt-2">
                                     <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah User Pertama
                                 </a>
                             </div>

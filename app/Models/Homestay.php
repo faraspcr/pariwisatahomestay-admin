@@ -45,19 +45,19 @@ class Homestay extends Model
         return $query;
     }
 
-    // TAMBAHKAN SCOPE SEARCH SAMA SEPERTI DI WARGA
-    public function scopeSearch($query, $request, array $columns)
-    {
-        if ($request->filled('search')) {
-            $query->where(function($q) use ($request, $columns) {
-                foreach ($columns as $column) {
-                    $q->orWhere($column, 'LIKE', '%' . $request->search . '%');
-                }
-                // Tambahkan search untuk nama pemilik (relasi)
-                $q->orWhereHas('pemilik', function($subQuery) use ($request) {
-                    $subQuery->where('nama', 'LIKE', '%' . $request->search . '%');
-                });
+   public function scopeSearch(Builder $query, $request, array $columns): Builder
+{
+    if ($request->filled('search')) {
+        $query->where(function($q) use ($request, $columns) {
+            foreach ($columns as $column) {
+                $q->orWhere($column, 'LIKE', '%' . $request->search . '%');
+            }
+            // ✅ FIX: pakai $q bukan $subQuery
+            $q->orWhereHas('pemilik', function($q2) use ($request) {
+                $q2->where('nama', 'LIKE', '%' . $request->search . '%');
             });
-        }
+        });
     }
+    return $query; // ✅ JANGAN LUPA RETURN
+}
 }

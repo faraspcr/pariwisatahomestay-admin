@@ -12,8 +12,8 @@
     </h3>
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('warga.index') }}">Data Warga</a></li>
+           <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('admin.warga.index') }}">Data Warga</a></li>
             <li class="breadcrumb-item active" aria-current="page">Tambah Data</li>
         </ol>
     </nav>
@@ -61,12 +61,12 @@
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h4 class="card-title mb-0">Form Tambah Data Warga</h4>
-            <a href="{{ route('warga.index') }}" class="btn btn-outline-secondary btn-sm">
+            <a href="{{ route('admin.warga.index') }}" class="btn btn-outline-secondary btn-sm">
                 <i class="mdi mdi-arrow-left mr-1"></i>Kembali ke Data Warga
             </a>
         </div>
 
-        <form action="{{ route('warga.store') }}" method="POST" id="wargaForm">
+        <form action="{{ route('admin.warga.store') }}" method="POST" id="wargaForm">
             @csrf
 
             <div class="row">
@@ -168,7 +168,7 @@
             <div class="row mt-4">
                 <div class="col-12">
                     <div class="d-flex justify-content-end gap-2">
-                        <a href="{{ route('warga.index') }}" class="btn btn-outline-secondary">
+                        <a href="{{ route('admin.warga.index') }}" class="btn btn-outline-secondary">
                             <i class="mdi mdi-arrow-left mr-1"></i>Kembali
                         </a>
                         <button type="submit" class="btn btn-primary">

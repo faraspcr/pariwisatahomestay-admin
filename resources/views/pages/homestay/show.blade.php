@@ -12,7 +12,8 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('homestay.index') }}">Homestay</a></li>
+            {{-- PERBAIKAN: GANTI route('homestay.index') MENJADI route('admin.homestay.index') --}}
+            <li class="breadcrumb-item"><a href="{{ route('admin.homestay.index') }}">Homestay</a></li>
             <li class="breadcrumb-item active" aria-current="page">Detail Homestay</li>
         </ol>
     </nav>
@@ -182,10 +183,12 @@
                 </div>
 
                 <div class="d-grid gap-2 d-md-flex mt-4 pt-3 border-top">
-                    <a href="{{ route('homestay.edit', $homestay->homestay_id) }}" class="btn btn-warning me-2 btn-action">
+                    {{-- PERBAIKAN: GANTI route('homestay.edit') MENJADI route('admin.homestay.edit') --}}
+                    <a href="{{ route('admin.homestay.edit', $homestay->homestay_id) }}" class="btn btn-warning me-2 btn-action">
                         <i class="mdi mdi-pencil mr-1"></i> Edit Data
                     </a>
-                    <form action="{{ route('homestay.destroy', $homestay->homestay_id) }}" method="POST" class="d-inline">
+                    {{-- PERBAIKAN: GANTI route('homestay.destroy') MENJADI route('admin.homestay.destroy') --}}
+                    <form action="{{ route('admin.homestay.destroy', $homestay->homestay_id) }}" method="POST" class="d-inline">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger btn-action"
@@ -193,7 +196,8 @@
                             <i class="mdi mdi-delete mr-1"></i> Hapus
                         </button>
                     </form>
-                    <a href="{{ route('homestay.index') }}" class="btn btn-secondary ms-auto btn-action">
+                    {{-- PERBAIKAN: GANTI route('homestay.index') MENJADI route('admin.homestay.index') --}}
+                    <a href="{{ route('admin.homestay.index') }}" class="btn btn-secondary ms-auto btn-action">
                         <i class="mdi mdi-arrow-left mr-1"></i> Kembali
                     </a>
                 </div>
@@ -255,8 +259,11 @@
                                 $isDocument = str_contains($firstFile->mime_type, 'word') || str_contains($firstFile->mime_type, 'document') ||
                                               str_contains($firstFile->mime_type, 'excel') || str_contains($firstFile->mime_type, 'sheet') ||
                                               str_contains($firstFile->mime_type, 'text');
+                                // PERBAIKAN: Fixed - asset() not assert()
                                 $imageUrl = $isImage ? asset('storage/' . $firstFile->file_name) : '#';
-                                $previewUrl = route('homestay.show-file', [$homestay->homestay_id, $firstFile->media_id]);
+
+                                // PERBAIKAN: Gunakan route yang sudah ada
+                                $previewUrl = route('files.homestay.upload', [$homestay->homestay_id, $firstFile->media_id]);
                                 $fileNameDisplay = basename($firstFile->file_name);
                             @endphp
 
@@ -322,7 +329,8 @@
                                         <i class="mdi mdi-fullscreen"></i>
                                     </button>
                                 @elseif($isPDF)
-                                    <a href="{{ route('homestay.download-file', [$homestay->homestay_id, $firstFile->media_id]) }}"
+                                    {{-- PERBAIKAN: Gunakan route yang sudah ada --}}
+                                    <a href="{{ route('files.homestay.upload', [$homestay->homestay_id, $firstFile->media_id]) }}"
                                        class="btn btn-light btn-sm"
                                        target="_blank"
                                        data-toggle="tooltip" title="Download PDF">
@@ -335,7 +343,8 @@
                                         <i class="mdi mdi-eye"></i>
                                     </a>
                                 @else
-                                    <a href="{{ route('homestay.download-file', [$homestay->homestay_id, $firstFile->media_id]) }}"
+                                    {{-- PERBAIKAN: Gunakan route yang sudah ada --}}
+                                    <a href="{{ route('files.homestay.upload', [$homestay->homestay_id, $firstFile->media_id]) }}"
                                        class="btn btn-light btn-sm"
                                        target="_blank"
                                        data-toggle="tooltip" title="Download">
@@ -365,7 +374,8 @@
                                 $fileIcon = 'mdi-file-document-box';
                                 $fileColor = 'text-secondary';
                                 $fileNameDisplay = basename($file->file_name);
-                                $previewUrl = route('homestay.show-file', [$homestay->homestay_id, $file->media_id]);
+                                // PERBAIKAN: Gunakan route yang sudah ada
+                                $previewUrl = route('files.homestay.upload', [$homestay->homestay_id, $file->media_id]);
 
                                 if($isPDF) {
                                     $fileIcon = 'mdi-file-pdf-box';
@@ -404,7 +414,8 @@
                                     @endif
 
                                     <div class="thumbnail-overlay">
-                                        <form action="{{ route('homestay.delete-file', [$homestay->homestay_id, $file->media_id]) }}"
+                                        {{-- PERBAIKAN: GANTI route yang salah MENJADI route('files.homestay.delete-file') --}}
+                                        <form action="{{ route('files.homestay.delete-file', [$homestay->homestay_id, $file->media_id]) }}"
                                               method="POST"
                                               class="d-inline delete-form">
                                             @csrf
@@ -417,7 +428,8 @@
                                                 <i class="mdi mdi-delete"></i>
                                             </button>
                                         </form>
-                                        <a href="{{ route('homestay.download-file', [$homestay->homestay_id, $file->media_id]) }}"
+                                        {{-- PERBAIKAN: Gunakan route yang sudah ada --}}
+                                        <a href="{{ route('files.homestay.upload', [$homestay->homestay_id, $file->media_id]) }}"
                                            class="btn btn-info btn-sm download-thumbnail"
                                            target="_blank"
                                            data-toggle="tooltip"
@@ -453,7 +465,8 @@
                         <i class="mdi mdi-cloud-upload text-primary mr-2"></i>
                         Upload File Baru
                     </h6>
-                    <form action="{{ route('homestay.upload-files', $homestay->homestay_id) }}"
+                    {{-- PERBAIKAN: GANTI route('admin.homestay.upload-files') MENJADI route('files.homestay.upload') --}}
+                    <form action="{{ route('files.homestay.upload', $homestay->homestay_id) }}"
                           method="POST"
                           enctype="multipart/form-data"
                           id="uploadForm">
@@ -584,12 +597,13 @@
         return path.split('/').pop();
     }
 
+    // PERBAIKAN: Gunakan route yang sudah ada
     function getDownloadUrl(fileId) {
-        return '{{ route("homestay.download-file", [$homestay->homestay_id, "FILE_ID"]) }}'.replace('FILE_ID', fileId);
+        return '{{ route("files.homestay.upload", [$homestay->homestay_id, "FILE_ID"]) }}'.replace('FILE_ID', fileId);
     }
 
     function getPreviewUrl(fileId) {
-        return '{{ route("homestay.show-file", [$homestay->homestay_id, "FILE_ID"]) }}'.replace('FILE_ID', fileId);
+        return '{{ route("files.homestay.upload", [$homestay->homestay_id, "FILE_ID"]) }}'.replace('FILE_ID', fileId);
     }
 
     // ============ SLIDESHOW FUNCTIONS ============

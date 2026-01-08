@@ -10,7 +10,8 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('destinasiwisata.index') }}">Destinasi Wisata</a></li>
+                    {{-- PERBAIKAN: GANTI destinaswisata.index MENJADI admin.destinasiwisata.index --}}
+                    <li class="breadcrumb-item"><a href="{{ route('admin.destinasiwisata.index') }}">Destinasi Wisata</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Tambah Destinasi</li>
                 </ol>
             </nav>
@@ -61,12 +62,14 @@
                         <i class="mdi mdi-plus-circle text-primary mr-2"></i>
                         Form Tambah Destinasi Wisata
                     </h4>
-                    <a href="{{ route('destinasiwisata.index') }}" class="btn btn-outline-secondary btn-action">
+                    {{-- PERBAIKAN: GANTI destinaswisata.index MENJADI admin.destinasiwisata.index --}}
+                    <a href="{{ route('admin.destinasiwisata.index') }}" class="btn btn-outline-secondary btn-action">
                         <i class="mdi mdi-arrow-left mr-1"></i>Kembali ke Destinasi Wisata
                     </a>
                 </div>
 
-                <form action="{{ route('destinasiwisata.store') }}" method="POST" id="destinasiForm" enctype="multipart/form-data">
+                {{-- PERBAIKAN: GANTI destinasiwisata.store MENJADI admin.destinasiwisata.store --}}
+                <form action="{{ route('admin.destinasiwisata.store') }}" method="POST" id="destinasiForm" enctype="multipart/form-data">
                     @csrf
 
                     <div class="row">
@@ -296,7 +299,8 @@
                     <div class="row mt-4">
                         <div class="col-12">
                             <div class="d-flex justify-content-end gap-2">
-                                <a href="{{ route('destinasiwisata.index') }}" class="btn btn-outline-secondary btn-action">
+                                {{-- PERBAIKAN: GANTI destinaswisata.index MENJADI admin.destinasiwisata.index --}}
+                                <a href="{{ route('admin.destinasiwisata.index') }}" class="btn btn-outline-secondary btn-action">
                                     <i class="mdi mdi-close mr-1"></i>Batal
                                 </a>
                                 <button type="submit" class="btn btn-primary btn-action" id="submitBtn">

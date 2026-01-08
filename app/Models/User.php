@@ -98,6 +98,17 @@ class User extends Authenticatable
         return $this->role === 'warga';
     }
 
+    //  public function warga()
+    // {
+    //     return $this->hasOne(Warga::class, 'user_id', 'id');
+    // }
+
+    // // Helper untuk dapatkan warga_id
+    // public function getWargaIdAttribute()
+    // {
+    //     return $this->warga ? $this->warga->warga_id : null;
+    // }
+
     /**
      * ✅ Scope untuk filter
      */

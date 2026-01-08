@@ -49,15 +49,24 @@ class UlasanWisata extends Model
     return $query;
 }
 
-    // TAMBAHKAN: Scope Search untuk pencarian data
-   public function scopeSearch($query, $request, array $columns)
-{
-    if ($request->filled('search')) {
-        $query->where(function($q) use ($request, $columns) {
-            foreach ($columns as $column) {
-                $q->orWhere($column, 'LIKE', '%' . $request->search . '%');
-            }
-        });
+    // Scope Search
+    public function scopeSearch(Builder $query, $request, array $columns): Builder
+    {
+        if ($request->filled('search')) {
+            $query->where(function($q) use ($request, $columns) {
+                foreach ($columns as $column) {
+                    $q->orWhere($column, 'LIKE', '%' . $request->search . '%');
+                }
+                // Search berdasarkan nama destinasi (relasi)
+                $q->orWhereHas('destinasi', function($q2) use ($request) {
+                    $q2->where('nama', 'LIKE', '%' . $request->search . '%');
+                });
+                // Search berdasarkan nama warga (relasi)
+                $q->orWhereHas('warga', function($q2) use ($request) {
+                    $q2->where('nama', 'LIKE', '%' . $request->search . '%');
+                });
+            });
+        }
+        return $query;
     }
-}
 }

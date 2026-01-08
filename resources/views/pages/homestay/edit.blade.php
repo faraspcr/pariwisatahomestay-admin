@@ -12,7 +12,11 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('homestay.index') }}">Data Homestay</a></li>
+            <li class="breadcrumb-item"><a href="{{
+                auth()->user()->role == 'admin' ? route('admin.homestay.index') :
+                (auth()->user()->role == 'pemilik' ? route('pemilik.homestay.index') :
+                route('view.homestay.index'))
+            }}">Data Homestay</a></li>
             <li class="breadcrumb-item active" aria-current="page">Edit Data</li>
         </ol>
     </nav>
@@ -62,13 +66,20 @@
             <div class="card-header bg-info text-white">
                 <div class="d-flex justify-content-between align-items-center">
                     <h5 class="mb-0"><i class="mdi mdi-pencil-box mr-2"></i>Form Edit Data Homestay</h5>
-                    <a href="{{ route('homestay.index') }}" class="btn btn-light btn-sm">
+                    <a href="{{
+                        auth()->user()->role == 'admin' ? route('admin.homestay.index') :
+                        (auth()->user()->role == 'pemilik' ? route('pemilik.homestay.index') :
+                        route('view.homestay.index'))
+                    }}" class="btn btn-light btn-sm">
                         <i class="mdi mdi-arrow-left mr-1"></i>Kembali
                     </a>
                 </div>
             </div>
             <div class="card-body">
-                <form action="{{ route('homestay.update', $homestay->homestay_id) }}" method="POST" id="homestayForm">
+                <form action="{{
+                    auth()->user()->role == 'admin' ? route('admin.homestay.update', $homestay->homestay_id) :
+                    route('pemilik.homestay.update', $homestay->homestay_id)
+                }}" method="POST" id="homestayForm">
                     @csrf
                     @method('PUT')
 
@@ -199,7 +210,11 @@
                                     </label>
                                 </div>
                                 <div class="d-flex gap-2">
-                                    <a href="{{ route('homestay.index') }}" class="btn btn-outline-secondary btn-sm">
+                                    <a href="{{
+                                        auth()->user()->role == 'admin' ? route('admin.homestay.index') :
+                                        (auth()->user()->role == 'pemilik' ? route('pemilik.homestay.index') :
+                                        route('view.homestay.index'))
+                                    }}" class="btn btn-outline-secondary btn-sm">
                                         <i class="mdi mdi-close mr-1"></i>Batal
                                     </a>
                                     <button type="submit" class="btn btn-primary btn-sm" id="submitBtn" disabled>
@@ -248,7 +263,9 @@
                                               str_contains($firstFile->mime_type, 'excel') || str_contains($firstFile->mime_type, 'sheet') ||
                                               str_contains($firstFile->mime_type, 'text');
                                 $imageUrl = $isImage ? asset('storage/' . $firstFile->file_name) : '#';
-                                $previewUrl = route('homestay.show-file', [$homestay->homestay_id, $firstFile->media_id]);
+                                // ⭐⭐⭐ PERUBAHAN: GUNAKAN ROUTE files.homestay.upload (yang sudah ada) ⭐⭐⭐
+                                $uploadRoute = 'files.homestay.upload';
+                                $deleteRoute = 'files.homestay.delete-file';
                                 $fileNameDisplay = basename($firstFile->file_name);
                             @endphp
 
@@ -266,7 +283,8 @@
                                     <h5 class="mt-3">{{ $fileNameDisplay }}</h5>
                                     <p class="text-muted">PDF Document</p>
                                     <div class="mt-4">
-                                        <a href="{{ $previewUrl }}"
+                                        <!-- ⭐⭐⭐ PERUBAHAN: Untuk PDF, langsung dari storage ⭐⭐⭐ -->
+                                        <a href="{{ asset('storage/' . $firstFile->file_name) }}"
                                            class="btn btn-primary btn-sm"
                                            target="_blank"
                                            data-toggle="tooltip"
@@ -302,22 +320,24 @@
                                         <i class="mdi mdi-fullscreen"></i>
                                     </button>
                                 @elseif($isPDF)
-                                    <a href="{{ route('homestay.download-file', [$homestay->homestay_id, $firstFile->media_id]) }}"
+                                    <!-- ⭐⭐⭐ PERUBAHAN: Untuk download PDF, langsung dari storage ⭐⭐⭐ -->
+                                    <a href="{{ asset('storage/' . $firstFile->file_name) }}"
                                        class="btn btn-light btn-sm"
-                                       target="_blank"
+                                       download="{{ $fileNameDisplay }}"
                                        data-toggle="tooltip" title="Download PDF">
                                         <i class="mdi mdi-download"></i>
                                     </a>
-                                    <a href="{{ $previewUrl }}"
+                                    <a href="{{ asset('storage/' . $firstFile->file_name) }}"
                                        class="btn btn-light btn-sm"
                                        target="_blank"
                                        data-toggle="tooltip" title="Buka PDF">
                                         <i class="mdi mdi-eye"></i>
                                     </a>
                                 @else
-                                    <a href="{{ route('homestay.download-file', [$homestay->homestay_id, $firstFile->media_id]) }}"
+                                    <!-- ⭐⭐⭐ PERUBAHAN: Untuk dokumen lain, langsung dari storage ⭐⭐⭐ -->
+                                    <a href="{{ asset('storage/' . $firstFile->file_name) }}"
                                        class="btn btn-light btn-sm"
-                                       target="_blank"
+                                       download="{{ $fileNameDisplay }}"
                                        data-toggle="tooltip" title="Download">
                                         <i class="mdi mdi-download"></i>
                                     </a>
@@ -345,7 +365,6 @@
                                 $fileIcon = 'mdi-file-document-box';
                                 $fileColor = 'text-secondary';
                                 $fileNameDisplay = basename($file->file_name);
-                                $previewUrl = route('homestay.show-file', [$homestay->homestay_id, $file->media_id]);
 
                                 if($isPDF) {
                                     $fileIcon = 'mdi-file-pdf-box';
@@ -369,7 +388,7 @@
                                      data-id="{{ $file->media_id }}"
                                      data-type="{{ $file->mime_type }}"
                                      data-filename="{{ $fileNameDisplay }}"
-                                     data-preview-url="{{ $isPDF ? $previewUrl : '#' }}">
+                                     data-filepath="{{ asset('storage/' . $file->file_name) }}">
 
                                     @if($isImage)
                                         <img src="{{ asset('storage/' . $file->file_name) }}"
@@ -384,7 +403,8 @@
                                     @endif
 
                                     <div class="thumbnail-overlay">
-                                        <form action="{{ route('homestay.delete-file', [$homestay->homestay_id, $file->media_id]) }}"
+                                        <!-- ⭐⭐⭐ PERUBAHAN: Gunakan route yang sudah ada ⭐⭐⭐ -->
+                                        <form action="{{ route('files.homestay.delete-file', [$homestay->homestay_id, $file->media_id]) }}"
                                               method="POST"
                                               class="d-inline delete-form">
                                             @csrf
@@ -397,15 +417,17 @@
                                                 <i class="mdi mdi-delete"></i>
                                             </button>
                                         </form>
-                                        <a href="{{ route('homestay.download-file', [$homestay->homestay_id, $file->media_id]) }}"
+                                        <!-- ⭐⭐⭐ PERUBAHAN: Download langsung dari storage ⭐⭐⭐ -->
+                                        <a href="{{ asset('storage/' . $file->file_name) }}"
                                            class="btn btn-info btn-sm download-thumbnail"
-                                           target="_blank"
+                                           download="{{ $fileNameDisplay }}"
                                            data-toggle="tooltip"
                                            title="Download File">
                                             <i class="mdi mdi-download"></i>
                                         </a>
                                         @if($isPDF)
-                                        <a href="{{ $previewUrl }}"
+                                        <!-- ⭐⭐⭐ PERUBAHAN: View PDF langsung dari storage ⭐⭐⭐ -->
+                                        <a href="{{ asset('storage/' . $file->file_name) }}"
                                            class="btn btn-warning btn-sm view-thumbnail"
                                            target="_blank"
                                            data-toggle="tooltip"
@@ -428,12 +450,13 @@
                 @endif
 
                 <!-- Upload Form -->
+                <!-- ⭐⭐⭐ PERUBAHAN: Gunakan route yang sudah ada ⭐⭐⭐ -->
                 <div class="upload-section mt-4 pt-4 border-top">
                     <h6 class="mb-3">
                         <i class="mdi mdi-cloud-upload text-primary mr-2"></i>
                         Upload File Baru
                     </h6>
-                    <form action="{{ route('homestay.upload-files', $homestay->homestay_id) }}"
+                    <form action="{{ route('files.homestay.upload', $homestay->homestay_id) }}"
                           method="POST"
                           enctype="multipart/form-data"
                           id="uploadForm">
@@ -548,21 +571,24 @@
     let currentFileType = photos.length > 0 ? photos[0].mime_type : '';
     let currentFileId = photos.length > 0 ? photos[0].media_id : '';
     let currentFileDisplayName = photos.length > 0 ? basename(photos[0].file_name) : '';
-    let currentPDFPreviewUrl = '';
+    let currentFileUrl = photos.length > 0 ? '{{ asset("storage/") }}/' + photos[0].file_name : '';
     const homestayId = {{ $homestay->homestay_id }};
     const baseImagePath = '{{ asset("storage/") }}/';
+    const userRole = '{{ auth()->user()->role }}';
 
     // Helper functions
     function basename(path) {
         return path.split('/').pop();
     }
 
-    function getDownloadUrl(fileId) {
-        return '{{ route("homestay.download-file", [$homestay->homestay_id, "FILE_ID"]) }}'.replace('FILE_ID', fileId);
+    // ⭐⭐⭐ PERUBAHAN: Fungsi untuk download langsung dari storage ⭐⭐⭐
+    function getDownloadUrl(fileName) {
+        return '{{ asset("storage/") }}/' + fileName;
     }
 
-    function getPreviewUrl(fileId) {
-        return '{{ route("homestay.show-file", [$homestay->homestay_id, "FILE_ID"]) }}'.replace('FILE_ID', fileId);
+    // ⭐⭐⭐ PERUBAHAN: Fungsi untuk delete menggunakan route yang ada ⭐⭐⭐
+    function getDeleteUrl(fileId) {
+        return '{{ route("files.homestay.delete-file", ["homestay" => $homestay->homestay_id, "fileId" => "FILE_ID"]) }}'.replace('FILE_ID', fileId);
     }
 
     // Form Validation
@@ -702,6 +728,7 @@
         currentFileType = mimeType;
         currentFileId = fileId;
         currentFileDisplayName = displayName || fileName.split('/').pop();
+        currentFileUrl = '{{ asset("storage/") }}/' + fileName;
 
         const isImage = mimeType.includes('image');
         const isPDF = mimeType.includes('pdf');
@@ -730,11 +757,27 @@
 
             document.getElementById('fullscreenImage').src = "{{ asset('') }}" + fullPath + '?t=' + timestamp;
             document.getElementById('imageFullscreenTitle').textContent = currentFileDisplayName;
-            currentPDFPreviewUrl = '';
         } else if (isPDF) {
-            currentPDFPreviewUrl = getPreviewUrl(fileId);
+            // Untuk PDF, update iframe
+            const pdfIframe = document.getElementById('pdfFullscreenIframe');
+            pdfIframe.src = currentFileUrl;
 
+            // Update PDF preview container
             const pdfContainer = document.querySelector('.pdf-preview-container') || createPDFPreview();
+            pdfContainer.innerHTML = `
+                <i class="mdi mdi-file-pdf-box text-danger" style="font-size: 100px;"></i>
+                <h5 class="mt-3">${currentFileDisplayName}</h5>
+                <p class="text-muted">PDF Document</p>
+                <div class="mt-4">
+                    <a href="${currentFileUrl}"
+                       class="btn btn-primary btn-sm"
+                       target="_blank"
+                       data-toggle="tooltip"
+                       title="Buka PDF">
+                        <i class="mdi mdi-eye mr-1"></i> Lihat PDF
+                    </a>
+                </div>
+            `;
             pdfContainer.style.display = 'block';
 
             document.getElementById('pdfFullscreenTitle').textContent = currentFileDisplayName + ' (PDF)';
@@ -767,7 +810,6 @@
                 existingDocPreview.remove();
             }
             mainPhotoWrapper.insertBefore(newDocPreview, mainPhotoWrapper.firstChild);
-            currentPDFPreviewUrl = '';
         }
 
         photoName.textContent = currentFileDisplayName;
@@ -788,37 +830,25 @@
         const pdfContainer = document.createElement('div');
         pdfContainer.className = 'pdf-preview-container text-center py-4';
         pdfContainer.id = 'pdfPreviewContainer';
-        pdfContainer.innerHTML = `
-            <i class="mdi mdi-file-pdf-box text-danger" style="font-size: 100px;"></i>
-            <h5 class="mt-3">${currentFileDisplayName}</h5>
-            <p class="text-muted">PDF Document</p>
-            <div class="mt-4">
-                <a href="${currentPDFPreviewUrl}"
-                   class="btn btn-primary btn-sm"
-                   target="_blank"
-                   data-toggle="tooltip"
-                   title="Buka PDF">
-                    <i class="mdi mdi-eye mr-1"></i> Lihat PDF
-                </a>
-            </div>
-        `;
         mainPhotoWrapper.insertBefore(pdfContainer, mainPhotoWrapper.firstChild);
         return pdfContainer;
     }
 
     // ============ DOWNLOAD FUNCTIONS ============
     function downloadCurrentPhoto() {
-        if (currentFileId) {
-            const downloadUrl = getDownloadUrl(currentFileId);
-            window.open(downloadUrl, '_blank');
+        if (currentFileName) {
+            const downloadUrl = getDownloadUrl(currentFileName);
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.download = currentFileDisplayName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
     }
 
     function downloadFullscreenPhoto() {
-        if (currentFileId) {
-            const downloadUrl = getDownloadUrl(currentFileId);
-            window.open(downloadUrl, '_blank');
-        }
+        downloadCurrentPhoto();
     }
 
     function downloadAll() {
@@ -831,11 +861,11 @@
 
         photos.forEach((photo, index) => {
             setTimeout(() => {
-                const downloadUrl = getDownloadUrl(photo.media_id);
+                const downloadUrl = getDownloadUrl(photo.file_name);
                 const link = document.createElement('a');
                 link.href = downloadUrl;
-                link.target = '_blank';
                 link.download = basename(photo.file_name);
+                link.style.display = 'none';
 
                 document.body.appendChild(link);
                 link.click();
@@ -844,12 +874,12 @@
                     document.body.removeChild(link);
                 }, 100);
 
-            }, index * 1500);
+            }, index * 1000);
         });
 
         setTimeout(() => {
             showToast('success', 'Semua file telah ditambahkan ke antrian download');
-        }, photos.length * 1500 + 1000);
+        }, photos.length * 1000 + 1000);
     }
 
     // ============ FULLSCREEN FUNCTIONS ============
@@ -870,7 +900,7 @@
 
         } else if (isPDF) {
             const pdfIframe = document.getElementById('pdfFullscreenIframe');
-            pdfIframe.src = currentPDFPreviewUrl;
+            pdfIframe.src = currentFileUrl;
             $('#pdfFullscreenModal').modal('show');
         } else {
             downloadCurrentPhoto();
@@ -878,8 +908,8 @@
     }
 
     function openPDFInNewTab() {
-        if (currentPDFPreviewUrl) {
-            window.open(currentPDFPreviewUrl, '_blank');
+        if (currentFileUrl) {
+            window.open(currentFileUrl, '_blank');
         }
     }
 
@@ -1089,7 +1119,9 @@
             }
 
             if (e.key === 'Escape') {
-                window.location.href = "{{ route('homestay.index') }}";
+                window.location.href = userRole === 'admin' ?
+                    '{{ route("admin.homestay.index") }}' :
+                    '{{ route("pemilik.homestay.index") }}';
             }
         });
 
@@ -1113,6 +1145,7 @@
 
         console.log('Files loaded:', photos);
         console.log('Homestay ID:', homestayId);
+        console.log('User Role:', userRole);
     });
 </script>
 

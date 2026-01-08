@@ -1,7 +1,5 @@
 <!-- ==================== START SIDEBAR ==================== -->
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
-
-
     <ul class="nav">
         <!-- Kategori: Menu Utama -->
         <li class="nav-item nav-category">Menu Utama</li>
@@ -28,7 +26,20 @@
                 <ul class="nav flex-column sub-menu">
                     <!-- Sub-menu: Destinasi Wisata -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('destinasiwisata.index') }}" data-route="destinasiwisata.index">
+                        @php
+                            $user = Auth::user();
+                            $role = $user->role ?? 'admin';
+                        @endphp
+
+                        @if($role === 'admin')
+                            <a class="nav-link" href="{{ route('admin.destinasiwisata.index') }}" data-route="admin.destinasiwisata.index">
+                        @elseif($role === 'pemilik')
+                            <a class="nav-link" href="{{ route('pemilik.destinasi.index') }}" data-route="pemilik.destinasi.index">
+                        @elseif($role === 'warga')
+                            <a class="nav-link" href="{{ route('warga.destinasi.index') }}" data-route="warga.destinasi.index">
+                        @else
+                            <a class="nav-link" href="{{ route('view.destinasi.index') }}" data-route="view.destinasi.index">
+                        @endif
                             <i class="mdi mdi-map-marker menu-icon"></i>
                             Destinasi Wisata
                         </a>
@@ -36,7 +47,15 @@
 
                     <!-- Sub-menu: HOMESTAY -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('homestay.index') }}" data-route="homestay.index">
+                        @if($role === 'admin')
+                            <a class="nav-link" href="{{ route('admin.homestay.index') }}" data-route="admin.homestay.index">
+                        @elseif($role === 'pemilik')
+                            <a class="nav-link" href="{{ route('pemilik.homestay.index') }}" data-route="pemilik.homestay.index">
+                        @elseif($role === 'warga')
+                            <a class="nav-link" href="{{ route('warga.homestay.index') }}" data-route="warga.homestay.index">
+                        @else
+                            <a class="nav-link" href="{{ route('view.homestay.index') }}" data-route="view.homestay.index">
+                        @endif
                             <i class="mdi mdi-home menu-icon"></i>
                             Homestay
                         </a>
@@ -44,7 +63,15 @@
 
                     <!-- Sub-menu: KAMAR HOMESTAY -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('kamar.my') }}" data-route="kamar.my">
+                        @if($role === 'admin')
+                            <a class="nav-link" href="{{ route('admin.kamarhomestay.index') }}" data-route="admin.kamarhomestay.index">
+                        @elseif($role === 'pemilik')
+                            <a class="nav-link" href="{{ route('pemilik.kamar.index') }}" data-route="pemilik.kamar.index">
+                        @elseif($role === 'warga')
+                            <a class="nav-link" href="{{ route('warga.kamar.index') }}" data-route="warga.kamar.index">
+                        @else
+                            <a class="nav-link" href="{{ route('view.kamar.index') }}" data-route="view.kamar.index">
+                        @endif
                             <i class="mdi mdi-door-closed menu-icon"></i>
                             Kamar Homestay
                         </a>
@@ -52,7 +79,13 @@
 
                     <!-- Sub-menu: BOOKING -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('booking-homestay.index') }}" data-route="booking-homestay.index">
+                        @if($role === 'admin')
+                            <a class="nav-link" href="{{ route('admin.booking-homestay.index') }}" data-route="admin.booking-homestay.index">
+                        @elseif($role === 'pemilik')
+                            <a class="nav-link" href="{{ route('pemilik.booking.index') }}" data-route="pemilik.booking.index">
+                        @elseif($role === 'warga')
+                            <a class="nav-link" href="{{ route('warga.booking.index') }}" data-route="warga.booking.index">
+                        @endif
                             <i class="mdi mdi-calendar-check menu-icon"></i>
                             Booking
                         </a>
@@ -60,7 +93,13 @@
 
                     <!-- Sub-menu: Ulasan Wisata -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('ulasan_wisata.index') }}" data-route="ulasan_wisata.index">
+                        @if($role === 'admin')
+                            <a class="nav-link" href="{{ route('admin.ulasan_wisata.index') }}" data-route="admin.ulasan_wisata.index">
+                        @elseif($role === 'pemilik')
+                            <a class="nav-link" href="{{ route('pemilik.ulasan.index') }}" data-route="pemilik.ulasan.index">
+                        @elseif($role === 'warga')
+                            <a class="nav-link" href="{{ route('warga.ulasan.index') }}" data-route="warga.ulasan.index">
+                        @endif
                             <i class="mdi mdi-star-circle menu-icon"></i>
                             Ulasan Wisata
                         </a>
@@ -70,6 +109,7 @@
         </li>
 
         <!-- Kategori: Master Data -->
+        @if($role === 'admin')
         <li class="nav-item nav-category">Master Data</li>
 
         <!-- Menu Collapsible: Master Data -->
@@ -83,7 +123,7 @@
                 <ul class="nav flex-column sub-menu">
                     <!-- Sub-menu: Manajemen User -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('user.index') }}" data-route="user.index">
+                        <a class="nav-link" href="{{ route('admin.user.index') }}" data-route="admin.user.index">
                             <i class="mdi mdi-account-multiple menu-icon"></i>
                             Manajemen User
                         </a>
@@ -91,7 +131,7 @@
 
                     <!-- Sub-menu: Data Warga -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('warga.index') }}" data-route="warga.index">
+                        <a class="nav-link" href="{{ route('admin.warga.index') }}" data-route="admin.warga.index">
                             <i class="mdi mdi-account-group menu-icon"></i>
                             Data Warga
                         </a>
@@ -99,6 +139,7 @@
                 </ul>
             </div>
         </li>
+        @endif
 
         <!-- Bagian User & Settings di Bawah Sidebar -->
         <li class="nav-item sidebar-user-actions mt-4">
@@ -550,18 +591,43 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Fallback: ekstrak dari URL
         const path = window.location.pathname;
-        const routes = {
-            '/dashboard': 'dashboard',
-            '/destinasiwisata': 'destinasiwisata.index',
-            '/homestay': 'homestay.index',
-            '/kamar': 'kamar.my',
-            '/booking-homestay': 'booking-homestay.index',
-            '/ulasan_wisata': 'ulasan_wisata.index',
-            '/users': 'user.index',
-            '/warga': 'warga.index'
+
+        // Mapping path ke route name berdasarkan role
+        const userRole = '{{ Auth::user()->role ?? "admin" }}';
+
+        // Daftar mapping route berdasarkan role
+        const routeMappings = {
+            'admin': {
+                '/admin/destinasiwisata': 'admin.destinasiwisata.index',
+                '/admin/homestay': 'admin.homestay.index',
+                '/admin/kamarhomestay': 'admin.kamarhomestay.index',
+                '/admin/booking-homestay': 'admin.booking-homestay.index',
+                '/admin/ulasan_wisata': 'admin.ulasan_wisata.index',
+                '/admin/user': 'admin.user.index',
+                '/admin/warga': 'admin.warga.index',
+                '/dashboard': 'dashboard'
+            },
+            'pemilik': {
+                '/pemilik/destinasi': 'pemilik.destinasi.index',
+                '/pemilik/homestay': 'pemilik.homestay.index',
+                '/pemilik/kamar': 'pemilik.kamar.index',
+                '/pemilik/booking': 'pemilik.booking.index',
+                '/pemilik/ulasan': 'pemilik.ulasan.index',
+                '/pemilik/dashboard': 'pemilik.dashboard'
+            },
+            'warga': {
+                '/warga/destinasi': 'warga.destinasi.index',
+                '/warga/homestay': 'warga.homestay.index',
+                '/warga/kamar': 'warga.kamar.index',
+                '/warga/booking': 'warga.booking.index',
+                '/warga/ulasan': 'warga.ulasan.index',
+                '/warga/dashboard': 'warga.dashboard'
+            }
         };
 
-        for (const [pathPattern, routeName] of Object.entries(routes)) {
+        const mappings = routeMappings[userRole] || routeMappings['admin'];
+
+        for (const [pathPattern, routeName] of Object.entries(mappings)) {
             if (path.includes(pathPattern)) {
                 return routeName;
             }
@@ -578,7 +644,8 @@ document.addEventListener('DOMContentLoaded', function() {
     menuLinks.forEach(link => {
         link.addEventListener('click', function(e) {
             // Hanya untuk link internal
-            if (this.getAttribute('href').startsWith('/') || this.getAttribute('href').startsWith('{{ url('') }}')) {
+            const href = this.getAttribute('href');
+            if (href && (href.startsWith('/') || href.startsWith('{{ url('') }}'))) {
                 // Hapus semua active class
                 menuLinks.forEach(l => l.classList.remove('active'));
 

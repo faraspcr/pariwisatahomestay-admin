@@ -12,391 +12,413 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('user.index') }}">Data User</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('admin.user.index') }}">Data User</a></li>
             <li class="breadcrumb-item active" aria-current="page">Detail User</li>
         </ol>
     </nav>
 </div>
 
-<!-- Alert -->
-@if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <i class="mdi mdi-check-circle-outline mr-2"></i>
-        <strong>Sukses!</strong> {{ session('success') }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-@endif
+<!-- Cek Role Admin (Jika Bukan Admin, Tampilkan Forbidden) -->
+@php
+    $currentUser = Auth::user();
+@endphp
 
-<!-- Card Detail User -->
-<div class="row">
-    <!-- Foto Profil User - STRUKTUR SAMA DENGAN SHOW DESTINASI -->
-    <div class="col-lg-5 mb-4">
-        <div class="card card-detail">
-            <div class="card-header bg-info text-white">
-                <h5 class="mb-0"><i class="mdi mdi-account mr-2"></i>Foto Profil User</h5>
-            </div>
-            <div class="card-body">
-                <div class="main-photo-container mb-4">
-                    <div class="main-photo-wrapper placeholder-wrapper">
-                        @if($user->profile_photo_url)
-                            <!-- Jika ada foto profil -->
-                            <img src="{{ $user->profile_photo_url }}"
-                                 id="currentProfilePhoto"
-                                 class="main-photo profile-photo"
-                                 alt="Foto Profil {{ $user->name }}"
-                                 onerror="handleProfileImageError(this)">
-                        @else
-                            <!-- Placeholder ketika tidak ada foto (SESUAI KODINGAN ANDA) -->
-                            <div class="placeholder-content">
-                                <div class="avatar-icon">
-                                    <i class="mdi mdi-account-circle placeholder-icon"></i>
-                                </div>
-                                <h4 class="placeholder-title">Avatar Default</h4>
-                                <p class="placeholder-text">User belum mengupload foto profil</p>
-                                <div class="placeholder-actions">
-                                    <a href="{{ route('user.edit', $user->id) }}" class="btn btn-primary btn-sm">
-                                        <i class="mdi mdi-camera mr-1"></i> Upload Foto
-                                    </a>
-                                </div>
-                            </div>
-                        @endif
-                    </div>
-                    <div class="photo-info text-center mt-2">
-                        <small id="profileName" class="text-truncate d-block">{{ $user->name }}</small>
-                        <div class="photo-controls mt-2">
-                            @if($user->profile_photo_url && $user->profile_picture)
-                                <span class="badge bg-success">Foto Custom</span>
-                            @else
-                                <span class="badge bg-secondary">Avatar Default</span>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Foto Info Detail -->
-                <div class="detail-info">
-                    <div class="detail-item">
-                        <div class="detail-label">
-                            <i class="mdi mdi-account text-primary"></i>
-                            <span>Jenis Foto</span>
-                        </div>
-                        <div class="detail-value">
-                            @if($user->profile_photo_url && $user->profile_picture)
-                                <span class="badge-hijau">Foto Profil Custom</span>
-                            @else
-                                <span class="badge-biru">Avatar Default</span>
-                            @endif
-                        </div>
-                    </div>
-
-                    <div class="detail-item">
-                        <div class="detail-label">
-                            <i class="mdi mdi-update text-primary"></i>
-                            <span>Terakhir Update</span>
-                        </div>
-                        <div class="detail-value">{{ $user->updated_at->format('d F Y H:i') }}</div>
-                    </div>
-
-                    <div class="detail-item">
-                        <div class="detail-label">
-                            <i class="mdi mdi-identifier text-primary"></i>
-                            <span>User ID</span>
-                        </div>
-                        <div class="detail-value">
-                            <span class="badge bg-secondary">#{{ $user->id }}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tombol Aksi Foto -->
-                <div class="d-grid gap-2 d-md-flex mt-4 pt-3 border-top">
-                    <a href="{{ route('user.edit', $user->id) }}" class="btn btn-warning me-2 btn-action">
-                        <i class="mdi mdi-camera mr-1"></i> Ubah Foto
-                    </a>
-                    @if($user->profile_photo_url && $user->profile_picture)
-                        <button type="button" class="btn btn-info btn-action" onclick="downloadProfilePhoto()">
-                            <i class="mdi mdi-download mr-1"></i> Download
-                        </button>
-                    @endif
-                    <button type="button" class="btn btn-primary btn-action" onclick="openFullscreenProfile()">
-                        <i class="mdi mdi-fullscreen mr-1"></i> Fullscreen
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Status Info Card -->
-        <div class="card mt-3">
-            <div class="card-body">
-                <h6 class="card-title mb-3">
-                    <i class="mdi mdi-information-outline text-info mr-2"></i>Status Akun
-                </h6>
-                <div class="detail-info">
-                    <div class="detail-item">
-                        <div class="detail-label">
-                            <i class="mdi mdi-email-check text-primary"></i>
-                            <span>Verifikasi Email</span>
-                        </div>
-                        <div class="detail-value">
-                            @if($user->email_verified_at)
-                                <span class="badge-hijau">
-                                    <i class="mdi mdi-check mr-1"></i> Terverifikasi
-                                </span>
-                            @else
-                                <span class="badge-orange">
-                                    <i class="mdi mdi-clock-outline mr-1"></i> Belum Verifikasi
-                                </span>
-                            @endif
-                        </div>
-                    </div>
-
-                    <div class="detail-item">
-                        <div class="detail-label">
-                            <i class="mdi mdi-account text-primary"></i>
-                            <span>Status Foto</span>
-                        </div>
-                        <div class="detail-value">
-                            @if($user->profile_picture)
-                                <span class="badge-hijau">Foto Custom</span>
-                            @else
-                                <span class="badge-biru">Avatar Default</span>
-                            @endif
-                        </div>
-                    </div>
-
-                    <div class="detail-item">
-                        <div class="detail-label">
-                            <i class="mdi mdi-calendar text-primary"></i>
-                            <span>Bergabung</span>
-                        </div>
-                        <div class="detail-value">
-                            {{ $user->created_at->format('d F Y') }}
-                            <small class="text-muted d-block">
-                                ({{ $user->created_at->diffForHumans() }})
-                            </small>
-                        </div>
-                    </div>
-                </div>
+@if(!$currentUser->isAdmin())
+    <!-- Tampilkan Halaman Forbidden untuk Non-Admin -->
+    <div class="card">
+        <div class="card-body text-center py-5">
+            <div class="d-flex flex-column align-items-center">
+                <i class="mdi mdi-shield-lock-outline text-danger" style="font-size: 80px;"></i>
+                <h3 class="text-danger mt-4">Akses Ditolak</h3>
+                <p class="text-muted">Hanya admin yang dapat mengakses halaman ini.</p>
+                <a href="{{ route('dashboard') }}" class="btn btn-primary mt-3">
+                    <i class="mdi mdi-arrow-left mr-1"></i>Kembali ke Dashboard
+                </a>
             </div>
         </div>
     </div>
+@else
+    <!-- Alert -->
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="mdi mdi-check-circle-outline mr-2"></i>
+            <strong>Sukses!</strong> {{ session('success') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
 
-    <!-- Informasi Detail User - STRUKTUR SAMA DENGAN SHOW DESTINASI -->
-    <div class="col-lg-7 mb-4">
-        <div class="card border-0 shadow card-gallery">
-            <div class="card-header bg-success text-white">
-                <h5 class="mb-0"><i class="mdi mdi-account-details mr-2"></i>Informasi Detail User</h5>
-            </div>
-            <div class="card-body">
-                <div class="detail-info">
-                    <div class="detail-item">
-                        <div class="detail-label">
-                            <i class="mdi mdi-account text-primary"></i>
-                            <span>Nama Lengkap</span>
+    <!-- Card Detail User -->
+    <div class="row">
+        <!-- Foto Profil User - STRUKTUR SAMA DENGAN SHOW DESTINASI -->
+        <div class="col-lg-5 mb-4">
+            <div class="card card-detail">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="mdi mdi-account mr-2"></i>Foto Profil User</h5>
+                </div>
+                <div class="card-body">
+                    <div class="main-photo-container mb-4">
+                        <div class="main-photo-wrapper placeholder-wrapper">
+                            @if($user->profile_photo_url)
+                                <!-- Jika ada foto profil -->
+                                <img src="{{ $user->profile_photo_url }}"
+                                     id="currentProfilePhoto"
+                                     class="main-photo profile-photo"
+                                     alt="Foto Profil {{ $user->name }}"
+                                     onerror="handleProfileImageError(this)">
+                            @else
+                                <!-- Placeholder ketika tidak ada foto (SESUAI KODINGAN ANDA) -->
+                                <div class="placeholder-content">
+                                    <div class="avatar-icon">
+                                        <i class="mdi mdi-account-circle placeholder-icon"></i>
+                                    </div>
+                                    <h4 class="placeholder-title">Avatar Default</h4>
+                                    <p class="placeholder-text">User belum mengupload foto profil</p>
+                                    <div class="placeholder-actions">
+                                        <a href="{{ route('admin.user.edit', $user->id) }}" class="btn btn-primary btn-sm">
+                                            <i class="mdi mdi-camera mr-1"></i> Upload Foto
+                                        </a>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
-                        <div class="detail-value">{{ $user->name }}</div>
-                    </div>
-
-                    <div class="detail-item">
-                        <div class="detail-label">
-                            <i class="mdi mdi-email text-primary"></i>
-                            <span>Email</span>
-                        </div>
-                        <div class="detail-value">
-                            <div class="d-flex align-items-center">
-                                {{ $user->email }}
-                                @if($user->email_verified_at)
-                                    <span class="badge-hijau ml-2">
-                                        <i class="mdi mdi-check mr-1"></i> Verified
-                                    </span>
+                        <div class="photo-info text-center mt-2">
+                            <small id="profileName" class="text-truncate d-block">{{ $user->name }}</small>
+                            <div class="photo-controls mt-2">
+                                @if($user->profile_photo_url && $user->profile_picture)
+                                    <span class="badge bg-success">Foto Custom</span>
+                                @else
+                                    <span class="badge bg-secondary">Avatar Default</span>
                                 @endif
                             </div>
                         </div>
                     </div>
 
-                    <div class="detail-item">
-                        <div class="detail-label">
-                            <i class="mdi mdi-shield-account text-primary"></i>
-                            <span>Role</span>
+                    <!-- Foto Info Detail -->
+                    <div class="detail-info">
+                        <div class="detail-item">
+                            <div class="detail-label">
+                                <i class="mdi mdi-account text-primary"></i>
+                                <span>Jenis Foto</span>
+                            </div>
+                            <div class="detail-value">
+                                @if($user->profile_photo_url && $user->profile_picture)
+                                    <span class="badge-hijau">Foto Profil Custom</span>
+                                @else
+                                    <span class="badge-biru">Avatar Default</span>
+                                @endif
+                            </div>
                         </div>
-                        <div class="detail-value">
-                            @if($user->role == 'admin')
-                                <span class="badge-danger">Admin</span>
-                            @elseif($user->role == 'pemilik')
-                                <span class="badge-orange">Pemilik Homestay</span>
-                            @else
-                                <span class="badge-hijau">Warga</span>
-                            @endif
+
+                        <div class="detail-item">
+                            <div class="detail-label">
+                                <i class="mdi mdi-update text-primary"></i>
+                                <span>Terakhir Update</span>
+                            </div>
+                            <div class="detail-value">{{ $user->updated_at->format('d F Y H:i') }}</div>
+                        </div>
+
+                        <div class="detail-item">
+                            <div class="detail-label">
+                                <i class="mdi mdi-identifier text-primary"></i>
+                                <span>User ID</span>
+                            </div>
+                            <div class="detail-value">
+                                <span class="badge bg-secondary">#{{ $user->id }}</span>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="detail-item">
-                        <div class="detail-label">
-                            <i class="mdi mdi-camera text-primary"></i>
-                            <span>Status Foto Profil</span>
-                        </div>
-                        <div class="detail-value">
-                            @if($user->profile_picture)
-                                <div class="d-flex align-items-center">
-                                    <code class="bg-light p-2 rounded mr-2">{{ $user->profile_picture }}</code>
-                                    <span class="badge-hijau">Foto Custom</span>
-                                </div>
-                            @else
-                                <div class="d-flex align-items-center">
-                                    <span class="text-muted mr-2">Default Avatar</span>
-                                    <span class="badge-biru">Sistem</span>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-
-                    <div class="detail-item">
-                        <div class="detail-label">
-                            <i class="mdi mdi-calendar-plus text-primary"></i>
-                            <span>Dibuat Tanggal</span>
-                        </div>
-                        <div class="detail-value">
-                            {{ $user->created_at->format('d F Y H:i') }}
-                            <small class="text-muted d-block">
-                                {{ $user->created_at->diffForHumans() }}
-                            </small>
-                        </div>
-                    </div>
-
-                    <div class="detail-item">
-                        <div class="detail-label">
-                            <i class="mdi mdi-update text-primary"></i>
-                            <span>Diupdate Tanggal</span>
-                        </div>
-                        <div class="detail-value">
-                            {{ $user->updated_at->format('d F Y H:i') }}
-                            <small class="text-muted d-block">
-                                {{ $user->updated_at->diffForHumans() }}
-                            </small>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Timeline -->
-                <h6 class="border-bottom pb-2 mb-3 mt-4">
-                    <i class="mdi mdi-timeline-text-outline text-primary mr-2"></i>Timeline Aktivitas
-                </h6>
-
-                <div class="timeline-container">
-                    <div class="timeline-item">
-                        <div class="timeline-marker bg-primary">
-                            <i class="mdi mdi-account-plus"></i>
-                        </div>
-                        <div class="timeline-content">
-                            <h6 class="mb-1">Akun Dibuat</h6>
-                            <small class="text-muted">{{ $user->created_at->format('d M Y, H:i') }}</small>
-                            <p class="mb-0 text-muted">User terdaftar ke dalam sistem</p>
-                        </div>
-                    </div>
-
-                    <div class="timeline-item">
-                        <div class="timeline-marker bg-success">
-                            <i class="mdi mdi-update"></i>
-                        </div>
-                        <div class="timeline-content">
-                            <h6 class="mb-1">Terakhir Update</h6>
-                            <small class="text-muted">{{ $user->updated_at->format('d M Y, H:i') }}</small>
-                            <p class="mb-0 text-muted">Data terakhir kali diperbarui</p>
-                        </div>
-                    </div>
-
-                    @if($user->email_verified_at)
-                    <div class="timeline-item">
-                        <div class="timeline-marker bg-info">
-                            <i class="mdi mdi-email-check"></i>
-                        </div>
-                        <div class="timeline-content">
-                            <h6 class="mb-1">Email Terverifikasi</h6>
-                            <small class="text-muted">{{ $user->email_verified_at->format('d M Y, H:i') }}</small>
-                            <p class="mb-0 text-muted">Email berhasil diverifikasi</p>
-                        </div>
-                    </div>
-                    @endif
-
-                    @if($user->profile_picture)
-                    <div class="timeline-item">
-                        <div class="timeline-marker bg-warning">
-                            <i class="mdi mdi-camera"></i>
-                        </div>
-                        <div class="timeline-content">
-                            <h6 class="mb-1">Foto Profil Diupload</h6>
-                            <small class="text-muted">{{ $user->updated_at->format('d M Y, H:i') }}</small>
-                            <p class="mb-0 text-muted">Foto profil custom diupload</p>
-                        </div>
-                    </div>
-                    @endif
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="d-grid gap-2 d-md-flex mt-4 pt-3 border-top">
-                    <a href="{{ route('user.edit', $user->id) }}" class="btn btn-warning me-2 btn-action">
-                        <i class="mdi mdi-pencil mr-1"></i> Edit Data
-                    </a>
-                    <a href="mailto:{{ $user->email }}" class="btn btn-info me-2 btn-action">
-                        <i class="mdi mdi-email mr-1"></i> Kirim Email
-                    </a>
-                    <form action="{{ route('user.destroy', $user->id) }}" method="POST" class="d-inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger btn-action"
-                                onclick="return confirm('Apakah Anda yakin ingin menghapus user {{ $user->name }}?')">
-                            <i class="mdi mdi-delete mr-1"></i> Hapus User
+                    <!-- Tombol Aksi Foto -->
+                    <div class="d-grid gap-2 d-md-flex mt-4 pt-3 border-top">
+                        <a href="{{ route('admin.user.edit', $user->id) }}" class="btn btn-warning me-2 btn-action">
+                            <i class="mdi mdi-camera mr-1"></i> Ubah Foto
+                        </a>
+                        @if($user->profile_photo_url && $user->profile_picture)
+                            <button type="button" class="btn btn-info btn-action" onclick="downloadProfilePhoto()">
+                                <i class="mdi mdi-download mr-1"></i> Download
+                            </button>
+                        @endif
+                        <button type="button" class="btn btn-primary btn-action" onclick="openFullscreenProfile()">
+                            <i class="mdi mdi-fullscreen mr-1"></i> Fullscreen
                         </button>
-                    </form>
-                    <a href="{{ route('user.index') }}" class="btn btn-secondary ms-auto btn-action">
-                        <i class="mdi mdi-arrow-left mr-1"></i> Kembali
-                    </a>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
 
-{{-- ====================== MODAL FULLSCREEN PROFILE PHOTO ====================== --}}
-<div class="modal fade" id="profileFullscreenModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content bg-dark">
-            <div class="modal-header border-0">
-                <h6 class="modal-title text-white" id="profileFullscreenTitle">Foto Profil {{ $user->name }}</h6>
-                <button type="button" class="btn-close btn-close-white" data-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body p-0 d-flex align-items-center justify-content-center" style="min-height: 70vh;">
-                <div class="image-container" style="width: 100%; height: 100%;">
-                    @if($user->profile_photo_url)
-                        <img id="fullscreenProfileImage" src="{{ $user->profile_photo_url }}"
-                             class="img-fluid rounded-circle"
-                             style="max-width: 400px; max-height: 400px; width: auto; height: auto; display: block; margin: 0 auto;"
-                             onerror="handleFullscreenProfileError(this)"
-                             alt="Foto Profil {{ $user->name }}">
-                    @else
-                        <div class="placeholder-content-fullscreen text-center py-5">
-                            <i class="mdi mdi-account-circle text-white" style="font-size: 200px;"></i>
-                            <h4 class="text-white mt-4">Avatar Default</h4>
-                            <p class="text-muted">User belum mengupload foto profil</p>
+            <!-- Status Info Card -->
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h6 class="card-title mb-3">
+                        <i class="mdi mdi-information-outline text-info mr-2"></i>Status Akun
+                    </h6>
+                    <div class="detail-info">
+                        <div class="detail-item">
+                            <div class="detail-label">
+                                <i class="mdi mdi-email-check text-primary"></i>
+                                <span>Verifikasi Email</span>
+                            </div>
+                            <div class="detail-value">
+                                @if($user->email_verified_at)
+                                    <span class="badge-hijau">
+                                        <i class="mdi mdi-check mr-1"></i> Terverifikasi
+                                    </span>
+                                @else
+                                    <span class="badge-orange">
+                                        <i class="mdi mdi-clock-outline mr-1"></i> Belum Verifikasi
+                                    </span>
+                                @endif
+                            </div>
                         </div>
-                    @endif
+
+                        <div class="detail-item">
+                            <div class="detail-label">
+                                <i class="mdi mdi-account text-primary"></i>
+                                <span>Status Foto</span>
+                            </div>
+                            <div class="detail-value">
+                                @if($user->profile_picture)
+                                    <span class="badge-hijau">Foto Custom</span>
+                                @else
+                                    <span class="badge-biru">Avatar Default</span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="detail-item">
+                            <div class="detail-label">
+                                <i class="mdi mdi-calendar text-primary"></i>
+                                <span>Bergabung</span>
+                            </div>
+                            <div class="detail-value">
+                                {{ $user->created_at->format('d F Y') }}
+                                <small class="text-muted d-block">
+                                    ({{ $user->created_at->diffForHumans() }})
+                                </small>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="modal-footer border-0 justify-content-center">
-                @if($user->profile_photo_url && $user->profile_picture)
-                <button class="btn btn-light me-2" onclick="downloadProfilePhoto()">
-                    <i class="mdi mdi-download mr-1"></i> Download
-                </button>
-                @endif
-                <button class="btn btn-light" data-dismiss="modal">
-                    <i class="mdi mdi-fullscreen-exit mr-1"></i> Keluar
-                </button>
+        </div>
+
+        <!-- Informasi Detail User - STRUKTUR SAMA DENGAN SHOW DESTINASI -->
+        <div class="col-lg-7 mb-4">
+            <div class="card border-0 shadow card-gallery">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="mdi mdi-account-details mr-2"></i>Informasi Detail User</h5>
+                </div>
+                <div class="card-body">
+                    <div class="detail-info">
+                        <div class="detail-item">
+                            <div class="detail-label">
+                                <i class="mdi mdi-account text-primary"></i>
+                                <span>Nama Lengkap</span>
+                            </div>
+                            <div class="detail-value">{{ $user->name }}</div>
+                        </div>
+
+                        <div class="detail-item">
+                            <div class="detail-label">
+                                <i class="mdi mdi-email text-primary"></i>
+                                <span>Email</span>
+                            </div>
+                            <div class="detail-value">
+                                <div class="d-flex align-items-center">
+                                    {{ $user->email }}
+                                    @if($user->email_verified_at)
+                                        <span class="badge-hijau ml-2">
+                                            <i class="mdi mdi-check mr-1"></i> Verified
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="detail-item">
+                            <div class="detail-label">
+                                <i class="mdi mdi-shield-account text-primary"></i>
+                                <span>Role</span>
+                            </div>
+                            <div class="detail-value">
+                                @if($user->role == 'admin')
+                                    <span class="badge-danger">Admin</span>
+                                @elseif($user->role == 'pemilik')
+                                    <span class="badge-orange">Pemilik Homestay</span>
+                                @else
+                                    <span class="badge-hijau">Warga</span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="detail-item">
+                            <div class="detail-label">
+                                <i class="mdi mdi-camera text-primary"></i>
+                                <span>Status Foto Profil</span>
+                            </div>
+                            <div class="detail-value">
+                                @if($user->profile_picture)
+                                    <div class="d-flex align-items-center">
+                                        <code class="bg-light p-2 rounded mr-2">{{ $user->profile_picture }}</code>
+                                        <span class="badge-hijau">Foto Custom</span>
+                                    </div>
+                                @else
+                                    <div class="d-flex align-items-center">
+                                        <span class="text-muted mr-2">Default Avatar</span>
+                                        <span class="badge-biru">Sistem</span>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="detail-item">
+                            <div class="detail-label">
+                                <i class="mdi mdi-calendar-plus text-primary"></i>
+                                <span>Dibuat Tanggal</span>
+                            </div>
+                            <div class="detail-value">
+                                {{ $user->created_at->format('d F Y H:i') }}
+                                <small class="text-muted d-block">
+                                    {{ $user->created_at->diffForHumans() }}
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="detail-item">
+                            <div class="detail-label">
+                                <i class="mdi mdi-update text-primary"></i>
+                                <span>Diupdate Tanggal</span>
+                            </div>
+                            <div class="detail-value">
+                                {{ $user->updated_at->format('d F Y H:i') }}
+                                <small class="text-muted d-block">
+                                    {{ $user->updated_at->diffForHumans() }}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Timeline -->
+                    <h6 class="border-bottom pb-2 mb-3 mt-4">
+                        <i class="mdi mdi-timeline-text-outline text-primary mr-2"></i>Timeline Aktivitas
+                    </h6>
+
+                    <div class="timeline-container">
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-primary">
+                                <i class="mdi mdi-account-plus"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <h6 class="mb-1">Akun Dibuat</h6>
+                                <small class="text-muted">{{ $user->created_at->format('d M Y, H:i') }}</small>
+                                <p class="mb-0 text-muted">User terdaftar ke dalam sistem</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-success">
+                                <i class="mdi mdi-update"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <h6 class="mb-1">Terakhir Update</h6>
+                                <small class="text-muted">{{ $user->updated_at->format('d M Y, H:i') }}</small>
+                                <p class="mb-0 text-muted">Data terakhir kali diperbarui</p>
+                            </div>
+                        </div>
+
+                        @if($user->email_verified_at)
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-info">
+                                <i class="mdi mdi-email-check"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <h6 class="mb-1">Email Terverifikasi</h6>
+                                <small class="text-muted">{{ $user->email_verified_at->format('d M Y, H:i') }}</small>
+                                <p class="mb-0 text-muted">Email berhasil diverifikasi</p>
+                            </div>
+                        </div>
+                        @endif
+
+                        @if($user->profile_picture)
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-warning">
+                                <i class="mdi mdi-camera"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <h6 class="mb-1">Foto Profil Diupload</h6>
+                                <small class="text-muted">{{ $user->updated_at->format('d M Y, H:i') }}</small>
+                                <p class="mb-0 text-muted">Foto profil custom diupload</p>
+                            </div>
+                        </div>
+                        @endif
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-grid gap-2 d-md-flex mt-4 pt-3 border-top">
+                        <a href="{{ route('admin.user.edit', $user->id) }}" class="btn btn-warning me-2 btn-action">
+                            <i class="mdi mdi-pencil mr-1"></i> Edit Data
+                        </a>
+                        <a href="mailto:{{ $user->email }}" class="btn btn-info me-2 btn-action">
+                            <i class="mdi mdi-email mr-1"></i> Kirim Email
+                        </a>
+                        <form action="{{ route('admin.user.destroy', $user->id) }}" method="POST" class="d-inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-action"
+                                    onclick="return confirm('Apakah Anda yakin ingin menghapus user {{ $user->name }}?')">
+                                <i class="mdi mdi-delete mr-1"></i> Hapus User
+                            </button>
+                        </form>
+                        <a href="{{ route('admin.user.index') }}" class="btn btn-secondary ms-auto btn-action">
+                            <i class="mdi mdi-arrow-left mr-1"></i> Kembali
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
+    {{-- ====================== MODAL FULLSCREEN PROFILE PHOTO ====================== --}}
+    <div class="modal fade" id="profileFullscreenModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content bg-dark">
+                <div class="modal-header border-0">
+                    <h6 class="modal-title text-white" id="profileFullscreenTitle">Foto Profil {{ $user->name }}</h6>
+                    <button type="button" class="btn-close btn-close-white" data-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0 d-flex align-items-center justify-content-center" style="min-height: 70vh;">
+                    <div class="image-container" style="width: 100%; height: 100%;">
+                        @if($user->profile_photo_url)
+                            <img id="fullscreenProfileImage" src="{{ $user->profile_photo_url }}"
+                                 class="img-fluid rounded-circle"
+                                 style="max-width: 400px; max-height: 400px; width: auto; height: auto; display: block; margin: 0 auto;"
+                                 onerror="handleFullscreenProfileError(this)"
+                                 alt="Foto Profil {{ $user->name }}">
+                        @else
+                            <div class="placeholder-content-fullscreen text-center py-5">
+                                <i class="mdi mdi-account-circle text-white" style="font-size: 200px;"></i>
+                                <h4 class="text-white mt-4">Avatar Default</h4>
+                                <p class="text-muted">User belum mengupload foto profil</p>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+                <div class="modal-footer border-0 justify-content-center">
+                    @if($user->profile_photo_url && $user->profile_picture)
+                    <button class="btn btn-light me-2" onclick="downloadProfilePhoto()">
+                        <i class="mdi mdi-download mr-1"></i> Download
+                    </button>
+                    @endif
+                    <button class="btn btn-light" data-dismiss="modal">
+                        <i class="mdi mdi-fullscreen-exit mr-1"></i> Keluar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+@endif
 
 {{-- ====================== START JS TAMBAHAN ====================== --}}
 <script>
@@ -546,7 +568,7 @@
             // E untuk edit
             if (e.key === 'e' && !e.target.matches('input, textarea, button, a')) {
                 e.preventDefault();
-                window.location.href = "{{ route('user.edit', $user->id) }}";
+                window.location.href = "{{ route('admin.user.edit', $user->id) }}";
             }
         });
     });

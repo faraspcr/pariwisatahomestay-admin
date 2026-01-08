@@ -9,8 +9,8 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('homestay.index') }}">Homestay</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('kamar_homestay.index') }}">Kamar Homestay</a></li>
+                    <li class="breadcrumb-item"><a href="{{ auth()->user()->role === 'admin' ? route('admin.homestay.index') : route('pemilik.homestay.index') }}">Homestay</a></li>
+                    <li class="breadcrumb-item"><a href="{{ auth()->user()->role === 'admin' ? route('admin.kamarhomestay.index') : route('pemilik.kamar.index') }}">Kamar Homestay</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Edit</li>
                 </ol>
             </nav>
@@ -23,7 +23,7 @@
                         <h5 class="mb-0"><i class="mdi mdi-pencil mr-2"></i>Form Edit Kamar</h5>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('kamar_homestay.update', $kamar->kamar_id) }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ auth()->user()->role === 'admin' ? route('admin.kamarhomestay.update', $kamar->kamar_id) : route('pemilik.kamar.update', $kamar->kamar_id) }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
 
@@ -148,10 +148,10 @@
                                 <button type="submit" class="btn btn-primary btn-lg me-2">
                                     <i class="mdi mdi-content-save mr-1"></i> Update Data
                                 </button>
-                                <a href="{{ route('kamar_homestay.show', $kamar->kamar_id) }}" class="btn btn-info btn-lg me-2">
+                                <a href="{{ auth()->user()->role === 'admin' ? route('admin.kamarhomestay.show', $kamar->kamar_id) : route('pemilik.kamar.show', $kamar->kamar_id) }}" class="btn btn-info btn-lg me-2">
                                     <i class="mdi mdi-eye mr-1"></i> Lihat Detail
                                 </a>
-                                <a href="{{ route('kamar_homestay.index') }}" class="btn btn-secondary btn-lg ms-auto">
+                                <a href="{{ auth()->user()->role === 'admin' ? route('admin.kamarhomestay.index') : route('pemilik.kamar.index') }}" class="btn btn-secondary btn-lg ms-auto">
                                     <i class="mdi mdi-arrow-left mr-1"></i> Kembali
                                 </a>
                             </div>
@@ -258,18 +258,27 @@
                                                     </span>
                                                 </div>
                                                 <div>
-                                                    <a href="{{ route('kamar_homestay.download-file', [$kamar->kamar_id, $file->media_id]) }}"
-                                                       class="btn btn-sm btn-outline-info btn-action"
-                                                       target="_blank"
-                                                       title="Download">
-                                                        <i class="mdi mdi-download"></i>
-                                                    </a>
+                                                    @if(auth()->user()->role === 'admin')
+                                                        <a href="{{ route('admin.kamarhomestay.download-file', [$kamar->kamar_id, $file->media_id]) }}"
+                                                           class="btn btn-sm btn-outline-info btn-action"
+                                                           target="_blank"
+                                                           title="Download">
+                                                            <i class="mdi mdi-download"></i>
+                                                        </a>
+                                                    @elseif(auth()->user()->role === 'pemilik')
+                                                        <a href="{{ route('files.kamar.download', [$kamar->kamar_id, $file->media_id]) }}"
+                                                           class="btn btn-sm btn-outline-info btn-action"
+                                                           target="_blank"
+                                                           title="Download">
+                                                            <i class="mdi mdi-download"></i>
+                                                        </a>
+                                                    @endif
                                                 </div>
                                             </div>
                                         @endforeach
                                     </div>
                                     <div class="mt-3 text-center">
-                                        <a href="{{ route('kamar_homestay.show', $kamar->kamar_id) }}" class="btn btn-outline-primary btn-sm">
+                                        <a href="{{ auth()->user()->role === 'admin' ? route('admin.kamarhomestay.show', $kamar->kamar_id) : route('pemilik.kamar.show', $kamar->kamar_id) }}" class="btn btn-outline-primary btn-sm">
                                             <i class="mdi mdi-eye mr-1"></i> Lihat Semua File di Gallery
                                         </a>
                                     </div>

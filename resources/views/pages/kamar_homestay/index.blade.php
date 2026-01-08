@@ -30,7 +30,7 @@
 
         {{-- ====================== FILTER DAN SEARCH (SEPERTI WARGA) ====================== --}}
         <!-- Form Filter dan Search -->
-        <form method="GET" action="{{ route('kamar_homestay.index') }}">
+        <form method="GET" action="{{ auth()->user()->role === 'admin' ? route('admin.kamarhomestay.index') : route('pemilik.kamar.index') }}">
             <div class="row mb-4">
                 <!-- Filter Homestay -->
                 <div class="col-md-3">
@@ -78,11 +78,11 @@
                 <!-- Tombol Tambah -->
                 <div class="col-md-3 text-right">
                     @if(auth()->user()->role === 'admin')
-                        <a href="{{ route('kamar_homestay.create') }}" class="btn btn-primary btn-sm add-btn">
+                        <a href="{{ route('admin.kamarhomestay.create') }}" class="btn btn-primary btn-sm add-btn">
                             <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah Kamar
                         </a>
                     @elseif(auth()->user()->role === 'pemilik')
-                        <a href="{{ route('kamar_homestay.create') }}" class="btn btn-primary btn-sm add-btn">
+                        <a href="{{ route('pemilik.kamar.create') }}" class="btn btn-primary btn-sm add-btn">
                             <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah Kamar
                         </a>
                     @endif
@@ -167,15 +167,15 @@
                             <td class="text-center action-buttons">
                                 <div class="btn-group" role="group">
                                     @if(auth()->user()->role === 'admin')
-                                        <a href="{{ route('kamar_homestay.edit', $item->kamar_id) }}"
+                                        <a href="{{ route('admin.kamarhomestay.edit', $item->kamar_id) }}"
                                            class="btn btn-outline-info btn-sm action-btn" data-toggle="tooltip" title="Edit Data">
                                             <i class="mdi mdi-pencil"></i>
                                         </a>
-                                        <a href="{{ route('kamar_homestay.show', $item->kamar_id) }}"
+                                        <a href="{{ route('admin.kamarhomestay.show', $item->kamar_id) }}"
                                            class="btn btn-outline-primary btn-sm action-btn" data-toggle="tooltip" title="Lihat Detail">
                                             <i class="mdi mdi-eye"></i>
                                         </a>
-                                        <form action="{{ route('kamar_homestay.destroy', $item->kamar_id) }}" method="POST" style="display:inline">
+                                        <form action="{{ route('admin.kamarhomestay.destroy', $item->kamar_id) }}" method="POST" style="display:inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-outline-danger btn-sm action-btn"
@@ -185,15 +185,15 @@
                                             </button>
                                         </form>
                                     @elseif(auth()->user()->role === 'pemilik')
-                                        <a href="{{ route('kamar_homestay.edit', $item->kamar_id) }}"
+                                        <a href="{{ route('pemilik.kamar.edit', $item->kamar_id) }}"
                                            class="btn btn-outline-info btn-sm action-btn" data-toggle="tooltip" title="Edit Data">
                                             <i class="mdi mdi-pencil"></i>
                                         </a>
-                                        <a href="{{ route('kamar_homestay.show', $item->kamar_id) }}"
+                                        <a href="{{ route('pemilik.kamar.show', $item->kamar_id) }}"
                                            class="btn btn-outline-primary btn-sm action-btn" data-toggle="tooltip" title="Lihat Detail">
                                             <i class="mdi mdi-eye"></i>
                                         </a>
-                                        <form action="{{ route('kamar_homestay.destroy', $item->kamar_id) }}" method="POST" style="display:inline">
+                                        <form action="{{ route('pemilik.kamar.destroy', $item->kamar_id) }}" method="POST" style="display:inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-outline-danger btn-sm action-btn"
@@ -220,16 +220,16 @@
                                     </h4>
                                     <p class="text-muted">Silakan tambah kamar homestay terlebih dahulu</p>
                                     @if(auth()->user()->role === 'admin')
-                                        <a href="{{ route('kamar_homestay.create') }}" class="btn btn-success mt-2">
+                                        <a href="{{ route('admin.kamarhomestay.create') }}" class="btn btn-success mt-2">
                                             <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah Kamar Pertama
                                         </a>
                                     @elseif(auth()->user()->role === 'pemilik')
-                                        <a href="{{ route('kamar_homestay.create') }}" class="btn btn-success mt-2">
+                                        <a href="{{ route('pemilik.kamar.create') }}" class="btn btn-success mt-2">
                                             <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah Kamar Pertama
                                         </a>
                                     @endif
                                     @if(request()->hasAny(['search', 'homestay_id', 'kapasitas']))
-                                        <a href="{{ route('kamar_homestay.index') }}" class="btn btn-secondary mt-2">
+                                        <a href="{{ auth()->user()->role === 'admin' ? route('admin.kamarhomestay.index') : route('pemilik.kamar.index') }}" class="btn btn-secondary mt-2">
                                             <i class="mdi mdi-refresh mr-1"></i>Reset Filter
                                         </a>
                                     @endif

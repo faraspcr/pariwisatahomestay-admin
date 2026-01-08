@@ -6,21 +6,41 @@ use Illuminate\Http\Request;
 use App\Models\Homestay;
 use App\Models\Warga;
 use App\Models\Media;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class HomestayController extends Controller
 {
+    /**
+     * ADMIN: Lihat semua homestay
+     * PEMILIK: Lihat homestay miliknya saja
+     * WARGA: Lihat semua homestay (view only)
+     */
     public function index(Request $request)
     {
+        $user = Auth::user();
+
         // Kolom yang bisa di-filter
         $filterableColumns = ['status'];
 
-        // Kolom yang bisa di-search (sesuai dengan kolom di tabel homestay)
+        // Kolom yang bisa di-search
         $searchableColumns = ['nama', 'alamat', 'rt', 'rw'];
 
-        // Query dengan filter DAN search PERSIS SEPERTI DI WARGA CONTROLLER
-        $homestays = Homestay::with('pemilik')
-            ->filter($request, $filterableColumns)
+        // Query dasar
+        $query = Homestay::with('pemilik');
+
+        // ✅ FILTER BERDASARKAN ROLE
+        if ($user->isPemilik()) {
+            // PEMILIK: Hanya homestay miliknya sendiri
+            $query->where('pemilik_warga_id', $user->warga_id);
+        } elseif ($user->isWarga()) {
+            // WARGA: Bisa lihat semua homestay yang aktif
+            $query->where('status', 'aktif');
+        }
+        // ADMIN: Lihat semua (tidak ada filter tambahan)
+
+        // Terapkan filter dan search
+        $homestays = $query->filter($request, $filterableColumns)
             ->search($request, $searchableColumns)
             ->paginate(10)
             ->onEachSide(2);
@@ -28,9 +48,25 @@ class HomestayController extends Controller
         return view('pages.homestay.index', compact('homestays'));
     }
 
+    /**
+     * ADMIN: Bisa create homestay untuk siapa saja
+     * PEMILIK: Hanya bisa create homestay untuk dirinya sendiri
+     */
     public function create()
     {
-        $wargas = Warga::all();
+        $user = Auth::user();
+
+        if ($user->isAdmin()) {
+            // ADMIN: Pilih semua warga sebagai pemilik
+            $wargas = Warga::all();
+        } elseif ($user->isPemilik()) {
+            // PEMILIK: Hanya bisa pilih dirinya sendiri
+            $wargas = Warga::where('warga_id', $user->warga_id)->get();
+        } else {
+            // WARGA: Tidak boleh akses create
+            abort(403, 'Anda tidak memiliki akses untuk membuat homestay.');
+        }
+
         return view('pages.homestay.create', compact('wargas'));
     }
 
@@ -39,19 +75,33 @@ class HomestayController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $user = Auth::user();
+
+        // ✅ VALIDASI BERDASARKAN ROLE
+        $validationRules = [
             'nama' => 'required|string|max:100|min:3',
-            'pemilik_warga_id' => 'required|exists:warga,warga_id',
             'alamat' => 'required|string|max:500|min:10',
             'rt' => 'nullable|string|max:5',
             'rw' => 'nullable|string|max:5',
             'fasilitas_json' => 'nullable|string',
             'harga_per_malam' => 'required|numeric|min:0',
             'status' => 'required|in:aktif,nonaktif,pending',
-            // FORMAT YANG DIDUKUNG: Gambar + PDF + DOC/DOCX
             'foto_homestay' => 'nullable|array',
             'foto_homestay.*' => 'file|mimes:jpg,jpeg,png,gif,webp,bmp,pdf,doc,docx|max:10240',
-        ], [
+        ];
+
+        if ($user->isAdmin()) {
+            // ADMIN: Bisa pilih pemilik siapa saja
+            $validationRules['pemilik_warga_id'] = 'required|exists:warga,warga_id';
+        } elseif ($user->isPemilik()) {
+            // PEMILIK: Otomatis pakai warga_id sendiri
+            $request->merge(['pemilik_warga_id' => $user->warga_id]);
+        } else {
+            // WARGA: Tidak boleh create
+            abort(403, 'Anda tidak memiliki akses untuk membuat homestay.');
+        }
+
+        $validated = $request->validate($validationRules, [
             'nama.required' => 'Nama homestay wajib diisi',
             'nama.min' => 'Nama homestay minimal 3 karakter',
             'pemilik_warga_id.required' => 'Pemilik wajib dipilih',
@@ -89,8 +139,14 @@ class HomestayController extends Controller
             }
         }
 
-        return redirect()->route('homestay.index')
-            ->with('success', 'Homestay berhasil ditambahkan!');
+        // ✅ REDIRECT BERDASARKAN ROLE
+        if ($user->isAdmin()) {
+            return redirect()->route('admin.homestay.index')
+                ->with('success', 'Homestay berhasil ditambahkan!');
+        } elseif ($user->isPemilik()) {
+            return redirect()->route('pemilik.homestay.index')
+                ->with('success', 'Homestay berhasil ditambahkan!');
+        }
     }
 
     /**
@@ -98,7 +154,13 @@ class HomestayController extends Controller
      */
     public function show($id)
     {
+        $user = Auth::user();
         $homestay = Homestay::with('pemilik')->findOrFail($id);
+
+        // ✅ AUTHORIZATION CHECK
+        if ($user->isPemilik() && $homestay->pemilik_warga_id != $user->warga_id) {
+            abort(403, 'Anda hanya bisa melihat homestay milik Anda sendiri.');
+        }
 
         $files = Media::where('ref_table', 'homestay')
                      ->where('ref_id', $homestay->homestay_id)
@@ -108,10 +170,26 @@ class HomestayController extends Controller
         return view('pages.homestay.show', compact('homestay', 'files'));
     }
 
+    /**
+     * Edit homestay
+     */
     public function edit($id)
     {
+        $user = Auth::user();
         $homestay = Homestay::findOrFail($id);
-        $wargas = Warga::all();
+
+        // ✅ AUTHORIZATION CHECK
+        if ($user->isPemilik() && $homestay->pemilik_warga_id != $user->warga_id) {
+            abort(403, 'Anda hanya bisa mengedit homestay milik Anda sendiri.');
+        } elseif ($user->isWarga()) {
+            abort(403, 'Anda tidak memiliki akses untuk mengedit homestay.');
+        }
+
+        if ($user->isAdmin()) {
+            $wargas = Warga::all();
+        } elseif ($user->isPemilik()) {
+            $wargas = Warga::where('warga_id', $user->warga_id)->get();
+        }
 
         $files = Media::where('ref_table', 'homestay')
                      ->where('ref_id', $homestay->homestay_id)
@@ -126,22 +204,45 @@ class HomestayController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validated = $request->validate([
+        $user = Auth::user();
+        $homestay = Homestay::findOrFail($id);
+
+        // ✅ AUTHORIZATION CHECK
+        if ($user->isPemilik() && $homestay->pemilik_warga_id != $user->warga_id) {
+            abort(403, 'Anda hanya bisa mengupdate homestay milik Anda sendiri.');
+        } elseif ($user->isWarga()) {
+            abort(403, 'Anda tidak memiliki akses untuk mengupdate homestay.');
+        }
+
+        $validationRules = [
             'nama' => 'required|string|max:100|min:3',
-            'pemilik_warga_id' => 'required|exists:warga,warga_id',
             'alamat' => 'required|string|max:500|min:10',
             'rt' => 'nullable|string|max:5',
             'rw' => 'nullable|string|max:5',
             'fasilitas_json' => 'nullable|string',
             'harga_per_malam' => 'required|numeric|min:0',
             'status' => 'required|in:aktif,nonaktif,pending'
-        ]);
+        ];
 
-        $homestay = Homestay::findOrFail($id);
+        if ($user->isAdmin()) {
+            $validationRules['pemilik_warga_id'] = 'required|exists:warga,warga_id';
+        } elseif ($user->isPemilik()) {
+            // Pastikan pemilik tidak bisa ganti pemiliknya sendiri
+            $request->merge(['pemilik_warga_id' => $user->warga_id]);
+        }
+
+        $validated = $request->validate($validationRules);
+
         $homestay->update($validated);
 
-        return redirect()->route('homestay.index')
-            ->with('success', 'Homestay berhasil diperbarui!');
+        // ✅ REDIRECT BERDASARKAN ROLE
+        if ($user->isAdmin()) {
+            return redirect()->route('admin.homestay.index')
+                ->with('success', 'Homestay berhasil diperbarui!');
+        } elseif ($user->isPemilik()) {
+            return redirect()->route('pemilik.homestay.index')
+                ->with('success', 'Homestay berhasil diperbarui!');
+        }
     }
 
     /**
@@ -149,7 +250,15 @@ class HomestayController extends Controller
      */
     public function destroy($id)
     {
+        $user = Auth::user();
         $homestay = Homestay::findOrFail($id);
+
+        // ✅ AUTHORIZATION CHECK
+        if ($user->isPemilik() && $homestay->pemilik_warga_id != $user->warga_id) {
+            abort(403, 'Anda hanya bisa menghapus homestay milik Anda sendiri.');
+        } elseif ($user->isWarga()) {
+            abort(403, 'Anda tidak memiliki akses untuk menghapus homestay.');
+        }
 
         // Hapus semua file terkait
         $files = Media::where('ref_table', 'homestay')
@@ -163,37 +272,125 @@ class HomestayController extends Controller
 
         $homestay->delete();
 
-        return redirect()->route('homestay.index')
-            ->with('success', 'Homestay berhasil dihapus!');
+        // ✅ REDIRECT BERDASARKAN ROLE
+        if ($user->isAdmin()) {
+            return redirect()->route('admin.homestay.index')
+                ->with('success', 'Homestay berhasil dihapus!');
+        } elseif ($user->isPemilik()) {
+            return redirect()->route('pemilik.homestay.index')
+                ->with('success', 'Homestay berhasil dihapus!');
+        }
     }
 
     /**
-     * Upload multiple files for homestay
+     * ====================================================
+     * METHOD KHUSUS UNTUK PEMILIK (MY HOMESTAY)
+     * ====================================================
      */
+
+    /**
+     * PEMILIK: Hanya lihat homestay miliknya sendiri
+     */
+    public function myHomestay(Request $request)
+    {
+        $user = Auth::user();
+
+        // Pastikan hanya pemilik yang bisa akses
+        if (!$user->isPemilik()) {
+            abort(403, 'Hanya pemilik homestay yang bisa mengakses halaman ini.');
+        }
+
+        $filterableColumns = ['status'];
+        $searchableColumns = ['nama', 'alamat', 'rt', 'rw'];
+
+
+    $homestays = Homestay::with('pemilik')
+        ->where('pemilik_warga_id', $user->warga_id)
+        ->filter($request, $filterableColumns)
+        ->search($request, $searchableColumns)
+        ->paginate(10)
+        ->onEachSide(2);
+
+    //     return view('pages.homestay.my-homestay', compact('homestays'));
+    // }
+     return view('pages.homestay.index', compact('homestays'));
+}
+
+    /**
+     * ====================================================
+     * METHOD UNTUK PUBLIC VIEW (SEMUA ROLE BISA LIHAT)
+     * ====================================================
+     */
+
+    /**
+     * Public index - untuk semua role (view only)
+     */
+    public function publicIndex(Request $request)
+    {
+        // Hanya tampilkan homestay yang aktif
+        $filterableColumns = [];
+        $searchableColumns = ['nama', 'alamat'];
+
+        $homestays = Homestay::with('pemilik')
+            ->where('status', 'aktif')
+            ->filter($request, $filterableColumns)
+            ->search($request, $searchableColumns)
+            ->paginate(12)
+            ->onEachSide(2);
+
+        return view('pages.homestay.public-index', compact('homestays'));
+    }
+
+    /**
+     * Public show - untuk semua role (view only)
+     */
+    public function publicShow($id)
+    {
+        $homestay = Homestay::with('pemilik')
+            ->where('status', 'aktif')
+            ->findOrFail($id);
+
+        $files = Media::where('ref_table', 'homestay')
+                     ->where('ref_id', $homestay->homestay_id)
+                     ->orderBy('sort_order', 'asc')
+                     ->get();
+
+        return view('pages.homestay.public-show', compact('homestay', 'files'));
+    }
+
+    /**
+     * ====================================================
+     * FILE UPLOAD METHODS (DENGAN AUTHORIZATION)
+     * ====================================================
+     */
+
     public function uploadFiles(Request $request, string $id)
     {
-        // FORMAT YANG DIDUKUNG: Gambar + PDF + DOC/DOCX
+        $user = Auth::user();
+        $homestay = Homestay::findOrFail($id);
+
+        // ✅ AUTHORIZATION: Hanya admin atau pemilik homestay ini
+        if ($user->isPemilik() && $homestay->pemilik_warga_id != $user->warga_id) {
+            abort(403, 'Anda hanya bisa upload file untuk homestay milik Anda sendiri.');
+        } elseif ($user->isWarga()) {
+            abort(403, 'Anda tidak memiliki akses untuk upload file homestay.');
+        }
+
+        // Validasi dan upload file (sama seperti sebelumnya)
         $request->validate([
             'foto_homestay.*' => 'required|file|mimes:jpg,jpeg,png,gif,webp,bmp,pdf,doc,docx|max:10240',
         ]);
 
-        $homestay = Homestay::findOrFail($id);
-
-        // Ambil urutan terakhir untuk sort_order
         $currentMaxOrder = Media::where('ref_table', 'homestay')
                               ->where('ref_id', $homestay->homestay_id)
                               ->max('sort_order') ?? 0;
 
         if ($request->hasFile('foto_homestay')) {
             foreach ($request->file('foto_homestay') as $key => $file) {
-                // Simpan dengan nama asli + timestamp
                 $originalName = $file->getClientOriginalName();
                 $filename = time() . '_' . $originalName;
-
-                // Simpan file
                 $file->storeAs('homestay', $filename, 'public');
 
-                // SIMPAN KE MEDIA
                 Media::create([
                     'file_name' => 'homestay/' . $filename,
                     'ref_table' => 'homestay',
@@ -214,7 +411,15 @@ class HomestayController extends Controller
      */
     public function deleteFile(string $id, string $fileId)
     {
+        $user = Auth::user();
         $homestay = Homestay::findOrFail($id);
+
+        // ✅ AUTHORIZATION: Hanya admin atau pemilik homestay ini
+        if ($user->isPemilik() && $homestay->pemilik_warga_id != $user->warga_id) {
+            abort(403, 'Anda hanya bisa menghapus file dari homestay milik Anda sendiri.');
+        } elseif ($user->isWarga()) {
+            abort(403, 'Anda tidak memiliki akses untuk menghapus file homestay.');
+        }
 
         $file = Media::where('media_id', $fileId)
             ->where('ref_table', 'homestay')
@@ -224,19 +429,27 @@ class HomestayController extends Controller
         $fileName = $file->file_name;
 
         Storage::disk('public')->delete($file->file_name);
-
-        // Delete database record
         $file->delete();
 
         return back()->with('success', "File '{$fileName}' berhasil dihapus!");
     }
 
-    /**
-     * Download file
-     */
+    // Download dan show file (tambahkan authorization check juga)
     public function downloadFile(string $id, string $fileId)
     {
         $homestay = Homestay::findOrFail($id);
+
+        // Untuk download, semua role yang bisa lihat homestay boleh download
+        // Tapi cek apakah homestay aktif atau user punya akses
+        $user = Auth::user();
+
+        if ($homestay->status !== 'aktif') {
+            if ($user->isPemilik() && $homestay->pemilik_warga_id != $user->warga_id) {
+                abort(403, 'Anda tidak memiliki akses ke file ini.');
+            } elseif ($user->isWarga()) {
+                abort(403, 'Homestay tidak aktif.');
+            }
+        }
 
         $file = Media::where('media_id', $fileId)
             ->where('ref_table', 'homestay')
@@ -247,19 +460,26 @@ class HomestayController extends Controller
             abort(404, 'File tidak ditemukan');
         }
 
-        // Ambil nama asli dari filename (hapus timestamp)
         $filename = basename($file->file_name);
         $originalName = substr($filename, strpos($filename, '_') + 1);
 
         return Storage::disk('public')->download($file->file_name, $originalName);
     }
 
-    /**
-     * Show file in browser (preview gambar & PDF)
-     */
     public function showFile(string $id, string $fileId)
     {
         $homestay = Homestay::findOrFail($id);
+
+        // Authorization sama seperti download
+        $user = Auth::user();
+
+        if ($homestay->status !== 'aktif') {
+            if ($user->isPemilik() && $homestay->pemilik_warga_id != $user->warga_id) {
+                abort(403, 'Anda tidak memiliki akses ke file ini.');
+            } elseif ($user->isWarga()) {
+                abort(403, 'Homestay tidak aktif.');
+            }
+        }
 
         $file = Media::where('media_id', $fileId)
             ->where('ref_table', 'homestay')
@@ -272,12 +492,10 @@ class HomestayController extends Controller
 
         $mime = $file->mime_type;
 
-        // Jika file adalah gambar atau PDF, tampilkan di browser
         if (str_starts_with($mime, 'image/') || $mime === 'application/pdf') {
             return Storage::disk('public')->response($file->file_name);
         }
 
-        // Untuk DOC/DOCX, force download
         $filename = basename($file->file_name);
         $originalName = substr($filename, strpos($filename, '_') + 1);
         return Storage::disk('public')->download($file->file_name, $originalName);

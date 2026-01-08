@@ -11,7 +11,7 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('ulasan_wisata.index') }}">Ulasan Wisata</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('admin.ulasan_wisata.index') }}">Ulasan Wisata</a></li>
             <li class="breadcrumb-item active" aria-current="page">Tambah Ulasan</li>
         </ol>
     </nav>
@@ -44,7 +44,7 @@
         <!-- Tombol Kembali di atas form -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h4 class="card-title mb-0">Form Tambah Ulasan</h4>
-            <a href="{{ route('ulasan_wisata.index') }}" class="btn btn-light btn-lg">
+            <a href="{{ route('admin.ulasan_wisata.index') }}" class="btn btn-light btn-lg">
                 <i class="mdi mdi-arrow-left mr-2"></i>Kembali ke Ulasan Wisata
             </a>
         </div>
@@ -53,7 +53,7 @@
             Isi form berikut untuk menambahkan ulasan baru
         </p>
 
-        <form action="{{ route('ulasan_wisata.store') }}" method="POST" id="ulasanForm">
+        <form action="{{ route('admin.ulasan_wisata.store') }}" method="POST" id="ulasanForm">
             @csrf
 
             <div class="row">
@@ -142,7 +142,7 @@
                     <button type="submit" class="btn btn-primary btn-lg mr-3">
                         <i class="mdi mdi-content-save mr-2"></i>Simpan Ulasan
                     </button>
-                    <a href="{{ route('ulasan_wisata.index') }}" class="btn btn-secondary btn-lg">
+                    <a href="{{ route('admin.ulasan_wisata.index') }}" class="btn btn-secondary btn-lg">
                         <i class="mdi mdi-close mr-2"></i>Batal
                     </a>
                 </div>

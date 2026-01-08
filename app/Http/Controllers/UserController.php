@@ -10,18 +10,27 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
-    public function __construct()
-    {
-        // Middleware sesuai kebutuhan
-    }
+    // public function __construct()
+    // {
+    //     // Middleware: hanya admin yang bisa akses CRUD user (kecuali myProfile)
+    //     $this->middleware('checkrole:admin')->except(['myProfile', 'updateMyProfile', 'deleteMyProfilePhoto']);
+    // }
 
     /**
      * Display a listing of the resource.
+     * HANYA ADMIN: Bisa lihat semua user
      */
     public function index(Request $request)
     {
+        $user = Auth::user();
+
+        // ✅ DOUBLE CHECK: Pastikan hanya admin
+        if (!$user->isAdmin()) {
+            abort(403, 'Hanya admin yang bisa mengakses manajemen user.');
+        }
+
         $filterableColumns = ['urutan', 'role'];
-        $searchableColumns = ['name', 'email', 'id'];
+        $searchableColumns = ['name', 'email'];
 
         $users = User::filter($request, $filterableColumns)
             ->search($request, $searchableColumns)
@@ -33,17 +42,31 @@ class UserController extends Controller
 
     /**
      * Show the form for creating a new resource.
+     * HANYA ADMIN: Bisa create user baru
      */
     public function create()
     {
+        $user = Auth::user();
+
+        if (!$user->isAdmin()) {
+            abort(403, 'Hanya admin yang bisa menambahkan user baru.');
+        }
+
         return view('pages.user.create');
     }
 
     /**
      * Store a newly created resource in storage.
+     * HANYA ADMIN: Bisa store user baru
      */
     public function store(Request $request)
     {
+        $user = Auth::user();
+
+        if (!$user->isAdmin()) {
+            abort(403, 'Hanya admin yang bisa menambahkan user baru.');
+        }
+
         $request->validate([
             'name' => 'required|string|max:100',
             'email' => 'required|email|unique:users,email',
@@ -65,11 +88,10 @@ class UserController extends Controller
             'role' => $request->role,
         ];
 
-        // ✅ PERBAIKAN: Pakai cara temanmu yang sudah berhasil
+        // Upload foto profil jika ada
         if ($request->hasFile('profile_photo')) {
             $file = $request->file('profile_photo');
 
-            // Validasi manual tipe file
             $allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg', 'image/webp'];
             if (!in_array($file->getMimeType(), $allowedMimes)) {
                 return back()->withErrors([
@@ -77,42 +99,66 @@ class UserController extends Controller
                 ])->withInput();
             }
 
-            // ✅ CARA BENAR: Simpan dengan store() ke folder 'profile_pictures'
             $path = $request->file('profile_photo')->store('profile_pictures', 'public');
-
-            // Simpan FULL PATH ke database
-            $data['profile_picture'] = $path; // Contoh: 'profile_pictures/filename.jpg'
+            $data['profile_picture'] = $path;
         }
 
         User::create($data);
 
-        return redirect()->route('user.index')
+        return redirect()->route('admin.user.index')
             ->with('success', 'User berhasil ditambahkan');
     }
 
     /**
      * Display the specified resource.
+     * HANYA ADMIN: Bisa lihat detail user
      */
     public function show(string $id)
     {
-        $user = User::findOrFail($id);
-        return view('pages.user.show', compact('user'));
+         $currentUser = Auth::user();
+
+        if (!$currentUser->isAdmin()) {
+        abort(403, 'Hanya admin yang bisa melihat detail user.');
     }
 
+    $user = User::findOrFail($id);
+    return view('pages.user.show', compact('user'));
+}
     /**
      * Show the form for editing the specified resource.
+     * HANYA ADMIN: Bisa edit user
      */
     public function edit(string $id)
     {
+        $currentUser = Auth::user();
+
+        if (!$currentUser->isAdmin()) {
+            abort(403, 'Hanya admin yang bisa mengedit user.');
+        }
+
         $user = User::findOrFail($id);
+
+        // Admin tidak bisa edit role sendiri menjadi non-admin
+        if ($currentUser->id == $user->id && $currentUser->isAdmin()) {
+            return view('pages.user.edit', compact('user'))->with('warning',
+                'Anda sedang mengedit akun sendiri. Ubah role dengan hati-hati.');
+        }
+
         return view('pages.user.edit', compact('user'));
     }
 
     /**
      * Update the specified resource in storage.
+     * HANYA ADMIN: Bisa update user
      */
     public function update(Request $request, string $id)
     {
+        $currentUser = Auth::user();
+
+        if (!$currentUser->isAdmin()) {
+            abort(403, 'Hanya admin yang bisa mengupdate user.');
+        }
+
         $user = User::findOrFail($id);
 
         $request->validate([
@@ -129,6 +175,13 @@ class UserController extends Controller
             'profile_photo.max' => 'Ukuran gambar maksimal 2MB',
         ]);
 
+        // Validasi khusus: Admin tidak boleh menghapus role admin dari diri sendiri
+        if ($currentUser->id == $user->id && $request->role !== 'admin') {
+            return back()->withErrors([
+                'role' => 'Anda tidak bisa menghapus role admin dari akun sendiri.'
+            ])->withInput();
+        }
+
         $data = [
             'name' => $request->name,
             'email' => $request->email,
@@ -140,16 +193,15 @@ class UserController extends Controller
             $data['password'] = Hash::make($request->password);
         }
 
-        // ✅ PERBAIKAN: Handle hapus foto (seperti temanmu)
+        // Handle hapus foto
         if ($request->has('remove_photo') && $request->remove_photo == '1') {
-            // Hapus file dari storage
             if ($user->profile_picture) {
                 Storage::disk('public')->delete($user->profile_picture);
             }
             $data['profile_picture'] = null;
         }
 
-        // ✅ PERBAIKAN: Handle upload foto baru (seperti temanmu)
+        // Handle upload foto baru
         if ($request->hasFile('profile_photo')) {
             // Hapus foto lama jika ada
             if ($user->profile_picture) {
@@ -158,7 +210,6 @@ class UserController extends Controller
 
             $file = $request->file('profile_photo');
 
-            // Validasi manual tipe file
             $allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg', 'image/webp'];
             if (!in_array($file->getMimeType(), $allowedMimes)) {
                 return back()->withErrors([
@@ -166,39 +217,58 @@ class UserController extends Controller
                 ])->withInput();
             }
 
-            // ✅ CARA BENAR: Simpan dengan store()
             $path = $request->file('profile_photo')->store('profile_pictures', 'public');
-
-            // Simpan FULL PATH ke database
             $data['profile_picture'] = $path;
         }
 
         $user->update($data);
 
-        return redirect()->route('user.index')
+        return redirect()->route('admin.user.index')
             ->with('success', 'User berhasil diupdate');
     }
 
     /**
      * Remove the specified resource from storage.
+     * HANYA ADMIN: Bisa delete user (dengan validasi)
      */
     public function destroy(string $id)
     {
+        $currentUser = Auth::user();
+
+        if (!$currentUser->isAdmin()) {
+            abort(403, 'Hanya admin yang bisa menghapus user.');
+        }
+
         $user = User::findOrFail($id);
 
-        // ✅ PERBAIKAN: Hapus foto profil jika ada (seperti temanmu)
+        // Validasi: Admin tidak bisa hapus diri sendiri
+        if ($currentUser->id == $user->id) {
+            return redirect()->route('admin.user.index')
+                ->with('error', 'Anda tidak bisa menghapus akun sendiri.');
+        }
+
+        // Validasi: Tidak bisa hapus user yang memiliki data terkait
+
+
+        // Hapus foto profil jika ada
         if ($user->profile_picture) {
             Storage::disk('public')->delete($user->profile_picture);
         }
 
         $user->delete();
 
-        return redirect()->route('user.index')
+        return redirect()->route('admin.user.index')
             ->with('success', 'User berhasil dihapus');
     }
 
     /**
-     * PROFILE METHODS - TAMBAHKAN INI
+     * ====================================================
+     * PROFILE METHODS - UNTUK SEMUA ROLE (MY PROFILE)
+     * ====================================================
+     */
+
+    /**
+     * SEMUA ROLE: Bisa lihat profile sendiri
      */
     public function myProfile()
     {
@@ -206,6 +276,9 @@ class UserController extends Controller
         return view('pages.user.my-profile', compact('user'));
     }
 
+    /**
+     * SEMUA ROLE: Bisa update profile sendiri
+     */
     public function updateMyProfile(Request $request)
     {
         $user = Auth::user();
@@ -251,7 +324,6 @@ class UserController extends Controller
 
             $file = $request->file('profile_photo');
 
-            // Validasi manual tipe file
             $allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg', 'image/webp'];
             if (!in_array($file->getMimeType(), $allowedMimes)) {
                 return back()->withErrors([
@@ -259,7 +331,6 @@ class UserController extends Controller
                 ])->withInput();
             }
 
-            // Simpan file
             $path = $request->file('profile_photo')->store('profile_pictures', 'public');
             $data['profile_picture'] = $path;
         }
@@ -278,6 +349,9 @@ class UserController extends Controller
             ->with('success', 'Profil berhasil diperbarui');
     }
 
+    /**
+     * SEMUA ROLE: Bisa hapus foto profile sendiri
+     */
     public function deleteMyProfilePhoto()
     {
         $user = Auth::user();

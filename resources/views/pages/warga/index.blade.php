@@ -28,7 +28,7 @@
         <h4 class="card-title mb-4">Daftar Warga Terdaftar</h4>
 
         <!-- Form Filter dan Search -->
-        <form method="GET" action="{{ route('warga.index') }}">
+        <form method="GET" action="{{ route('admin.warga.index') }}">
             <div class="row mb-4">
                 <!-- Filter Gender -->
                 <div class="col-md-3">
@@ -60,7 +60,7 @@
 
                 <!-- Tombol Tambah -->
                 <div class="col-md-6 text-right">
-                    <a href="{{ route('warga.create') }}" class="btn btn-primary btn-sm add-btn">
+                    <a href="{{ route('admin.warga.create') }}" class="btn btn-primary btn-sm add-btn">
                         <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah Warga
                     </a>
                 </div>
@@ -141,13 +141,24 @@
                         </td>
                         <td class="text-center action-buttons">
                             <div class="btn-group" role="group">
-                                <a href="{{ route('warga.edit', $item->warga_id) }}"
+                                <!-- Tombol Show/Lihat Detail -->
+                                <a href="{{ route('admin.warga.show', $item->warga_id) }}"
+                                   class="btn btn-outline-primary btn-sm action-btn"
+                                   data-toggle="tooltip"
+                                   title="Lihat Detail">
+                                    <i class="mdi mdi-eye"></i>
+                                </a>
+
+                                <!-- Tombol Edit -->
+                                <a href="{{ route('admin.warga.edit', $item->warga_id) }}"
                                    class="btn btn-outline-info btn-sm action-btn"
                                    data-toggle="tooltip"
                                    title="Edit Data">
                                     <i class="mdi mdi-pencil"></i>
                                 </a>
-                                <form action="{{ route('warga.destroy', $item->warga_id) }}" method="POST" style="display:inline">
+
+                                <!-- Tombol Hapus -->
+                                <form action="{{ route('admin.warga.destroy', $item->warga_id) }}" method="POST" style="display:inline">
                                     @csrf
                                     @method("DELETE")
                                     <button type="submit"
@@ -168,7 +179,7 @@
                                 <i class="mdi mdi-account-off-outline text-muted" style="font-size: 64px;"></i>
                                 <h4 class="text-muted mt-3">Belum ada data warga</h4>
                                 <p class="text-muted">Silakan tambah data warga terlebih dahulu</p>
-                                <a href="{{ route('warga.create') }}" class="btn btn-primary mt-2 add-btn">
+                                <a href="{{ route('admin.warga.create') }}" class="btn btn-primary mt-2 add-btn">
                                     <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah Warga Pertama
                                 </a>
                             </div>
@@ -358,6 +369,7 @@
     position: relative;
     overflow: hidden;
     border-radius: 6px;
+    margin: 0 2px;
 }
 
 .action-btn:hover {
@@ -365,16 +377,31 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
+/* Warna untuk tombol Show */
+.action-btn.btn-outline-primary:hover {
+    background-color: #4e73df !important;
+    border-color: #4e73df !important;
+    color: white !important;
+}
+
+/* Warna untuk tombol Edit */
 .action-btn.btn-outline-info:hover {
     background-color: #36b9cc !important;
     border-color: #36b9cc !important;
     color: white !important;
 }
 
+/* Warna untuk tombol Delete */
 .action-btn.btn-outline-danger:hover {
     background-color: #e74a3b !important;
     border-color: #e74a3b !important;
     color: white !important;
+}
+
+/* Styling untuk button group */
+.btn-group {
+    flex-wrap: nowrap;
+    gap: 2px;
 }
 
 /* Animasi untuk Empty State */
@@ -419,6 +446,27 @@
 
 .search-loading {
     animation: pulse 1.5s infinite;
+}
+
+/* Responsive untuk kolom aksi */
+@media (max-width: 768px) {
+    .action-buttons .btn-group {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .action-btn {
+        margin: 2px 0;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .action-btn i {
+        margin: 0 !important;
+    }
 }
 </style>
 
@@ -489,7 +537,46 @@ document.addEventListener('DOMContentLoaded', function() {
             row.style.transform = 'translateX(0)';
         }, index * 100);
     });
+
+    // Animasi hover untuk tombol aksi
+    const actionButtons = document.querySelectorAll('.action-btn');
+    actionButtons.forEach(button => {
+        button.addEventListener('mouseenter', function() {
+            // Efek ripple untuk tombol aksi
+            const ripple = document.createElement('span');
+            ripple.classList.add('ripple-effect');
+            ripple.style.position = 'absolute';
+            ripple.style.borderRadius = '50%';
+            ripple.style.backgroundColor = 'rgba(255, 255, 255, 0.3)';
+            ripple.style.transform = 'scale(0)';
+            ripple.style.animation = 'ripple 0.6s linear';
+            ripple.style.width = '100%';
+            ripple.style.height = '100%';
+            ripple.style.top = '0';
+            ripple.style.left = '0';
+
+            this.appendChild(ripple);
+
+            setTimeout(() => {
+                if (this.contains(ripple)) {
+                    this.removeChild(ripple);
+                }
+            }, 600);
+        });
+    });
 });
+
+// Keyframe untuk efek ripple
+const style = document.createElement('style');
+style.textContent = `
+@keyframes ripple {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+`;
+document.head.appendChild(style);
 </script>
 
 @endsection

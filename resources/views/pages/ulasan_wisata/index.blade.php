@@ -104,7 +104,7 @@
         <h4 class="card-title mb-4">Data Ulasan Wisata</h4>
 
         <!-- Form Filter dan Search -->
-        <form method="GET" action="{{ route('ulasan_wisata.index') }}">
+        <form method="GET" action="{{ route('admin.ulasan_wisata.index') }}">
             <div class="row mb-4">
                 <!-- Filter Rating -->
                 <div class="col-md-3">
@@ -139,7 +139,7 @@
 
                 <!-- Tombol Tambah -->
                 <div class="col-md-6 text-right">
-                    <a href="{{ route('ulasan_wisata.create') }}" class="btn btn-primary btn-sm add-btn">
+                    <a href="{{ route('admin.ulasan_wisata.create') }}" class="btn btn-primary btn-sm add-btn">
                         <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah Ulasan
                     </a>
                 </div>
@@ -233,13 +233,13 @@
                         </td>
                         <td class="text-center action-buttons">
                             <div class="btn-group" role="group">
-                                <a href="{{ route('ulasan_wisata.edit', $item->ulasan_id) }}"
+                                <a href="{{ route('admin.ulasan_wisata.edit', $item->ulasan_id) }}"
                                    class="btn btn-outline-info btn-sm action-btn"
                                    data-toggle="tooltip"
                                    title="Edit Data">
                                     <i class="mdi mdi-pencil"></i>
                                 </a>
-                                <form action="{{ route('ulasan_wisata.destroy', $item->ulasan_id) }}" method="POST" style="display:inline">
+                                <form action="{{ route('admin.ulasan_wisata.destroy', $item->ulasan_id) }}" method="POST" style="display:inline">
                                     @csrf
                                     @method("DELETE")
                                     <button type="submit"
@@ -260,7 +260,7 @@
                                 <i class="mdi mdi-star-off-outline text-muted" style="font-size: 64px;"></i>
                                 <h4 class="text-muted mt-3">Belum ada data ulasan</h4>
                                 <p class="text-muted">Silakan tambah data ulasan terlebih dahulu</p>
-                                <a href="{{ route('ulasan_wisata.create') }}" class="btn btn-primary mt-2 add-btn">
+                                <a href="{{ route('admin.ulasan_wisata.create') }}" class="btn btn-primary mt-2 add-btn">
                                     <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah Ulasan Pertama
                                 </a>
                             </div>

@@ -12,7 +12,7 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('booking-homestay.index') }}">Booking Homestay</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('admin.booking-homestay.index') }}">Booking Homestay</a></li>
             <li class="breadcrumb-item active" aria-current="page">Detail Booking</li>
         </ol>
     </nav>
@@ -198,10 +198,10 @@
                 </div>
 
                 <div class="d-grid gap-2 d-md-flex mt-4 pt-3 border-top">
-                    <a href="{{ route('booking-homestay.edit', $booking->booking_id) }}" class="btn btn-warning me-2 btn-action">
+                    <a href="{{ route('admin.booking-homestay.edit', $booking->booking_id) }}" class="btn btn-warning me-2 btn-action">
                         <i class="mdi mdi-pencil mr-1"></i> Edit Data
                     </a>
-                    <form action="{{ route('booking-homestay.destroy', $booking->booking_id) }}" method="POST" class="d-inline">
+                    <form action="{{ route('admin.booking-homestay.destroy', $booking->booking_id) }}" method="POST" class="d-inline">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger btn-action"
@@ -209,7 +209,7 @@
                             <i class="mdi mdi-delete mr-1"></i> Hapus
                         </button>
                     </form>
-                    <a href="{{ route('booking-homestay.index') }}" class="btn btn-secondary ms-auto btn-action">
+                    <a href="{{ route('admin.booking-homestay.index') }}" class="btn btn-secondary ms-auto btn-action">
                         <i class="mdi mdi-arrow-left mr-1"></i> Kembali
                     </a>
                 </div>
@@ -272,7 +272,7 @@
                                               str_contains($firstFile->mime_type, 'excel') || str_contains($firstFile->mime_type, 'sheet') ||
                                               str_contains($firstFile->mime_type, 'text');
                                 $imageUrl = $isImage ? asset('storage/' . $firstFile->file_name) : '#';
-                                $previewUrl = route('booking-homestay.show-file', [$booking->booking_id, $firstFile->media_id]);
+                                $previewUrl = route('admin.booking-homestay.show-file', [$booking->booking_id, $firstFile->media_id]);
                                 $fileNameDisplay = basename($firstFile->file_name);
                             @endphp
 
@@ -338,7 +338,7 @@
                                         <i class="mdi mdi-fullscreen"></i>
                                     </button>
                                 @elseif($isPDF)
-                                    <a href="{{ route('booking-homestay.download-file', [$booking->booking_id, $firstFile->media_id]) }}"
+                                    <a href="{{ route('admin.booking-homestay.download-file', [$booking->booking_id, $firstFile->media_id]) }}"
                                        class="btn btn-light btn-sm"
                                        target="_blank"
                                        data-toggle="tooltip" title="Download PDF">
@@ -351,7 +351,7 @@
                                         <i class="mdi mdi-eye"></i>
                                     </a>
                                 @else
-                                    <a href="{{ route('booking-homestay.download-file', [$booking->booking_id, $firstFile->media_id]) }}"
+                                    <a href="{{ route('admin.booking-homestay.download-file', [$booking->booking_id, $firstFile->media_id]) }}"
                                        class="btn btn-light btn-sm"
                                        target="_blank"
                                        data-toggle="tooltip" title="Download">
@@ -381,7 +381,7 @@
                                 $fileIcon = 'mdi-file-document-box';
                                 $fileColor = 'text-secondary';
                                 $fileNameDisplay = basename($file->file_name);
-                                $previewUrl = route('booking-homestay.show-file', [$booking->booking_id, $file->media_id]);
+                                $previewUrl = route('admin.booking-homestay.show-file', [$booking->booking_id, $file->media_id]);
 
                                 if($isPDF) {
                                     $fileIcon = 'mdi-file-pdf-box';
@@ -420,7 +420,7 @@
                                     @endif
 
                                     <div class="thumbnail-overlay">
-                                        <form action="{{ route('booking-homestay.delete-file', [$booking->booking_id, $file->media_id]) }}"
+                                        <form action="{{ route('admin.booking-homestay.delete-file', [$booking->booking_id, $file->media_id]) }}"
                                               method="POST"
                                               class="d-inline delete-form">
                                             @csrf
@@ -433,7 +433,7 @@
                                                 <i class="mdi mdi-delete"></i>
                                             </button>
                                         </form>
-                                        <a href="{{ route('booking-homestay.download-file', [$booking->booking_id, $file->media_id]) }}"
+                                        <a href="{{ route('admin.booking-homestay.download-file', [$booking->booking_id, $file->media_id]) }}"
                                            class="btn btn-info btn-sm download-thumbnail"
                                            target="_blank"
                                            data-toggle="tooltip"
@@ -469,7 +469,7 @@
                         <i class="mdi mdi-cloud-upload text-primary mr-2"></i>
                         Upload File Baru
                     </h6>
-                    <form action="{{ route('booking-homestay.upload-files', $booking->booking_id) }}"
+                    <form action="{{ route('admin.booking-homestay.upload-files', $booking->booking_id) }}"
                           method="POST"
                           enctype="multipart/form-data"
                           id="uploadForm">
@@ -601,11 +601,11 @@
     }
 
     function getDownloadUrl(fileId) {
-        return '{{ route("booking-homestay.download-file", [$booking->booking_id, "FILE_ID"]) }}'.replace('FILE_ID', fileId);
+        return '{{ route("admin.booking-homestay.download-file", [$booking->booking_id, "FILE_ID"]) }}'.replace('FILE_ID', fileId);
     }
 
     function getPreviewUrl(fileId) {
-        return '{{ route("booking-homestay.show-file", [$booking->booking_id, "FILE_ID"]) }}'.replace('FILE_ID', fileId);
+        return '{{ route("admin.booking-homestay.show-file", [$booking->booking_id, "FILE_ID"]) }}'.replace('FILE_ID', fileId);
     }
 
     // ============ SLIDESHOW FUNCTIONS ============

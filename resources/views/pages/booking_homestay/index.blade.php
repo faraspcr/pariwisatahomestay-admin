@@ -30,7 +30,7 @@
 
                 {{-- ====================== FILTER DAN SEARCH (SAMA SEPERTI KAMAR HOMESTAY) ====================== --}}
                 <!-- Form Filter dan Search -->
-                <form method="GET" action="{{ route('booking-homestay.index') }}">
+                <form method="GET" action="{{ route('admin.booking-homestay.index') }}">
                     <div class="row mb-4">
                         <!-- Filter Status -->
                         <div class="col-md-3">
@@ -72,7 +72,7 @@
 
                         <!-- Tombol Tambah -->
                         <div class="col-md-3 text-right">
-                            <a href="{{ route('booking-homestay.create') }}" class="btn btn-primary btn-sm add-btn">
+                            <a href="{{ route('admin.booking-homestay.create') }}" class="btn btn-primary btn-sm add-btn">
                                 <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah Booking
                             </a>
                         </div>
@@ -167,15 +167,15 @@
                                     <td class="text-center action-buttons">
                                         <div class="btn-group" role="group">
                                             <!-- TAMBAHKAN TOMBOL LIHAT DETAIL -->
-                                            <a href="{{ route('booking-homestay.edit', $item->booking_id) }}"
+                                            <a href="{{ route('admin.booking-homestay.edit', $item->booking_id) }}"
                                                class="btn btn-outline-info btn-sm action-btn" data-toggle="tooltip" title="Edit Data">
                                                 <i class="mdi mdi-pencil"></i>
                                             </a>
-                                              <a href="{{ route('booking-homestay.show', $item->booking_id) }}"
+                                              <a href="{{ route('admin.booking-homestay.show', $item->booking_id) }}"
                                                class="btn btn-outline-primary btn-sm action-btn" data-toggle="tooltip" title="Lihat Detail">
                                                 <i class="mdi mdi-eye"></i>
                                             </a>
-                                            <form action="{{ route('booking-homestay.destroy', $item->booking_id) }}" method="POST" style="display:inline">
+                                            <form action="{{ route('admin.booking-homestay.destroy', $item->booking_id) }}" method="POST" style="display:inline">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-outline-danger btn-sm action-btn"
@@ -200,11 +200,11 @@
                                                 @endif
                                             </h4>
                                             <p class="text-muted">Silakan tambah booking terlebih dahulu</p>
-                                            <a href="{{ route('booking-homestay.create') }}" class="btn btn-success mt-2">
+                                            <a href="{{ route('admin.booking-homestay.create') }}" class="btn btn-success mt-2">
                                                 <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah Booking Pertama
                                             </a>
                                             @if(request()->hasAny(['search', 'status', 'tanggal']))
-                                                <a href="{{ route('booking-homestay.index') }}" class="btn btn-secondary mt-2">
+                                                <a href="{{ route('admin.booking-homestay.index') }}" class="btn btn-secondary mt-2">
                                                     <i class="mdi mdi-refresh mr-1"></i>Reset Filter
                                                 </a>
                                             @endif

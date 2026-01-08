@@ -12,7 +12,20 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('destinasiwisata.index') }}">Destinasi Wisata</a></li>
+            @php
+                $user = Auth::user();
+                $role = $user->role ?? 'admin';
+            @endphp
+
+            @if($role === 'admin')
+                <li class="breadcrumb-item"><a href="{{ route('admin.destinasiwisata.index') }}">Destinasi Wisata</a></li>
+            @elseif($role === 'pemilik')
+                <li class="breadcrumb-item"><a href="{{ route('pemilik.destinasi.index') }}">Destinasi Wisata</a></li>
+            @elseif($role === 'warga')
+                <li class="breadcrumb-item"><a href="{{ route('warga.destinasi.index') }}">Destinasi Wisata</a></li>
+            @else
+                <li class="breadcrumb-item"><a href="{{ route('view.destinasi.index') }}">Destinasi Wisata</a></li>
+            @endif
             <li class="breadcrumb-item active" aria-current="page">Edit Data</li>
         </ol>
     </nav>
@@ -62,13 +75,27 @@
             <div class="card-header bg-info text-white">
                 <div class="d-flex justify-content-between align-items-center">
                     <h5 class="mb-0"><i class="mdi mdi-pencil-box mr-2"></i>Form Edit Destinasi Wisata</h5>
-                    <a href="{{ route('destinasiwisata.index') }}" class="btn btn-light btn-sm">
-                        <i class="mdi mdi-arrow-left mr-1"></i>Kembali
-                    </a>
+                    @if($role === 'admin')
+                        <a href="{{ route('admin.destinasiwisata.index') }}" class="btn btn-light btn-sm">
+                            <i class="mdi mdi-arrow-left mr-1"></i>Kembali
+                        </a>
+                    @elseif($role === 'pemilik')
+                        <a href="{{ route('pemilik.destinasi.index') }}" class="btn btn-light btn-sm">
+                            <i class="mdi mdi-arrow-left mr-1"></i>Kembali
+                        </a>
+                    @elseif($role === 'warga')
+                        <a href="{{ route('warga.destinasi.index') }}" class="btn btn-light btn-sm">
+                            <i class="mdi mdi-arrow-left mr-1"></i>Kembali
+                        </a>
+                    @else
+                        <a href="{{ route('view.destinasi.index') }}" class="btn btn-light btn-sm">
+                            <i class="mdi mdi-arrow-left mr-1"></i>Kembali
+                        </a>
+                    @endif
                 </div>
             </div>
             <div class="card-body">
-                <form action="{{ route('destinasiwisata.update', $destinasi->destinasi_id) }}" method="POST" id="destinasiForm">
+                <form action="{{ route('admin.destinasiwisata.update', $destinasi->destinasi_id) }}" method="POST" id="destinasiForm">
                     @csrf
                     @method('PUT')
 
@@ -212,9 +239,23 @@
                                     </label>
                                 </div>
                                 <div class="d-flex gap-2">
-                                    <a href="{{ route('destinasiwisata.index') }}" class="btn btn-outline-secondary btn-sm">
-                                        <i class="mdi mdi-close mr-1"></i>Batal
-                                    </a>
+                                    @if($role === 'admin')
+                                        <a href="{{ route('admin.destinasiwisata.index') }}" class="btn btn-outline-secondary btn-sm">
+                                            <i class="mdi mdi-close mr-1"></i>Batal
+                                        </a>
+                                    @elseif($role === 'pemilik')
+                                        <a href="{{ route('pemilik.destinasi.index') }}" class="btn btn-outline-secondary btn-sm">
+                                            <i class="mdi mdi-close mr-1"></i>Batal
+                                        </a>
+                                    @elseif($role === 'warga')
+                                        <a href="{{ route('warga.destinasi.index') }}" class="btn btn-outline-secondary btn-sm">
+                                            <i class="mdi mdi-close mr-1"></i>Batal
+                                        </a>
+                                    @else
+                                        <a href="{{ route('view.destinasi.index') }}" class="btn btn-outline-secondary btn-sm">
+                                            <i class="mdi mdi-close mr-1"></i>Batal
+                                        </a>
+                                    @endif
                                     <button type="submit" class="btn btn-primary btn-sm" id="submitBtn" disabled>
                                         <i class="mdi mdi-content-save mr-1"></i>Simpan Perubahan
                                     </button>
@@ -261,7 +302,19 @@
                                               str_contains($firstFile->mime_type, 'excel') || str_contains($firstFile->mime_type, 'sheet') ||
                                               str_contains($firstFile->mime_type, 'text');
                                 $imageUrl = $isImage ? asset('storage/' . $firstFile->file_name) : '#';
-                                $previewUrl = route('destinasiwisata.show-file', [$destinasi->destinasi_id, $firstFile->media_id]);
+                                // ✅ PERBAIKAN ROUTE: Gunakan parameter array yang benar
+                                $previewUrl = route('admin.destinasiwisata.show-file', [
+                                    'destinasi' => $destinasi->destinasi_id,
+                                    'fileId' => $firstFile->media_id
+                                ]);
+                                $downloadUrl = route('admin.destinasiwisata.download-file', [
+                                    'destinasi' => $destinasi->destinasi_id,
+                                    'fileId' => $firstFile->media_id
+                                ]);
+                                $deleteUrl = route('files.destinasi.delete-file', [
+                                    'destinasi' => $destinasi->destinasi_id,
+                                    'fileId' => $firstFile->media_id
+                                ]);
                                 $fileNameDisplay = basename($firstFile->file_name);
                             @endphp
 
@@ -315,7 +368,7 @@
                                         <i class="mdi mdi-fullscreen"></i>
                                     </button>
                                 @elseif($isPDF)
-                                    <a href="{{ route('destinasiwisata.download-file', [$destinasi->destinasi_id, $firstFile->media_id]) }}"
+                                    <a href="{{ $downloadUrl }}"
                                        class="btn btn-light btn-sm"
                                        target="_blank"
                                        data-toggle="tooltip" title="Download PDF">
@@ -328,7 +381,7 @@
                                         <i class="mdi mdi-eye"></i>
                                     </a>
                                 @else
-                                    <a href="{{ route('destinasiwisata.download-file', [$destinasi->destinasi_id, $firstFile->media_id]) }}"
+                                    <a href="{{ $downloadUrl }}"
                                        class="btn btn-light btn-sm"
                                        target="_blank"
                                        data-toggle="tooltip" title="Download">
@@ -358,7 +411,19 @@
                                 $fileIcon = 'mdi-file-document-box';
                                 $fileColor = 'text-secondary';
                                 $fileNameDisplay = basename($file->file_name);
-                                $previewUrl = route('destinasiwisata.show-file', [$destinasi->destinasi_id, $file->media_id]);
+                                // ✅ PERBAIKAN ROUTE: Gunakan parameter array yang benar
+                                $previewUrl = route('admin.destinasiwisata.show-file', [
+                                    'destinasi' => $destinasi->destinasi_id,
+                                    'fileId' => $file->media_id
+                                ]);
+                                $downloadUrl = route('admin.destinasiwisata.download-file', [
+                                    'destinasi' => $destinasi->destinasi_id,
+                                    'fileId' => $file->media_id
+                                ]);
+                                $deleteUrl = route('files.destinasi.delete-file', [
+                                    'destinasi' => $destinasi->destinasi_id,
+                                    'fileId' => $file->media_id
+                                ]);
 
                                 if($isPDF) {
                                     $fileIcon = 'mdi-file-pdf-box';
@@ -397,7 +462,7 @@
                                     @endif
 
                                     <div class="thumbnail-overlay">
-                                        <form action="{{ route('destinasiwisata.delete-file', [$destinasi->destinasi_id, $file->media_id]) }}"
+                                        <form action="{{ $deleteUrl }}"
                                               method="POST"
                                               class="d-inline delete-form">
                                             @csrf
@@ -410,7 +475,7 @@
                                                 <i class="mdi mdi-delete"></i>
                                             </button>
                                         </form>
-                                        <a href="{{ route('destinasiwisata.download-file', [$destinasi->destinasi_id, $file->media_id]) }}"
+                                        <a href="{{ $downloadUrl }}"
                                            class="btn btn-info btn-sm download-thumbnail"
                                            target="_blank"
                                            data-toggle="tooltip"
@@ -446,7 +511,7 @@
                         <i class="mdi mdi-cloud-upload text-primary mr-2"></i>
                         Upload File Baru
                     </h6>
-                    <form action="{{ route('destinasiwisata.upload-files', $destinasi->destinasi_id) }}"
+                    <form action="{{ route('files.destinasi.upload', $destinasi->destinasi_id) }}"
                           method="POST"
                           enctype="multipart/form-data"
                           id="uploadForm">
@@ -571,11 +636,13 @@
     }
 
     function getDownloadUrl(fileId) {
-        return '{{ route("destinasiwisata.download-file", [$destinasi->destinasi_id, "FILE_ID"]) }}'.replace('FILE_ID', fileId);
+        // ✅ PERBAIKAN: Gunakan parameter array yang benar
+        return '{{ route("admin.destinasiwisata.download-file", ["destinasi" => $destinasi->destinasi_id, "fileId" => "FILE_ID"]) }}'.replace('FILE_ID', fileId);
     }
 
     function getPreviewUrl(fileId) {
-        return '{{ route("destinasiwisata.show-file", [$destinasi->destinasi_id, "FILE_ID"]) }}'.replace('FILE_ID', fileId);
+        // ✅ PERBAIKAN: Gunakan parameter array yang benar
+        return '{{ route("admin.destinasiwisata.show-file", ["destinasi" => $destinasi->destinasi_id, "fileId" => "FILE_ID"]) }}'.replace('FILE_ID', fileId);
     }
 
     // Form Validation
@@ -1135,7 +1202,25 @@
 
             // Esc untuk cancel
             if (e.key === 'Escape') {
-                window.location.href = "{{ route('destinasiwisata.index') }}";
+                // Redirect berdasarkan role
+                const userRole = '{{ Auth::user()->role ?? "admin" }}';
+                let redirectUrl = '';
+
+                switch(userRole) {
+                    case 'admin':
+                        redirectUrl = "{{ route('admin.destinasiwisata.index') }}";
+                        break;
+                    case 'pemilik':
+                        redirectUrl = "{{ route('pemilik.destinasi.index') }}";
+                        break;
+                    case 'warga':
+                        redirectUrl = "{{ route('warga.destinasi.index') }}";
+                        break;
+                    default:
+                        redirectUrl = "{{ route('view.destinasi.index') }}";
+                }
+
+                window.location.href = redirectUrl;
             }
         });
 
@@ -1160,6 +1245,7 @@
         // Tambahkan console log untuk debugging
         console.log('Files loaded:', photos);
         console.log('Destinasi ID:', destinasiId);
+        console.log('User Role:', '{{ Auth::user()->role ?? "admin" }}');
     });
 </script>
 
@@ -1374,7 +1460,7 @@
 }
 
 .main-photo-wrapper:hover .photo-overlay {
-    opacity = 1;
+    opacity: 1;
 }
 
 .photo-overlay .btn {
@@ -1497,7 +1583,7 @@
 }
 
 .thumbnail-card:hover .thumbnail-overlay {
-    opacity = 1;
+    opacity: 1;
 }
 
 .delete-thumbnail, .download-thumbnail, .view-thumbnail {

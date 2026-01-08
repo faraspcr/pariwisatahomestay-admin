@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WargaController;
@@ -24,180 +23,206 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.su
 
 // ==================== HARUS LOGIN ====================
 Route::middleware(['checkislogin'])->group(function () {
+    // ============ DASHBOARD & LOGOUT ============
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 
-    // ============ PROFILE SENDIRI ============
+    // ============ PROFILE SENDIRI (SEMUA ROLE) ============
     Route::prefix('my-profile')->group(function () {
         Route::get('/', [UserController::class, 'myProfile'])->name('user.my-profile');
         Route::put('/', [UserController::class, 'updateMyProfile'])->name('user.update-my-profile');
         Route::delete('/photo', [UserController::class, 'deleteMyProfilePhoto'])->name('user.delete-my-profile-photo');
     });
 
-    // ============ HANYA ADMIN ============
-    Route::middleware(['checkrole:admin'])->group(function () {
+    // ============ ADMIN: FULL ACCESS ============
+    Route::middleware(['checkrole:admin'])->prefix('admin')->name('admin.')->group(function () {
+        // User Management
         Route::resource('user', UserController::class);
+
+        // Warga Management
         Route::resource('warga', WargaController::class);
+
+        // Destinasi Wisata
         Route::resource('destinasiwisata', DestinasiWisataController::class);
-        Route::resource('kamarhomestay', KamarHomestayController::class);
 
-        // KAMAR HOMESTAY - ADMIN
-        Route::get('kamar_homestay', [KamarHomestayController::class, 'index'])->name('kamar_homestay.index');
-        Route::get('kamar_homestay/create', [KamarHomestayController::class, 'create'])->name('kamar_homestay.create');
-        Route::post('kamar_homestay', [KamarHomestayController::class, 'store'])->name('kamar_homestay.store');
-        Route::get('kamar_homestay/{id}', [KamarHomestayController::class, 'show'])->name('kamar_homestay.show');
-        Route::get('kamar_homestay/{id}/edit', [KamarHomestayController::class, 'edit'])->name('kamar_homestay.edit');
-        Route::put('kamar_homestay/{id}', [KamarHomestayController::class, 'update'])->name('kamar_homestay.update');
-        Route::delete('kamar_homestay/{id}', [KamarHomestayController::class, 'destroy'])->name('kamar_homestay.destroy');
-
-        // File upload untuk kamar homestay - ADMIN
-        Route::post('kamar_homestay/{id}/upload-files', [KamarHomestayController::class, 'uploadFiles'])
-            ->name('kamar_homestay.upload-files');
-        Route::delete('kamar_homestay/{id}/delete-file/{fileId}', [KamarHomestayController::class, 'deleteFile'])
-            ->name('kamar_homestay.delete-file');
-        Route::get('kamar_homestay/{id}/download-file/{fileId}', [KamarHomestayController::class, 'downloadFile'])
-            ->name('kamar_homestay.download-file');
-        Route::get('kamar_homestay/{id}/show-file/{fileId}', [KamarHomestayController::class, 'showFile'])
-            ->name('kamar_homestay.show-file');
-        Route::post('kamar_homestay/{id}/rename-file/{fileId}', [KamarHomestayController::class, 'renameFile'])
-            ->name('kamar_homestay.rename-file');
-
-        // File upload untuk destinasi
-        Route::post('destinasiwisata/{id}/upload-files', [DestinasiWisataController::class, 'uploadFiles'])
-            ->name('destinasiwisata.upload-files');
-        Route::delete('destinasiwisata/{id}/files/{fileId}', [DestinasiWisataController::class, 'deleteFile'])
-            ->name('destinasiwisata.delete-file');
-        Route::get('destinasiwisata/{id}/files/{fileId}/download', [DestinasiWisataController::class, 'downloadFile'])
-            ->name('destinasiwisata.download-file');
-        Route::get('destinasiwisata/{id}/files/{fileId}/show', [DestinasiWisataController::class, 'showFile'])
-            ->name('destinasiwisata.show-file');
-        Route::post('/destinasi-wisata/{id}/files/{fileId}/rename', [DestinasiWisataController::class, 'renameFile'])
-            ->name('destinasiwisata.rename-file');
-
-        // Homestay
-        Route::get('homestay', [HomestayController::class, 'index'])->name('homestay.index');
-        Route::get('homestay/create', [HomestayController::class, 'create'])->name('homestay.create');
-        Route::post('homestay', [HomestayController::class, 'store'])->name('homestay.store');
-        Route::get('homestay/{id}', [HomestayController::class, 'show'])->name('homestay.show');
-        Route::get('homestay/{id}/edit', [HomestayController::class, 'edit'])->name('homestay.edit');
-        Route::put('homestay/{id}', [HomestayController::class, 'update'])->name('homestay.update');
-        Route::delete('homestay/{id}', [HomestayController::class, 'destroy'])->name('homestay.destroy');
-
-        // Booking Homestay - ADMIN (LENGKAP)
-        Route::get('booking-homestay', [BookingHomestayController::class, 'index'])->name('booking-homestay.index');
-        Route::get('booking-homestay/create', [BookingHomestayController::class, 'create'])->name('booking-homestay.create');
-        Route::post('booking-homestay', [BookingHomestayController::class, 'store'])->name('booking-homestay.store');
-        Route::get('booking-homestay/{id}', [BookingHomestayController::class, 'show'])->name('booking-homestay.show');
-        Route::get('booking-homestay/{id}/edit', [BookingHomestayController::class, 'edit'])->name('booking-homestay.edit');
-        Route::put('booking-homestay/{id}', [BookingHomestayController::class, 'update'])->name('booking-homestay.update');
-        Route::delete('booking-homestay/{id}', [BookingHomestayController::class, 'destroy'])->name('booking-homestay.destroy');
-
-        // Ulasan Wisata - ADMIN BISA SEMUA
-        Route::get('ulasan_wisata', [UlasanWisataController::class, 'index'])->name('ulasan_wisata.index');
-        Route::get('ulasan_wisata/{id}', [UlasanWisataController::class, 'show'])->name('ulasan_wisata.show');
-        Route::get('ulasan_wisata/{id}/edit', [UlasanWisataController::class, 'edit'])->name('ulasan_wisata.edit');
-        Route::put('ulasan_wisata/{id}', [UlasanWisataController::class, 'update'])->name('ulasan_wisata.update');
-        Route::delete('ulasan_wisata/{id}', [UlasanWisataController::class, 'destroy'])->name('ulasan_wisata.destroy');
-    });
-
-    // ============ ADMIN & PEMILIK ============
-    Route::middleware(['checkrole:admin,pemilik'])->group(function () {
-        Route::get('kamar-homestay-saya', [KamarHomestayController::class, 'index'])->name('kamar.my');
-    });
-
-    // ============ HANYA PEMILIK ============
-    Route::middleware(['checkrole:pemilik'])->group(function () {
-        // Homestay Saya
-        Route::get('homestay-saya', [HomestayController::class, 'myHomestay'])->name('homestay.my');
-        Route::get('homestay-saya/create', [HomestayController::class, 'create'])->name('homestay.my.create');
-        Route::post('homestay-saya', [HomestayController::class, 'store'])->name('homestay.my.store');
-        Route::get('homestay-saya/{id}/edit', [HomestayController::class, 'edit'])->name('homestay.my.edit');
-        Route::put('homestay-saya/{id}', [HomestayController::class, 'update'])->name('homestay.my.update');
-
-        // CRUD kamar untuk pemilik
-        Route::prefix('kamar-pemilik')->group(function () {
-            Route::get('/create', [KamarHomestayController::class, 'create'])->name('kamar.pemilik.create');
-            Route::post('/', [KamarHomestayController::class, 'store'])->name('kamar.pemilik.store');
-            Route::get('/{id}', [KamarHomestayController::class, 'show'])->name('kamar.pemilik.show');
-            Route::get('/{id}/edit', [KamarHomestayController::class, 'edit'])->name('kamar.pemilik.edit');
-            Route::put('/{id}', [KamarHomestayController::class, 'update'])->name('kamar.pemilik.update');
-            Route::delete('/{id}', [KamarHomestayController::class, 'destroy'])->name('kamar.pemilik.destroy');
-
-            // File upload untuk pemilik
-            Route::post('/{id}/upload-files', [KamarHomestayController::class, 'uploadFiles'])
-                ->name('kamar.pemilik.upload-files');
-            Route::delete('/{id}/delete-file/{fileId}', [KamarHomestayController::class, 'deleteFile'])
-                ->name('kamar.pemilik.delete-file');
-            Route::get('/{id}/download-file/{fileId}', [KamarHomestayController::class, 'downloadFile'])
-                ->name('kamar.pemilik.download-file');
-            Route::get('/{id}/show-file/{fileId}', [KamarHomestayController::class, 'showFile'])
-                ->name('kamar.pemilik.show-file');
-            Route::post('/{id}/rename-file/{fileId}', [KamarHomestayController::class, 'renameFile'])
-                ->name('kamar.pemilik.rename-file');
+        // ⭐⭐⭐ ROUTE UNTUK FILE DESTINASI WISATA ⭐⭐⭐
+        Route::prefix('destinasiwisata')->name('destinasiwisata.')->group(function () {
+            Route::get('/{destinasi}/file/{fileId}/show', [DestinasiWisataController::class, 'showFile'])->name('show-file');
+            Route::get('/{destinasi}/file/{fileId}/download', [DestinasiWisataController::class, 'downloadFile'])->name('download-file');
+            Route::delete('/{destinasi}/file/{fileId}', [DestinasiWisataController::class, 'deleteFile'])->name('delete-file');
+            Route::post('/{destinasi}/upload', [DestinasiWisataController::class, 'uploadFiles'])->name('upload-files');
         });
 
-        // Booking di homestay saya
-        Route::get('booking-homestay-saya', [BookingHomestayController::class, 'myHomestayBooking'])->name('booking.my-homestay');
+        // Homestay (semua)
+        Route::resource('homestay', HomestayController::class);
 
-        // Ulasan Wisata - PEMILIK BISA CREATE, EDIT, DELETE SENDIRI
-        Route::get('ulasan_wisata/create', [UlasanWisataController::class, 'create'])->name('ulasan_wisata.create');
-        Route::post('ulasan_wisata', [UlasanWisataController::class, 'store'])->name('ulasan_wisata.store');
-        Route::get('ulasan_wisata/{id}/edit', [UlasanWisataController::class, 'edit'])->name('ulasan_wisata.edit');
-        Route::put('ulasan_wisata/{id}', [UlasanWisataController::class, 'update'])->name('ulasan_wisata.update');
+        // ⭐⭐⭐ ROUTE UNTUK FILE HOMESTAY (TAMBAHKAN INI) ⭐⭐⭐
+        Route::prefix('homestay')->name('homestay.')->group(function () {
+            Route::get('/{homestay}/file/{fileId}/show', [HomestayController::class, 'showFile'])->name('show-file');
+            Route::get('/{homestay}/file/{fileId}/download', [HomestayController::class, 'downloadFile'])->name('download-file');
+            Route::delete('/{homestay}/file/{fileId}', [HomestayController::class, 'deleteFile'])->name('delete-file');
+            Route::post('/{homestay}/upload', [HomestayController::class, 'uploadFiles'])->name('upload-files');
+        });
 
-        // Booking Saya (untuk pemilik)
-        Route::get('booking-saya', [BookingHomestayController::class, 'myBooking'])->name('booking-homestay.my');
+        // Kamar (semua)
+        Route::resource('kamarhomestay', KamarHomestayController::class);
 
-        // Destinasi
-        Route::get('destinasi', [DestinasiWisataController::class, 'publicIndex'])->name('destinasi.public');
-        Route::get('destinasi/{id}', [DestinasiWisataController::class, 'publicShow'])->name('destinasi.show');
+        // ⭐⭐⭐ ROUTE UNTUK FILE KAMAR (TAMBAHKAN INI) ⭐⭐⭐
+        Route::prefix('kamarhomestay')->name('kamarhomestay.')->group(function () {
+            Route::get('/{kamar}/file/{fileId}/show', [KamarHomestayController::class, 'showFile'])->name('show-file');
+            Route::get('/{kamar}/file/{fileId}/download', [KamarHomestayController::class, 'downloadFile'])->name('download-file');
+            Route::delete('/{kamar}/file/{fileId}', [KamarHomestayController::class, 'deleteFile'])->name('delete-file');
+            Route::post('/{kamar}/upload', [KamarHomestayController::class, 'uploadFiles'])->name('upload-files');
+        });
+
+        // Booking (semua)
+        Route::resource('booking-homestay', BookingHomestayController::class)->parameters([
+            'booking-homestay' => 'booking'
+        ]);
+
+        // ⭐⭐⭐ ROUTE UNTUK FILE BOOKING (TAMBAHKAN INI) ⭐⭐⭐
+        Route::prefix('booking-homestay')->name('booking-homestay.')->group(function () {
+            Route::get('/{booking}/file/{fileId}/show', [BookingHomestayController::class, 'showFile'])->name('show-file');
+            Route::get('/{booking}/file/{fileId}/download', [BookingHomestayController::class, 'downloadFile'])->name('download-file');
+            Route::delete('/{booking}/file/{fileId}', [BookingHomestayController::class, 'deleteFile'])->name('delete-file');
+            Route::post('/{booking}/upload', [BookingHomestayController::class, 'uploadFiles'])->name('upload-files');
+        });
+
+        // Ulasan (semua)
+        Route::resource('ulasan_wisata', UlasanWisataController::class)->parameters([
+            'ulasan_wisata' => 'ulasan'
+        ]);
     });
 
-    // ============ HANYA WARGA ============
-    Route::middleware(['checkrole:warga'])->group(function () {
-        // Ulasan Wisata - WARGA BISA CREATE, EDIT, DELETE SENDIRI
-        Route::get('ulasan_wisata/create', [UlasanWisataController::class, 'create'])->name('ulasan_wisata.create');
-        Route::post('ulasan_wisata', [UlasanWisataController::class, 'store'])->name('ulasan_wisata.store');
-        Route::get('ulasan_wisata/{id}/edit', [UlasanWisataController::class, 'edit'])->name('ulasan_wisata.edit');
-        Route::put('ulasan_wisata/{id}', [UlasanWisataController::class, 'update'])->name('ulasan_wisata.update');
+    // ============ PEMILIK HOMESTAY ============
+    Route::middleware(['checkrole:pemilik'])->prefix('pemilik')->name('pemilik.')->group(function () {
+        // Dashboard Pemilik
+        Route::get('/dashboard', [DashboardController::class, 'pemilikDashboard'])->name('dashboard');
 
-        // Booking Saya (untuk warga)
-        Route::get('booking-saya', [BookingHomestayController::class, 'myBooking'])->name('booking-homestay.my');
+        // ✅ Homestay miliknya sendiri (CRUD)
+        Route::get('/homestay', [HomestayController::class, 'myHomestay'])->name('homestay.index');
+        Route::get('/homestay/create', [HomestayController::class, 'create'])->name('homestay.create');
+        Route::post('/homestay', [HomestayController::class, 'store'])->name('homestay.store');
+        Route::get('/homestay/{homestay}', [HomestayController::class, 'show'])->name('homestay.show');
+        Route::get('/homestay/{homestay}/edit', [HomestayController::class, 'edit'])->name('homestay.edit');
+        Route::put('/homestay/{homestay}', [HomestayController::class, 'update'])->name('homestay.update');
+        Route::delete('/homestay/{homestay}', [HomestayController::class, 'destroy'])->name('homestay.destroy');
 
-        // Destinasi
-        Route::get('destinasi', [DestinasiWisataController::class, 'publicIndex'])->name('destinasi.public');
-        Route::get('destinasi/{id}', [DestinasiWisataController::class, 'publicShow'])->name('destinasi.show');
+        // ✅ Kamar di homestay miliknya (CRUD)
+        Route::get('/kamar', [KamarHomestayController::class, 'myHomestayKamar'])->name('kamar.index');
+        Route::get('/kamar/create', [KamarHomestayController::class, 'create'])->name('kamar.create');
+        Route::post('/kamar', [KamarHomestayController::class, 'store'])->name('kamar.store');
+        Route::get('/kamar/{kamar}', [KamarHomestayController::class, 'show'])->name('kamar.show');
+        Route::get('/kamar/{kamar}/edit', [KamarHomestayController::class, 'edit'])->name('kamar.edit');
+        Route::put('/kamar/{kamar}', [KamarHomestayController::class, 'update'])->name('kamar.update');
+        Route::delete('/kamar/{kamar}', [KamarHomestayController::class, 'destroy'])->name('kamar.destroy');
+
+        // ✅ Booking di homestay miliknya (lihat & kelola)
+        Route::get('/booking', [BookingHomestayController::class, 'myHomestayBooking'])->name('booking.index');
+        Route::get('/booking/{booking}', [BookingHomestayController::class, 'show'])->name('booking.show');
+        Route::put('/booking/{booking}', [BookingHomestayController::class, 'update'])->name('booking.update');
+
+        // ✅ Ulasan Wisata (HANYA LIHAT)
+        Route::get('/ulasan', [UlasanWisataController::class, 'index'])->name('ulasan.index');
+        Route::get('/ulasan/{ulasan}', [UlasanWisataController::class, 'show'])->name('ulasan.show');
+
+        // ✅ Destinasi Wisata (HANYA LIHAT)
+        Route::get('/destinasi', [DestinasiWisataController::class, 'index'])->name('destinasi.index');
+        Route::get('/destinasi/{destinasi}', [DestinasiWisataController::class, 'show'])->name('destinasi.show');
+
+        // ✅ Data Warga (HANYA LIHAT)
+        Route::get('/warga', [WargaController::class, 'index'])->name('warga.index');
+        Route::get('/warga/{warga}', [WargaController::class, 'show'])->name('warga.show');
     });
 
-    // ============ ADMIN, PEMILIK & WARGA (UNTUK CRUD SENDIRI) ============
-    Route::middleware(['checkrole:admin,pemilik,warga'])->group(function () {
-        // Ulasan Wisata - VIEW & DELETE OWN
-        Route::get('ulasan_wisata/{id}', [UlasanWisataController::class, 'show'])->name('ulasan_wisata.show');
-        Route::delete('ulasan_wisata/{id}', [UlasanWisataController::class, 'destroy'])->name('ulasan_wisata.destroy');
+    // ============ WARGA ============
+    Route::middleware(['checkrole:warga'])->prefix('warga')->name('warga.')->group(function () {
+        // Dashboard Warga
+        Route::get('/dashboard', [DashboardController::class, 'wargaDashboard'])->name('dashboard');
 
-        // Booking Homestay - UPDATE/DELETE OWN (untuk pemilik & warga, admin sudah punya di atas)
-        Route::post('booking-homestay/{id}/upload-files', [BookingHomestayController::class, 'uploadFiles'])
-            ->name('booking-homestay.upload-files');
-        Route::delete('booking-homestay/{id}/delete-file/{fileId}', [BookingHomestayController::class, 'deleteFile'])
-            ->name('booking-homestay.delete-file');
-        Route::get('booking-homestay/{id}/download-file/{fileId}', [BookingHomestayController::class, 'downloadFile'])
-            ->name('booking-homestay.download-file');
-        Route::get('booking-homestay/{id}/show-file/{fileId}', [BookingHomestayController::class, 'showFile'])
-            ->name('booking-homestay.show-file');
-        Route::put('booking-homestay/{id}/rename-file/{fileId}', [BookingHomestayController::class, 'renameFile'])
-            ->name('booking-homestay.rename-file');
+        // ✅ Booking miliknya sendiri (lihat & buat)
+        Route::get('/booking', [BookingHomestayController::class, 'myBooking'])->name('booking.index');
+        Route::get('/booking/create', [BookingHomestayController::class, 'create'])->name('booking.create');
+        Route::post('/booking', [BookingHomestayController::class, 'store'])->name('booking.store');
+        Route::get('/booking/{booking}', [BookingHomestayController::class, 'show'])->name('booking.show');
+        Route::get('/booking/{booking}/edit', [BookingHomestayController::class, 'edit'])->name('booking.edit');
+        Route::put('/booking/{booking}', [BookingHomestayController::class, 'update'])->name('booking.update');
+        Route::delete('/booking/{booking}', [BookingHomestayController::class, 'destroy'])->name('booking.destroy');
+
+        // ✅ Ulasan miliknya sendiri (buat, lihat, edit)
+        Route::get('/ulasan', [UlasanWisataController::class, 'myUlasan'])->name('ulasan.index');
+        Route::get('/ulasan/create', [UlasanWisataController::class, 'create'])->name('ulasan.create');
+        Route::post('/ulasan', [UlasanWisataController::class, 'store'])->name('ulasan.store');
+        Route::get('/ulasan/{ulasan}/edit', [UlasanWisataController::class, 'edit'])->name('ulasan.edit');
+        Route::put('/ulasan/{ulasan}', [UlasanWisataController::class, 'update'])->name('ulasan.update');
+        Route::delete('/ulasan/{ulasan}', [UlasanWisataController::class, 'destroy'])->name('ulasan.destroy');
+
+        // ✅ Data dirinya sendiri (lihat & edit)
+        Route::get('/data-saya', [WargaController::class, 'myData'])->name('warga.my-data');
+        Route::get('/data-saya/edit', [WargaController::class, 'editMyData'])->name('warga.edit-my-data');
+        Route::put('/data-saya', [WargaController::class, 'updateMyData'])->name('warga.update-my-data');
+
+        // ✅ Destinasi Wisata (HANYA LIHAT)
+        Route::get('/destinasi', [DestinasiWisataController::class, 'index'])->name('destinasi.index');
+        Route::get('/destinasi/{destinasi}', [DestinasiWisataController::class, 'show'])->name('destinasi.show');
+
+        // ✅ Homestay (HANYA LIHAT)
+        Route::get('/homestay', [HomestayController::class, 'index'])->name('homestay.index');
+        Route::get('/homestay/{homestay}', [HomestayController::class, 'show'])->name('homestay.show');
+
+        // ✅ Kamar (HANYA LIHAT)
+        Route::get('/kamar', [KamarHomestayController::class, 'index'])->name('kamar.index');
+        Route::get('/kamar/{kamar}', [KamarHomestayController::class, 'show'])->name('kamar.show');
     });
 
-    // ============ ADMIN & PEMILIK (UNTUK FILE UPLOAD HOMESTAY) ============
-    Route::middleware(['checkrole:admin,pemilik'])->group(function () {
-        // File upload untuk homestay
-        Route::post('homestay/{id}/upload-files', [HomestayController::class, 'uploadFiles'])
-            ->name('homestay.upload-files');
-        Route::delete('homestay/{id}/delete-file/{fileId}', [HomestayController::class, 'deleteFile'])
-            ->name('homestay.delete-file');
-        Route::get('homestay/{id}/download-file/{fileId}', [HomestayController::class, 'downloadFile'])
-            ->name('homestay.download-file');
-        Route::get('homestay/{id}/show-file/{fileId}', [HomestayController::class, 'showFile'])
-            ->name('homestay.show-file');
+    // ============ VIEW ONLY UNTUK SEMUA ROLE ============
+    // Semua role bisa akses route ini (view only)
+    Route::prefix('view')->name('view.')->group(function () {
+        // Destinasi: view only
+        Route::get('/destinasi', [DestinasiWisataController::class, 'publicIndex'])->name('destinasi.index');
+        Route::get('/destinasi/{destinasi}', [DestinasiWisataController::class, 'publicShow'])->name('destinasi.show');
+
+        // Homestay: view only
+        Route::get('/homestay', [HomestayController::class, 'publicIndex'])->name('homestay.index');
+        Route::get('/homestay/{homestay}', [HomestayController::class, 'publicShow'])->name('homestay.show');
+
+        // Kamar: view only
+        Route::get('/kamar', [KamarHomestayController::class, 'publicIndex'])->name('kamar.index');
+        Route::get('/kamar/{kamar}', [KamarHomestayController::class, 'publicShow'])->name('kamar.show');
+
+        // Ulasan: view only
+        Route::get('/ulasan', [UlasanWisataController::class, 'publicIndex'])->name('ulasan.index');
+        Route::get('/ulasan/{ulasan}', [UlasanWisataController::class, 'publicShow'])->name('ulasan.show');
+    });
+
+    // ============ FILE UPLOAD ROUTES (DENGAN AUTHORIZATION DI CONTROLLER) ============
+    Route::prefix('files')->name('files.')->group(function () {
+        // Homestay files
+        Route::post('/homestay/{homestay}/upload', [HomestayController::class, 'uploadFiles'])->name('homestay.upload');
+        Route::delete('/homestay/{homestay}/{fileId}', [HomestayController::class, 'deleteFile'])->name('homestay.delete-file');
+        // ✅ TAMBAHKAN INI:
+        Route::get('/homestay/{homestay}/{fileId}/show', [HomestayController::class, 'showFile'])->name('homestay.show-file');
+        Route::get('/homestay/{homestay}/{fileId}/download', [HomestayController::class, 'downloadFile'])->name('homestay.download-file');
+
+        // Kamar files
+        Route::post('/kamar/{kamar}/upload', [KamarHomestayController::class, 'uploadFiles'])->name('kamar.upload');
+        Route::delete('/kamar/{kamar}/{fileId}', [KamarHomestayController::class, 'deleteFile'])->name('kamar.delete-file');
+        // ✅ TAMBAHKAN INI:
+        Route::get('/kamar/{kamar}/{fileId}/show', [KamarHomestayController::class, 'showFile'])->name('kamar.show-file');
+        Route::get('/kamar/{kamar}/{fileId}/download', [KamarHomestayController::class, 'downloadFile'])->name('kamar.download-file');
+
+        // Destinasi files
+        Route::post('/destinasi/{destinasi}/upload', [DestinasiWisataController::class, 'uploadFiles'])->name('destinasi.upload');
+        Route::delete('/destinasi/{destinasi}/{fileId}', [DestinasiWisataController::class, 'deleteFile'])->name('destinasi.delete-file');
+        // ✅ TAMBAHKAN INI:
+        Route::get('/destinasi/{destinasi}/{fileId}/show', [DestinasiWisataController::class, 'showFile'])->name('destinasi.show-file');
+        Route::get('/destinasi/{destinasi}/{fileId}/download', [DestinasiWisataController::class, 'downloadFile'])->name('destinasi.download-file');
+
+        // Booking files
+        Route::post('/booking/{booking}/upload', [BookingHomestayController::class, 'uploadFiles'])->name('booking.upload');
+        Route::delete('/booking/{booking}/{fileId}', [BookingHomestayController::class, 'deleteFile'])->name('booking.delete-file');
+        // ✅ TAMBAHKAN INI:
+        Route::get('/booking/{booking}/{fileId}/show', [BookingHomestayController::class, 'showFile'])->name('booking.show-file');
+        Route::get('/booking/{booking}/{fileId}/download', [BookingHomestayController::class, 'downloadFile'])->name('booking.download-file');
     });
 });

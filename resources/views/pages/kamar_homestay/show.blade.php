@@ -12,8 +12,8 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('homestay.index') }}">Homestay</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('kamar_homestay.index') }}">Kamar Homestay</a></li>
+                    <li class="breadcrumb-item"><a href="{{ auth()->user()->role === 'admin' ? route('admin.homestay.index') : route('pemilik.homestay.index') }}">Homestay</a></li>
+                    <li class="breadcrumb-item"><a href="{{ auth()->user()->role === 'admin' ? route('admin.kamarhomestay.index') : route('pemilik.kamar.index') }}">Kamar Homestay</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Detail Kamar</li>
                 </ol>
             </nav>
@@ -31,7 +31,7 @@
         @endif
 
         <div class="row">
-            <!-- Informasi Kamar Homestay - STRUKTUR SAMA -->
+            <!-- Informasi Kamar Homestay -->
             <div class="col-lg-5 mb-4">
                 <div class="card card-detail">
                     <div class="card-header bg-info text-white">
@@ -169,10 +169,10 @@
                         </div>
 
                         <div class="d-grid gap-2 d-md-flex mt-4 pt-3 border-top">
-                            <a href="{{ route('kamar_homestay.edit', $kamar->kamar_id) }}" class="btn btn-warning me-2 btn-action">
+                            <a href="{{ auth()->user()->role === 'admin' ? route('admin.kamarhomestay.edit', $kamar->kamar_id) : route('pemilik.kamar.edit', $kamar->kamar_id) }}" class="btn btn-warning me-2 btn-action">
                                 <i class="mdi mdi-pencil mr-1"></i> Edit Data
                             </a>
-                            <form action="{{ route('kamar_homestay.destroy', $kamar->kamar_id) }}" method="POST" class="d-inline">
+                            <form action="{{ auth()->user()->role === 'admin' ? route('admin.kamarhomestay.destroy', $kamar->kamar_id) : route('pemilik.kamar.destroy', $kamar->kamar_id) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-action"
@@ -180,7 +180,7 @@
                                     <i class="mdi mdi-delete mr-1"></i> Hapus
                                 </button>
                             </form>
-                            <a href="{{ route('kamar_homestay.index') }}" class="btn btn-secondary ms-auto btn-action">
+                            <a href="{{ auth()->user()->role === 'admin' ? route('admin.kamarhomestay.index') : route('pemilik.kamar.index') }}" class="btn btn-secondary ms-auto btn-action">
                                 <i class="mdi mdi-arrow-left mr-1"></i> Kembali
                             </a>
                         </div>
@@ -188,7 +188,7 @@
                 </div>
             </div>
 
-            <!-- Foto Kamar Homestay - STRUKTUR SAMA -->
+            <!-- Foto Kamar Homestay -->
             <div class="col-lg-7 mb-4">
                 <div class="card border-0 shadow card-gallery">
                     <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
@@ -232,7 +232,7 @@
                                 </div>
                             </div>
 
-                            <!-- Main Photo Preview - DIPERBESAR -->
+                            <!-- Main Photo Preview - PERBAIKAN DISINI -->
                             <div class="main-photo-container mb-4">
                                 <div class="main-photo-wrapper">
                                     @php
@@ -243,17 +243,19 @@
                                                       str_contains($firstFile->mime_type, 'excel') || str_contains($firstFile->mime_type, 'sheet') ||
                                                       str_contains($firstFile->mime_type, 'text');
                                         $imageUrl = $isImage ? asset('storage/' . $firstFile->file_name) : '#';
-                                        $previewUrl = route('kamar_homestay.show-file', [$kamar->kamar_id, $firstFile->media_id]);
+                                        $previewUrl = auth()->user()->role === 'admin' ? route('admin.kamarhomestay.show-file', [$kamar->kamar_id, $firstFile->media_id]) : route('files.kamar.show-file', [$kamar->kamar_id, $firstFile->media_id]);
                                         $fileNameDisplay = basename($firstFile->file_name);
                                     @endphp
 
                                     @if($isImage)
-                                        <!-- Gambar - DIPERBESAR -->
-                                        <img src="{{ asset('storage/' . $firstFile->file_name) }}"
-                                             id="currentMainPhoto"
-                                             class="main-photo"
-                                             alt="Foto Utama"
-                                             onerror="handleImageError(this, '{{ $firstFile->file_name }}')">
+                                        <!-- Gambar - DIPERBAIKI -->
+                                        <div class="main-image-container">
+                                            <img src="{{ asset('storage/' . $firstFile->file_name) }}"
+                                                 id="currentMainPhoto"
+                                                 class="main-photo"
+                                                 alt="Foto Utama"
+                                                 onerror="handleImageError(this, '{{ $firstFile->file_name }}')">
+                                        </div>
                                     @elseif($isPDF)
                                         <!-- PDF Preview -->
                                         <div class="pdf-preview-container text-center py-4" id="pdfPreviewContainer">
@@ -309,7 +311,7 @@
                                                 <i class="mdi mdi-fullscreen"></i>
                                             </button>
                                         @elseif($isPDF)
-                                            <a href="{{ route('kamar_homestay.download-file', [$kamar->kamar_id, $firstFile->media_id]) }}"
+                                            <a href="{{ auth()->user()->role === 'admin' ? route('admin.kamarhomestay.download-file', [$kamar->kamar_id, $firstFile->media_id]) : route('files.kamar.download-file', [$kamar->kamar_id, $firstFile->media_id]) }}"
                                                class="btn btn-light btn-sm"
                                                target="_blank"
                                                data-toggle="tooltip" title="Download PDF">
@@ -322,7 +324,7 @@
                                                 <i class="mdi mdi-eye"></i>
                                             </a>
                                         @else
-                                            <a href="{{ route('kamar_homestay.download-file', [$kamar->kamar_id, $firstFile->media_id]) }}"
+                                            <a href="{{ auth()->user()->role === 'admin' ? route('admin.kamarhomestay.download-file', [$kamar->kamar_id, $firstFile->media_id]) : route('files.kamar.download-file', [$kamar->kamar_id, $firstFile->media_id]) }}"
                                                class="btn btn-light btn-sm"
                                                target="_blank"
                                                data-toggle="tooltip" title="Download">
@@ -339,7 +341,7 @@
                                 </div>
                             </div>
 
-                            <!-- Thumbnail Gallery -->
+                            <!-- Thumbnail Gallery - PERBAIKAN UTAMA DISINI -->
                             <h6 class="border-bottom pb-2 mb-3">
                                 <i class="mdi mdi-image-multiple mr-2"></i>Daftar File
                             </h6>
@@ -352,7 +354,7 @@
                                         $fileIcon = 'mdi-file-document-box';
                                         $fileColor = 'text-secondary';
                                         $fileNameDisplay = basename($file->file_name);
-                                        $previewUrl = route('kamar_homestay.show-file', [$kamar->kamar_id, $file->media_id]);
+                                        $previewUrl = auth()->user()->role === 'admin' ? route('admin.kamarhomestay.show-file', [$kamar->kamar_id, $file->media_id]) : route('files.kamar.show-file', [$kamar->kamar_id, $file->media_id]);
 
                                         if($isPDF) {
                                             $fileIcon = 'mdi-file-pdf-box';
@@ -379,10 +381,13 @@
                                              data-preview-url="{{ $isPDF ? $previewUrl : '#' }}">
 
                                             @if($isImage)
-                                                <img src="{{ asset('storage/' . $file->file_name) }}"
-                                                     class="thumbnail-img"
-                                                     alt="Thumbnail {{ $index + 1 }}"
-                                                     onerror="handleThumbnailError(this, '{{ $fileNameDisplay }}')">
+                                                <!-- PERBAIKAN: Thumbnail image dengan object-fit cover -->
+                                                <div class="thumbnail-img-container">
+                                                    <img src="{{ asset('storage/' . $file->file_name) }}"
+                                                         class="thumbnail-img"
+                                                         alt="Thumbnail {{ $index + 1 }}"
+                                                         onerror="handleThumbnailError(this, '{{ $fileNameDisplay }}')">
+                                                </div>
                                             @else
                                                 <div class="file-thumbnail text-center py-3">
                                                     <i class="mdi {{ $fileIcon }} {{ $fileColor }}" style="font-size: 40px;"></i>
@@ -391,7 +396,7 @@
                                             @endif
 
                                             <div class="thumbnail-overlay">
-                                                <form action="{{ route('kamar_homestay.delete-file', [$kamar->kamar_id, $file->media_id]) }}"
+                                                <form action="{{ auth()->user()->role === 'admin' ? route('admin.kamarhomestay.delete-file', [$kamar->kamar_id, $file->media_id]) : route('files.kamar.delete-file', [$kamar->kamar_id, $file->media_id]) }}"
                                                       method="POST"
                                                       class="d-inline delete-form">
                                                     @csrf
@@ -404,7 +409,7 @@
                                                         <i class="mdi mdi-delete"></i>
                                                     </button>
                                                 </form>
-                                                <a href="{{ route('kamar_homestay.download-file', [$kamar->kamar_id, $file->media_id]) }}"
+                                                <a href="{{ auth()->user()->role === 'admin' ? route('admin.kamarhomestay.download-file', [$kamar->kamar_id, $file->media_id]) : route('files.kamar.download-file', [$kamar->kamar_id, $file->media_id]) }}"
                                                    class="btn btn-info btn-sm download-thumbnail"
                                                    target="_blank"
                                                    data-toggle="tooltip"
@@ -440,7 +445,7 @@
                                 <i class="mdi mdi-cloud-upload text-primary mr-2"></i>
                                 Upload File Baru
                             </h6>
-                            <form action="{{ route('kamar_homestay.upload-files', $kamar->kamar_id) }}"
+                            <form action="{{ auth()->user()->role === 'admin' ? route('admin.kamarhomestay.upload-files', $kamar->kamar_id) : route('files.kamar.upload', $kamar->kamar_id) }}"
                                   method="POST"
                                   enctype="multipart/form-data"
                                   id="uploadForm">
@@ -558,6 +563,7 @@
     let currentPDFPreviewUrl = '';
     const kamarId = {{ $kamar->kamar_id }};
     const baseImagePath = '{{ asset("storage/") }}/';
+    const isAdmin = {{ auth()->user()->role === 'admin' ? 'true' : 'false' }};
 
     // Slideshow Variables
     let slideshowInterval = null;
@@ -572,11 +578,35 @@
     }
 
     function getDownloadUrl(fileId) {
-        return '{{ route("kamar_homestay.download-file", [$kamar->kamar_id, "FILE_ID"]) }}'.replace('FILE_ID', fileId);
+        if (isAdmin) {
+            return '{{ route("admin.kamarhomestay.download-file", [$kamar->kamar_id, "FILE_ID"]) }}'.replace('FILE_ID', fileId);
+        } else {
+            return '{{ route("files.kamar.download-file", [$kamar->kamar_id, "FILE_ID"]) }}'.replace('FILE_ID', fileId);
+        }
     }
 
     function getPreviewUrl(fileId) {
-        return '{{ route("kamar_homestay.show-file", [$kamar->kamar_id, "FILE_ID"]) }}'.replace('FILE_ID', fileId);
+        if (isAdmin) {
+            return '{{ route("admin.kamarhomestay.show-file", [$kamar->kamar_id, "FILE_ID"]) }}'.replace('FILE_ID', fileId);
+        } else {
+            return '{{ route("files.kamar.show-file", [$kamar->kamar_id, "FILE_ID"]) }}'.replace('FILE_ID', fileId);
+        }
+    }
+
+    function getDeleteUrl(fileId) {
+        if (isAdmin) {
+            return '{{ route("admin.kamarhomestay.delete-file", [$kamar->kamar_id, "FILE_ID"]) }}'.replace('FILE_ID', fileId);
+        } else {
+            return '{{ route("files.kamar.delete-file", [$kamar->kamar_id, "FILE_ID"]) }}'.replace('FILE_ID', fileId);
+        }
+    }
+
+    function getUploadUrl() {
+        if (isAdmin) {
+            return '{{ route("admin.kamarhomestay.upload-files", $kamar->kamar_id) }}';
+        } else {
+            return '{{ route("files.kamar.upload", $kamar->kamar_id) }}';
+        }
     }
 
     // ============ SLIDESHOW FUNCTIONS ============
@@ -873,7 +903,7 @@
         const photoCounter = document.getElementById('photoCounter');
 
         // Hide semua preview terlebih dahulu
-        mainPhoto.style.display = 'none';
+        if (mainPhoto) mainPhoto.style.display = 'none';
         if (pdfPreviewContainer) pdfPreviewContainer.style.display = 'none';
         if (docPreview) docPreview.style.display = 'none';
 
@@ -1110,9 +1140,11 @@
                     if (file.type.startsWith('image/')) {
                         col.innerHTML = `
                             <div class="upload-preview-card">
-                                <img src="${e.target.result}"
-                                     class="upload-preview-img"
-                                     alt="Preview ${index + 1}">
+                                <div class="upload-preview-img-container">
+                                    <img src="${e.target.result}"
+                                         class="upload-preview-img"
+                                         alt="Preview ${index + 1}">
+                                </div>
                                 <div class="upload-preview-info">
                                     <small class="text-truncate d-block">${file.name}</small>
                                     <small class="text-muted">${(file.size / 1024).toFixed(1)} KB</small>
@@ -1222,6 +1254,7 @@
         // Tambahkan console log untuk debugging
         console.log('Files loaded:', photos);
         console.log('Kamar ID:', kamarId);
+        console.log('Is Admin:', isAdmin);
 
         // Add keyboard shortcuts
         document.addEventListener('keydown', function(e) {
@@ -1495,7 +1528,7 @@
     color: white;
 }
 
-/* PERBAIKAN BESAR: Main photo container lebih besar */
+/* PERBAIKAN UTAMA: Main photo container */
 .main-photo-container {
     position: relative;
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
@@ -1523,7 +1556,16 @@
     box-shadow: 0 12px 30px rgba(0,0,0,0.2);
 }
 
-/* PERBAIKAN BESAR: Main photo lebih besar */
+/* PERBAIKAN UTAMA: Main photo lebih besar dengan object-fit contain */
+.main-image-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
 .main-photo {
     max-width: 100%;
     max-height: 550px;
@@ -1532,10 +1574,34 @@
     object-fit: contain;
     transition: transform 0.5s ease;
     cursor: pointer;
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
 }
 
 .main-photo:hover {
     transform: scale(1.03);
+}
+
+/* PERBAIKAN UTAMA: Thumbnail image container */
+.thumbnail-img-container {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    background: #f8f9fa;
+}
+
+.thumbnail-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: all 0.3s ease;
+    display: block;
+}
+
+.thumbnail-card:hover .thumbnail-img {
+    transform: scale(1.1);
+    filter: brightness(0.9);
 }
 
 /* Styling khusus untuk PDF Preview */
@@ -1676,17 +1742,6 @@
     box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
 
-.thumbnail-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-}
-
-.thumbnail-card:hover .thumbnail-img {
-    transform: scale(1.15);
-}
-
 .file-thumbnail {
     height: 100%;
     display: flex;
@@ -1776,7 +1831,6 @@
 }
 
 /* ==================== FULLSCREEN MODAL STYLES ==================== */
-/* Modal untuk Gambar */
 #imageFullscreenModal .modal-dialog {
     max-width: 95%;
     margin: 10px auto;
@@ -1906,6 +1960,26 @@
     box-shadow: 0 8px 25px rgba(78, 115, 223, 0.3);
 }
 
+/* PERBAIKAN: Upload preview image container */
+.upload-preview-img-container {
+    width: 100%;
+    height: 100px;
+    overflow: hidden;
+    position: relative;
+    background: #f8f9fa;
+}
+
+.upload-preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.upload-preview-card:hover .upload-preview-img {
+    transform: scale(1.1);
+}
+
 .upload-preview-card {
     position: relative;
     border-radius: 10px;
@@ -1920,12 +1994,6 @@
     border-color: #4e73df;
     transform: translateY(-3px);
     box-shadow: 0 8px 20px rgba(78, 115, 223, 0.2);
-}
-
-.upload-preview-img {
-    width: 100%;
-    height: 100px;
-    object-fit: cover;
 }
 
 .upload-preview-doc {
@@ -2127,6 +2195,10 @@
         max-height: 500px;
     }
 
+    .thumbnail-card {
+        height: 120px;
+    }
+
     #imageFullscreenModal .modal-dialog {
         max-width: 100%;
         margin: 5px auto;
@@ -2148,7 +2220,7 @@
     }
 
     .thumbnail-card {
-        height: 120px;
+        height: 110px;
     }
 
     .gallery-nav {

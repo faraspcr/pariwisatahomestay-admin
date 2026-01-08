@@ -29,7 +29,19 @@
         <h4 class="card-title mb-4">Daftar Destinasi Wisata</h4>
 
         <!-- ==================== FORM FILTER DAN SEARCH ==================== -->
-        <form method="GET" action="{{ route('destinasiwisata.index') }}">
+        @php
+            // Tentukan route berdasarkan role
+            $currentRoute = '';
+            if (auth()->user()->role == 'admin') {
+                $currentRoute = route('admin.destinasiwisata.index');
+            } elseif (auth()->user()->role == 'pemilik') {
+                $currentRoute = route('pemilik.destinasi.index');
+            } elseif (auth()->user()->role == 'warga') {
+                $currentRoute = route('warga.destinasi.index');
+            }
+        @endphp
+
+        <form method="GET" action="{{ $currentRoute }}">
             <div class="row mb-4">
                 <!-- Filter Jam Buka -->
                 <div class="col-md-3">
@@ -62,11 +74,13 @@
                     </div>
                 </div>
 
-                <!-- Tombol Tambah -->
+                <!-- Tombol Tambah (Hanya untuk Admin) -->
                 <div class="col-md-6 text-right">
-                    <a href="{{ route('destinasiwisata.create') }}" class="btn btn-primary btn-sm add-btn">
+                    @if(auth()->user()->role == 'admin')
+                    <a href="{{ route('admin.destinasiwisata.create') }}" class="btn btn-primary btn-sm add-btn">
                         <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah Destinasi
                     </a>
+                    @endif
                 </div>
             </div>
         </form>
@@ -145,28 +159,38 @@
                             </td>
                             <td class="text-center action-buttons">
                                 <div class="btn-group" role="group">
-                                    <a href="{{ route('destinasiwisata.edit', $item->destinasi_id) }}"
-                                        class="btn btn-outline-info btn-sm action-btn" data-toggle="tooltip"
-                                        title="Edit Data">
-                                        <i class="mdi mdi-pencil"></i>
-                                    </a>
-                                    <a href="{{ route('destinasiwisata.show', $item->destinasi_id) }}"
+                                    @if(auth()->user()->role == 'admin')
+                                        <a href="{{ route('admin.destinasiwisata.edit', $item->destinasi_id) }}"
+                                            class="btn btn-outline-info btn-sm action-btn" data-toggle="tooltip"
+                                            title="Edit Data">
+                                            <i class="mdi mdi-pencil"></i>
+                                        </a>
+                                    @endif
+
+                                    <a href="{{
+                                        auth()->user()->role == 'admin' ? route('admin.destinasiwisata.show', $item->destinasi_id) :
+                                        (auth()->user()->role == 'pemilik' ? route('pemilik.destinasi.show', $item->destinasi_id) :
+                                        route('warga.destinasi.show', $item->destinasi_id))
+                                    }}"
                                         class="btn btn-outline-primary btn-sm action-btn"
                                         data-toggle="tooltip" title="Lihat Detail">
                                         <i class="mdi mdi-eye"></i>
                                     </a>
-                                    <form
-                                        action="{{ route('destinasiwisata.destroy', $item->destinasi_id) }}"
-                                        method="POST" style="display:inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                            class="btn btn-outline-danger btn-sm action-btn"
-                                            data-toggle="tooltip" title="Hapus Data"
-                                            onclick="return confirm('Apakah Anda yakin ingin menghapus destinasi wisata {{ $item->nama }}?')">
-                                            <i class="mdi mdi-delete"></i>
-                                        </button>
-                                    </form>
+
+                                    @if(auth()->user()->role == 'admin')
+                                        <form
+                                            action="{{ route('admin.destinasiwisata.destroy', $item->destinasi_id) }}"
+                                            method="POST" style="display:inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="btn btn-outline-danger btn-sm action-btn"
+                                                data-toggle="tooltip" title="Hapus Data"
+                                                onclick="return confirm('Apakah Anda yakin ingin menghapus destinasi wisata {{ $item->nama }}?')">
+                                                <i class="mdi mdi-delete"></i>
+                                            </button>
+                                        </form>
+                                    @endif
                                 </div>
                             </td>
                         </tr>
@@ -180,11 +204,13 @@
                                     </h4>
                                     <p class="text-muted">Silakan tambah destinasi wisata terlebih
                                         dahulu</p>
-                                    <a href="{{ route('destinasiwisata.create') }}"
-                                        class="btn btn-success mt-2">
-                                        <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah
-                                        Destinasi Pertama
-                                    </a>
+                                    @if(auth()->user()->role == 'admin')
+                                        <a href="{{ route('admin.destinasiwisata.create') }}"
+                                            class="btn btn-success mt-2">
+                                            <i class="mdi mdi-plus-circle-outline mr-1"></i>Tambah
+                                            Destinasi Pertama
+                                        </a>
+                                    @endif
                                 </div>
                             </td>
                         </tr>

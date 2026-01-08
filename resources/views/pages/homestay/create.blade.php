@@ -1,284 +1,297 @@
 @extends('layouts.app')
 @section('content')
 
-        {{-- ====================== START MAIN CONTENT ====================== --}}
+{{-- ====================== START MAIN CONTENT ====================== --}}
 
-        <!-- Header -->
-        <div class="page-header">
-            <h3 class="page-title">
-                <i class="mdi mdi-home-plus text-primary mr-2"></i>
-                Tambah Data Homestay
-            </h3>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('homestay.index') }}">Data Homestay</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Tambah Data</li>
-                </ol>
-            </nav>
+<!-- Header -->
+<div class="page-header">
+    <h3 class="page-title">
+        <i class="mdi mdi-home-plus text-primary mr-2"></i>
+        Tambah Data Homestay
+    </h3>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{{
+                auth()->user()->role == 'admin' ? route('admin.homestay.index') :
+                route('pemilik.homestay.index')
+            }}">Data Homestay</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Tambah Data</li>
+        </ol>
+    </nav>
+</div>
+
+<!-- Error List di Atas Form -->
+@if($errors->any())
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="mdi mdi-alert-circle-outline mr-2"></i>
+        <strong>Terjadi kesalahan!</strong> Silakan perbaiki data berikut:
+        <ul class="mt-2 mb-0">
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
+
+<!-- Alert Success -->
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="mdi mdi-check-circle-outline mr-2"></i>
+        <strong>Sukses!</strong> {{ session('success') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
+
+@if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="mdi mdi-alert-circle-outline mr-2"></i>
+        <strong>Error!</strong> {{ session('error') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
+
+<!-- Card Form Tambah Homestay -->
+<div class="card create-card">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="card-title mb-0">Form Tambah Data Homestay</h4>
+            <a href="{{
+                auth()->user()->role == 'admin' ? route('admin.homestay.index') :
+                route('pemilik.homestay.index')
+            }}" class="btn btn-outline-secondary btn-sm">
+                <i class="mdi mdi-arrow-left mr-1"></i>Kembali ke Data Homestay
+            </a>
         </div>
 
-        <!-- Error List di Atas Form -->
-        @if($errors->any())
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="mdi mdi-alert-circle-outline mr-2"></i>
-                <strong>Terjadi kesalahan!</strong> Silakan perbaiki data berikut:
-                <ul class="mt-2 mb-0">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
+        <!-- ⭐⭐⭐ PERUBAHAN PENTING: Gunakan route yang benar berdasarkan role ⭐⭐⭐ -->
+        <form action="{{
+            auth()->user()->role == 'admin' ? route('admin.homestay.store') :
+            route('pemilik.homestay.store')
+        }}" method="POST" id="homestayForm" enctype="multipart/form-data">
+            @csrf
 
-        <!-- Alert Success -->
-        @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="mdi mdi-check-circle-outline mr-2"></i>
-                <strong>Sukses!</strong> {{ session('success') }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
+            <div class="row">
+                <!-- Kolom Kiri -->
+                <div class="col-md-6">
+                    <!-- Nama Homestay -->
+                    <div class="form-group">
+                        <label for="nama" class="form-label">Nama Homestay <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control @error('nama') is-invalid @enderror"
+                               id="nama" name="nama" value="{{ old('nama') }}"
+                               placeholder="Masukkan nama homestay" required>
+                        @error('nama')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
 
-        @if(session('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="mdi mdi-alert-circle-outline mr-2"></i>
-                <strong>Error!</strong> {{ session('error') }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
+                    <!-- Pemilik -->
+                    <div class="form-group">
+                        <label for="pemilik_warga_id" class="form-label">Pemilik <span class="text-danger">*</span></label>
+                        <select class="form-control @error('pemilik_warga_id') is-invalid @enderror"
+                                id="pemilik_warga_id" name="pemilik_warga_id" required>
+                            <option value="">-- Pilih Pemilik --</option>
+                            @foreach($wargas as $warga)
+                                <option value="{{ $warga->warga_id }}" {{ old('pemilik_warga_id') == $warga->warga_id ? 'selected' : '' }}>
+                                    {{ $warga->nama }} - {{ $warga->no_ktp }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('pemilik_warga_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
 
-        <!-- Card Form Tambah Homestay -->
-        <div class="card create-card">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h4 class="card-title mb-0">Form Tambah Data Homestay</h4>
-                    <a href="{{ route('homestay.index') }}" class="btn btn-outline-secondary btn-sm">
-                        <i class="mdi mdi-arrow-left mr-1"></i>Kembali ke Data Homestay
-                    </a>
+                    <!-- Alamat -->
+                    <div class="form-group">
+                        <label for="alamat" class="form-label">Alamat <span class="text-danger">*</span></label>
+                        <textarea class="form-control @error('alamat') is-invalid @enderror"
+                                  id="alamat" name="alamat" rows="3"
+                                  placeholder="Masukkan alamat lengkap" required>{{ old('alamat') }}</textarea>
+                        @error('alamat')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
                 </div>
 
-                <form action="{{ route('homestay.store') }}" method="POST" id="homestayForm" enctype="multipart/form-data">
-                    @csrf
-
-                    <div class="row">
-                        <!-- Kolom Kiri -->
-                        <div class="col-md-6">
-                            <!-- Nama Homestay -->
-                            <div class="form-group">
-                                <label for="nama" class="form-label">Nama Homestay <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control @error('nama') is-invalid @enderror"
-                                       id="nama" name="nama" value="{{ old('nama') }}"
-                                       placeholder="Masukkan nama homestay" required>
-                                @error('nama')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <!-- Pemilik -->
-                            <div class="form-group">
-                                <label for="pemilik_warga_id" class="form-label">Pemilik <span class="text-danger">*</span></label>
-                                <select class="form-control @error('pemilik_warga_id') is-invalid @enderror"
-                                        id="pemilik_warga_id" name="pemilik_warga_id" required>
-                                    <option value="">-- Pilih Pemilik --</option>
-                                    @foreach($wargas as $warga)
-                                        <option value="{{ $warga->warga_id }}" {{ old('pemilik_warga_id') == $warga->warga_id ? 'selected' : '' }}>
-                                            {{ $warga->nama }} - {{ $warga->no_ktp }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('pemilik_warga_id')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <!-- Alamat -->
-                            <div class="form-group">
-                                <label for="alamat" class="form-label">Alamat <span class="text-danger">*</span></label>
-                                <textarea class="form-control @error('alamat') is-invalid @enderror"
-                                          id="alamat" name="alamat" rows="3"
-                                          placeholder="Masukkan alamat lengkap" required>{{ old('alamat') }}</textarea>
-                                @error('alamat')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <!-- Kolom Kanan -->
-                        <div class="col-md-6">
-                            <!-- RT -->
-                            <div class="form-group">
-                                <label for="rt" class="form-label">RT</label>
-                                <input type="text" class="form-control @error('rt') is-invalid @enderror"
-                                       id="rt" name="rt" value="{{ old('rt') }}"
-                                       placeholder="Masukkan RT" maxlength="5">
-                                @error('rt')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <!-- RW -->
-                            <div class="form-group">
-                                <label for="rw" class="form-label">RW</label>
-                                <input type="text" class="form-control @error('rw') is-invalid @enderror"
-                                       id="rw" name="rw" value="{{ old('rw') }}"
-                                       placeholder="Masukkan RW" maxlength="5">
-                                @error('rw')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <!-- Harga per Malam -->
-                            <div class="form-group">
-                                <label for="harga_per_malam" class="form-label">Harga per Malam <span class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Rp</span>
-                                    </div>
-                                    <input type="number" class="form-control @error('harga_per_malam') is-invalid @enderror"
-                                           id="harga_per_malam" name="harga_per_malam"
-                                           value="{{ old('harga_per_malam') }}"
-                                           placeholder="Masukkan harga per malam" min="0" required>
-                                </div>
-                                @error('harga_per_malam')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <!-- Status -->
-                            <div class="form-group">
-                                <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
-                                <select class="form-control @error('status') is-invalid @enderror"
-                                        id="status" name="status" required>
-                                    <option value="">-- Pilih Status --</option>
-                                    <option value="pending" {{ old('status') == 'pending' ? 'selected' : '' }}>Pending</option>
-                                    <option value="aktif" {{ old('status') == 'aktif' ? 'selected' : '' }}>Aktif</option>
-                                    <option value="nonaktif" {{ old('status') == 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
-                                </select>
-                                @error('status')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <!-- Fasilitas (JSON) -->
-                            <div class="form-group">
-                                <label for="fasilitas_json" class="form-label">Fasilitas (JSON)</label>
-                                <textarea class="form-control @error('fasilitas_json') is-invalid @enderror"
-                                          id="fasilitas_json" name="fasilitas_json" rows="3"
-                                          placeholder='Contoh: ["WiFi", "AC", "Kolam Renang"]'>{{ old('fasilitas_json') }}</textarea>
-                                <small class="form-text text-muted">
-                                    Format JSON array. Contoh: ["WiFi", "AC", "Parkir", "Dapur"]
-                                </small>
-                                @error('fasilitas_json')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
+                <!-- Kolom Kanan -->
+                <div class="col-md-6">
+                    <!-- RT -->
+                    <div class="form-group">
+                        <label for="rt" class="form-label">RT</label>
+                        <input type="text" class="form-control @error('rt') is-invalid @enderror"
+                               id="rt" name="rt" value="{{ old('rt') }}"
+                               placeholder="Masukkan RT" maxlength="5">
+                        @error('rt')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
-                    <!-- Form Upload File (SAMA SEPERTI DESTINASI) -->
-                    <div class="row mt-4">
-                        <div class="col-md-12">
-                            <div class="card upload-card">
-                                <div class="card-header bg-gradient-primary text-white">
-                                    <h5 class="mb-0">
-                                        <i class="mdi mdi-camera mr-2"></i>Upload Foto Homestay
-                                        <span class="badge bg-light text-primary ml-2" id="fileCount">0 File</span>
-                                    </h5>
-                                </div>
-                                <div class="card-body">
-                                    <!-- File Upload Area -->
-                                    <div class="custom-file-upload mb-4">
-                                        <input type="file"
-                                               class="form-control-file @error('foto_homestay.*') is-invalid @enderror"
-                                               id="foto_homestay"
-                                               name="foto_homestay[]"
-                                               multiple
-                                               accept="image/*,.pdf,.doc,.docx"
-                                               onchange="previewFiles(this)">
-                                        <label for="foto_homestay" class="upload-label">
-                                            <div class="upload-icon">
-                                                <i class="mdi mdi-cloud-upload"></i>
-                                            </div>
-                                            <div class="upload-text">
-                                                <h5>Drop files here or click to upload</h5>
-                                                <p class="text-muted">Format yang didukung: JPG, PNG, GIF, WEBP, PDF, DOC, DOCX</p>
-                                                <p class="text-muted">Maksimal 5MB per file</p>
-                                            </div>
-                                        </label>
-                                        @error('foto_homestay.*')
-                                            <div class="invalid-feedback d-block">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <!-- File List Preview -->
-                                    <div class="file-list-section">
-                                        <h6 class="section-title">
-                                            <i class="mdi mdi-file-multiple mr-2"></i>
-                                            Daftar File yang akan diupload
-                                            <span class="badge badge-pill badge-info" id="selectedCount">0</span>
-                                        </h6>
-
-                                        <!-- Empty State -->
-                                        <div class="empty-state text-center py-5" id="emptyState">
-                                            <i class="mdi mdi-file-image text-muted" style="font-size: 80px;"></i>
-                                            <h5 class="text-muted mt-3">Belum ada file yang dipilih</h5>
-                                            <p class="text-muted">Upload foto atau dokumen pendukung homestay</p>
-                                        </div>
-
-                                        <!-- File Preview Container -->
-                                        <div class="file-preview-container" id="filePreviewContainer" style="display: none;">
-                                            <div class="row" id="filePreviewRow"></div>
-
-                                            <!-- File Info Summary -->
-                                            <div class="file-summary mt-3 p-3 bg-light rounded">
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <small class="text-muted">
-                                                            <i class="mdi mdi-file mr-1"></i>
-                                                            Total File: <span id="totalFiles">0</span>
-                                                        </small>
-                                                    </div>
-                                                    <div class="col-md-6 text-right">
-                                                        <small class="text-muted">
-                                                            <i class="mdi mdi-weight mr-1"></i>
-                                                            Total Size: <span id="totalSize">0 KB</span>
-                                                        </small>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <!-- RW -->
+                    <div class="form-group">
+                        <label for="rw" class="form-label">RW</label>
+                        <input type="text" class="form-control @error('rw') is-invalid @enderror"
+                               id="rw" name="rw" value="{{ old('rw') }}"
+                               placeholder="Masukkan RW" maxlength="5">
+                        @error('rw')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
-                    <!-- Tombol Aksi -->
-                    <div class="row mt-4">
-                        <div class="col-12">
-                            <div class="d-flex justify-content-end gap-2">
-                                <a href="{{ route('homestay.index') }}" class="btn btn-outline-secondary">
-                                    <i class="mdi mdi-arrow-left mr-1"></i>Kembali
-                                </a>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="mdi mdi-content-save mr-1"></i>Simpan Data
-                                </button>
+                    <!-- Harga per Malam -->
+                    <div class="form-group">
+                        <label for="harga_per_malam" class="form-label">Harga per Malam <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Rp</span>
                             </div>
+                            <input type="number" class="form-control @error('harga_per_malam') is-invalid @enderror"
+                                   id="harga_per_malam" name="harga_per_malam"
+                                   value="{{ old('harga_per_malam') }}"
+                                   placeholder="Masukkan harga per malam" min="0" required>
                         </div>
+                        @error('harga_per_malam')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
-                </form>
+
+                    <!-- Status -->
+                    <div class="form-group">
+                        <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
+                        <select class="form-control @error('status') is-invalid @enderror"
+                                id="status" name="status" required>
+                            <option value="">-- Pilih Status --</option>
+                            <option value="pending" {{ old('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                            <option value="aktif" {{ old('status') == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                            <option value="nonaktif" {{ old('status') == 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
+                        </select>
+                        @error('status')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <!-- Fasilitas (JSON) -->
+                    <div class="form-group">
+                        <label for="fasilitas_json" class="form-label">Fasilitas (JSON)</label>
+                        <textarea class="form-control @error('fasilitas_json') is-invalid @enderror"
+                                  id="fasilitas_json" name="fasilitas_json" rows="3"
+                                  placeholder='Contoh: ["WiFi", "AC", "Kolam Renang"]'>{{ old('fasilitas_json') }}</textarea>
+                        <small class="form-text text-muted">
+                            Format JSON array. Contoh: ["WiFi", "AC", "Parkir", "Dapur"]
+                        </small>
+                        @error('fasilitas_json')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
             </div>
-        </div>
 
-        {{-- ====================== END MAIN CONTENT ====================== --}}
+            <!-- Form Upload File -->
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <div class="card upload-card">
+                        <div class="card-header bg-gradient-primary text-white">
+                            <h5 class="mb-0">
+                                <i class="mdi mdi-camera mr-2"></i>Upload Foto Homestay
+                                <span class="badge bg-light text-primary ml-2" id="fileCount">0 File</span>
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <!-- File Upload Area -->
+                            <div class="custom-file-upload mb-4">
+                                <input type="file"
+                                       class="form-control-file @error('foto_homestay.*') is-invalid @enderror"
+                                       id="foto_homestay"
+                                       name="foto_homestay[]"
+                                       multiple
+                                       accept="image/*,.pdf,.doc,.docx"
+                                       onchange="previewFiles(this)">
+                                <label for="foto_homestay" class="upload-label">
+                                    <div class="upload-icon">
+                                        <i class="mdi mdi-cloud-upload"></i>
+                                    </div>
+                                    <div class="upload-text">
+                                        <h5>Drop files here or click to upload</h5>
+                                        <p class="text-muted">Format yang didukung: JPG, PNG, GIF, WEBP, PDF, DOC, DOCX</p>
+                                        <p class="text-muted">Maksimal 5MB per file</p>
+                                    </div>
+                                </label>
+                                @error('foto_homestay.*')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- File List Preview -->
+                            <div class="file-list-section">
+                                <h6 class="section-title">
+                                    <i class="mdi mdi-file-multiple mr-2"></i>
+                                    Daftar File yang akan diupload
+                                    <span class="badge badge-pill badge-info" id="selectedCount">0</span>
+                                </h6>
+
+                                <!-- Empty State -->
+                                <div class="empty-state text-center py-5" id="emptyState">
+                                    <i class="mdi mdi-file-image text-muted" style="font-size: 80px;"></i>
+                                    <h5 class="text-muted mt-3">Belum ada file yang dipilih</h5>
+                                    <p class="text-muted">Upload foto atau dokumen pendukung homestay</p>
+                                </div>
+
+                                <!-- File Preview Container -->
+                                <div class="file-preview-container" id="filePreviewContainer" style="display: none;">
+                                    <div class="row" id="filePreviewRow"></div>
+
+                                    <!-- File Info Summary -->
+                                    <div class="file-summary mt-3 p-3 bg-light rounded">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <small class="text-muted">
+                                                    <i class="mdi mdi-file mr-1"></i>
+                                                    Total File: <span id="totalFiles">0</span>
+                                                </small>
+                                            </div>
+                                            <div class="col-md-6 text-right">
+                                                <small class="text-muted">
+                                                    <i class="mdi mdi-weight mr-1"></i>
+                                                    Total Size: <span id="totalSize">0 KB</span>
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tombol Aksi -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{{
+                            auth()->user()->role == 'admin' ? route('admin.homestay.index') :
+                            route('pemilik.homestay.index')
+                        }}" class="btn btn-outline-secondary">
+                            <i class="mdi mdi-arrow-left mr-1"></i>Kembali
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="mdi mdi-content-save mr-1"></i>Simpan Data
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{{-- ====================== END MAIN CONTENT ====================== --}}
 
 <!-- Modal Preview Gambar -->
 <div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-hidden="true">

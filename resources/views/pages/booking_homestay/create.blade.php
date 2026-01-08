@@ -12,7 +12,7 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('booking-homestay.index') }}">Booking Homestay</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('admin.booking-homestay.index') }}">Booking Homestay</a></li>
             <li class="breadcrumb-item active" aria-current="page">Tambah</li>
         </ol>
     </nav>
@@ -60,12 +60,12 @@
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h4 class="card-title mb-0">Form Tambah Data Booking</h4>
-            <a href="{{ route('booking-homestay.index') }}" class="btn btn-outline-secondary btn-sm">
+            <a href="{{ route('admin.booking-homestay.index') }}" class="btn btn-outline-secondary btn-sm">
                 <i class="mdi mdi-arrow-left mr-1"></i>Kembali ke Data Booking
             </a>
         </div>
 
-        <form action="{{ route('booking-homestay.store') }}" method="POST" id="bookingForm" enctype="multipart/form-data">
+        <form action="{{ route('admin.booking-homestay.store') }}" method="POST" id="bookingForm" enctype="multipart/form-data">
             @csrf
 
             <div class="row">
@@ -301,7 +301,7 @@
             <div class="row mt-4">
                 <div class="col-12">
                     <div class="d-flex justify-content-end gap-2">
-                        <a href="{{ route('booking-homestay.index') }}" class="btn btn-outline-secondary">
+                        <a href="{{ route('admin.booking-homestay.index') }}" class="btn btn-outline-secondary">
                             <i class="mdi mdi-arrow-left mr-1"></i>Kembali
                         </a>
                         <button type="submit" class="btn btn-primary">

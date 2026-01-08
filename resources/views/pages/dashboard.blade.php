@@ -23,7 +23,7 @@
     <!-- End layout styles -->
     <link rel="shortcut icon" href="{{ asset('assets-admin/images/favicon.png') }}">
 
-    <!-- ==================== START CSS ==================== -->
+    <!-- ==================== START CSS CUSTOM ==================== -->
     <style>
         /* ==================== HEADER YANG DIPERBAIKI ==================== */
         .navbar.default-layout-navbar {
@@ -2396,11 +2396,12 @@
             100% { transform: rotate(360deg); }
         }
     </style>
-    <!-- ==================== END CSS ==================== -->
+    <!-- ==================== END CSS CUSTOM ==================== -->
 </head>
 <!-- ==================== END HEAD ==================== -->
 
 <body>
+    <!-- ==================== START CONTAINER ==================== -->
     <div class="container-scroller">
 
         <!-- ==================== START HEADER YANG DIPERBAIKI ==================== -->
@@ -2640,9 +2641,10 @@
         </nav>
         <!-- ==================== END HEADER ==================== -->
 
+        <!-- ==================== START PAGE BODY WRAPPER ==================== -->
         <div class="container-fluid page-body-wrapper">
 
-            <!-- ==================== START SIDEBAR YANG DIUBAH ==================== -->
+            <!-- ==================== START SIDEBAR ==================== -->
             <nav class="sidebar sidebar-offcanvas" id="sidebar">
                 <ul class="nav">
                     <li class="nav-item nav-category">Menu Utama</li>
@@ -2664,48 +2666,132 @@
                         </a>
                         <div class="collapse" id="fiturUtama">
                             <ul class="nav flex-column sub-menu">
-                                <!-- Destinasi Wisata -->
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('destinasiwisata.index') }}">
-                                        <i class="mdi mdi-map-marker menu-icon"></i>
-                                        Destinasi Wisata
-                                    </a>
-                                </li>
+                                @if(auth()->user()->role == 'admin')
+                                    <!-- Destinasi Wisata -->
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('admin.destinasiwisata.index') }}">
+                                            <i class="mdi mdi-map-marker menu-icon"></i>
+                                            Destinasi Wisata
+                                        </a>
+                                    </li>
 
-                                <!-- HOMESTAY -->
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('homestay.index') }}">
-                                        <i class="mdi mdi-home menu-icon"></i>
-                                        Homestay
-                                    </a>
-                                </li>
+                                    <!-- HOMESTAY -->
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('admin.homestay.index') }}">
+                                            <i class="mdi mdi-home menu-icon"></i>
+                                            Homestay
+                                        </a>
+                                    </li>
 
-                                <!-- KAMAR HOMESTAY -->
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('kamar.my') }}">
-                                        <i class="mdi mdi-door-closed menu-icon"></i>
-                                        Kamar Homestay
-                                    </a>
-                                </li>
+                                    <!-- KAMAR HOMESTAY -->
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('admin.kamarhomestay.index') }}">
+                                            <i class="mdi mdi-door-closed menu-icon"></i>
+                                            Kamar Homestay
+                                        </a>
+                                    </li>
 
-                                <!-- BOOKING -->
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('booking-homestay.index') }}">
-                                        <i class="mdi mdi-calendar-check menu-icon"></i>
-                                        Booking
-                                    </a>
-                                </li>
+                                    <!-- BOOKING -->
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('admin.booking-homestay.index') }}">
+                                            <i class="mdi mdi-calendar-check menu-icon"></i>
+                                            Booking
+                                        </a>
+                                    </li>
 
-                                <!-- Ulasan Wisata -->
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('ulasan_wisata.index') }}">
-                                        <i class="mdi mdi-star-circle menu-icon"></i>
-                                        Ulasan Wisata
-                                    </a>
-                                </li>
+                                    <!-- Ulasan Wisata -->
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('admin.ulasan_wisata.index') }}">
+                                            <i class="mdi mdi-star-circle menu-icon"></i>
+                                            Ulasan Wisata
+                                        </a>
+                                    </li>
+                                @elseif(auth()->user()->role == 'pemilik')
+                                    <!-- Destinasi Wisata (HANYA LIHAT) -->
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('pemilik.destinasi.index') }}">
+                                            <i class="mdi mdi-map-marker menu-icon"></i>
+                                            Destinasi Wisata
+                                        </a>
+                                    </li>
+
+                                    <!-- HOMESTAY (miliknya sendiri) -->
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('pemilik.homestay.index') }}">
+                                            <i class="mdi mdi-home menu-icon"></i>
+                                            Homestay
+                                        </a>
+                                    </li>
+
+                                    <!-- KAMAR HOMESTAY (di homestay miliknya) -->
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('pemilik.kamar.index') }}">
+                                            <i class="mdi mdi-door-closed menu-icon"></i>
+                                            Kamar Homestay
+                                        </a>
+                                    </li>
+
+                                    <!-- BOOKING (untuk homestay miliknya) -->
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('pemilik.booking.index') }}">
+                                            <i class="mdi mdi-calendar-check menu-icon"></i>
+                                            Booking
+                                        </a>
+                                    </li>
+
+                                    <!-- Ulasan Wisata (HANYA LIHAT) -->
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('pemilik.ulasan.index') }}">
+                                            <i class="mdi mdi-star-circle menu-icon"></i>
+                                            Ulasan Wisata
+                                        </a>
+                                    </li>
+                                @elseif(auth()->user()->role == 'warga')
+                                    <!-- Destinasi Wisata (HANYA LIHAT) -->
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('warga.destinasi.index') }}">
+                                            <i class="mdi mdi-map-marker menu-icon"></i>
+                                            Destinasi Wisata
+                                        </a>
+                                    </li>
+
+                                    <!-- HOMESTAY (HANYA LIHAT) -->
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('warga.homestay.index') }}">
+                                            <i class="mdi mdi-home menu-icon"></i>
+                                            Homestay
+                                        </a>
+                                    </li>
+
+                                    <!-- KAMAR (HANYA LIHAT) -->
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('warga.kamar.index') }}">
+                                            <i class="mdi mdi-door-closed menu-icon"></i>
+                                            Kamar Homestay
+                                        </a>
+                                    </li>
+
+                                    <!-- BOOKING (miliknya sendiri) -->
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('warga.booking.index') }}">
+                                            <i class="mdi mdi-calendar-check menu-icon"></i>
+                                            Booking
+                                        </a>
+                                    </li>
+
+                                    <!-- Ulasan Wisata (miliknya sendiri) -->
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('warga.ulasan.index') }}">
+                                            <i class="mdi mdi-star-circle menu-icon"></i>
+                                            Ulasan Wisata
+                                        </a>
+                                    </li>
+                                @endif
                             </ul>
                         </div>
                     </li>
+
+                    @if(auth()->user()->role == 'admin')
                     <li class="nav-item nav-category">Master Data</li>
 
                     <li class="nav-item">
@@ -2717,13 +2803,13 @@
                         <div class="collapse" id="masterData">
                             <ul class="nav flex-column sub-menu">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('user.index') }}">
+                                    <a class="nav-link" href="{{ route('admin.user.index') }}">
                                         <i class="mdi mdi-account-multiple menu-icon"></i>
                                         Manajemen User
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('warga.index') }}">
+                                    <a class="nav-link" href="{{ route('admin.warga.index') }}">
                                         <i class="mdi mdi-account-group menu-icon"></i>
                                         Data Warga
                                     </a>
@@ -2731,6 +2817,7 @@
                             </ul>
                         </div>
                     </li>
+                    @endif
 
                     <!-- User Display & Settings Section -->
                     <li class="nav-item sidebar-user-actions mt-4">
@@ -2818,7 +2905,12 @@
                     <!-- Circular Progress Charts - Semua Statistik Digabung (TANPA AKTIVITAS) -->
                     <div class="circular-progress-container">
                         <!-- Data Warga Progress -->
-                        <div class="circular-progress-card progress-warga clickable-stat" data-url="{{ route('warga.index') }}">
+                        <div class="circular-progress-card progress-warga clickable-stat"
+                             data-url="{{
+                                auth()->user()->role == 'admin' ? route('admin.warga.index') :
+                                (auth()->user()->role == 'pemilik' ? route('pemilik.warga.index') :
+                                route('warga.warga.my-data'))
+                             }}">
                             <div class="circular-progress-wrapper">
                                 <div class="circular-progress">
                                     <div class="circular-progress-bg">
@@ -2848,7 +2940,12 @@
                         </div>
 
                         <!-- Destinasi Wisata Progress -->
-                        <div class="circular-progress-card progress-wisata clickable-stat" data-url="{{ route('destinasiwisata.index') }}">
+                        <div class="circular-progress-card progress-wisata clickable-stat"
+                             data-url="{{
+                                auth()->user()->role == 'admin' ? route('admin.destinasiwisata.index') :
+                                (auth()->user()->role == 'pemilik' ? route('pemilik.destinasi.index') :
+                                route('warga.destinasi.index'))
+                             }}">
                             <div class="circular-progress-wrapper">
                                 <div class="circular-progress">
                                     <div class="circular-progress-bg">
@@ -2878,7 +2975,9 @@
                         </div>
 
                         <!-- Total User Progress -->
-                        <div class="circular-progress-card progress-user clickable-stat" data-url="{{ route('user.index') }}">
+                        @if(auth()->user()->role == 'admin')
+                        <div class="circular-progress-card progress-user clickable-stat"
+                             data-url="{{ route('admin.user.index') }}">
                             <div class="circular-progress-wrapper">
                                 <div class="circular-progress">
                                     <div class="circular-progress-bg">
@@ -2906,9 +3005,15 @@
                                 <i class="mdi mdi-open-in-new"></i>
                             </div>
                         </div>
+                        @endif
 
                         <!-- Homestay Progress -->
-                        <div class="circular-progress-card progress-homestay clickable-stat" data-url="{{ route('homestay.index') }}">
+                        <div class="circular-progress-card progress-homestay clickable-stat"
+                             data-url="{{
+                                auth()->user()->role == 'admin' ? route('admin.homestay.index') :
+                                (auth()->user()->role == 'pemilik' ? route('pemilik.homestay.index') :
+                                route('warga.homestay.index'))
+                             }}">
                             <div class="circular-progress-wrapper">
                                 <div class="circular-progress">
                                     <div class="circular-progress-bg">
@@ -2938,7 +3043,12 @@
                         </div>
 
                         <!-- Kamar Homestay Progress -->
-                        <div class="circular-progress-card progress-kamar clickable-stat" data-url="{{ route('kamar.my') }}">
+                        <div class="circular-progress-card progress-kamar clickable-stat"
+                             data-url="{{
+                                auth()->user()->role == 'admin' ? route('admin.kamarhomestay.index') :
+                                (auth()->user()->role == 'pemilik' ? route('pemilik.kamar.index') :
+                                route('warga.kamar.index'))
+                             }}">
                             <div class="circular-progress-wrapper">
                                 <div class="circular-progress">
                                     <div class="circular-progress-bg">
@@ -2968,7 +3078,12 @@
                         </div>
 
                         <!-- Booking Progress -->
-                        <div class="circular-progress-card progress-booking clickable-stat" data-url="{{ route('booking-homestay.index') }}">
+                        <div class="circular-progress-card progress-booking clickable-stat"
+                             data-url="{{
+                                auth()->user()->role == 'admin' ? route('admin.booking-homestay.index') :
+                                (auth()->user()->role == 'pemilik' ? route('pemilik.booking.index') :
+                                route('warga.booking.index'))
+                             }}">
                             <div class="circular-progress-wrapper">
                                 <div class="circular-progress">
                                     <div class="circular-progress-bg">
@@ -2998,7 +3113,12 @@
                         </div>
 
                         <!-- Ulasan Wisata Progress -->
-                        <div class="circular-progress-card progress-ulasan clickable-stat" data-url="{{ route('ulasan_wisata.index') }}">
+                        <div class="circular-progress-card progress-ulasan clickable-stat"
+                             data-url="{{
+                                auth()->user()->role == 'admin' ? route('admin.ulasan_wisata.index') :
+                                (auth()->user()->role == 'pemilik' ? route('pemilik.ulasan.index') :
+                                route('warga.ulasan.index'))
+                             }}">
                             <div class="circular-progress-wrapper">
                                 <div class="circular-progress">
                                     <div class="circular-progress-bg">
@@ -3257,7 +3377,7 @@
 
                 </div>
 
-                <!-- ==================== START FOOTER YANG DIUBAH ==================== -->
+                <!-- ==================== START FOOTER ==================== -->
                 <footer class="footer">
                     <div class="footer-inner-wraper">
                         <div class="text-center">
@@ -3277,16 +3397,20 @@
                 </footer>
                 <!-- ==================== END FOOTER ==================== -->
             </div>
+            <!-- ==================== END MAIN CONTENT ==================== -->
         </div>
+        <!-- ==================== END PAGE BODY WRAPPER ==================== -->
     </div>
+    <!-- ==================== END CONTAINER ==================== -->
 
-    <!-- Floating WhatsApp Button -->
+    <!-- ==================== START FLOATING WHATSAPP BUTTON ==================== -->
     <div class="whatsapp-float" id="whatsappFloat">
         <i class="mdi mdi-whatsapp"></i>
         <div class="whatsapp-tooltip">Hubungi Admin</div>
     </div>
+    <!-- ==================== END FLOATING WHATSAPP BUTTON ==================== -->
 
-    <!-- Logout Forms -->
+    <!-- ==================== START LOGOUT FORMS ==================== -->
     <form id="logout-form" action="{{ route('auth.logout') }}" method="POST" style="display: none;">
         @csrf
     </form>
@@ -3294,6 +3418,7 @@
     <form id="sidebar-logout-form" action="{{ route('auth.logout') }}" method="POST" style="display: none;">
         @csrf
     </form>
+    <!-- ==================== END LOGOUT FORMS ==================== -->
 
     <!-- ==================== START JS ==================== -->
     <!-- plugins:js -->
@@ -3312,6 +3437,7 @@
     <script src="{{ asset('assets-admin/js/dashboard.js') }}"></script>
     <!-- End custom js for this page -->
 
+    <!-- ==================== START CUSTOM JAVASCRIPT ==================== -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // ==================== HAMBURGER MENU FIX ====================
@@ -3818,6 +3944,8 @@
             }, 30000);
         });
     </script>
+    <!-- ==================== END CUSTOM JAVASCRIPT ==================== -->
+
     <!-- ==================== END JS ==================== -->
 </body>
 </html>

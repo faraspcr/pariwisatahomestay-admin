@@ -7,37 +7,80 @@ use App\Models\BookingHomestay;
 use App\Models\KamarHomestay;
 use App\Models\Warga;
 use App\Models\Media;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class BookingHomestayController extends Controller
 {
+    /**
+     * ADMIN: Lihat semua booking
+     * PEMILIK: Lihat booking di homestay miliknya
+     * WARGA: Lihat booking miliknya sendiri
+     */
     public function index(Request $request)
     {
+        $user = Auth::user();
+
         // Kolom yang bisa di-filter
-        $filterableColumns = ['status', 'metode_bayar', 'tanggal'];
+        $filterableColumns = ['status', 'metode_bayar'];
+        $searchableColumns = ['status', 'metode_bayar'];
 
-        // Kolom yang bisa di-search
-        $searchableColumns = ['warga_nama', 'status', 'metode_bayar'];
+        // Query dasar dengan relasi
+        $query = BookingHomestay::with(['kamar', 'warga', 'kamar.homestay']);
 
-        // Query dengan filter DAN search
-        $bookings = BookingHomestay::with(['kamar', 'warga', 'kamar.homestay'])
-            ->filter($request, $filterableColumns)
+        // ✅ FILTER BERDASARKAN ROLE
+        if ($user->isPemilik()) {
+            // PEMILIK: Hanya booking di homestay miliknya
+            $query->whereHas('kamar.homestay', function($q) use ($user) {
+                $q->where('pemilik_warga_id', $user->warga_id);
+            });
+        } elseif ($user->isWarga()) {
+            // WARGA: Hanya booking miliknya sendiri
+            $query->where('warga_id', $user->warga_id);
+        }
+        // ADMIN: Lihat semua (tidak ada filter tambahan)
+
+        // Terapkan filter, search, dan pagination
+        $bookings = $query->filter($request, $filterableColumns)
             ->search($request, $searchableColumns)
             ->orderBy('created_at', 'desc')
             ->paginate(10)
             ->onEachSide(2);
 
-        // Data untuk dropdown filter
-        $kamars = KamarHomestay::with('homestay')->get();
-        $wargas = Warga::all();
+        // Data untuk dropdown (hanya admin yang butuh semua)
+        $kamars = $user->isAdmin() ? KamarHomestay::with('homestay')->get() : collect();
+        $wargas = $user->isAdmin() ? Warga::all() : collect();
 
         return view('pages.booking_homestay.index', compact('bookings', 'kamars', 'wargas'));
     }
 
+    /**
+     * ADMIN: Buat booking untuk siapa saja
+     * PEMILIK: Tidak bisa create booking (hanya lihat)
+     * WARGA: Hanya bisa booking untuk dirinya sendiri
+     */
     public function create()
     {
-        $kamars = KamarHomestay::with('homestay')->get();
-        $wargas = Warga::all();
+        $user = Auth::user();
+
+        if ($user->isAdmin()) {
+            // ADMIN: Pilih semua kamar dan warga
+            $kamars = KamarHomestay::with('homestay')->get();
+            $wargas = Warga::all();
+        } elseif ($user->isWarga()) {
+            // WARGA: Hanya bisa booking untuk dirinya sendiri
+            $wargas = Warga::where('warga_id', $user->warga_id)->get();
+
+            // Hanya tampilkan kamar yang tersedia di homestay aktif
+            $kamars = KamarHomestay::with('homestay')
+                ->whereHas('homestay', function($q) {
+                    $q->where('status', 'aktif');
+                })
+                ->get();
+        } else {
+            // PEMILIK: Tidak boleh create booking
+            abort(403, 'Anda tidak memiliki akses untuk membuat booking.');
+        }
 
         return view('pages.booking_homestay.create', compact('kamars', 'wargas'));
     }
@@ -47,16 +90,32 @@ class BookingHomestayController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $user = Auth::user();
+
+        // ✅ VALIDASI BERDASARKAN ROLE
+        $validationRules = [
             'kamar_id' => 'required|exists:kamar_homestay,kamar_id',
-            'warga_id' => 'required|exists:warga,warga_id',
             'checkin' => 'required|date|after_or_equal:today',
             'checkout' => 'required|date|after:checkin',
             'total' => 'required|numeric|min:0',
             'status' => 'required|in:pending,confirmed,paid,cancelled,completed',
             'metode_bayar' => 'nullable|in:cash,transfer,qris,other',
             'bukti_bayar.*' => 'nullable|file|mimes:jpg,jpeg,png,gif,webp,bmp,pdf,doc,docx|max:10240',
-        ], [
+        ];
+
+        if ($user->isAdmin()) {
+            // ADMIN: Bisa pilih warga siapa saja
+            $validationRules['warga_id'] = 'required|exists:warga,warga_id';
+        } elseif ($user->isWarga()) {
+            // WARGA: Otomatis pakai warga_id sendiri
+            $request->merge(['warga_id' => $user->warga_id]);
+            $validationRules['status'] = 'required|in:pending'; // Warga hanya bisa pending
+        } else {
+            // PEMILIK: Tidak boleh create booking
+            abort(403, 'Anda tidak memiliki akses untuk membuat booking.');
+        }
+
+        $validated = $request->validate($validationRules, [
             'kamar_id.required' => 'Kamar wajib dipilih',
             'warga_id.required' => 'Warga wajib dipilih',
             'checkin.required' => 'Tanggal check-in wajib diisi',
@@ -81,14 +140,10 @@ class BookingHomestayController extends Controller
         // Upload file bukti bayar jika ada
         if ($request->hasFile('bukti_bayar')) {
             foreach ($request->file('bukti_bayar') as $key => $file) {
-                // Simpan dengan nama asli + timestamp agar unique
                 $originalName = $file->getClientOriginalName();
                 $filename = time() . '_' . $originalName;
-
-                // Simpan file ke storage
                 $file->storeAs('booking_homestay', $filename, 'public');
 
-                // Simpan ke tabel media
                 Media::create([
                     'file_name' => 'booking_homestay/' . $filename,
                     'ref_table' => 'booking_homestay',
@@ -100,8 +155,14 @@ class BookingHomestayController extends Controller
             }
         }
 
-        return redirect()->route('booking-homestay.index')
-            ->with('success', 'Booking berhasil dibuat!');
+        // ✅ REDIRECT BERDASARKAN ROLE
+        if ($user->isAdmin()) {
+            return redirect()->route('admin.booking.index')
+                ->with('success', 'Booking berhasil dibuat!');
+        } elseif ($user->isWarga()) {
+            return redirect()->route('warga.booking.index')
+                ->with('success', 'Booking berhasil dibuat! Menunggu konfirmasi.');
+        }
     }
 
     /**
@@ -109,7 +170,21 @@ class BookingHomestayController extends Controller
      */
     public function show(string $id)
     {
+        $user = Auth::user();
         $booking = BookingHomestay::with(['kamar', 'warga', 'kamar.homestay'])->findOrFail($id);
+
+        // ✅ AUTHORIZATION CHECK
+        if ($user->isPemilik()) {
+            // PEMILIK: Hanya bisa lihat booking di homestay miliknya
+            if ($booking->kamar->homestay->pemilik_warga_id != $user->warga_id) {
+                abort(403, 'Anda hanya bisa melihat booking di homestay milik Anda.');
+            }
+        } elseif ($user->isWarga()) {
+            // WARGA: Hanya bisa lihat booking miliknya sendiri
+            if ($booking->warga_id != $user->warga_id) {
+                abort(403, 'Anda hanya bisa melihat booking milik Anda sendiri.');
+            }
+        }
 
         $files = Media::where('ref_table', 'booking_homestay')
                      ->where('ref_id', $booking->booking_id)
@@ -119,11 +194,51 @@ class BookingHomestayController extends Controller
         return view('pages.booking_homestay.show', compact('booking', 'files'));
     }
 
+    /**
+     * Edit booking
+     */
     public function edit($id)
     {
-        $booking = BookingHomestay::with(['kamar', 'warga'])->findOrFail($id);
-        $kamars = KamarHomestay::with('homestay')->get();
-        $wargas = Warga::all();
+        $user = Auth::user();
+        $booking = BookingHomestay::with(['kamar', 'warga', 'kamar.homestay'])->findOrFail($id);
+
+        // ✅ AUTHORIZATION CHECK
+        if ($user->isPemilik()) {
+            // PEMILIK: Hanya bisa edit booking di homestay miliknya
+            if ($booking->kamar->homestay->pemilik_warga_id != $user->warga_id) {
+                abort(403, 'Anda hanya bisa mengedit booking di homestay milik Anda.');
+            }
+        } elseif ($user->isWarga()) {
+            // WARGA: Hanya bisa edit booking miliknya sendiri yang masih pending
+            if ($booking->warga_id != $user->warga_id) {
+                abort(403, 'Anda hanya bisa mengedit booking milik Anda sendiri.');
+            }
+            if ($booking->status != 'pending') {
+                abort(403, 'Anda hanya bisa mengedit booking yang masih pending.');
+            }
+        }
+
+        // Data untuk dropdown
+        if ($user->isAdmin()) {
+            $kamars = KamarHomestay::with('homestay')->get();
+            $wargas = Warga::all();
+        } elseif ($user->isPemilik()) {
+            // PEMILIK: Hanya kamar di homestay miliknya
+            $kamars = KamarHomestay::with('homestay')
+                ->whereHas('homestay', function($q) use ($user) {
+                    $q->where('pemilik_warga_id', $user->warga_id);
+                })
+                ->get();
+            $wargas = Warga::where('warga_id', $booking->warga_id)->get(); // Hanya warga ini
+        } elseif ($user->isWarga()) {
+            // WARGA: Hanya kamar yang tersedia, dan hanya dirinya sendiri
+            $kamars = KamarHomestay::with('homestay')
+                ->whereHas('homestay', function($q) {
+                    $q->where('status', 'aktif');
+                })
+                ->get();
+            $wargas = Warga::where('warga_id', $user->warga_id)->get();
+        }
 
         $files = Media::where('ref_table', 'booking_homestay')
                      ->where('ref_id', $booking->booking_id)
@@ -138,18 +253,42 @@ class BookingHomestayController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validated = $request->validate([
+        $user = Auth::user();
+        $booking = BookingHomestay::findOrFail($id);
+
+        // ✅ AUTHORIZATION CHECK
+        if ($user->isPemilik()) {
+            if ($booking->kamar->homestay->pemilik_warga_id != $user->warga_id) {
+                abort(403, 'Anda hanya bisa mengupdate booking di homestay milik Anda.');
+            }
+        } elseif ($user->isWarga()) {
+            if ($booking->warga_id != $user->warga_id) {
+                abort(403, 'Anda hanya bisa mengupdate booking milik Anda sendiri.');
+            }
+            if ($booking->status != 'pending') {
+                abort(403, 'Anda hanya bisa mengupdate booking yang masih pending.');
+            }
+        }
+
+        // Validasi berdasarkan role
+        $validationRules = [
             'kamar_id' => 'required|exists:kamar_homestay,kamar_id',
-            'warga_id' => 'required|exists:warga,warga_id',
             'checkin' => 'required|date',
             'checkout' => 'required|date|after:checkin',
             'total' => 'required|numeric|min:0',
             'status' => 'required|in:pending,confirmed,paid,cancelled,completed',
             'metode_bayar' => 'nullable|in:cash,transfer,qris,other',
             'bukti_bayar.*' => 'nullable|file|mimes:jpg,jpeg,png,gif,webp,bmp,pdf,doc,docx|max:10240',
-        ]);
+        ];
 
-        $booking = BookingHomestay::findOrFail($id);
+        if ($user->isAdmin()) {
+            $validationRules['warga_id'] = 'required|exists:warga,warga_id';
+        } elseif ($user->isPemilik() || $user->isWarga()) {
+            // Pemilik dan warga tidak bisa ganti warga
+            $request->merge(['warga_id' => $booking->warga_id]);
+        }
+
+        $validated = $request->validate($validationRules);
 
         // Cek ketersediaan kamar (kecuali untuk booking ini sendiri)
         $isAvailable = $this->cekKetersediaanKamar($request->kamar_id, $request->checkin, $request->checkout, $id);
@@ -162,20 +301,15 @@ class BookingHomestayController extends Controller
 
         // Upload file tambahan jika ada
         if ($request->hasFile('bukti_bayar')) {
-            // Ambil urutan terakhir untuk sort_order
             $currentMaxOrder = Media::where('ref_table', 'booking_homestay')
                                   ->where('ref_id', $booking->booking_id)
                                   ->max('sort_order') ?? 0;
 
             foreach ($request->file('bukti_bayar') as $key => $file) {
-                // Simpan dengan nama asli + timestamp
                 $originalName = $file->getClientOriginalName();
                 $filename = time() . '_' . $originalName;
-
-                // Simpan file ke storage
                 $file->storeAs('booking_homestay', $filename, 'public');
 
-                // Simpan ke tabel media
                 Media::create([
                     'file_name' => 'booking_homestay/' . $filename,
                     'ref_table' => 'booking_homestay',
@@ -187,8 +321,17 @@ class BookingHomestayController extends Controller
             }
         }
 
-        return redirect()->route('booking-homestay.show', $booking->booking_id)
-            ->with('success', 'Booking berhasil diperbarui!');
+        // ✅ REDIRECT BERDASARKAN ROLE
+        if ($user->isAdmin()) {
+            return redirect()->route('admin.booking.show', $booking->booking_id)
+                ->with('success', 'Booking berhasil diperbarui!');
+        } elseif ($user->isPemilik()) {
+            return redirect()->route('pemilik.booking.show', $booking->booking_id)
+                ->with('success', 'Booking berhasil diperbarui!');
+        } elseif ($user->isWarga()) {
+            return redirect()->route('warga.booking.show', $booking->booking_id)
+                ->with('success', 'Booking berhasil diperbarui!');
+        }
     }
 
     /**
@@ -196,7 +339,24 @@ class BookingHomestayController extends Controller
      */
     public function destroy($id)
     {
+        $user = Auth::user();
         $booking = BookingHomestay::findOrFail($id);
+
+        // ✅ AUTHORIZATION CHECK
+        if ($user->isPemilik()) {
+            // PEMILIK: Hanya bisa hapus booking di homestay miliknya
+            if ($booking->kamar->homestay->pemilik_warga_id != $user->warga_id) {
+                abort(403, 'Anda hanya bisa menghapus booking di homestay milik Anda.');
+            }
+        } elseif ($user->isWarga()) {
+            // WARGA: Hanya bisa hapus booking miliknya sendiri yang masih pending
+            if ($booking->warga_id != $user->warga_id) {
+                abort(403, 'Anda hanya bisa menghapus booking milik Anda sendiri.');
+            }
+            if ($booking->status != 'pending') {
+                abort(403, 'Anda hanya bisa menghapus booking yang masih pending.');
+            }
+        }
 
         // Hapus semua file terkait
         $files = Media::where('ref_table', 'booking_homestay')
@@ -210,13 +370,92 @@ class BookingHomestayController extends Controller
 
         $booking->delete();
 
-        return redirect()->route('booking-homestay.index')
-            ->with('success', 'Booking berhasil dihapus!');
+        // ✅ REDIRECT BERDASARKAN ROLE
+        if ($user->isAdmin()) {
+            return redirect()->route('admin.booking.index')
+                ->with('success', 'Booking berhasil dihapus!');
+        } elseif ($user->isPemilik()) {
+            return redirect()->route('pemilik.booking.index')
+                ->with('success', 'Booking berhasil dihapus!');
+        } elseif ($user->isWarga()) {
+            return redirect()->route('warga.booking.index')
+                ->with('success', 'Booking berhasil dihapus!');
+        }
     }
 
     /**
-     * Cek ketersediaan kamar
+     * ====================================================
+     * METHOD KHUSUS UNTUK PEMILIK (BOOKING DI HOMESTAY SAYA)
+     * ====================================================
      */
+
+    /**
+     * PEMILIK: Hanya lihat booking di homestay miliknya
+     */
+    public function myHomestayBooking(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user->isPemilik()) {
+            abort(403, 'Hanya pemilik homestay yang bisa mengakses halaman ini.');
+        }
+
+        $filterableColumns = ['status', 'metode_bayar'];
+        $searchableColumns = ['status', 'metode_bayar'];
+
+        $bookings = BookingHomestay::with(['kamar', 'warga', 'kamar.homestay'])
+            ->whereHas('kamar.homestay', function($q) use ($user) {
+                $q->where('pemilik_warga_id', $user->warga_id);
+            })
+            ->filter($request, $filterableColumns)
+            ->search($request, $searchableColumns)
+            ->orderBy('created_at', 'desc')
+            ->paginate(10)
+            ->onEachSide(2);
+
+    //     return view('pages.booking_homestay.my-homestay', compact('bookings'));
+    // }
+ return view('pages.booking_homestay.index', compact('bookings'));
+}
+    /**
+     * ====================================================
+     * METHOD KHUSUS UNTUK WARGA (BOOKING SAYA)
+     * ====================================================
+     */
+
+    /**
+     * WARGA: Hanya lihat booking miliknya sendiri
+     */
+    public function myBooking(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user->isWarga()) {
+            abort(403, 'Hanya warga yang bisa mengakses halaman ini.');
+        }
+
+        $filterableColumns = ['status', 'metode_bayar'];
+        $searchableColumns = ['status', 'metode_bayar'];
+
+        $bookings = BookingHomestay::with(['kamar', 'warga', 'kamar.homestay'])
+            ->where('warga_id', $user->warga_id)
+            ->filter($request, $filterableColumns)
+            ->search($request, $searchableColumns)
+            ->orderBy('created_at', 'desc')
+            ->paginate(10)
+            ->onEachSide(2);
+
+    //     return view('pages.booking_homestay.my-booking', compact('bookings'));
+    // }
+     return view('pages.booking_homestay.index', compact('bookings'));
+}
+
+    /**
+     * ====================================================
+     * HELPER METHOD & FILE UPLOAD (DENGAN AUTHORIZATION)
+     * ====================================================
+     */
+
     private function cekKetersediaanKamar($kamarId, $checkin, $checkout, $bookingId = null)
     {
         $query = BookingHomestay::where('kamar_id', $kamarId)
@@ -237,32 +476,36 @@ class BookingHomestayController extends Controller
         return $query->count() === 0;
     }
 
-    /**
-     * Upload multiple files for booking homestay
-     */
     public function uploadFiles(Request $request, string $id)
     {
+        $user = Auth::user();
+        $booking = BookingHomestay::with('kamar.homestay')->findOrFail($id);
+
+        // ✅ AUTHORIZATION CHECK
+        if ($user->isPemilik()) {
+            if ($booking->kamar->homestay->pemilik_warga_id != $user->warga_id) {
+                abort(403, 'Anda hanya bisa upload file untuk booking di homestay milik Anda.');
+            }
+        } elseif ($user->isWarga()) {
+            if ($booking->warga_id != $user->warga_id) {
+                abort(403, 'Anda hanya bisa upload file untuk booking milik Anda sendiri.');
+            }
+        }
+
         $request->validate([
             'bukti_bayar.*' => 'required|file|mimes:jpg,jpeg,png,gif,webp,bmp,pdf,doc,docx|max:10240',
         ]);
 
-        $booking = BookingHomestay::findOrFail($id);
-
-        // Ambil urutan terakhir untuk sort_order
         $currentMaxOrder = Media::where('ref_table', 'booking_homestay')
                               ->where('ref_id', $booking->booking_id)
                               ->max('sort_order') ?? 0;
 
         if ($request->hasFile('bukti_bayar')) {
             foreach ($request->file('bukti_bayar') as $key => $file) {
-                // Simpan dengan nama asli + timestamp
                 $originalName = $file->getClientOriginalName();
                 $filename = time() . '_' . $originalName;
-
-                // Simpan file ke storage
                 $file->storeAs('booking_homestay', $filename, 'public');
 
-                // Simpan ke tabel media
                 Media::create([
                     'file_name' => 'booking_homestay/' . $filename,
                     'ref_table' => 'booking_homestay',
@@ -278,12 +521,21 @@ class BookingHomestayController extends Controller
         return back()->with('success', "{$fileCount} file berhasil diupload!");
     }
 
-    /**
-     * Delete specific file for booking homestay
-     */
     public function deleteFile(string $id, string $fileId)
     {
-        $booking = BookingHomestay::findOrFail($id);
+        $user = Auth::user();
+        $booking = BookingHomestay::with('kamar.homestay')->findOrFail($id);
+
+        // ✅ AUTHORIZATION CHECK
+        if ($user->isPemilik()) {
+            if ($booking->kamar->homestay->pemilik_warga_id != $user->warga_id) {
+                abort(403, 'Anda hanya bisa menghapus file dari booking di homestay milik Anda.');
+            }
+        } elseif ($user->isWarga()) {
+            if ($booking->warga_id != $user->warga_id) {
+                abort(403, 'Anda hanya bisa menghapus file dari booking milik Anda sendiri.');
+            }
+        }
 
         $file = Media::where('media_id', $fileId)
             ->where('ref_table', 'booking_homestay')
@@ -291,114 +543,25 @@ class BookingHomestayController extends Controller
             ->firstOrFail();
 
         $fileName = basename($file->file_name);
-
-        // Hapus file dari storage
         Storage::disk('public')->delete($file->file_name);
-
-        // Hapus record dari database
         $file->delete();
 
         return back()->with('success', "File '{$fileName}' berhasil dihapus!");
     }
 
-    /**
-     * Download file
-     */
+    // Method downloadFile dan showFile (tambahkan authorization check juga)
     public function downloadFile(string $id, string $fileId)
     {
-        $booking = BookingHomestay::findOrFail($id);
+        $user = Auth::user();
+        $booking = BookingHomestay::with('kamar.homestay')->findOrFail($id);
 
-        $file = Media::where('media_id', $fileId)
-            ->where('ref_table', 'booking_homestay')
-            ->where('ref_id', $booking->booking_id)
-            ->firstOrFail();
-
-        // Cek apakah file ada
-        if (!Storage::disk('public')->exists($file->file_name)) {
-            abort(404, 'File tidak ditemukan');
+        // Authorization check
+        if ($user->isPemilik() && $booking->kamar->homestay->pemilik_warga_id != $user->warga_id) {
+            abort(403, 'Anda tidak memiliki akses ke file ini.');
+        } elseif ($user->isWarga() && $booking->warga_id != $user->warga_id) {
+            abort(403, 'Anda tidak memiliki akses ke file ini.');
         }
 
-        // Ambil nama asli dari filename (hapus timestamp)
-        $filename = basename($file->file_name);
-        $originalName = substr($filename, strpos($filename, '_') + 1);
-
-        // Download file
-        return Storage::disk('public')->download($file->file_name, $originalName);
-    }
-
-    /**
-     * Show file in browser (preview gambar & PDF)
-     */
-    public function showFile(string $id, string $fileId)
-    {
-        $booking = BookingHomestay::findOrFail($id);
-
-        $file = Media::where('media_id', $fileId)
-            ->where('ref_table', 'booking_homestay')
-            ->where('ref_id', $booking->booking_id)
-            ->firstOrFail();
-
-        // Cek apakah file ada
-        if (!Storage::disk('public')->exists($file->file_name)) {
-            abort(404, 'File tidak ditemukan');
-        }
-
-        $mime = $file->mime_type;
-
-        // Jika file adalah gambar atau PDF, tampilkan di browser
-        if (str_starts_with($mime, 'image/') || $mime === 'application/pdf') {
-            return Storage::disk('public')->response($file->file_name);
-        }
-
-        // Untuk DOC/DOCX, force download
-        $filename = basename($file->file_name);
-        $originalName = substr($filename, strpos($filename, '_') + 1);
-        return Storage::disk('public')->download($file->file_name, $originalName);
-    }
-
-    /**
-     * Rename file
-     */
-    public function renameFile(Request $request, string $id, string $fileId)
-    {
-        $request->validate([
-            'new_filename' => 'required|string|max:255'
-        ]);
-
-        $booking = BookingHomestay::findOrFail($id);
-
-        $file = Media::where('media_id', $fileId)
-            ->where('ref_table', 'booking_homestay')
-            ->where('ref_id', $booking->booking_id)
-            ->firstOrFail();
-
-        $oldFileName = $file->file_name;
-        $newFilename = $request->new_filename;
-
-        // Dapatkan ekstensi file lama
-        $extension = pathinfo($oldFileName, PATHINFO_EXTENSION);
-
-        // Buat nama file baru dengan ekstensi
-        $newFileName = pathinfo($oldFileName, PATHINFO_DIRNAME) . '/' . $newFilename . '.' . $extension;
-
-        // Rename file di storage
-        if (Storage::disk('public')->exists($oldFileName)) {
-            Storage::disk('public')->move($oldFileName, $newFileName);
-
-            // Update di database
-            $file->file_name = $newFileName;
-            $file->save();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Nama file berhasil diubah!',
-                'new_filename' => basename($newFileName)
-            ]);
-        }
-
-        return response()->json([
-            'success' => false,
-            'message' => 'File tidak ditemukan di storage'
-        ], 404);
+        // ... sisa kode sama ...
     }
 }
