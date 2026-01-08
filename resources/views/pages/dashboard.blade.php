@@ -42,6 +42,7 @@
             width: auto;
             min-width: 250px;
             padding: 0 15px;
+            transition: all 0.3s ease;
         }
 
         .brand-logo {
@@ -73,6 +74,7 @@
             min-width: 60px !important;
             height: 60px !important;
             flex-shrink: 0;
+            transition: all 0.3s ease;
         }
 
         /* Logo gambar - ukuran proporsional */
@@ -95,6 +97,7 @@
             max-width: 280px !important;
             min-height: 60px !important;
             overflow: hidden !important;
+            transition: opacity 0.3s ease;
         }
 
         /* Judul utama - satu baris */
@@ -172,6 +175,113 @@
             background: rgba(40, 167, 69, 0.1) !important;
         }
 
+        /* ==================== SIDEBAR COLLAPSE FIX ==================== */
+        /* Sidebar style ketika collapsed */
+        body.sidebar-collapsed .sidebar {
+            width: 70px !important;
+            min-width: 70px !important;
+        }
+
+        body.sidebar-collapsed .sidebar .nav-category,
+        body.sidebar-collapsed .sidebar .menu-title,
+        body.sidebar-collapsed .sidebar .nav-profile-text,
+        body.sidebar-collapsed .sidebar .user-info-small,
+        body.sidebar-collapsed .sidebar .settings-item span,
+        body.sidebar-collapsed .sidebar .logout-item-sidebar span {
+            display: none !important;
+        }
+
+        body.sidebar-collapsed .sidebar .nav-item .nav-link {
+            justify-content: center !important;
+            padding: 10px !important;
+        }
+
+        body.sidebar-collapsed .sidebar .icon-bg {
+            margin-right: 0 !important;
+        }
+
+        body.sidebar-collapsed .sidebar .user-display-section {
+            justify-content: center !important;
+            padding: 5px !important;
+        }
+
+        body.sidebar-collapsed .sidebar .user-avatar-small {
+            margin-right: 0 !important;
+        }
+
+        /* Header ketika sidebar collapsed */
+        body.sidebar-collapsed .navbar-brand-wrapper {
+            width: 70px !important;
+            min-width: 70px !important;
+            justify-content: center !important;
+        }
+
+        body.sidebar-collapsed .header-text-container {
+            display: none !important;
+        }
+
+        body.sidebar-collapsed .logo-wrapper {
+            min-width: 40px !important;
+            height: 40px !important;
+        }
+
+        /* Main content adjustment */
+        body.sidebar-collapsed .main-panel {
+            margin-left: 70px !important;
+            width: calc(100% - 70px) !important;
+        }
+
+        /* Transisi smooth */
+        .sidebar,
+        .main-panel,
+        .navbar-brand-wrapper,
+        .header-text-container,
+        .logo-wrapper {
+            transition: all 0.3s ease;
+        }
+
+        /* Mobile responsive untuk sidebar */
+        @media (max-width: 991px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .navbar-brand-wrapper {
+                min-width: 60px !important;
+                width: 60px !important;
+            }
+
+            .header-text-container {
+                display: none !important;
+            }
+
+            .logo-wrapper {
+                min-width: 40px !important;
+                height: 40px !important;
+            }
+
+            .main-panel {
+                width: 100% !important;
+                margin-left: 0 !important;
+            }
+        }
+
+        /* Desktop */
+        @media (min-width: 992px) {
+            .sidebar-offcanvas {
+                transform: translateX(0) !important;
+            }
+
+            .main-panel {
+                transition: all 0.3s ease;
+            }
+        }
+
         /* Responsive design untuk header */
         @media (max-width: 991px) {
             .navbar-brand-wrapper {
@@ -239,124 +349,6 @@
 
             .header-subtitle {
                 display: none !important;
-            }
-        }
-
-        /* Pastikan logo tidak duplikat saat sidebar collapse */
-        @media (max-width: 991px) {
-            .navbar-brand-wrapper .brand-logo {
-                display: flex !important;
-            }
-
-            .navbar-brand-wrapper .brand-logo-mini {
-                display: none !important;
-            }
-        }
-
-        /* ==================== HEADER RESPONSIVE FIXES ==================== */
-        /* Responsive design untuk header - Mode Mobile/Split Screen */
-        @media (max-width: 991px) {
-            /* Sembunyikan teks header di bagian kiri */
-            .header-text-container {
-                display: none !important;
-            }
-
-            /* Hanya tampilkan logo saja */
-            .navbar-brand-wrapper {
-                min-width: auto !important;
-                width: auto !important;
-            }
-
-            .logo-wrapper {
-                min-width: 50px !important;
-                height: 50px !important;
-            }
-
-            /* Atur ulang navbar menu wrapper */
-            .navbar-menu-wrapper {
-                justify-content: flex-end !important;
-                padding: 0 10px !important;
-                flex: 1;
-            }
-
-            /* Posisikan notification dan profile ke kanan */
-            .navbar-nav-right {
-                display: flex !important;
-                align-items: center !important;
-                gap: 5px !important;
-                margin-left: auto !important;
-            }
-
-            /* Hamburger menu di kiri */
-            .navbar-toggler[data-toggle="minimize"] {
-                order: -1;
-                margin-right: 10px;
-            }
-
-            /* Notification bell */
-            .nav-item.dropdown {
-                margin-right: 5px;
-            }
-
-            /* Profile section - tampilkan hanya avatar di mobile */
-            .nav-profile .nav-profile-text {
-                display: none !important;
-            }
-
-            .nav-profile .nav-profile-img {
-                margin-right: 0 !important;
-            }
-
-            /* Profile dropdown tetap full */
-            .nav-profile .dropdown-menu {
-                min-width: 280px !important;
-            }
-        }
-
-        /* Untuk tampilan sangat kecil (mobile kecil) */
-        @media (max-width: 576px) {
-            .navbar-brand-wrapper {
-                min-width: 60px !important;
-            }
-
-            .logo-wrapper {
-                min-width: 45px !important;
-                height: 45px !important;
-            }
-
-            /* Search field disembunyikan di mobile */
-            .search-field {
-                display: none !important;
-            }
-
-            /* Perkecil notification icon */
-            .nav-link.count-indicator {
-                padding: 5px !important;
-            }
-
-            /* Perkecil profile avatar */
-            .nav-profile .profile-avatar-circle {
-                width: 35px !important;
-                height: 35px !important;
-            }
-        }
-
-        /* Untuk tampilan desktop/laptop - tetap seperti semula */
-        @media (min-width: 992px) {
-            .navbar-brand-wrapper {
-                min-width: 250px !important;
-            }
-
-            .header-text-container {
-                display: flex !important;
-            }
-
-            .navbar-menu-wrapper {
-                justify-content: space-between !important;
-            }
-
-            .nav-profile .nav-profile-text {
-                display: flex !important;
             }
         }
 
@@ -2424,7 +2416,7 @@
                                  alt="Logo Pariwisata Desa"
                                  onerror="this.onerror=null; this.src='{{ asset('assets-admin/images/logo-default.png') }}';">
                         </div>
-                        <!-- Teks di kanan - akan disembunyikan di mobile -->
+                        <!-- Teks di kanan - akan disembunyikan di mobile dan ketika sidebar collapsed -->
                         <div class="header-text-container">
                             <div class="header-title">PARIWISATA DESA</div>
                             <div class="header-subtitle">SISTEM ADMINISTRASI PARIWISATA DAN HOMESTAY DESA</div>
@@ -2739,8 +2731,6 @@
                             </ul>
                         </div>
                     </li>
-
-                    <!-- MENGHAPUS BAGIAN DOCUMENTATION -->
 
                     <!-- User Display & Settings Section -->
                     <li class="nav-item sidebar-user-actions mt-4">
@@ -3324,6 +3314,69 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // ==================== HAMBURGER MENU FIX ====================
+            // Handle hamburger menu untuk toggle sidebar
+            const sidebarToggler = document.querySelector('.navbar-toggler[data-toggle="minimize"]');
+            if (sidebarToggler) {
+                sidebarToggler.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    // Toggle class pada body
+                    document.body.classList.toggle('sidebar-collapsed');
+
+                    // Untuk mobile (< 992px), gunakan show/hide sidebar
+                    if (window.innerWidth < 992) {
+                        const sidebar = document.getElementById('sidebar');
+                        if (sidebar) {
+                            sidebar.classList.toggle('show');
+                        }
+                    }
+                });
+            }
+
+            // Mobile hamburger menu
+            const mobileToggler = document.querySelector('.navbar-toggler-right');
+            if (mobileToggler) {
+                mobileToggler.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const sidebar = document.getElementById('sidebar');
+                    if (sidebar) {
+                        sidebar.classList.toggle('show');
+                    }
+                });
+            }
+
+            // Close sidebar saat klik di luar sidebar (mobile only)
+            document.addEventListener('click', function(event) {
+                if (window.innerWidth < 992) {
+                    const sidebar = document.getElementById('sidebar');
+                    const mobileToggler = document.querySelector('.navbar-toggler-right');
+
+                    if (sidebar && sidebar.classList.contains('show')) {
+                        // Jika klik di luar sidebar dan bukan di hamburger button
+                        const isClickInsideSidebar = sidebar.contains(event.target);
+                        const isClickOnMobileToggler = mobileToggler && (mobileToggler.contains(event.target) || event.target === mobileToggler);
+
+                        if (!isClickInsideSidebar && !isClickOnMobileToggler) {
+                            sidebar.classList.remove('show');
+                        }
+                    }
+                }
+            });
+
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                const sidebar = document.getElementById('sidebar');
+                // Di desktop (≥992px), pastikan sidebar tidak dalam mode 'show'
+                if (window.innerWidth >= 992 && sidebar) {
+                    sidebar.classList.remove('show');
+                    // Juga pastikan tidak ada class collapsed jika di resize ke mobile
+                    if (window.innerWidth < 992) {
+                        document.body.classList.remove('sidebar-collapsed');
+                    }
+                }
+            });
+
             // ==================== SLIDESHOW FUNCTIONALITY ====================
             let currentSlide = 0;
             const slides = document.querySelectorAll('.slideshow-slide');
@@ -3391,37 +3444,6 @@
                     }, 5000);
                 });
             });
-
-            // ==================== HEADER FIXES ====================
-            // Pastikan hanya satu logo yang ditampilkan
-            const brandLogo = document.querySelector('.brand-logo');
-            const brandLogoMini = document.querySelector('.brand-logo-mini');
-
-            if (brandLogo && brandLogoMini) {
-                // Sembunyikan logo mini
-                brandLogoMini.style.display = 'none';
-
-                // Pastikan logo utama selalu terlihat
-                brandLogo.style.display = 'flex';
-            }
-
-            // Handle hamburger menu untuk sidebar
-            const sidebarToggler = document.querySelector('.navbar-toggler[data-toggle="minimize"]');
-            if (sidebarToggler) {
-                sidebarToggler.addEventListener('click', function() {
-                    // Tidak perlu melakukan perubahan pada logo
-                    // Biarkan CSS yang mengatur tampilan
-                });
-            }
-
-            // Handle mobile hamburger menu
-            const mobileToggler = document.querySelector('.navbar-toggler-right');
-            if (mobileToggler) {
-                mobileToggler.addEventListener('click', function() {
-                    // Tidak perlu melakukan perubahan pada logo
-                    // Biarkan CSS yang mengatur tampilan
-                });
-            }
 
             // ==================== FUNGSI KLIK PADA STATISTIK ====================
             const statCards = document.querySelectorAll('.clickable-stat');
