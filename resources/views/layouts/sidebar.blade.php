@@ -168,7 +168,7 @@
 
                 <!-- Item Settings -->
                 <a class="settings-item" href="{{ route('user.my-profile') }}">
-                    <i class="mdi mdi-cog"></i>
+                    <i class="mdi mdi-settings"></i>
                     <span>Settings</span>
                 </a>
 
